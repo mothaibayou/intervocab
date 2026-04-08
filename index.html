@@ -2,28 +2,53 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>Language Lessons</title>
+  <title>LangPower</title>
 
   <style>
     body {
-      font-family: Arial, sans-serif;
-      background-color: #f4f1ea;
+      font-family: Georgia, "Times New Roman", serif;
+      background: linear-gradient(to right, #f4f1ea, #e6dfd2);
       margin: 0;
       padding: 0;
     }
 
     .container {
-      max-width: 800px;
-      margin: 60px auto;
-      background: white;
-      padding: 40px;
-      border-radius: 12px;
-      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      max-width: 900px;
+      margin: 80px auto;
+      background: #fffdf8;
+      padding: 50px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       text-align: center;
     }
 
     h1 {
-      margin-bottom: 40px;
+      margin-bottom: 10px;
+      font-size: 42px;
+      color: #4a3f35;
+      letter-spacing: 1.5px;
+
+ }
+
+    .subtitle {
+      font-size: 18px;
+      color: #5a4a3a;
+      margin: 20px auto 40px auto;
+      font-weight: 500;
+     line-height: 1.25;
+     text-align: center;
+}
+
+.subtitle .line2 {
+  display: inline-block;
+}
+
+
+    .domain {
+     font-size: 14px;
+     color: #6e5d4d;   /* slightly darker */
+     margin-top: -20px;
+     margin-bottom: 40px;
     }
 
     .columns {
@@ -37,7 +62,9 @@
     }
 
     h2 {
-      margin-bottom: 20px;
+      margin-bottom: 25px;
+      font-size: 24px;
+      color: #5c4a3d;
     }
 
     ul {
@@ -46,22 +73,39 @@
     }
 
     li {
-      margin: 15px 0;
+      margin: 20px 0;
     }
 
     a {
-      text-decoration: none;
-      font-size: 20px;
-      color: #2c3e50;
       display: inline-block;
-      padding: 8px 12px;
-      border-radius: 6px;
-      transition: 0.2s;
+      width: 180px;
+      padding: 12px 0;
+      font-size: 18px;
+      text-decoration: none;
+      border-radius: 8px;
+      color: white;
+      background-color: #8b6f47;
+      transition: all 0.25s ease;
     }
 
     a:hover {
-      background-color: #0077cc;
-      color: white;
+      background-color: #6f5636;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.12);
+    }
+
+    .column:nth-child(2) a {
+      background-color: #7a8b5a;
+    }
+
+    .column:nth-child(2) a:hover {
+      background-color: #5f6e45;
+    }
+
+    @media (max-width: 700px) {
+      .columns {
+        flex-direction: column;
+      }
     }
   </style>
 </head>
@@ -70,12 +114,20 @@
 
 <div class="container">
 
-  <h1>Language Lessons</h1>
+  <h1>LangPower</h1>
+
+  <p class="subtitle">
+    A Simple, Powerful Way<br>
+    <span class="line2">to Learn Languages</span>
+</p>
+  </p>
+
+  <p class="domain">langpower.app</p>
 
   <div class="columns">
 
     <div class="column">
-      <h2>English</h2>
+      <h2>🇺🇸 English</h2>
       <ul>
         <li><a href="english/beginner/">Beginner</a></li>
         <li><a href="english/intermediate/">Intermediate</a></li>
@@ -83,7 +135,7 @@
     </div>
 
     <div class="column">
-      <h2>Vietnamese</h2>
+      <h2>🇻🇳 Vietnamese</h2>
       <ul>
         <li><a href="vietnamese/beginner/">Beginner</a></li>
         <li><a href="vietnamese/intermediate/">Intermediate</a></li>
