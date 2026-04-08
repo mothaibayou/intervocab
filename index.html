@@ -2,46 +2,97 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>English Lessons</title>
+  <title>Language Lessons</title>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f1ea;
+      margin: 0;
+      padding: 0;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 60px auto;
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 0 15px rgba(0,0,0,0.1);
+      text-align: center;
+    }
+
+    h1 {
+      margin-bottom: 40px;
+    }
+
+    .columns {
+      display: flex;
+      justify-content: space-around;
+      gap: 40px;
+    }
+
+    .column {
+      flex: 1;
+    }
+
+    h2 {
+      margin-bottom: 20px;
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+
+    li {
+      margin: 15px 0;
+    }
+
+    a {
+      text-decoration: none;
+      font-size: 20px;
+      color: #2c3e50;
+      display: inline-block;
+      padding: 8px 12px;
+      border-radius: 6px;
+      transition: 0.2s;
+    }
+
+    a:hover {
+      background-color: #0077cc;
+      color: white;
+    }
+  </style>
 </head>
 
 <body>
 
-<table>
-  <tr>
-    <td>
-      <h1>ENGLISH</h1>
+<div class="container">
+
+  <h1>Language Lessons</h1>
+
+  <div class="columns">
+
+    <div class="column">
+      <h2>English</h2>
       <ul>
         <li><a href="english/beginner/">Beginner</a></li>
         <li><a href="english/intermediate/">Intermediate</a></li>
       </ul>
-    </td>
+    </div>
 
-    <td style="padding-left: 50px;">
-      <h1>VIETNAMESE</h1>
+    <div class="column">
+      <h2>Vietnamese</h2>
       <ul>
         <li><a href="vietnamese/beginner/">Beginner</a></li>
         <li><a href="vietnamese/intermediate/">Intermediate</a></li>
       </ul>
-    </td>
-  </tr>
-</table>
+    </div>
+
+  </div>
+
+</div>
 
 </body>
-
-
-
-
-
-
-
-
-
-
-<!--   <li>
-    <a href="english/" style="font-size: 15px; font-style: Arial; font-weight: bold;">Learn English</a>
-  </li>
-  <li>
-    <a href="vietnamese/" style="font-size: 25px; font-style: Arial; font-weight: bold;">Learn Vietnamese</a>
-  </li>
-</ul>  -->
+</html>
