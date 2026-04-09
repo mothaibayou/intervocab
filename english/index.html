@@ -1,11 +1,9 @@
-<!-- This is the INDEX.HTML file in the ENGLISH folder -->
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>English Beginner – LangPower</title>
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Lessons – LangPower</title>
   <style>
     body {
       font-family: Georgia, "Times New Roman", serif;
@@ -16,17 +14,36 @@
     .container {
       max-width: 900px;
       margin: 80px auto;
-      background: #fffdf8;
+      background: #ede8dc;
       padding: 50px;
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       text-align: center;
     }
+    .back-btn {
+      float: left;
+      background: #8b6f47;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .back-btn:hover {
+      background: #6f5636;
+    }
     h1 {
+      clear: both;
       margin-bottom: 0px;
       font-size: 42px;
       color: #4a3f35;
       letter-spacing: 1.5px;
+    }
+    h2 {
+      font-size: 24px;
+      color: #5c4a3d;
+      margin-bottom: 30px;
     }
     .domain {
       font-size: 14px;
@@ -34,49 +51,42 @@
       margin-top: 8px;
       margin-bottom: 50px;
     }
-    h2 {
-      margin-bottom: 25px;
-      font-size: 24px;
-      color: #5c4a3d;
-    }
-    ul {
+    .lesson-list {
       list-style: none;
       padding: 0;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      text-align: center;
     }
-    li {
-      margin: 20px 0;
+    .lesson-list li {
+      padding: 8px 4px;
     }
-    a {
-      display: inline-block;
-      width: 180px;
-      padding: 12px 0;
+    .lesson-list a {
       font-size: 18px;
       text-decoration: none;
-      border-radius: 8px;
-      color: white;
-      background-color: #8b6f47;
-      transition: all 0.25s ease;
+      color: #6f5636;
+      font-weight: bold;
     }
-    a:hover {
-      background-color: #6f5636;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 10px rgba(0,0,0,0.12);
+    .lesson-list a:hover {
+      color: #4a3f35;
+      text-decoration: underline;
     }
-    @media (max-width: 700px) {
-      .container {
-        margin: 40px 20px;
-        padding: 30px;
+    @media (max-width: 600px) {
+      .lesson-list {
+        grid-template-columns: repeat(1, 1fr);
       }
     }
   </style>
 </head>
 <body>
 <div class="container">
-  <h1>LangPower</h1>
-  <br><br>
+  <button class="back-btn" onclick="history.back()">← Back</button>
+  <h1>English</h1>
+  <h2>Choose a Level</h2>
   <p class="domain">langpower.app</p>
-  <h2>🇺🇸 English Lessons</h2>
-  <ul>
+  <ul class="lesson-list">
     <li><a href="beginner/">Beginner</a></li>
     <li><a href="intermediate/">Intermediate</a></li>
   </ul>
