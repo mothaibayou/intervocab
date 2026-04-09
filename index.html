@@ -1,10 +1,10 @@
-<!-- This is INDEX.HTML file in the ROOT folder -->
+<!-- this is the INDEX.HTML file inside the BEGINNER folder -->
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>LangPower</title>
-
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>English Beginner – LangPower</title>
   <style>
     body {
       font-family: Georgia, "Times New Roman", serif;
@@ -12,140 +12,84 @@
       margin: 0;
       padding: 0;
     }
-
     .container {
       max-width: 900px;
       margin: 80px auto;
-      background: #fffdf8;
+      background: #ede8dc;
       padding: 50px;
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       text-align: center;
     }
-
+    .back-btn {
+      float: left;
+      background: #8b6f47;
+      color: white;
+      border: none;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .back-btn:hover {
+      background: #6f5636;
+    }
     h1 {
-      margin-bottom: 10px;
+      clear: both;
+      margin-bottom: 0px;
       font-size: 42px;
       color: #4a3f35;
       letter-spacing: 1.5px;
-
- }
-
-    .subtitle {
-      font-size: 18px;
-      color: #5a4a3a;
-      margin: 20px auto 40px auto;
-      font-weight: 500;
-     line-height: 1.25;
-     text-align: center;
-}
-
-.subtitle .line2 {
-  display: inline-block;
-}
-
-
-    .domain {
-     font-size: 14px;
-     color: #6e5d4d;   /* slightly darker */
-     margin-top: -20px;
-     margin-bottom: 40px;
     }
-
-    .columns {
-      display: flex;
-      justify-content: space-around;
-      gap: 40px;
-    }
-
-    .column {
-      flex: 1;
-    }
-
     h2 {
-      margin-bottom: 25px;
       font-size: 24px;
       color: #5c4a3d;
+      margin-bottom: 30px;
     }
-
-    ul {
+    .domain {
+      font-size: 14px;
+      color: #6e5d4d;
+      margin-top: 8px;
+      margin-bottom: 50px;
+    }
+    .lesson-list {
       list-style: none;
       padding: 0;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 10px;
+      text-align: center;
     }
-
-    li {
-      margin: 20px 0;
+    .lesson-list li {
+      padding: 8px 4px;
     }
-
-    a {
-      display: inline-block;
-      width: 180px;
-      padding: 12px 0;
-      font-size: 18px;
+    .lesson-list a {
+      font-size: 15px;
       text-decoration: none;
-      border-radius: 8px;
-      color: white;
-      background-color: #8b6f47;
-      transition: all 0.25s ease;
+      color: #6f5636;
+      font-weight: bold;
     }
-
-    a:hover {
-      background-color: #6f5636;
-      transform: translateY(-2px);
-      box-shadow: 0 5px 10px rgba(0,0,0,0.12);
+    .lesson-list a:hover {
+      color: #4a3f35;
+      text-decoration: underline;
     }
-
-    .column:nth-child(2) a {
-      background-color: #7a8b5a;
-    }
-
-    .column:nth-child(2) a:hover {
-      background-color: #5f6e45;
-    }
-
-    @media (max-width: 700px) {
-      .columns {
-        flex-direction: column;
+    @media (max-width: 600px) {
+      .lesson-list {
+        grid-template-columns: repeat(3, 1fr);
       }
     }
   </style>
 </head>
-
 <body>
-
 <div class="container">
-
-  <h1>LangPower</h1>
-
-  <p class="subtitle">
-    A Simple, Powerful Way<br>
-    <span class="line2">to Learn Languages</span>
-</p>
-  </p>
-
+  <button class="back-btn" onclick="history.back()">← Back</button>
+  <h1>English</h1>
+  <h2>Beginner Level</h2>
   <p class="domain">langpower.app</p>
-
-  <div class="columns">
-
-    <div class="column">
-      <h2>🇺🇸 English</h2>
-      <ul>
-        <li><a href="english/beginner/">Beginner</a></li>
-        <li><a href="english/intermediate/">Intermediate</a></li>
-      </ul>
-    </div>
-
-    <div class="column">
-      <h2>🇻🇳 Vietnamese</h2>
-      <ul>
-        <li><a href="vietnamese/beginner/">Beginner</a></li>
-        <li><a href="vietnamese/intermediate/">Intermediate</a></li>
-      </ul>
-    </div>
-
-  </div>
-
+  <ul class="lesson-list">
+    <li><a href="work-lesson.html">work-lesson</a></li>
+  </ul>
 </div>
-
 </body>
 </html>
