@@ -231,9 +231,27 @@
   }
   .skip-notes ul { padding-left: 20px; }
 </style>
+ .back-btn {
+    float: left;
+    background: #8b6f47;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+  .back-btn:hover { background: #6f5636; }
+</style>
 </head>
 <body>
 <div id="page">
+  <button class="back-btn" onclick="history.back()">← Back</button>
+  <button id="download-btn" onclick="downloadClean()">⬇ content only version</button>
+
+
+
+<a href="index.html">← Back</a>
   <button id="download-btn" onclick="downloadClean()">⬇ content only version</button>
 
   <h1>Minh's Story: Work, Health, and Balance</h1>
@@ -939,8 +957,10 @@ function downloadClean() {
   a.click();
 }
 </script>
-<p><a href="index.html">← Back to Beginner</a></p>
-<p><a href="../index.html">← Back to English</a></p>
-<p><a href="../../index.html">← Home</a></p>
+<div style="margin-top: 30px; border-top: 1px solid #b0a080; padding-top: 16px; font-family: Arial, sans-serif; font-size: 0.95rem;">
+  <a href="index.html" style="color:#6b5c3e; margin-right: 24px; text-decoration:none;">← Beginner</a>
+  <a href="../index.html" style="color:#6b5c3e; margin-right: 24px; text-decoration:none;">← English</a>
+  <a href="../../index.html" style="color:#6b5c3e; text-decoration:none;">← Home</a>
+</div>
 </body>
 </html>
