@@ -1,9 +1,11 @@
+<!-- This is INDEX.HTML file in the ENGLISH folder -->
 <!DOCTYPE html>
 <html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>English Lessons – LangPower</title>
+  <title>LangPower</title>
+  
   <style>
     body {
       font-family: Georgia, "Times New Roman", serif;
@@ -11,85 +13,135 @@
       margin: 0;
       padding: 0;
     }
+
     .container {
       max-width: 900px;
       margin: 80px auto;
-      background: #ede8dc;
+      background: #fffdf8;
       padding: 50px;
       border-radius: 16px;
       box-shadow: 0 10px 25px rgba(0,0,0,0.08);
       text-align: center;
     }
-    .back-btn {
-      float: left;
-      background: #8b6f47;
-      color: white;
-      border: none;
-      padding: 8px 16px;
-      border-radius: 8px;
-      font-size: 15px;
-      cursor: pointer;
-    }
-    .back-btn:hover {
-      background: #6f5636;
-    }
+
     h1 {
-      clear: both;
-      margin-bottom: 0px;
+      margin-bottom: 10px;
       font-size: 42px;
       color: #4a3f35;
       letter-spacing: 1.5px;
+
+ }
+
+    .subtitle {
+      font-size: 18px;
+      color: #5a4a3a;
+      margin: 20px auto 40px auto;
+      font-weight: 500;
+     line-height: 1.25;
+     text-align: center;
+}
+
+.subtitle .line2 {
+  display: inline-block;
+}
+
+
+    .domain {
+     font-size: 14px;
+     color: #6e5d4d;   /* slightly darker */
+     margin-top: -20px;
+     margin-bottom: 40px;
     }
+
+    .columns {
+      display: flex;
+      justify-content: space-around;
+      gap: 40px;
+    }
+
+    .column {
+      flex: 1;
+    }
+
     h2 {
+      margin-bottom: 25px;
       font-size: 24px;
       color: #5c4a3d;
-      margin-bottom: 30px;
     }
-    .domain {
-      font-size: 14px;
-      color: #6e5d4d;
-      margin-top: 8px;
-      margin-bottom: 50px;
-    }
-    .lesson-list {
+
+    ul {
       list-style: none;
       padding: 0;
-      margin: 0 auto;
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 10px;
-      text-align: center;
     }
-    .lesson-list li {
-      padding: 8px 4px;
+
+    li {
+      margin: 20px 0;
     }
-    .lesson-list a {
+
+    a {
+      display: inline-block;
+      width: 180px;
+      padding: 12px 0;
       font-size: 18px;
       text-decoration: none;
-      color: #6f5636;
-      font-weight: bold;
+      border-radius: 8px;
+      color: white;
+      background-color: #8b6f47;
+      transition: all 0.25s ease;
     }
-    .lesson-list a:hover {
-      color: #4a3f35;
-      text-decoration: underline;
+
+    a:hover {
+      background-color: #6f5636;
+      transform: translateY(-2px);
+      box-shadow: 0 5px 10px rgba(0,0,0,0.12);
     }
-    @media (max-width: 600px) {
-      .lesson-list {
-        grid-template-columns: repeat(1, 1fr);
+
+    .column:nth-child(2) a {
+      background-color: #7a8b5a;
+    }
+
+    .column:nth-child(2) a:hover {
+      background-color: #5f6e45;
+    }
+
+    @media (max-width: 700px) {
+      .columns {
+        flex-direction: column;
       }
     }
   </style>
 </head>
+
 <body>
+
 <div class="container">
-  <button class="back-btn" onclick="history.back()">← Back</button>
-  <h1>English</h1>
-  <h2>Choose a Level</h2>
+<button class="back-btn" onclick="window.location.href='../index.html'">← Back</button>
+
+  <h1>LangPower</h1>
+
+  <p class="subtitle">
+    A Simple, Powerful Way<br>
+    <span class="line2">to Learn Languages</span>
+</p>
+  </p>
+
   <p class="domain">langpower.app</p>
-  <ul class="lesson-list">
-    <li><a href="beginner/">Beginner</a></li>
-    <li><a href="intermediate/">Intermediate</a></li>
-  </ul>
+
+  <div class="columns">
+
+    <div class="column">
+      <h2>🇺🇸 English</h2>
+      <ul>
+        <li><a href="english/beginner/">Beginner</a></li> <!--goes to index pg in english folder-->
+        <li><a href="english/intermediate/">Intermediate</a></li>
+        <li><a href="english/advanced/">Advanced</a></li>
+        
+      </ul>
+    </div>
+
+   </div>
+
 </div>
+
 </body>
 </html>
