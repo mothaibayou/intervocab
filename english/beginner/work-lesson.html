@@ -255,7 +255,8 @@
 <div class="audio-section">
     <div class="audio-label">🔊 Listen to the text</div>
     <audio id="audio-player" controls src="work-html.mp3"></audio>
-    <button class="rewind-btn" ...>↺ 5 sec</button>
+    <button class="rewind-btn" onclick="var a=document.getElementById('audio-player');     
+           a.currentTime=Math.min(a.duration,a.currentTime-5);">↺ 5 sec</button>
     <button class="rewind-btn" onclick="var a=document.getElementById('audio-player');     
            a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
 </div>
