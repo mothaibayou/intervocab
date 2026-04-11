@@ -302,7 +302,7 @@
 
   <!-- Test Your Memory Section -->
   <div class="memory-section">
-    <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared. Click on word to jump to it in the story.</h2>
     <div class="memory-grid">
       <span>software engineer</span>
       <span>technology company</span>
@@ -464,6 +464,23 @@ function downloadClean() {
   a.download = 'minh_vocab_content_only.html';
   a.click();
 }
+<!--NEW MEMORY GRID CLICK-TO-SCROLL -->
+document.querySelectorAll('.memory-grid span').forEach(span => {
+  span.style.cursor = 'pointer';
+  span.style.textDecoration = 'underline';
+  span.style.textDecorationStyle = 'dotted';
+  span.addEventListener('click', function() {
+    const word = this.textContent.trim().toLowerCase();
+    const match = [...document.querySelectorAll('.vocab')].find(el =>
+      el.dataset.wordEn && el.dataset.wordEn.toLowerCase() === word
+    );
+    if (match) {
+      match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      match.style.backgroundColor = '#ffe082';
+      setTimeout(() => match.style.backgroundColor = '', 1500);
+    }
+  });
+});
 </script>
 
 </body></html>
