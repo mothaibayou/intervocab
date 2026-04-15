@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mỹ đột kích Venezuela – Content Only</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    min-height: 100vh;
+    padding: 30px 16px 60px;
+    color: #222;
+    user-select: none;
+  }
+  #page {
+    background: #f0e6c8;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 40px 48px 50px;
+    border: 2px solid #a0845a;
+    box-shadow: 0 2px 18px rgba(0,0,0,0.45);
+    position: relative;
+  }
+  h1 {
+    font-family: Arial, sans-serif;
+    font-size: 1.55rem;
+    font-weight: bold;
+    margin-bottom: 22px;
+    color: #3a1f00;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    line-height: 1.35;
+  }
+  .dateline {
+    font-size: 0.88rem;
+    color: #6b5c3e;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .audio-section { margin-bottom: 28px; }
+  .audio-label { font-size: 0.95rem; color: #6b5c3e; margin-bottom: 6px; font-style: italic; }
+  audio {
+    width: 100%;
+    height: 38px;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    background: #2e1f0a;
+    display: block;
+    accent-color: #c8a060;
+  }
+  .rewind-btn {
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 5px 13px;
+    cursor: pointer;
+    margin-top: 6px;
+  }
+  .rewind-btn:hover { background: #4e3820; }
+  p.body-text {
+    line-height: 1.85;
+    margin-bottom: 18px;
+    color: #2a1500;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+  }
+  .vocab {
+    color: inherit;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #2e7d32;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+  .corrected.vocab {
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #2e7d32;
+    text-decoration-thickness: 2px;
+    text-underline-offset: 3px;
+    cursor: pointer;
+  }
+  #popup-card {
+    display: none;
+    position: fixed;
+    z-index: 9999;
+    max-height: 80vh;
+    overflow-y: auto;
+    background: #fffdf7;
+    border: 1px solid #a0845a;
+    border-radius: 5px;
+    padding: 16px 18px 14px;
+    max-width: 320px;
+    min-width: 230px;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.28);
+    font-family: Arial, sans-serif;
+  }
+  #popup-card .pw-en { font-size: 1.3rem; font-weight: bold; color: #2a1500; margin-bottom: 1px; }
+  #popup-card .pw-vn { font-size: 0.95rem; color: #8a7a5e; margin-bottom: 4px; font-style: italic; }
+  #popup-card .p-pos { font-size: 0.95rem; color: #888; margin-bottom: 7px; }
+  #popup-card .p-def-en { font-size: 1rem; color: #2a1500; margin-bottom: 8px; }
+  #popup-card .p-ctx-label { font-size: 0.95rem; color: #888; font-style: italic; margin-bottom: 2px; }
+  #popup-card .p-ctx-en { font-size: 0.95rem; color: #5a4a2e; font-style: italic; }
+  #popup-card .p-divider { border: none; border-top: 1px solid #d8cdb0; margin: 8px 0; }
+  #download-btn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 5px 11px;
+    cursor: pointer;
+  }
+  #download-btn:hover { background: #4e3820; }
+  .memory-section {
+    margin-top: 42px;
+    border-top: 1px solid #7a4e1a;
+    padding-top: 18px;
+  }
+  .memory-section h2 {
+    font-size: 1.05rem;
+    color: #3a1f00;
+    margin-bottom: 14px;
+    font-family: Arial, sans-serif;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 6px;
+  }
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 12px;
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    color: #2a1500;
+  }
+  .memory-grid span {
+    padding: 3px 0;
+    cursor: pointer;
+    text-decoration: underline;
+    text-decoration-style: dotted;
+    text-decoration-color: #a0845a;
+  }
+  .memory-grid span:hover { color: #7a4e1a; }
+  .highlight-flash {
+    background-color: #ffe082 !important;
+    transition: background-color 0.3s;
+  }
+  .transcription-notes {
+    margin-top: 42px;
+    border-top: 1px solid #7a4e1a;
+    padding-top: 18px;
+  }
+  .transcription-notes h2 {
+    font-size: 1.05rem;
+    color: #3a1f00;
+    margin-bottom: 12px;
+    font-family: Arial, sans-serif;
+  }
+  .transcription-notes table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+  }
+  .transcription-notes th {
+    background: #e8d8b0;
+    color: #3a2e1e;
+    padding: 6px 8px;
+    text-align: left;
+    border: 1px solid #a0845a;
+  }
+  .transcription-notes td {
+    padding: 5px 8px;
+    border: 1px solid #a0845a;
+    vertical-align: top;
+    color: #2a2218;
+  }
+  .transcription-notes tr:nth-child(even) td { background: #f0e8d0; }
+  .skip-notes {
+    margin-top: 30px;
+    border-top: 1px solid #7a4e1a;
+    padding-top: 16px;
+  }
+  .skip-notes h2 {
+    font-size: 1.05rem;
+    color: #3a1f00;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+  }
+  .skip-notes p, .skip-notes li {
+    font-size: 0.92rem;
+    color: #4a3c28;
+    font-family: Arial, sans-serif;
+    line-height: 1.7;
+    margin-bottom: 4px;
+  }
+  .skip-notes ul { padding-left: 20px; }
+</style>
+</head>
+<body>
+<div id="page">
+  
+
+  <div class="dateline">Thứ bảy, 3/1/2026, 13:40 (GMT+7) — VnExpress</div>
+  <h1>Mỹ <span class="vocab" data-word-en="raid / strike" data-word-vn="đột kích" data-pos="động từ / verb" data-def-en="To carry out a sudden surprise military attack on a target" data-def-vn="Thực hiện một cuộc tấn công quân sự bất ngờ vào mục tiêu" data-context-en="The US launched a surprise raid on Caracas in the early hours of January 3rd." data-context-vn="Mỹ tiến hành cuộc đột kích bất ngờ vào Caracas vào rạng sáng ngày 3 tháng 1.">đột kích</span> Venezuela, <span class="vocab" data-word-en="declare / announce" data-word-vn="tuyên bố" data-pos="động từ / verb" data-def-en="To formally and publicly announce or proclaim something" data-def-vn="Thông báo hoặc công bố điều gì đó một cách chính thức và công khai" data-context-en="Trump declared that US forces had captured President Maduro." data-context-vn="Trump tuyên bố rằng lực lượng Mỹ đã bắt Tổng thống Maduro.">tuyên bố</span> <span class="vocab" data-word-en="arrest / capture" data-word-vn="bắt" data-pos="động từ / verb" data-def-en="To seize and take someone into custody by force" data-def-vn="Bắt giữ và tạm giam ai đó bằng vũ lực" data-context-en="US forces captured President Maduro in the early morning raid." data-context-vn="Lực lượng Mỹ bắt Tổng thống Maduro trong cuộc đột kích rạng sáng.">bắt</span> Tổng thống Maduro</h1>
+
+<!-- THIS SECTION ADDS THE PLAYER CONTROL BUTTONS -->
+  <div class="audio-section">
+    <div class="audio-label">🔊 Listen to the text</div>
+    <audio id="audio-player" controls="" src="maduro-vnexpress.mp3"></audio>
+
+<button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+<button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+<button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+
+
+
+   <!-- <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+    <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+<button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button> -->
+  </div>
+
+  <p class="body-text">
+    Ông Trump <span class="vocab" data-word-en="notify / inform" data-word-vn="thông báo" data-pos="động từ / verb" data-def-en="To officially inform or announce to the public" data-def-vn="Thông báo chính thức hoặc công bố tới công chúng" data-context-en="Trump informed the public that US forces had captured Maduro and his wife." data-context-vn="Trump thông báo rằng lực lượng Mỹ đã bắt vợ chồng Tổng thống Maduro.">thông báo</span> rằng <span class="vocab" data-word-en="forces / troops" data-word-vn="lực lượng" data-pos="danh từ / noun" data-def-en="Military personnel or armed units deployed for an operation" data-def-vn="Quân nhân hoặc đơn vị vũ trang được triển khai cho một chiến dịch" data-context-en="US forces carried out the raid that captured Maduro and his wife." data-context-vn="Lực lượng Mỹ đã tiến hành cuộc đột kích bắt vợ chồng Tổng thống Maduro.">lực lượng</span> Mỹ đã bắt vợ chồng Tổng thống Maduro sau cuộc <span class="vocab" data-word-en="raid / surprise attack" data-word-vn="đột kích" data-pos="danh từ / noun" data-def-en="A sudden, swift military or police attack on a location" data-def-vn="Một cuộc tấn công quân sự hoặc cảnh sát bất ngờ, nhanh chóng vào một địa điểm" data-context-en="The raid took place in the early hours of the morning in Caracas." data-context-vn="Cuộc đột kích diễn ra vào rạng sáng ở Caracas.">đột kích</span> lúc <span class="vocab" data-word-en="dawn / early morning" data-word-vn="rạng sáng" data-pos="danh từ / noun" data-def-en="The period just before or at sunrise; the very early hours of the morning" data-def-vn="Thời điểm ngay trước hoặc lúc mặt trời mọc; những giờ đầu tiên của buổi sáng" data-context-en="The US raid on Caracas happened at dawn, around 2am local time." data-context-vn="Cuộc đột kích của Mỹ vào Caracas diễn ra lúc rạng sáng, khoảng 2 giờ sáng giờ địa phương.">rạng sáng</span> vào <span class="vocab" data-word-en="capital city" data-word-vn="thủ đô" data-pos="danh từ / noun" data-def-en="The city that serves as the seat of government of a country" data-def-vn="Thành phố là trung tâm chính phủ của một quốc gia" data-context-en="Caracas is the capital of Venezuela and was the target of the US operation." data-context-vn="Caracas là thủ đô của Venezuela và là mục tiêu của chiến dịch Mỹ.">thủ đô</span> Caracas.
+  </p>
+
+  <p class="body-text">
+    Khoảng 2h sáng 3/1 (13h giờ Hà Nội), thủ đô Caracas của Venezuela <span class="vocab" data-word-en="shook / was shaken" data-word-vn="rung chuyển" data-pos="động từ / verb" data-def-en="To be violently shaken or rocked, as by explosions" data-def-vn="Bị rung lắc mạnh hoặc chao đảo, như bởi các vụ nổ" data-context-en="Caracas was shaken by a series of loud explosions in the early morning." data-context-vn="Caracas rung chuyển bởi loạt tiếng nổ lớn vào rạng sáng.">rung chuyển</span> bởi <span class="vocab" data-word-en="series / volley" data-word-vn="loạt" data-pos="danh từ / noun" data-def-en="A series or burst of something, especially sounds or events occurring in rapid succession" data-def-vn="Một loạt hoặc một tràng gì đó, đặc biệt là âm thanh hoặc sự kiện xảy ra liên tiếp nhanh chóng" data-context-en="A series of loud explosions rocked the Venezuelan capital." data-context-vn="Một loạt tiếng nổ lớn làm rung chuyển thủ đô Venezuela.">loạt</span> <span class="vocab" data-word-en="explosion / blast" data-word-vn="tiếng nổ" data-pos="danh từ / noun" data-def-en="The loud sound produced by an explosion or detonation" data-def-vn="Âm thanh lớn do vụ nổ hoặc kích nổ tạo ra" data-context-en="Loud explosions were heard across Caracas as the US operation began." data-context-vn="Tiếng nổ lớn vang khắp Caracas khi chiến dịch Mỹ bắt đầu.">tiếng nổ</span> lớn, cùng hàng loạt <span class="vocab" data-word-en="aircraft / airplanes" data-word-vn="máy bay" data-pos="danh từ / noun" data-def-en="Fixed-wing aircraft used for military or civilian purposes" data-def-vn="Máy bay cánh cố định dùng cho mục đích quân sự hoặc dân sự" data-context-en="Numerous aircraft and helicopters were seen operating at low altitude over Caracas." data-context-vn="Hàng loạt máy bay và trực thăng hoạt động tầm thấp trên bầu trời Caracas.">máy bay</span> và <span class="vocab" data-word-en="helicopter" data-word-vn="trực thăng" data-pos="danh từ / noun" data-def-en="A rotary-wing aircraft capable of vertical takeoff and hovering" data-def-vn="Máy bay cánh quạt có khả năng cất cánh thẳng đứng và lơ lửng" data-context-en="Helicopters were observed flying at low altitude during the US operation." data-context-vn="Trực thăng được quan sát bay ở tầm thấp trong chiến dịch của Mỹ.">trực thăng</span> <span class="vocab" data-word-en="operating / active" data-word-vn="hoạt động" data-pos="động từ / verb" data-def-en="Functioning or being in action; carrying out operations" data-def-vn="Đang hoạt động hoặc thực hiện nhiệm vụ" data-context-en="Aircraft and helicopters were operating at low altitude over Caracas." data-context-vn="Máy bay và trực thăng hoạt động tầm thấp trên bầu trời Caracas.">hoạt động</span> <span class="vocab" data-word-en="low altitude" data-word-vn="tầm thấp" data-pos="cụm danh từ / noun phrase" data-def-en="Flying at a low height above the ground, typically for tactical military purposes" data-def-vn="Bay ở độ cao thấp so với mặt đất, thường dùng cho mục đích quân sự chiến thuật" data-context-en="The aircraft operated at low altitude, a sign of aggressive military action." data-context-vn="Máy bay hoạt động tầm thấp, dấu hiệu của hành động quân sự hung hăng.">tầm thấp</span>. <span class="vocab" data-word-en="media / press" data-word-vn="truyền thông" data-pos="danh từ / noun" data-def-en="News organizations, journalists, and broadcasting channels that report information to the public" data-def-vn="Các tổ chức tin tức, nhà báo và kênh truyền hình đưa thông tin đến công chúng" data-context-en="US and international media reported on Washington's large-scale strike on Venezuela." data-context-vn="Truyền thông Mỹ và quốc tế đưa tin về chiến dịch tập kích quy mô lớn của Washington vào Venezuela.">Truyền thông</span> Mỹ và <span class="vocab" data-word-en="international" data-word-vn="quốc tế" data-pos="tính từ / adjective" data-def-en="Involving or relating to more than one country" data-def-vn="Liên quan đến hoặc thuộc về nhiều quốc gia" data-context-en="Both US and international media covered the strike on Venezuela." data-context-vn="Cả truyền thông Mỹ và quốc tế đều đưa tin về cuộc tập kích vào Venezuela.">quốc tế</span> sau đó cho biết Washington đã <span class="vocab" data-word-en="launch / open" data-word-vn="mở" data-pos="động từ / verb" data-def-en="To initiate or begin a military campaign or operation" data-def-vn="Bắt đầu hoặc khởi động một chiến dịch quân sự hay chiến dịch nào đó" data-context-en="Washington launched a large-scale strike campaign against Venezuela." data-context-vn="Washington đã mở chiến dịch tập kích quy mô lớn vào Venezuela.">mở</span> <span class="vocab" data-word-en="campaign / operation" data-word-vn="chiến dịch" data-pos="danh từ / noun" data-def-en="A planned series of military operations to achieve a specific goal" data-def-vn="Một loạt các hoạt động quân sự được lên kế hoạch để đạt được mục tiêu cụ thể" data-context-en="The US launched a large-scale strike campaign against Venezuela." data-context-vn="Mỹ đã mở chiến dịch tập kích quy mô lớn vào Venezuela." style="">chiến dịch</span> <span class="vocab" data-word-en="strike / attack" data-word-vn="tập kích" data-pos="danh từ / noun" data-def-en="A concentrated military attack, often sudden, on a target" data-def-vn="Một cuộc tấn công quân sự tập trung, thường bất ngờ, vào một mục tiêu" data-context-en="The US strike campaign on Venezuela followed months of military pressure." data-context-vn="Chiến dịch tập kích của Mỹ vào Venezuela diễn ra sau nhiều tháng gây sức ép quân sự.">tập kích</span> <span class="vocab" data-word-en="large-scale" data-word-vn="quy mô lớn" data-pos="cụm tính từ / adjective phrase" data-def-en="Involving a large number of forces, resources, or areas; extensive in scope" data-def-vn="Liên quan đến số lượng lớn lực lượng, nguồn lực hoặc khu vực; có phạm vi rộng lớn" data-context-en="The strike was described as large-scale, targeting multiple locations across Venezuela." data-context-vn="Cuộc tập kích được mô tả là quy mô lớn, nhắm vào nhiều địa điểm trên khắp Venezuela.">quy mô lớn</span> vào Venezuela sau nhiều tháng <span class="vocab" data-word-en="apply pressure" data-word-vn="gây sức ép" data-pos="cụm động từ / verb phrase" data-def-en="To exert coercive force or political/military pressure on someone to compel action" data-def-vn="Dùng áp lực cưỡng ép về chính trị hoặc quân sự buộc ai đó phải hành động" data-context-en="Washington had been applying both political and military pressure on Maduro's government for months." data-context-vn="Washington đã gây sức ép cả chính trị lẫn quân sự với chính quyền Maduro trong nhiều tháng.">gây sức ép</span> cả <span class="vocab" data-word-en="political" data-word-vn="chính trị" data-pos="tính từ / adjective" data-def-en="Relating to government, politics, or the exercise of political power" data-def-vn="Liên quan đến chính phủ, chính trị hoặc việc thực thi quyền lực chính trị" data-context-en="The US applied both political and military pressure on Maduro's government." data-context-vn="Mỹ gây sức ép cả chính trị lẫn quân sự với chính quyền Maduro.">chính trị</span> lẫn <span class="vocab" data-word-en="military" data-word-vn="quân sự" data-pos="tính từ / adjective" data-def-en="Relating to armed forces or warfare" data-def-vn="Liên quan đến lực lượng vũ trang hoặc chiến tranh" data-context-en="Military pressure on Venezuela had been building for months before the raid." data-context-vn="Sức ép quân sự lên Venezuela đã tích tụ trong nhiều tháng trước cuộc đột kích.">quân sự</span> với <span class="vocab" data-word-en="government / administration" data-word-vn="chính quyền" data-pos="danh từ / noun" data-def-en="The ruling government or administration of a country" data-def-vn="Chính phủ hoặc bộ máy cầm quyền của một quốc gia" data-context-en="The US had been applying pressure on Maduro's government for months." data-context-vn="Mỹ đã gây sức ép với chính quyền Maduro trong nhiều tháng.">chính quyền</span> Tổng thống Nicolas Maduro.
+  </p>
+
+  <p class="body-text">
+    Theo <span class="vocab" data-word-en="news agency" data-word-vn="hãng tin" data-pos="danh từ / noun" data-def-en="An organization that gathers and distributes news to media outlets" data-def-vn="Tổ chức thu thập và phân phối tin tức cho các cơ quan truyền thông" data-context-en="According to the AP news agency, the strike lasted about 30 minutes." data-context-vn="Theo hãng tin AP, cuộc tập kích kéo dài khoảng 30 phút.">hãng tin</span> AP, cuộc tập kích <span class="vocab" data-word-en="lasted / continued" data-word-vn="kéo dài" data-pos="động từ / verb" data-def-en="To continue for a period of time; to extend in duration" data-def-vn="Tiếp tục trong một khoảng thời gian; kéo dài về thời gian" data-context-en="The strike lasted approximately 30 minutes according to AP." data-context-vn="Cuộc tập kích kéo dài khoảng 30 phút theo hãng tin AP.">kéo dài</span> khoảng 30 phút. <span class="vocab" data-word-en="images / footage" data-word-vn="hình ảnh" data-pos="danh từ / noun" data-def-en="Visual recordings or photographs documenting events" data-def-vn="Các bản ghi hình ảnh hoặc ảnh chụp ghi lại các sự kiện" data-context-en="Images and videos spread on social media showing Venezuelan bases under attack." data-context-vn="Hình ảnh, video lan truyền trên mạng xã hội cho thấy nhiều căn cứ Venezuela bị tấn công.">Hình ảnh</span>, video <span class="vocab" data-word-en="spread / circulated" data-word-vn="lan truyền" data-pos="động từ / verb" data-def-en="To spread rapidly from person to person, especially on social media" data-def-vn="Lan rộng nhanh chóng từ người này sang người khác, đặc biệt trên mạng xã hội" data-context-en="Videos and images of the attack spread rapidly on social media." data-context-vn="Hình ảnh, video về cuộc tấn công lan truyền nhanh chóng trên mạng xã hội.">lan truyền</span> trên <span class="vocab" data-word-en="social media" data-word-vn="mạng xã hội" data-pos="danh từ / noun" data-def-en="Online platforms where users share content and communicate publicly" data-def-vn="Các nền tảng trực tuyến nơi người dùng chia sẻ nội dung và giao tiếp công khai" data-context-en="Footage of the attack spread on social media and was verified by news agencies." data-context-vn="Hình ảnh về cuộc tấn công lan truyền trên mạng xã hội và được nhiều hãng tin xác thực.">mạng xã hội</span> và được nhiều hãng tin <span class="vocab" data-word-en="verify / authenticate" data-word-vn="xác thực" data-pos="động từ / verb" data-def-en="To confirm the authenticity or accuracy of information or media" data-def-vn="Xác nhận tính xác thực hoặc độ chính xác của thông tin hoặc phương tiện truyền thông" data-context-en="The footage was verified by multiple news agencies." data-context-vn="Hình ảnh được nhiều hãng tin xác thực.">xác thực</span> cho thấy nhiều <span class="vocab" data-word-en="base / military installation" data-word-vn="căn cứ" data-pos="danh từ / noun" data-def-en="A military installation or base used for operations and housing troops" data-def-vn="Một cơ sở hoặc căn cứ quân sự dùng để thực hiện chiến dịch và đóng quân" data-context-en="Several Venezuelan military bases were attacked with missiles and rockets." data-context-vn="Nhiều căn cứ của Venezuela bị tấn công bằng tên lửa tầm xa và rocket.">căn cứ</span> của Venezuela bị <span class="vocab" data-word-en="attacked / struck" data-word-vn="tấn công" data-pos="động từ / verb" data-def-en="To assault or strike with weapons, especially in a military context" data-def-vn="Tấn công hoặc bắn phá bằng vũ khí, đặc biệt trong bối cảnh quân sự" data-context-en="Venezuelan bases were attacked using long-range missiles and helicopter-launched rockets." data-context-vn="Nhiều căn cứ của Venezuela bị tấn công bằng tên lửa tầm xa và rocket phóng từ trực thăng.">tấn công</span> bằng <span class="vocab" data-word-en="missile / rocket (long-range)" data-word-vn="tên lửa tầm xa" data-pos="danh từ / noun" data-def-en="A self-propelled weapon capable of traveling long distances to strike targets" data-def-vn="Vũ khí tự đẩy có khả năng di chuyển xa để tấn công mục tiêu" data-context-en="Venezuelan bases were struck by long-range missiles fired during the US operation." data-context-vn="Các căn cứ Venezuela bị tấn công bằng tên lửa tầm xa trong chiến dịch của Mỹ.">tên lửa tầm xa</span> và rocket <span class="vocab" data-word-en="launched / fired" data-word-vn="phóng" data-pos="động từ / verb" data-def-en="To fire or launch a projectile or weapon from a platform" data-def-vn="Bắn hoặc phóng một vật phóng hoặc vũ khí từ một bệ phóng" data-context-en="Rockets were launched from armed helicopters during the strike." data-context-vn="Rocket được phóng từ trực thăng vũ trang trong cuộc tập kích.">phóng</span> từ trực thăng <span class="vocab" data-word-en="armed" data-word-vn="vũ trang" data-pos="tính từ / adjective" data-def-en="Equipped with weapons; referring to military hardware or personnel bearing arms" data-def-vn="Được trang bị vũ khí; chỉ thiết bị quân sự hoặc nhân viên mang vũ khí" data-context-en="Rockets were fired from armed helicopters participating in the US strike." data-context-vn="Rocket được phóng từ trực thăng vũ trang tham gia cuộc tập kích của Mỹ.">vũ trang</span>.
+  </p>
+
+  <p class="body-text">
+    <span class="vocab" data-word-en="government" data-word-vn="chính phủ" data-pos="danh từ / noun" data-def-en="The group of people with authority to govern a country or state" data-def-vn="Nhóm người có thẩm quyền điều hành một quốc gia hoặc nhà nước" data-context-en="The Venezuelan government accused the US of being behind the strike on Caracas." data-context-vn="Chính phủ Venezuela cáo buộc Mỹ đứng sau chiến dịch tập kích vào thủ đô Caracas.">Chính phủ</span> Venezuela <span class="vocab" data-word-en="accused / alleged" data-word-vn="cáo buộc" data-pos="động từ / verb" data-def-en="To formally charge or claim that someone is responsible for a wrongdoing" data-def-vn="Chính thức buộc tội hoặc tuyên bố rằng ai đó chịu trách nhiệm về một hành vi sai trái" data-context-en="Venezuela accused the US of being behind the strike campaign on Caracas and three provinces." data-context-vn="Venezuela cáo buộc Mỹ đứng sau chiến dịch tập kích vào thủ đô Caracas cùng ba tỉnh.">cáo buộc</span> Mỹ đứng sau chiến dịch tập kích vào thủ đô Caracas cùng ba tỉnh Aragua, Miranda và La Guaira, <span class="vocab" data-word-en="aiming to / in order to" data-word-vn="nhằm" data-pos="liên từ / conjunction" data-def-en="With the purpose of; intending to achieve a specific goal" data-def-vn="Với mục đích; có ý định đạt được một mục tiêu cụ thể" data-context-en="The US allegedly attacked Venezuela aiming to change its government and seize its resources." data-context-vn="Mỹ bị cáo buộc tấn công Venezuela nhằm thay đổi chế độ và tước đoạt tài nguyên.">nhằm</span> <span class="vocab" data-word-en="change / overthrow" data-word-vn="thay đổi chế độ" data-pos="cụm động từ / verb phrase" data-def-en="To overthrow or replace a political government or regime" data-def-vn="Lật đổ hoặc thay thế một chính phủ hoặc chế độ chính trị" data-context-en="Venezuela accused the US of seeking regime change in the country." data-context-vn="Venezuela cáo buộc Mỹ nhằm thay đổi chế độ ở nước này.">thay đổi chế độ</span> và <span class="vocab" data-word-en="seize / plunder" data-word-vn="tước đoạt" data-pos="động từ / verb" data-def-en="To forcibly take away resources or rights from someone" data-def-vn="Cưỡng đoạt tài nguyên hoặc quyền lợi của ai đó" data-context-en="Venezuela accused the US of seeking to seize its natural resources." data-context-vn="Venezuela cáo buộc Mỹ tìm cách tước đoạt tài nguyên của nước này.">tước đoạt</span> <span class="vocab" data-word-en="natural resources" data-word-vn="tài nguyên" data-pos="danh từ / noun" data-def-en="Naturally occurring materials such as oil, minerals, and water that have economic value" data-def-vn="Các vật liệu tự nhiên như dầu mỏ, khoáng sản và nước có giá trị kinh tế" data-context-en="Venezuela accused the US of trying to seize its natural resources, particularly oil." data-context-vn="Venezuela cáo buộc Mỹ tìm cách tước đoạt tài nguyên của nước này, đặc biệt là dầu mỏ.">tài nguyên</span> ở nước này. <span class="vocab" data-word-en="communiqué / statement" data-word-vn="thông cáo" data-pos="danh từ / noun" data-def-en="An official public statement or announcement, especially from a government" data-def-vn="Một tuyên bố hoặc thông báo chính thức, đặc biệt từ chính phủ" data-context-en="The official communiqué also stated that Maduro had declared a nationwide state of emergency." data-context-vn="Thông cáo cũng cho biết Tổng thống Maduro đã ban bố tình trạng khẩn cấp trên toàn quốc.">Thông cáo</span> cũng cho biết Tổng thống Maduro đã <span class="vocab" data-word-en="declare / proclaim" data-word-vn="ban bố" data-pos="động từ / verb" data-def-en="To officially issue or declare a formal governmental order or state" data-def-vn="Chính thức ban hành hoặc tuyên bố một mệnh lệnh hoặc tình trạng chính thức của chính phủ" data-context-en="Maduro declared a nationwide state of emergency following the US attack." data-context-vn="Maduro ban bố tình trạng khẩn cấp trên toàn quốc sau cuộc tấn công của Mỹ.">ban bố</span> <span class="vocab" data-word-en="state of emergency" data-word-vn="tình trạng khẩn cấp" data-pos="danh từ / noun" data-def-en="A government declaration of crisis that grants special emergency powers" data-def-vn="Tuyên bố của chính phủ về tình trạng khủng hoảng, trao quyền khẩn cấp đặc biệt" data-context-en="Maduro declared a nationwide state of emergency in response to the US attack." data-context-vn="Maduro ban bố tình trạng khẩn cấp trên toàn quốc để đối phó với cuộc tấn công của Mỹ.">tình trạng khẩn cấp</span> trên toàn quốc, ra lệnh <span class="vocab" data-word-en="general mobilization" data-word-vn="tổng động viên" data-pos="danh từ / noun" data-def-en="A nationwide call to mobilize all available military and civilian resources for war or crisis" data-def-vn="Lệnh huy động toàn quốc mọi nguồn lực quân sự và dân sự sẵn có cho chiến tranh hoặc khủng hoảng" data-context-en="Maduro ordered a general mobilization of the country's forces in response to the attack." data-context-vn="Maduro ra lệnh tổng động viên lực lượng của đất nước để đối phó với cuộc tấn công.">tổng động viên</span> và <span class="vocab" data-word-en="call on / appeal to" data-word-vn="kêu gọi" data-pos="động từ / verb" data-def-en="To urge or appeal to a group or body to take action" data-def-vn="Kêu gọi hoặc thỉnh cầu một nhóm hoặc cơ quan thực hiện hành động" data-context-en="Maduro called on the international community to intervene in the situation." data-context-vn="Maduro kêu gọi cộng đồng quốc tế can thiệp.">kêu gọi</span> <span class="vocab" data-word-en="international community" data-word-vn="cộng đồng quốc tế" data-pos="danh từ / noun" data-def-en="The collective body of nations and international organizations worldwide" data-def-vn="Tập thể các quốc gia và tổ chức quốc tế trên toàn thế giới" data-context-en="Maduro called on the international community to intervene following the US attack." data-context-vn="Maduro kêu gọi cộng đồng quốc tế can thiệp sau cuộc tấn công của Mỹ.">cộng đồng quốc tế</span> <span class="vocab" data-word-en="intervene" data-word-vn="can thiệp" data-pos="động từ / verb" data-def-en="To become involved in a situation in order to change or affect its outcome" data-def-vn="Tham gia vào một tình huống để thay đổi hoặc ảnh hưởng đến kết quả của nó" data-context-en="Venezuela called on the international community to intervene against the US attack." data-context-vn="Venezuela kêu gọi cộng đồng quốc tế can thiệp trước cuộc tấn công của Mỹ.">can thiệp</span>.
+  </p>
+
+  <p class="body-text">
+    Bộ trưởng Quốc phòng Vladimir Padrino Lopez sau đó <span class="vocab" data-word-en="declared / announced" data-word-vn="tuyên bố" data-pos="động từ / verb" data-def-en="To make an official or public announcement" data-def-vn="Đưa ra thông báo chính thức hoặc công khai" data-context-en="The Defense Minister declared the deployment of troops under Maduro's orders." data-context-vn="Bộ trưởng Quốc phòng tuyên bố triển khai quân đội theo lệnh của ông Maduro.">tuyên bố</span> <span class="vocab" data-word-en="deploy / mobilize" data-word-vn="triển khai" data-pos="động từ / verb" data-def-en="To move or position military forces into readiness for action" data-def-vn="Di chuyển hoặc bố trí lực lượng quân sự vào trạng thái sẵn sàng chiến đấu" data-context-en="The defense minister deployed troops under Maduro's orders to resist the foreign military presence." data-context-vn="Bộ trưởng quốc phòng triển khai quân đội theo lệnh của ông Maduro để kháng cự hiện diện quân sự nước ngoài.">triển khai</span> quân đội theo lệnh của ông Maduro "<span class="vocab" data-word-en="resist / oppose" data-word-vn="kháng cự" data-pos="động từ / verb" data-def-en="To actively oppose or fight back against an attacking or occupying force" data-def-vn="Chủ động chống lại hoặc phản công lực lượng tấn công hoặc chiếm đóng" data-context-en="Venezuelan troops were ordered to resist the foreign military presence in their country." data-context-vn="Quân đội Venezuela được lệnh kháng cự hiện diện quân sự nước ngoài.">kháng cự</span> <span class="vocab" data-word-en="presence" data-word-vn="hiện diện" data-pos="danh từ / noun" data-def-en="The fact of being present in a place, especially with military forces" data-def-vn="Sự có mặt tại một nơi, đặc biệt là với lực lượng quân sự" data-context-en="Venezuela's defense minister called for resistance against the foreign military presence." data-context-vn="Bộ trưởng quốc phòng Venezuela kêu gọi kháng cự hiện diện quân sự nước ngoài.">hiện diện</span> quân sự nước ngoài" và kêu gọi người dân <span class="vocab" data-word-en="stay calm / keep calm" data-word-vn="giữ bình tĩnh" data-pos="cụm động từ / verb phrase" data-def-en="To remain calm and not panic in the face of a crisis" data-def-vn="Giữ thái độ bình tĩnh và không hoảng loạn trước khủng hoảng" data-context-en="The defense minister urged citizens to stay calm amid the chaos of the US attack." data-context-vn="Bộ trưởng quốc phòng kêu gọi người dân giữ bình tĩnh trong cơn hỗn loạn của cuộc tấn công Mỹ.">giữ bình tĩnh</span>.
+  </p>
+
+  <p class="body-text">
+    Tuy nhiên, chiến dịch tập kích, phóng rocket, tên lửa của Mỹ nhiều <span class="vocab" data-word-en="likely / probably" data-word-vn="khả năng" data-pos="danh từ / noun (used as adverb)" data-def-en="Used to indicate that something is probable or likely to be the case" data-def-vn="Được dùng để chỉ rằng điều gì đó có xác suất cao hoặc có thể xảy ra" data-context-en="The missile strikes were likely a cover for the more daring special forces raid on Maduro." data-context-vn="Các cuộc tập kích tên lửa nhiều khả năng là đòn ngụy trang cho chiến dịch đột kích táo bạo hơn của đặc nhiệm.">khả năng</span> là <span class="vocab" data-word-en="cover / disguise" data-word-vn="đòn ngụy trang" data-pos="danh từ / noun" data-def-en="A deceptive maneuver used to conceal the true target or purpose of a military operation" data-def-vn="Một mưu kế lừa dối được dùng để che giấu mục tiêu hoặc mục đích thực sự của một chiến dịch quân sự" data-context-en="The missile strikes were a cover operation concealing the real target: Maduro himself." data-context-vn="Các cuộc tập kích tên lửa là đòn ngụy trang che giấu mục tiêu thực sự: chính bản thân Maduro.">đòn ngụy trang</span> cho một chiến dịch đột kích <span class="vocab" data-word-en="bold / daring" data-word-vn="táo bạo" data-pos="tính từ / adjective" data-def-en="Showing a willingness to take risks; courageous and audacious" data-def-vn="Thể hiện sự sẵn sàng chấp nhận rủi ro; dũng cảm và táo bạo" data-context-en="The real operation was a more daring special forces raid targeting Maduro directly." data-context-vn="Chiến dịch thực sự là một cuộc đột kích táo bạo hơn của đặc nhiệm nhắm trực tiếp vào Maduro.">táo bạo</span> hơn do <span class="vocab" data-word-en="special forces" data-word-vn="đặc nhiệm" data-pos="danh từ / noun" data-def-en="Elite military units trained for specialized and covert operations" data-def-vn="Các đơn vị quân sự tinh nhuệ được huấn luyện cho các chiến dịch đặc biệt và bí mật" data-context-en="The actual capture of Maduro was carried out by US special forces (Delta Force)." data-context-vn="Việc bắt Maduro thực sự do đặc nhiệm Mỹ (Delta Force) thực hiện.">đặc nhiệm</span> nước này <span class="vocab" data-word-en="carry out / conduct" data-word-vn="tiến hành" data-pos="động từ / verb" data-def-en="To carry out or execute a planned operation or activity" data-def-vn="Thực hiện hoặc tiến hành một chiến dịch hoặc hoạt động đã được lên kế hoạch" data-context-en="US special forces carried out the daring raid that captured Maduro." data-context-vn="Đặc nhiệm Mỹ tiến hành cuộc đột kích táo bạo bắt Maduro.">tiến hành</span>, <span class="vocab" data-word-en="targeting / aimed at" data-word-vn="nhắm vào" data-pos="cụm động từ / verb phrase" data-def-en="To direct an attack or operation specifically toward a target" data-def-vn="Hướng một cuộc tấn công hoặc chiến dịch cụ thể vào một mục tiêu" data-context-en="The special forces operation was aimed specifically at capturing President Maduro." data-context-vn="Chiến dịch đặc nhiệm nhắm vào việc bắt Tổng thống Maduro.">nhắm vào</span> Tổng thống Maduro. Vài phút sau tuyên bố từ Bộ trưởng Lopez, Tổng thống Mỹ Donald Trump thông báo trên Truth Social rằng Mỹ đã "triển khai <span class="vocab" data-word-en="successfully" data-word-vn="thành công" data-pos="trạng từ / adverb" data-def-en="In a way that achieves the desired aim or result" data-def-vn="Theo cách đạt được mục tiêu hoặc kết quả mong muốn" data-context-en="Trump announced that the US had successfully carried out a large-scale strike on Venezuela." data-context-vn="Trump thông báo Mỹ đã triển khai thành công cuộc tập kích quy mô lớn vào Venezuela.">thành công</span> cuộc tập kích quy mô lớn vào Venezuela", đồng thời đã bắt Tổng thống Maduro cùng <span class="vocab" data-word-en="wife / spouse (formal)" data-word-vn="phu nhân" data-pos="danh từ / noun" data-def-en="A formal or respectful term for a man's wife, especially a dignitary's wife" data-def-vn="Từ trang trọng hoặc kính trọng để chỉ vợ của một người, đặc biệt là vợ của một nhân vật quan trọng" data-context-en="Maduro and his wife (phu nhân) were both captured and taken out of Venezuela." data-context-vn="Maduro cùng phu nhân đều bị bắt và đưa ra khỏi Venezuela.">phu nhân</span> và <span class="vocab" data-word-en="took / escorted out" data-word-vn="đưa" data-pos="động từ / verb" data-def-en="To transport or escort someone away from a location" data-def-vn="Vận chuyển hoặc áp giải ai đó ra khỏi một địa điểm" data-context-en="US forces took both Maduro and his wife out of Venezuela after their capture." data-context-vn="Lực lượng Mỹ đã đưa cả hai người khỏi Venezuela sau khi bắt giữ.">đưa</span> hai người <span class="vocab" data-word-en="out of / away from" data-word-vn="khỏi" data-pos="giới từ / preposition (directional)" data-def-en="Away from or out of a place, used to indicate departure or removal" data-def-vn="Ra khỏi hoặc thoát khỏi một nơi, dùng để chỉ sự rời đi hoặc bị dời đi" data-context-en="Maduro and his wife were taken out of Venezuela by US forces." data-context-vn="Maduro và vợ được đưa khỏi Venezuela bởi lực lượng Mỹ.">khỏi</span> Venezuela.
+  </p>
+
+  <p class="body-text">
+    Các <span class="vocab" data-word-en="officials" data-word-vn="quan chức" data-pos="danh từ / noun" data-def-en="Government or military officers holding an official position or rank" data-def-vn="Các quan chức chính phủ hoặc quân sự giữ vị trí hoặc chức vụ chính thức" data-context-en="Anonymous US officials told CBS that Delta Force carried out the raid." data-context-vn="Các quan chức Mỹ giấu tên nói với CBS rằng Delta là lực lượng đã tiến hành cuộc đột kích.">quan chức</span> Mỹ <span class="vocab" data-word-en="anonymous / unnamed" data-word-vn="giấu tên" data-pos="cụm tính từ / adjective phrase" data-def-en="Keeping one's identity hidden; not willing to be publicly named as a source" data-def-vn="Giữ bí mật danh tính; không muốn bị nêu tên công khai là nguồn tin" data-context-en="Anonymous US officials told CBS that Delta Force had conducted the raid." data-context-vn="Các quan chức Mỹ giấu tên nói với CBS rằng Delta là lực lượng đã tiến hành cuộc đột kích.">giấu tên</span> nói với CBS rằng Delta, một trong những <span class="vocab" data-word-en="unit" data-word-vn="đơn vị" data-pos="danh từ / noun" data-def-en="A distinct military group or formation that operates as a single body" data-def-vn="Một nhóm quân sự riêng biệt hoặc đội hình hoạt động như một thể thống nhất" data-context-en="Delta Force is described as one of the most elite special forces units in the US military." data-context-vn="Delta là một trong những đơn vị đặc nhiệm tinh nhuệ nhất của Mỹ.">đơn vị</span> đặc nhiệm <span class="vocab" data-word-en="elite / most skilled" data-word-vn="tinh nhuệ" data-pos="tính từ / adjective" data-def-en="Of the highest skill and training; the best and most capable" data-def-vn="Có kỹ năng và trình độ cao nhất; giỏi nhất và có năng lực nhất" data-context-en="Delta Force is one of the most elite special forces units in the US military." data-context-vn="Delta là một trong những đơn vị đặc nhiệm tinh nhuệ nhất của Mỹ.">tinh nhuệ</span> nhất của Mỹ, là lực lượng đã tiến hành cuộc đột kích vào thủ đô Caracas và bắt vợ chồng Tổng thống Maduro.
+  </p>
+
+  <p class="body-text">
+    Trong bình luận sau đó với truyền thông, ông Trump nói chiến dịch ở Venezuela đã <span class="vocab" data-word-en="completed / accomplished" data-word-vn="hoàn thành" data-pos="động từ / verb" data-def-en="To successfully finish or fulfill a task or objective" data-def-vn="Hoàn thành hoặc thực hiện thành công một nhiệm vụ hoặc mục tiêu" data-context-en="Trump said the operation had completed its objective of capturing President Maduro alive." data-context-vn="Trump nói chiến dịch đã hoàn thành mục tiêu bắt sống Tổng thống Maduro.">hoàn thành</span> mục tiêu <span class="vocab" data-word-en="capture alive" data-word-vn="bắt sống" data-pos="cụm động từ / verb phrase" data-def-en="To capture someone alive rather than killing them" data-def-vn="Bắt giữ ai đó còn sống thay vì giết chết họ" data-context-en="Trump confirmed the operation's objective was to capture President Maduro alive." data-context-vn="Trump xác nhận mục tiêu của chiến dịch là bắt sống Tổng thống Maduro.">bắt sống</span> Tổng thống Maduro, "<span class="vocab" data-word-en="carefully planned" data-word-vn="được lên kế hoạch rất kỹ lưỡng" data-pos="cụm động từ / verb phrase" data-def-en="Planned with great care and thoroughness" data-def-vn="Được lên kế hoạch cẩn thận và kỹ lưỡng" data-context-en="Trump described the operation as having been very carefully planned." data-context-vn="Trump mô tả chiến dịch đã được lên kế hoạch rất kỹ lưỡng.">được lên kế hoạch rất kỹ lưỡng</span>, <span class="vocab" data-word-en="mobilizing" data-word-vn="huy động" data-pos="động từ / verb" data-def-en="To gather and organize people or resources for a purpose" data-def-vn="Tập hợp và tổ chức người hoặc nguồn lực cho một mục đích" data-context-en="Trump praised the operation for mobilizing outstanding soldiers and personnel." data-context-vn="Trump khen ngợi chiến dịch đã huy động những quân nhân và con người tuyệt vời.">huy động</span> những quân nhân và con người <span class="vocab" data-word-en="outstanding / wonderful" data-word-vn="tuyệt vời" data-pos="tính từ / adjective" data-def-en="Extremely good; excellent in quality or performance" data-def-vn="Rất tốt; xuất sắc về chất lượng hoặc hiệu suất" data-context-en="Trump praised the soldiers involved as wonderful and outstanding." data-context-vn="Trump khen ngợi các quân nhân tham gia là những con người tuyệt vời.">tuyệt vời</span>", nhưng chưa <span class="vocab" data-word-en="provide / supply" data-word-vn="cung cấp" data-pos="động từ / verb" data-def-en="To give or supply information, details, or resources" data-def-vn="Cung cấp thông tin, chi tiết hoặc nguồn lực" data-context-en="Trump had not yet provided detailed information about the operation." data-context-vn="Trump chưa cung cấp thông tin chi tiết về chiến dịch.">cung cấp</span> thông tin <span class="vocab" data-word-en="detailed / specific" data-word-vn="chi tiết" data-pos="tính từ / adjective" data-def-en="Containing or providing specific facts and particulars" data-def-vn="Chứa đựng hoặc cung cấp các sự kiện và chi tiết cụ thể" data-context-en="Trump had not yet provided detailed information about how the operation was conducted." data-context-vn="Trump chưa cung cấp thông tin chi tiết về cách chiến dịch được thực hiện.">chi tiết</span>.
+  </p>
+
+  <p class="body-text">
+    <span class="vocab" data-word-en="Senator" data-word-vn="Thượng nghị sĩ" data-pos="danh từ / noun" data-def-en="A member of a senate, the upper chamber of a legislative body" data-def-vn="Thành viên của thượng viện, cơ quan lập pháp cấp trên" data-context-en="Republican Senator Mike Lee cited Secretary of State Rubio to explain the operation's legal basis." data-context-vn="Thượng nghị sĩ đảng Cộng hòa Mike Lee dẫn lời Ngoại trưởng Rubio để giải thích cơ sở pháp lý của chiến dịch.">Thượng nghị sĩ</span> đảng Cộng hòa Mike Lee, dẫn lời Ngoại trưởng Mỹ Marco Rubio, <span class="vocab" data-word-en="explained" data-word-vn="giải thích" data-pos="động từ / verb" data-def-en="To make something clear by describing it in detail" data-def-vn="Làm rõ điều gì đó bằng cách mô tả chi tiết" data-context-en="Senator Lee explained that the military deployment was to protect enforcement of the arrest warrant." data-context-vn="Thượng nghị sĩ Lee giải thích rằng Mỹ triển khai lực lượng quân sự để bảo vệ lực lượng hành pháp thực thi lệnh bắt.">giải thích</span> rằng Mỹ triển khai lực lượng quân sự đột kích vào Caracas là để "<span class="vocab" data-word-en="protect / safeguard" data-word-vn="bảo vệ" data-pos="động từ / verb" data-def-en="To keep safe from harm or danger" data-def-vn="Giữ an toàn khỏi nguy hiểm hoặc tổn hại" data-context-en="The stated purpose of the military deployment was to protect enforcement personnel executing the arrest warrant." data-context-vn="Mục đích được nêu của việc triển khai quân sự là bảo vệ lực lượng hành pháp thực thi lệnh bắt.">bảo vệ</span> lực lượng <span class="vocab" data-word-en="law enforcement" data-word-vn="hành pháp" data-pos="tính từ / adjective" data-def-en="Relating to the branch of government responsible for executing laws; law enforcement" data-def-vn="Liên quan đến nhánh chính phủ chịu trách nhiệm thực thi pháp luật" data-context-en="The military was described as protecting law enforcement personnel executing the arrest warrant." data-context-vn="Quân đội được mô tả là bảo vệ lực lượng hành pháp thực thi lệnh bắt ông Maduro.">hành pháp</span>" thực thi lệnh bắt ông Maduro, người bị Mỹ <span class="vocab" data-word-en="wanted / sought by law" data-word-vn="truy nã" data-pos="động từ / verb" data-def-en="To be officially sought by law enforcement, with a warrant issued for arrest" data-def-vn="Bị lực lượng thực thi pháp luật chính thức truy tìm, với lệnh bắt được ban hành" data-context-en="Maduro was wanted by the US on charges of conspiring with notorious criminal organizations." data-context-vn="Maduro bị Mỹ truy nã với cáo buộc cấu kết với các băng nhóm tội phạm khét tiếng.">truy nã</span> với cáo buộc <span class="vocab" data-word-en="conspire / collude" data-word-vn="cấu kết" data-pos="động từ / verb" data-def-en="To secretly cooperate with others, especially for criminal purposes" data-def-vn="Bí mật hợp tác với người khác, đặc biệt vì mục đích tội phạm" data-context-en="Maduro was accused of colluding with notorious criminal gangs including Tren de Aragua." data-context-vn="Maduro bị cáo buộc cấu kết với các băng nhóm tội phạm khét tiếng như Tren de Aragua.">cấu kết</span> với các <span class="vocab" data-word-en="gangs / criminal groups" data-word-vn="băng nhóm tội phạm" data-pos="danh từ / noun" data-def-en="Organized criminal organizations that engage in illegal activities" data-def-vn="Các tổ chức tội phạm có tổ chức tham gia vào các hoạt động bất hợp pháp" data-context-en="Maduro was charged with conspiring with notorious criminal gangs including Tren de Aragua and Sinaloa Cartel." data-context-vn="Maduro bị buộc tội cấu kết với các băng nhóm tội phạm khét tiếng như Tren de Aragua và Sinaloa Cartel.">băng nhóm tội phạm</span> <span class="vocab" data-word-en="notorious / infamous" data-word-vn="khét tiếng" data-pos="tính từ / adjective" data-def-en="Well known for being bad or criminal; infamous" data-def-vn="Nổi tiếng vì xấu xa hoặc tội ác; tai tiếng" data-context-en="Maduro was accused of working with notorious criminal groups like Tren de Aragua and Sinaloa Cartel." data-context-vn="Maduro bị cáo buộc cộng tác với các băng nhóm tội phạm khét tiếng như Tren de Aragua và Sinaloa Cartel.">khét tiếng</span> như Tren de Aragua và Sinaloa Cartel. Mỹ đã <span class="vocab" data-word-en="offer a reward" data-word-vn="treo thưởng" data-pos="cụm động từ / verb phrase" data-def-en="To publicly offer a financial reward for information leading to the capture of a fugitive" data-def-vn="Công khai đưa ra phần thưởng tài chính cho thông tin dẫn đến việc bắt giữ tội phạm bỏ trốn" data-context-en="The US had offered a $50 million reward for information leading to Maduro's arrest." data-context-vn="Mỹ đã treo thưởng 50 triệu USD cho những ai cung cấp thông tin dẫn đến việc bắt ông Maduro.">treo thưởng</span> 50 triệu USD cho những ai cung cấp thông tin <span class="vocab" data-word-en="leading to" data-word-vn="dẫn đến" data-pos="cụm động từ / verb phrase" data-def-en="Resulting in; causing a particular outcome" data-def-vn="Dẫn đến; gây ra một kết quả cụ thể" data-context-en="The US offered $50 million for information leading to Maduro's capture." data-context-vn="Mỹ treo thưởng 50 triệu USD cho thông tin dẫn đến việc bắt ông Maduro.">dẫn đến</span> việc bắt ông Maduro.
+  </p>
+
+  <p class="body-text">
+    Chính phủ Mỹ có thể sử dụng cách <span class="vocab" data-word-en="argument / reasoning" data-word-vn="lập luận" data-pos="danh từ / noun" data-def-en="A set of reasons given in support of a position or action" data-def-vn="Một tập hợp lý lẽ được đưa ra để ủng hộ một lập trường hoặc hành động" data-context-en="The US government may use this reasoning to defend the constitutionality of the Venezuela campaign." data-context-vn="Chính phủ Mỹ có thể sử dụng cách lập luận này để bảo vệ tính hợp hiến của chiến dịch tại Venezuela.">lập luận</span> này để <span class="vocab" data-word-en="defend / justify" data-word-vn="bảo vệ" data-pos="động từ / verb" data-def-en="To argue in support of; to justify or uphold something" data-def-vn="Lập luận để ủng hộ; biện hộ hoặc duy trì điều gì đó" data-context-en="The US may use this argument to defend the constitutional legality of the Venezuela operation." data-context-vn="Mỹ có thể dùng lập luận này để bảo vệ tính hợp hiến của chiến dịch tại Venezuela.">bảo vệ</span> <span class="vocab" data-word-en="constitutionality" data-word-vn="tính hợp hiến" data-pos="danh từ / noun" data-def-en="The quality of being in accordance with or authorized by a constitution" data-def-vn="Tính phù hợp với hoặc được ủy quyền bởi hiến pháp" data-context-en="Questions arose about the constitutionality of the US using military force against another country without a declaration of war." data-context-vn="Câu hỏi nảy sinh về tính hợp hiến của việc Mỹ dùng vũ lực với nước khác mà chưa tuyên chiến.">tính hợp hiến</span> của chiến dịch tại Venezuela, khi đã <span class="vocab" data-word-en="use force / resort to force" data-word-vn="sử dụng vũ lực" data-pos="cụm động từ / verb phrase" data-def-en="To employ military or physical force against another party" data-def-vn="Dùng sức mạnh quân sự hoặc vật lý chống lại bên khác" data-context-en="The US used military force against Venezuela without declaring war or receiving congressional authorization." data-context-vn="Mỹ đã sử dụng vũ lực với Venezuela mà chưa tuyên chiến hay nhận được phê chuẩn từ quốc hội.">sử dụng vũ lực</span> với nước khác mà chưa <span class="vocab" data-word-en="declare war" data-word-vn="tuyên chiến" data-pos="cụm động từ / verb phrase" data-def-en="To formally announce that a state of war exists between countries" data-def-vn="Chính thức tuyên bố rằng tình trạng chiến tranh tồn tại giữa các quốc gia" data-context-en="The US used military force against Venezuela without formally declaring war." data-context-vn="Mỹ đã sử dụng vũ lực với Venezuela mà chưa tuyên chiến.">tuyên chiến</span> hay nhận được <span class="vocab" data-word-en="approval / authorization" data-word-vn="phê chuẩn" data-pos="danh từ / noun" data-def-en="Official approval or authorization from a legislative or governing body" data-def-vn="Sự chấp thuận hoặc ủy quyền chính thức từ cơ quan lập pháp hoặc quản lý" data-context-en="The operation proceeded without congressional authorization, raising constitutional questions." data-context-vn="Chiến dịch tiến hành mà không có phê chuẩn từ quốc hội, đặt ra câu hỏi về tính hợp hiến.">phê chuẩn</span> từ <span class="vocab" data-word-en="congress / parliament" data-word-vn="quốc hội" data-pos="danh từ / noun" data-def-en="The national legislative body with the power to make laws and authorize military action" data-def-vn="Cơ quan lập pháp quốc gia có quyền lập pháp và ủy quyền hành động quân sự" data-context-en="The US used force against Venezuela without receiving authorization from Congress." data-context-vn="Mỹ sử dụng vũ lực với Venezuela mà không nhận được phê chuẩn từ quốc hội.">quốc hội</span>.
+  </p>
+
+  <p class="body-text">
+    Phó tổng thống Venezuela Delcy Rodríguez <span class="vocab" data-word-en="acknowledged / admitted" data-word-vn="thừa nhận" data-pos="động từ / verb" data-def-en="To admit or concede that something is true or that a situation exists" data-def-vn="Thừa nhận hoặc chấp nhận rằng điều gì đó là đúng hoặc tình huống tồn tại" data-context-en="The Venezuelan Vice President acknowledged that the government did not know where Maduro and his wife were." data-context-vn="Phó tổng thống Venezuela thừa nhận chính phủ hiện không biết ông Maduro và phu nhân đang ở đâu.">thừa nhận</span> chính phủ hiện không biết ông Maduro và phu nhân đang ở đâu, đồng thời <span class="vocab" data-word-en="demand / require" data-word-vn="yêu cầu" data-pos="động từ / verb" data-def-en="To insist on or formally request something as a right or necessity" data-def-vn="Đòi hỏi hoặc yêu cầu chính thức điều gì đó như một quyền lợi hoặc sự cần thiết" data-context-en="The Venezuelan VP demanded that the relevant parties provide proof that Maduro and his wife were still alive." data-context-vn="Phó tổng thống Venezuela yêu cầu phía liên quan công bố bằng chứng hai người vẫn còn sống.">yêu cầu</span> phía liên quan công bố <span class="vocab" data-word-en="evidence / proof" data-word-vn="bằng chứng" data-pos="danh từ / noun" data-def-en="Information or facts that confirm or prove something is true" data-def-vn="Thông tin hoặc sự kiện xác nhận hoặc chứng minh điều gì đó là đúng" data-context-en="The VP demanded evidence that Maduro and his wife were still alive." data-context-vn="Phó tổng thống yêu cầu bằng chứng rằng Maduro và phu nhân vẫn còn sống.">bằng chứng</span> hai người <span class="vocab" data-word-en="still alive" data-word-vn="vẫn còn sống" data-pos="cụm tính từ / adjective phrase" data-def-en="Continuing to be alive; not dead" data-def-vn="Tiếp tục còn sống; không chết" data-context-en="Venezuela's VP demanded proof that Maduro and his wife were still alive after being captured." data-context-vn="Phó tổng thống Venezuela yêu cầu bằng chứng rằng Maduro và phu nhân vẫn còn sống sau khi bị bắt.">vẫn còn sống</span>.
+  </p>
+
+  <p class="body-text">
+    Bộ trưởng Nội vụ Diosdado Cabello, một trong những <span class="vocab" data-word-en="allies / close allies" data-word-vn="đồng minh thân cận" data-pos="danh từ / noun" data-def-en="A person or group closely allied and loyal to someone, especially in politics" data-def-vn="Một người hoặc nhóm có liên minh chặt chẽ và trung thành với ai đó, đặc biệt trong chính trị" data-context-en="Interior Minister Cabello was described as one of President Maduro's closest allies." data-context-vn="Bộ trưởng Nội vụ Cabello là một trong những đồng minh thân cận nhất của Tổng thống Maduro.">đồng minh thân cận</span> nhất của Tổng thống Maduro, kêu gọi người dân <span class="vocab" data-word-en="trust / have faith in" data-word-vn="tin tưởng" data-pos="động từ / verb" data-def-en="To have confidence in or rely on someone or something" data-def-vn="Tin tưởng vào hoặc dựa vào ai đó hoặc điều gì đó" data-context-en="Cabello urged citizens to trust the leadership apparatus remaining in Caracas." data-context-vn="Cabello kêu gọi người dân tin tưởng vào bộ máy lãnh đạo tại Caracas.">tin tưởng</span> vào <span class="vocab" data-word-en="leadership apparatus" data-word-vn="bộ máy lãnh đạo" data-pos="danh từ / noun" data-def-en="The administrative and political machinery of a government or organization" data-def-vn="Bộ máy hành chính và chính trị của một chính phủ hoặc tổ chức" data-context-en="Cabello told citizens to trust in the leadership apparatus remaining in Caracas." data-context-vn="Cabello kêu gọi người dân tin tưởng vào bộ máy lãnh đạo tại Caracas.">bộ máy lãnh đạo</span> tại Caracas và "không <span class="vocab" data-word-en="collaborate with / aid" data-word-vn="tiếp tay" data-pos="động từ / verb" data-def-en="To assist or enable someone, especially an enemy or wrongdoer" data-def-vn="Giúp đỡ hoặc tạo điều kiện cho ai đó, đặc biệt là kẻ thù hoặc kẻ làm sai" data-context-en="Cabello warned citizens not to assist or enable the invading enemy." data-context-vn="Cabello cảnh báo người dân không tiếp tay cho kẻ thù xâm lược.">tiếp tay</span> cho kẻ thù <span class="vocab" data-word-en="aggressor / invader" data-word-vn="xâm lược" data-pos="danh từ/tính từ / noun/adjective" data-def-en="Describing an enemy that has invaded or committed aggression against a country" data-def-vn="Mô tả kẻ thù đã xâm lược hoặc gây hấn chống lại một quốc gia" data-context-en="Cabello referred to the US as the invading enemy and urged people not to help them." data-context-vn="Cabello gọi Mỹ là kẻ thù xâm lược và kêu gọi người dân không tiếp tay cho chúng.">xâm lược</span>".
+  </p>
+
+  <p class="body-text">
+    Theo <span class="vocab" data-word-en="constitution" data-word-vn="Hiến pháp" data-pos="danh từ / noun" data-def-en="The fundamental law of a nation that establishes its political framework and rights" data-def-vn="Luật cơ bản của một quốc gia xác định khuôn khổ chính trị và quyền lợi" data-context-en="Under Venezuela's Constitution, power transfers temporarily to the Vice President if the President is unable to govern." data-context-vn="Theo Hiến pháp Venezuela, nếu Tổng thống không còn khả năng điều hành, quyền lực sẽ tạm thời chuyển cho Phó tổng thống.">Hiến pháp</span> Venezuela, nếu Tổng thống Maduro không còn <span class="vocab" data-word-en="capability / capacity" data-word-vn="khả năng" data-pos="danh từ / noun" data-def-en="The ability or capacity to do something" data-def-vn="Khả năng hoặc năng lực làm điều gì đó" data-context-en="If the President no longer has the capacity to govern, power transfers to the Vice President under the Constitution." data-context-vn="Nếu Tổng thống không còn khả năng điều hành, quyền lực sẽ chuyển cho Phó tổng thống theo Hiến pháp.">khả năng</span> <span class="vocab" data-word-en="govern / administer" data-word-vn="điều hành" data-pos="động từ / verb" data-def-en="To lead and manage a government or organization" data-def-vn="Lãnh đạo và quản lý một chính phủ hoặc tổ chức" data-context-en="The Constitution states that if the President cannot govern, power shifts to the Vice President." data-context-vn="Hiến pháp quy định nếu Tổng thống không còn khả năng điều hành, quyền lực tạm thời chuyển cho Phó tổng thống.">điều hành</span>, quyền lực sẽ tạm thời <span class="vocab" data-word-en="transfer / shift" data-word-vn="chuyển" data-pos="động từ / verb" data-def-en="To move or pass authority from one person or body to another" data-def-vn="Chuyển giao hoặc truyền quyền lực từ người này sang người khác" data-context-en="Under the constitution, power would temporarily transfer to the Vice President." data-context-vn="Theo hiến pháp, quyền lực sẽ tạm thời chuyển cho Phó tổng thống.">chuyển</span> cho Phó tổng thống. Tuy nhiên, tình hình hiện được <span class="vocab" data-word-en="assessed / evaluated" data-word-vn="đánh giá" data-pos="động từ / verb" data-def-en="To judge or evaluate the nature or quality of a situation" data-def-vn="Đánh giá hoặc xem xét bản chất hoặc chất lượng của một tình huống" data-context-en="The current situation is assessed as unprecedented, with no prior example to follow." data-context-vn="Tình hình hiện được đánh giá là chưa có tiền lệ.">đánh giá</span> là chưa có <span class="vocab" data-word-en="precedent" data-word-vn="tiền lệ" data-pos="danh từ / noun" data-def-en="A previous case or example that serves as a guide or justification for a similar situation" data-def-vn="Một trường hợp hoặc ví dụ trước đó làm hướng dẫn hoặc biện hộ cho tình huống tương tự" data-context-en="The current situation was described as unprecedented with no prior example to follow." data-context-vn="Tình hình hiện được đánh giá là chưa có tiền lệ trong bối cảnh phức tạp.">tiền lệ</span>, trong bối cảnh Mỹ không <span class="vocab" data-word-en="recognize / acknowledge" data-word-vn="công nhận" data-pos="động từ / verb" data-def-en="To formally accept or acknowledge the legitimacy of a government or entity" data-def-vn="Chính thức chấp nhận hoặc thừa nhận tính hợp pháp của một chính phủ hoặc thực thể" data-context-en="The US does not recognize the legitimacy of Maduro's government." data-context-vn="Mỹ không công nhận tính hợp pháp của chính quyền Maduro.">công nhận</span> <span class="vocab" data-word-en="legitimacy" data-word-vn="tính hợp pháp" data-pos="danh từ / noun" data-def-en="The quality of being in accordance with the law or accepted rules; lawfulness" data-def-vn="Tính phù hợp với pháp luật hoặc các quy tắc được chấp nhận; tính hợp pháp" data-context-en="The US does not recognize the legitimacy of the Maduro government." data-context-vn="Mỹ không công nhận tính hợp pháp của chính quyền Maduro.">tính hợp pháp</span> của chính quyền Maduro, còn phe <span class="vocab" data-word-en="opposition" data-word-vn="đối lập" data-pos="danh từ / noun" data-def-en="A political group that opposes the ruling government" data-def-vn="Một nhóm chính trị phản đối chính phủ cầm quyền" data-context-en="The opposition insists that exiled former congressman Edmundo Gonzalez is the legitimate president." data-context-vn="Phe đối lập khẳng định cựu nghị sĩ lưu vong Edmundo Gonzalez mới là tổng thống hợp pháp.">đối lập</span> <span class="vocab" data-word-en="insists / affirms" data-word-vn="khẳng định" data-pos="động từ / verb" data-def-en="To state firmly and confidently that something is true" data-def-vn="Khẳng định một cách chắc chắn và tự tin rằng điều gì đó là đúng" data-context-en="The opposition insists that Edmundo Gonzalez is the legitimate president of Venezuela." data-context-vn="Phe đối lập khẳng định Edmundo Gonzalez mới là tổng thống hợp pháp.">khẳng định</span> cựu nghị sĩ <span class="vocab" data-word-en="in exile / exiled" data-word-vn="lưu vong" data-pos="tính từ / adjective" data-def-en="Living in exile outside one's home country, often for political reasons" data-def-vn="Sống lưu vong bên ngoài đất nước, thường vì lý do chính trị" data-context-en="Edmundo Gonzalez is described as an exiled former congressman who the opposition considers the legitimate president." data-context-vn="Edmundo Gonzalez được mô tả là cựu nghị sĩ lưu vong mà phe đối lập coi là tổng thống hợp pháp.">lưu vong</span> Edmundo Gonzalez mới là tổng thống <span class="vocab" data-word-en="legitimate / lawful" data-word-vn="hợp pháp" data-pos="tính từ / adjective" data-def-en="Conforming to the law; having legal status or authority" data-def-vn="Phù hợp với pháp luật; có tư cách hoặc thẩm quyền pháp lý" data-context-en="The opposition considers Gonzalez to be the legitimate president of Venezuela." data-context-vn="Phe đối lập coi Gonzalez là tổng thống hợp pháp của Venezuela.">hợp pháp</span>.
+  </p>
+
+  <p class="body-text">
+    Tổng thống Colombia Gustavo Petro đã kêu gọi Liên Hợp Quốc và Tổ chức Các quốc gia châu Mỹ <span class="vocab" data-word-en="hold an emergency meeting" data-word-vn="họp khẩn" data-pos="cụm động từ / verb phrase" data-def-en="To convene an urgent, unscheduled meeting in response to a crisis" data-def-vn="Triệu tập một cuộc họp khẩn cấp không theo lịch để đối phó với khủng hoảng" data-context-en="Colombia's president called for the UN and OAS to hold emergency meetings about the situation." data-context-vn="Tổng thống Colombia kêu gọi Liên Hợp Quốc và Tổ chức Các quốc gia châu Mỹ họp khẩn.">họp khẩn</span>, trong khi Cuba, Iran và Nga <span class="vocab" data-word-en="strongly condemned" data-word-vn="lên án mạnh mẽ" data-pos="cụm động từ / verb phrase" data-def-en="To publicly and forcefully criticize or censure an action as wrong or unacceptable" data-def-vn="Công khai và mạnh mẽ phê phán hoặc lên án một hành động là sai trái hoặc không thể chấp nhận" data-context-en="Cuba, Iran, and Russia strongly condemned what they called US military aggression against Venezuela." data-context-vn="Cuba, Iran và Nga lên án mạnh mẽ điều họ gọi là hành động xâm lược quân sự của Mỹ.">lên án mạnh mẽ</span> điều họ gọi là hành động "<span class="vocab" data-word-en="military aggression" data-word-vn="xâm lược quân sự" data-pos="danh từ / noun" data-def-en="The use of armed military force by one country against another without justification" data-def-vn="Việc sử dụng lực lượng quân sự vũ trang của một quốc gia chống lại quốc gia khác mà không có lý do chính đáng" data-context-en="Cuba, Iran and Russia called the US operation military aggression against Venezuela." data-context-vn="Cuba, Iran và Nga gọi chiến dịch của Mỹ là hành động xâm lược quân sự vào Venezuela.">xâm lược quân sự</span>" của Mỹ.
+  </p>
+
+  <p class="body-text">
+    Tổng thống Trump trong vài tháng qua nhiều lần tuyên bố sẽ <span class="vocab" data-word-en="conduct / carry out" data-word-vn="tiến hành" data-pos="động từ / verb" data-def-en="To execute or carry out a planned action or campaign" data-def-vn="Thực hiện hoặc tiến hành một hành động hoặc chiến dịch đã được lên kế hoạch" data-context-en="Trump had repeatedly declared he would conduct a ground attack campaign against Venezuela." data-context-vn="Trump nhiều lần tuyên bố sẽ tiến hành chiến dịch tấn công trên bộ ở Venezuela.">tiến hành</span> chiến dịch <span class="vocab" data-word-en="ground attack" data-word-vn="tấn công trên bộ" data-pos="danh từ / noun" data-def-en="A military offensive conducted by land forces rather than by air or sea" data-def-vn="Một cuộc tấn công quân sự do lực lượng trên bộ thực hiện, không phải từ trên không hay trên biển" data-context-en="Trump had repeatedly threatened a ground attack campaign in Venezuela." data-context-vn="Trump nhiều lần đe dọa tiến hành chiến dịch tấn công trên bộ ở Venezuela.">tấn công trên bộ</span> ở Venezuela, <span class="vocab" data-word-en="aiming to increase pressure" data-word-vn="nhằm tăng sức ép" data-pos="cụm động từ / verb phrase" data-def-en="With the purpose of increasing coercive pressure on someone to force a desired outcome" data-def-vn="Với mục đích tăng sức ép cưỡng ép buộc ai đó phải đạt kết quả mong muốn" data-context-en="Trump threatened a ground attack aiming to increase pressure on Maduro to resign." data-context-vn="Trump đe dọa tấn công trên bộ nhằm tăng sức ép buộc Maduro rời nhiệm sở.">nhằm tăng sức ép</span> buộc Tổng thống Maduro <span class="vocab" data-word-en="step down / resign" data-word-vn="rời nhiệm sở" data-pos="cụm động từ / verb phrase" data-def-en="To leave office; to resign from a position of power" data-def-vn="Rời bỏ chức vụ; từ chức khỏi vị trí quyền lực" data-context-en="The US had been pressuring Maduro to step down from the presidency." data-context-vn="Mỹ đã gây sức ép buộc Maduro rời nhiệm sở.">rời nhiệm sở</span>.
+  </p>
+
+  <p class="body-text">
+    Mỹ từ tháng 9/2025 đã <span class="vocab" data-word-en="significantly increased" data-word-vn="tăng đáng kể" data-pos="cụm động từ / verb phrase" data-def-en="To increase by a notable or substantial amount" data-def-vn="Tăng lên một lượng đáng chú ý hoặc đáng kể" data-context-en="From September 2025, the US significantly increased its military presence in waters off Venezuela." data-context-vn="Từ tháng 9/2025, Mỹ đã tăng đáng kể hiện diện quân sự ở vùng biển ngoài khơi Venezuela.">tăng đáng kể</span> hiện diện quân sự ở vùng biển <span class="vocab" data-word-en="offshore / off the coast" data-word-vn="ngoài khơi" data-pos="trạng từ / adverb" data-def-en="At sea, at a distance from the coast; offshore" data-def-vn="Trên biển, ở khoảng cách từ bờ biển; ngoài khơi" data-context-en="The US increased its military presence in offshore waters near Venezuela." data-context-vn="Mỹ tăng hiện diện quân sự ở vùng biển ngoài khơi Venezuela.">ngoài khơi</span> Venezuela, tiến hành <span class="vocab" data-word-en="dozens of" data-word-vn="hàng chục" data-pos="danh từ (số lượng) / quantifier" data-def-en="A large number; many — specifically referring to tens of something" data-def-vn="Một số lượng lớn; nhiều — cụ thể đề cập đến hàng chục cái gì đó" data-context-en="The US conducted dozens of strikes on boats accused of carrying drugs at sea." data-context-vn="Mỹ tiến hành hàng chục vụ tập kích xuồng bị cáo buộc chở ma túy trên biển.">hàng chục</span> vụ tập kích <span class="vocab" data-word-en="boat / small vessel" data-word-vn="xuồng" data-pos="danh từ / noun" data-def-en="A small boat or vessel, often used for transport on water" data-def-vn="Một chiếc thuyền nhỏ hoặc phương tiện thủy nhỏ, thường dùng để vận chuyển trên nước" data-context-en="The US struck dozens of small boats accused of carrying drugs at sea." data-context-vn="Mỹ tập kích hàng chục chiếc xuồng bị cáo buộc chở ma túy trên biển.">xuồng</span> bị cáo buộc <span class="vocab" data-word-en="carrying / transporting" data-word-vn="chở" data-pos="động từ / verb" data-def-en="To transport or carry goods or passengers from one place to another" data-def-vn="Vận chuyển hàng hóa hoặc hành khách từ nơi này sang nơi khác" data-context-en="Boats accused of carrying drugs at sea were struck by US forces." data-context-vn="Các xuồng bị cáo buộc chở ma túy trên biển bị lực lượng Mỹ tập kích.">chở</span> <span class="vocab" data-word-en="drugs / narcotics" data-word-vn="ma túy" data-pos="danh từ / noun" data-def-en="Illegal narcotic substances, particularly cocaine and similar drugs" data-def-vn="Các chất ma túy bất hợp pháp, đặc biệt là cocaine và các loại thuốc tương tự" data-context-en="Venezuela was accused of allowing boats carrying drugs to operate from its waters." data-context-vn="Venezuela bị cáo buộc cho phép các xuồng chở ma túy hoạt động từ vùng biển của mình.">ma túy</span> trên biển, cũng như tập kích một <span class="vocab" data-word-en="port / harbor" data-word-vn="bến cảng" data-pos="danh từ / noun" data-def-en="A harbor or port facility where ships dock and cargo is loaded or unloaded" data-def-vn="Cảng hoặc cơ sở cảng nơi tàu thuyền neo đậu và hàng hóa được bốc dỡ" data-context-en="The US also struck a Venezuelan port facility as part of its escalating pressure campaign." data-context-vn="Mỹ cũng tập kích một bến cảng của Venezuela như một phần trong chiến dịch leo thang sức ép.">bến cảng</span> của nước này. Tổng thống Maduro giữa tuần này tuyên bố <span class="vocab" data-word-en="willing / ready" data-word-vn="sẵn sàng" data-pos="tính từ / adjective" data-def-en="Prepared and ready to do something; willing" data-def-vn="Chuẩn bị sẵn sàng để làm điều gì đó; sẵn lòng" data-context-en="Maduro declared he was willing to cooperate with the US despite weeks of pressure." data-context-vn="Maduro tuyên bố sẵn sàng hợp tác với Mỹ sau nhiều tuần chịu sức ép.">sẵn sàng</span> <span class="vocab" data-word-en="cooperate" data-word-vn="hợp tác" data-pos="động từ / verb" data-def-en="To work jointly with someone; to act together toward a shared goal" data-def-vn="Làm việc chung với ai đó; cùng hành động hướng tới mục tiêu chung" data-context-en="Maduro declared willingness to cooperate with the US after weeks of pressure, but received no response." data-context-vn="Maduro tuyên bố sẵn sàng hợp tác với Mỹ sau nhiều tuần chịu sức ép, nhưng không nhận được phản hồi.">hợp tác</span> với Mỹ sau nhiều tuần <span class="vocab" data-word-en="under pressure / enduring pressure" data-word-vn="chịu sức ép" data-pos="cụm động từ / verb phrase" data-def-en="To endure or bear coercive political or military pressure from another party" data-def-vn="Chịu đựng hoặc gánh chịu áp lực cưỡng ép về chính trị hoặc quân sự từ bên khác" data-context-en="Maduro declared willingness to cooperate after weeks of bearing US pressure." data-context-vn="Maduro tuyên bố sẵn sàng hợp tác sau nhiều tuần chịu sức ép từ Mỹ.">chịu sức ép</span>, song không nhận được <span class="vocab" data-word-en="response / reply" data-word-vn="phản hồi" data-pos="danh từ / noun" data-def-en="A reply or response to a communication or overture" data-def-vn="Câu trả lời hoặc phản hồi cho một liên lạc hoặc đề nghị" data-context-en="Maduro received no response from Washington to his overture of cooperation." data-context-vn="Maduro không nhận được phản hồi nào từ Washington về đề nghị hợp tác.">phản hồi</span> nào từ Washington.
+  </p>
+
+  <!-- MEMORY SECTION -->
+  <div class="memory-section">
+    <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid" id="memory-grid">
+      <span onclick="scrollToWord('đột kích')">đột kích</span>
+      <span onclick="scrollToWord('tuyên bố')">tuyên bố</span>
+      <span onclick="scrollToWord('bắt')">bắt</span>
+      <span onclick="scrollToWord('lực lượng')">lực lượng</span>
+      <span onclick="scrollToWord('rạng sáng')">rạng sáng</span>
+      <span onclick="scrollToWord('thủ đô')">thủ đô</span>
+      <span onclick="scrollToWord('rung chuyển')">rung chuyển</span>
+      <span onclick="scrollToWord('tiếng nổ')">tiếng nổ</span>
+      <span onclick="scrollToWord('trực thăng')">trực thăng</span>
+      <span onclick="scrollToWord('truyền thông')">truyền thông</span>
+      <span onclick="scrollToWord('chiến dịch')">chiến dịch</span>
+      <span onclick="scrollToWord('tập kích')">tập kích</span>
+      <span onclick="scrollToWord('quy mô lớn')">quy mô lớn</span>
+      <span onclick="scrollToWord('gây sức ép')">gây sức ép</span>
+      <span onclick="scrollToWord('chính quyền')">chính quyền</span>
+      <span onclick="scrollToWord('hãng tin')">hãng tin</span>
+      <span onclick="scrollToWord('kéo dài')">kéo dài</span>
+      <span onclick="scrollToWord('lan truyền')">lan truyền</span>
+      <span onclick="scrollToWord('xác thực')">xác thực</span>
+      <span onclick="scrollToWord('căn cứ')">căn cứ</span>
+      <span onclick="scrollToWord('tên lửa tầm xa')">tên lửa tầm xa</span>
+      <span onclick="scrollToWord('vũ trang')">vũ trang</span>
+      <span onclick="scrollToWord('cáo buộc')">cáo buộc</span>
+      <span onclick="scrollToWord('tước đoạt')">tước đoạt</span>
+      <span onclick="scrollToWord('tài nguyên')">tài nguyên</span>
+      <span onclick="scrollToWord('tình trạng khẩn cấp')">tình trạng khẩn cấp</span>
+      <span onclick="scrollToWord('tổng động viên')">tổng động viên</span>
+      <span onclick="scrollToWord('cộng đồng quốc tế')">cộng đồng quốc tế</span>
+      <span onclick="scrollToWord('triển khai')">triển khai</span>
+      <span onclick="scrollToWord('kháng cự')">kháng cự</span>
+      <span onclick="scrollToWord('giữ bình tĩnh')">giữ bình tĩnh</span>
+      <span onclick="scrollToWord('đòn ngụy trang')">đòn ngụy trang</span>
+      <span onclick="scrollToWord('táo bạo')">táo bạo</span>
+      <span onclick="scrollToWord('đặc nhiệm')">đặc nhiệm</span>
+      <span onclick="scrollToWord('phu nhân')">phu nhân</span>
+      <span onclick="scrollToWord('quan chức')">quan chức</span>
+      <span onclick="scrollToWord('giấu tên')">giấu tên</span>
+      <span onclick="scrollToWord('tinh nhuệ')">tinh nhuệ</span>
+      <span onclick="scrollToWord('bắt sống')">bắt sống</span>
+      <span onclick="scrollToWord('tuyệt vời')">tuyệt vời</span>
+      <span onclick="scrollToWord('giải thích')">giải thích</span>
+      <span onclick="scrollToWord('truy nã')">truy nã</span>
+      <span onclick="scrollToWord('cấu kết')">cấu kết</span>
+      <span onclick="scrollToWord('khét tiếng')">khét tiếng</span>
+      <span onclick="scrollToWord('treo thưởng')">treo thưởng</span>
+      <span onclick="scrollToWord('lập luận')">lập luận</span>
+      <span onclick="scrollToWord('tính hợp hiến')">tính hợp hiến</span>
+      <span onclick="scrollToWord('tuyên chiến')">tuyên chiến</span>
+      <span onclick="scrollToWord('phê chuẩn')">phê chuẩn</span>
+      <span onclick="scrollToWord('thừa nhận')">thừa nhận</span>
+      <span onclick="scrollToWord('bằng chứng')">bằng chứng</span>
+      <span onclick="scrollToWord('đồng minh thân cận')">đồng minh thân cận</span>
+      <span onclick="scrollToWord('tiếp tay')">tiếp tay</span>
+      <span onclick="scrollToWord('tiền lệ')">tiền lệ</span>
+      <span onclick="scrollToWord('tính hợp pháp')">tính hợp pháp</span>
+      <span onclick="scrollToWord('lưu vong')">lưu vong</span>
+      <span onclick="scrollToWord('họp khẩn')">họp khẩn</span>
+      <span onclick="scrollToWord('xâm lược quân sự')">xâm lược quân sự</span>
+      <span onclick="scrollToWord('rời nhiệm sở')">rời nhiệm sở</span>
+      <span onclick="scrollToWord('ngoài khơi')">ngoài khơi</span>
+      <span onclick="scrollToWord('bến cảng')">bến cảng</span>
+      <span onclick="scrollToWord('phản hồi')">phản hồi</span>
+    </div>
+  </div>
+
+  <!-- TRANSCRIPTION NOTES -->
+  
+
+  <!-- SKIP NOTES -->
+  
+
+</div>
+<div id="popup-card" style="display: none;">
+  <div class="pw-en" id="p-word-en"></div>
+  <div class="pw-vn" id="p-word-vn"></div>
+  <div class="p-pos" id="p-pos"></div>
+  <hr class="p-divider">
+  <div class="p-def-en" id="p-def-en"></div>
+  <hr class="p-divider">
+  <div class="p-ctx-label">In context:</div>
+  <div class="p-ctx-en" id="p-ctx-en"></div>
+</div>
+<script>
+
+  // POPUP LOGIC
+  let activeWord = null;
+  document.querySelectorAll('.vocab').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      var popup = document.getElementById('popup-card');
+      if (activeWord === el && popup.style.display === 'block') {
+        popup.style.display = 'none';
+        activeWord = null;
+        return;
+      }
+      activeWord = el;
+      document.getElementById('p-word-en').textContent = el.getAttribute('data-word-en');
+      document.getElementById('p-word-vn').textContent = el.getAttribute('data-word-vn');
+      document.getElementById('p-pos').textContent = el.getAttribute('data-pos');
+      document.getElementById('p-def-en').textContent = el.getAttribute('data-def-en');
+      document.getElementById('p-ctx-en').textContent = el.getAttribute('data-context-en');
+
+      popup.style.position = 'fixed';
+      popup.style.top = '18%';
+      popup.style.left = '50%';
+      popup.style.transform = 'translateX(-50%)';
+      popup.style.width = '300px';
+      popup.style.display = 'block';
+    });
+  });
+  document.addEventListener('click', function() {
+    document.getElementById('popup-card').style.display = 'none';
+    activeWord = null;
+  });
+
+  // MEMORY GRID SCROLL
+  function scrollToWord(word) {
+    var els = document.querySelectorAll('.vocab');
+    for (var i = 0; i < els.length; i++) {
+      var vn = els[i].getAttribute('data-word-vn') || '';
+      if (vn.indexOf(word) !== -1 || els[i].textContent.trim() === word) {
+        els[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        var orig = els[i].style.backgroundColor;
+        els[i].style.backgroundColor = '#ffe082';
+        setTimeout(function(el, o) { el.style.backgroundColor = o; }.bind(null, els[i], orig), 2000);
+        return;
+      }
+    }
+  }
+
+  // DOWNLOAD CONTENT ONLY
+  function downloadContentOnly() {
+    var clone = document.getElementById('page').cloneNode(true);
+
+    // Remove download button
+    var dlBtn = clone.querySelector('#download-btn');
+    if (dlBtn) dlBtn.remove();
+
+    // Audio section is intentionally kept — do NOT remove it
+
+    // Remove skip-notes ONLY
+    var skipNotes = clone.querySelector('.skip-notes');
+    if (skipNotes) skipNotes.remove();
+
+    // Remove transcription-notes ONLY
+    var transNotes = clone.querySelector('.transcription-notes');
+    if (transNotes) transNotes.remove();
+
+    // Memory section is intentionally kept — do NOT remove it
+
+    var styleHTML = '<style>' + document.querySelector('style').innerHTML + '</style>';
+    var scriptHTML = '<script>\n' + document.querySelector('script').textContent + '\n<\/script>';
+
+    var html = '<!DOCTYPE html>\n<html lang="vi">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0">\n<title>Mỹ đột kích Venezuela – Content Only</title>\n'
+      + styleHTML
+      + '\n</head>\n<body>\n'
+      + clone.outerHTML
+      + '\n' + document.getElementById('popup-card').outerHTML
+      + '\n' + scriptHTML
+      + '\n</body>\n</html>';
+
+    var blob = new Blob([html], { type: 'text/html' });
+    var a = document.createElement('a');
+    a.href = URL.createObjectURL(blob);
+    a.download = 'maduro-vnexpress-content-only.html';
+    a.click();
+  }
+
+</script>
+</body>
+</html>
