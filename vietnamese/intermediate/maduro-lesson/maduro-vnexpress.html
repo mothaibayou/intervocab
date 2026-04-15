@@ -229,11 +229,20 @@
   <div class="dateline">Thứ bảy, 3/1/2026, 13:40 (GMT+7) — VnExpress</div>
   <h1>Mỹ <span class="vocab" data-word-en="raid / strike" data-word-vn="đột kích" data-pos="động từ / verb" data-def-en="To carry out a sudden surprise military attack on a target" data-def-vn="Thực hiện một cuộc tấn công quân sự bất ngờ vào mục tiêu" data-context-en="The US launched a surprise raid on Caracas in the early hours of January 3rd." data-context-vn="Mỹ tiến hành cuộc đột kích bất ngờ vào Caracas vào rạng sáng ngày 3 tháng 1.">đột kích</span> Venezuela, <span class="vocab" data-word-en="declare / announce" data-word-vn="tuyên bố" data-pos="động từ / verb" data-def-en="To formally and publicly announce or proclaim something" data-def-vn="Thông báo hoặc công bố điều gì đó một cách chính thức và công khai" data-context-en="Trump declared that US forces had captured President Maduro." data-context-vn="Trump tuyên bố rằng lực lượng Mỹ đã bắt Tổng thống Maduro.">tuyên bố</span> <span class="vocab" data-word-en="arrest / capture" data-word-vn="bắt" data-pos="động từ / verb" data-def-en="To seize and take someone into custody by force" data-def-vn="Bắt giữ và tạm giam ai đó bằng vũ lực" data-context-en="US forces captured President Maduro in the early morning raid." data-context-vn="Lực lượng Mỹ bắt Tổng thống Maduro trong cuộc đột kích rạng sáng.">bắt</span> Tổng thống Maduro</h1>
 
+<!-- THIS SECTION ADDS THE PLAYER CONTROL BUTTONS -->
   <div class="audio-section">
     <div class="audio-label">🔊 Listen to the text</div>
     <audio id="audio-player" controls="" src="maduro-vnexpress.mp3"></audio>
-    <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+
+<button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+<button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+<button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>;
+
+
+
+   <!-- <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
     <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+<button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button> -->
   </div>
 
   <p class="body-text">
