@@ -1,0 +1,324 @@
+<!DOCTYPE html><html lang="vi"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0"><title>Minh – Kỹ Sư Phần Mềm Và Hành Trình Cân Bằng Cuộc Sống</title><style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    user-select: none;
+    min-height: 100vh;
+    padding: 30px 16px 60px;
+  }
+  #page {
+    background: #f0e6c8;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 36px 42px 48px;
+    border: 2px solid #a0845a;
+    border-radius: 4px;
+    position: relative;
+  }
+  h1 {
+    color: #3a1f00;
+    font-size: 1.45rem;
+    font-family: Arial, sans-serif;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+    line-height: 1.4;
+  }
+  p { margin-bottom: 1.1em; line-height: 1.75; }
+  .vocab {
+    border-bottom: 2px dotted #2e7d32;
+    cursor: pointer;
+  }
+  .vocab:hover { background: rgba(46,125,50,0.08); border-radius: 2px; }
+  #popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 100;
+  }
+  #popup-card {
+    display: none;
+    position: fixed;
+    z-index: 200;
+    background: #f0e6c8;
+    border: 2px solid #7a4e1a;
+    border-radius: 6px;
+    padding: 18px 20px 16px;
+    max-width: 360px;
+    min-width: 260px;
+    box-shadow: 2px 4px 18px rgba(0,0,0,0.38);
+    color: #2a1500;
+    font-family: Arial, sans-serif;
+  }
+  #popup-card .pc-word-en {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #3a1f00;
+    margin-bottom: 2px;
+  }
+  #popup-card .pc-word-vn {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #7a4e1a;
+    margin-bottom: 6px;
+  }
+  #popup-card .pc-pos {
+    font-size: 0.95rem;
+    color: #7a4e1a;
+    margin-bottom: 8px;
+    font-style: italic;
+  }
+  #popup-card .pc-def {
+    font-size: 1rem;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  #popup-card .pc-context-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #3a1f00;
+    margin-bottom: 3px;
+  }
+  #popup-card .pc-context {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #5a3a10;
+    line-height: 1.5;
+  }
+  #popup-card .pc-divider {
+    border: none;
+    border-top: 1px solid #c8a060;
+    margin: 8px 0;
+  }
+  .audio-section {
+    margin-bottom: 22px;
+  }
+  .audio-label {
+    font-size: 0.92rem;
+    color: #7a4e1a;
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+  audio {
+    width: 100%;
+    height: 36px;
+    border-radius: 4px;
+    border: 1px solid #7a4e1a;
+    background: #2e1f0a;
+    accent-color: #c8a060;
+    display: block;
+  }
+  .rewind-btn {
+    margin-top: 8px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 5px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+  }
+  .rewind-btn:hover { background: #4a3318; }
+  #download-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    z-index: 10;
+  }
+  #download-btn:hover { background: #4a3318; }
+  .section-divider {
+    border: none;
+    border-top: 2px solid #7a4e1a;
+    margin: 32px 0 20px;
+  }
+  .skip-notes, .transcription-notes {
+    margin-top: 10px;
+  }
+  .skip-notes h2, .transcription-notes h2 {
+    color: #3a1f00;
+    font-size: 1rem;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 6px;
+    margin-bottom: 12px;
+  }
+  .skip-notes p, .transcription-notes p {
+    font-size: 0.93rem;
+    color: #5a3a10;
+    margin-bottom: 0.6em;
+  }
+  .skip-notes ul { padding-left: 20px; font-size: 0.93rem; color: #5a3a10; }
+  .skip-notes ul li { margin-bottom: 4px; }
+  table.notes-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    margin-top: 8px;
+  }
+  table.notes-table th {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 6px 10px;
+    text-align: left;
+  }
+  table.notes-table td {
+    border: 1px solid #c8a060;
+    padding: 6px 10px;
+    vertical-align: top;
+    color: #2a1500;
+  }
+  table.notes-table tr:nth-child(even) td { background: #e8d9b0; }
+</style></head><body><div id="page">
+  
+
+  <h1>Minh – Kỹ Sư Phần Mềm Và Hành Trình Cân Bằng Cuộc Sống</h1>
+
+  
+
+  <p>Minh là một
+    <span class="vocab" data-word-en="software engineer" data-word-vn="kỹ sư phần mềm" data-pos="danh từ / noun" data-def-en="A professional who designs, builds, and maintains software systems." data-def-vn="Người chuyên thiết kế, xây dựng và bảo trì các hệ thống phần mềm." data-context-en="Minh works as a software engineer at a tech company in Ho Chi Minh City." data-context-vn="Minh là kỹ sư phần mềm tại một công ty công nghệ ở Thành phố Hồ Chí Minh.">kỹ sư phần mềm</span>
+    làm việc tại một
+    <span class="vocab" data-word-en="tech company" data-word-vn="công ty công nghệ" data-pos="danh từ / noun" data-def-en="A business that develops or sells technology-based products or services." data-def-vn="Doanh nghiệp phát triển hoặc kinh doanh sản phẩm và dịch vụ công nghệ." data-context-en="Minh is employed at a tech company located in Ho Chi Minh City." data-context-vn="Minh làm việc tại một công ty công nghệ ở Thành phố Hồ Chí Minh.">công ty công nghệ</span>
+    ở Thành phố Hồ Chí Minh. Mỗi ngày, anh phải
+    <span class="vocab" data-word-en="face / deal with" data-word-vn="đối mặt với" data-pos="động từ / verb phrase" data-def-en="To confront or deal with a difficult situation directly." data-def-vn="Trực tiếp đương đầu hoặc xử lý một tình huống khó khăn." data-context-en="Every day Minh must face work pressure and constant deadlines." data-context-vn="Mỗi ngày anh phải đối mặt với áp lực công việc và thời hạn cận kề.">đối mặt với</span>
+    <span class="vocab" data-word-en="work pressure" data-word-vn="áp lực công việc" data-pos="danh từ / noun phrase" data-def-en="Stress and demands placed on a person by their job responsibilities." data-def-vn="Căng thẳng và yêu cầu đặt lên một người bởi trách nhiệm công việc." data-context-en="Minh faces work pressure every single day at his job." data-context-vn="Minh phải đối mặt với áp lực công việc mỗi ngày.">áp lực công việc</span>
+    và những
+    <span class="vocab" data-word-en="deadline" data-word-vn="thời hạn" data-pos="danh từ / noun" data-def-en="A fixed point in time by which a task or project must be completed." data-def-vn="Mốc thời gian cố định mà công việc hoặc dự án phải hoàn thành." data-context-en="The deadlines at his company are always looming close." data-context-vn="Những thời hạn tại công ty anh luôn cận kề.">thời hạn</span>
+    luôn
+    <span class="vocab" data-word-en="imminent / close" data-word-vn="cận kề" data-pos="tính từ / adjective" data-def-en="Very near in time; about to happen soon." data-def-vn="Rất gần về mặt thời gian; sắp xảy ra." data-context-en="The deadlines are described as always imminent, adding constant pressure." data-context-vn="Thời hạn được mô tả là luôn cận kề, tạo áp lực liên tục.">cận kề</span>.
+  </p>
+
+  <p>Nơi làm việc của anh có một
+    <span class="vocab" data-word-en="group / team" data-word-vn="nhóm" data-pos="danh từ / noun" data-def-en="A number of people working together toward a common goal." data-def-vn="Một số người cùng làm việc hướng đến mục tiêu chung." data-context-en="His workplace has a group of twelve people responsible for an important software project." data-context-vn="Nơi làm việc của anh có một nhóm gồm mười hai người phụ trách dự án phần mềm.">nhóm</span>
+    gồm mười hai người
+    <span class="vocab" data-word-en="be in charge of / responsible for" data-word-vn="phụ trách" data-pos="động từ / verb" data-def-en="To be responsible for managing or overseeing something." data-def-vn="Chịu trách nhiệm quản lý hoặc giám sát một việc gì đó." data-context-en="The team is in charge of an important software project." data-context-vn="Nhóm phụ trách một dự án phần mềm quan trọng.">phụ trách</span>
+    một
+    <span class="vocab" data-word-en="software project" data-word-vn="dự án phần mềm" data-pos="danh từ / noun phrase" data-def-en="A planned undertaking to develop or improve a software product." data-def-vn="Một công việc có kế hoạch nhằm phát triển hoặc cải thiện một sản phẩm phần mềm." data-context-en="The team of twelve is responsible for an important software project." data-context-vn="Nhóm mười hai người phụ trách một dự án phần mềm quan trọng.">dự án phần mềm</span>
+    quan trọng. Tuy nhiên,
+    <span class="vocab" data-word-en="workforce / staffing" data-word-vn="lực lượng nhân sự" data-pos="danh từ / noun phrase" data-def-en="The total number of workers employed by a company." data-def-vn="Tổng số nhân viên được tuyển dụng bởi một công ty." data-context-en="The company's workforce had significantly decreased after a recent round of layoffs." data-context-vn="Lực lượng nhân sự của công ty đã giảm đáng kể sau đợt cắt giảm gần đây.">lực lượng nhân sự</span>
+    của công ty đã
+    <span class="vocab" data-word-en="significantly" data-word-vn="đáng kể" data-pos="trạng từ / adverb" data-def-en="To a noticeable or important degree; considerably." data-def-vn="Ở mức độ đáng chú ý hoặc quan trọng; đáng kể." data-context-en="The workforce decreased significantly after the layoffs." data-context-vn="Lực lượng nhân sự giảm đáng kể sau đợt cắt giảm.">giảm đáng kể</span>
+    sau một
+    <span class="vocab" data-word-en="round of layoffs" data-word-vn="đợt cắt giảm nhân sự" data-pos="danh từ / noun phrase" data-def-en="A period during which a company dismisses a number of employees, often to reduce costs." data-def-vn="Một giai đoạn mà công ty sa thải một số nhân viên, thường để cắt giảm chi phí." data-context-en="The company's staffing dropped significantly after a recent round of layoffs." data-context-vn="Nhân sự giảm đáng kể sau một đợt cắt giảm nhân sự gần đây.">đợt cắt giảm nhân sự</span>
+    gần đây.
+  </p>
+
+  <p>Vì vậy, Minh và các
+    <span class="vocab" data-word-en="colleagues" data-word-vn="đồng nghiệp" data-pos="danh từ / noun" data-def-en="People who work in the same workplace or profession." data-def-vn="Những người làm việc cùng nơi hoặc cùng ngành nghề." data-context-en="Minh and his colleagues were forced to work many extra hours each week." data-context-vn="Minh và các đồng nghiệp buộc phải làm thêm rất nhiều giờ mỗi tuần.">đồng nghiệp</span>
+    <span class="vocab" data-word-en="be forced to" data-word-vn="buộc phải" data-pos="động từ / verb phrase" data-def-en="Compelled or obligated to do something without a choice." data-def-vn="Bị bắt buộc hoặc phải làm điều gì đó mà không có sự lựa chọn." data-context-en="They were forced to work extra hours because of reduced staffing." data-context-vn="Họ buộc phải làm thêm giờ vì nhân sự bị cắt giảm.">buộc phải</span>
+    làm thêm rất nhiều giờ mỗi tuần.
+    <span class="vocab" data-word-en="schedule" data-word-vn="lịch trình" data-pos="danh từ / noun" data-def-en="A plan of events or tasks arranged according to time." data-def-vn="Kế hoạch các sự kiện hoặc công việc được sắp xếp theo thời gian." data-context-en="His schedule was so packed that he had almost no time for a personal life." data-context-vn="Lịch trình của anh dày đặc đến mức không còn thời gian cho cuộc sống cá nhân.">Lịch trình</span>
+    của anh
+    <span class="vocab" data-word-en="packed / dense" data-word-vn="dày đặc" data-pos="tính từ / adjective" data-def-en="Very full, with little or no free space or time." data-def-vn="Rất đầy, hầu như không còn khoảng trống hoặc thời gian rảnh." data-context-en="His schedule was so packed that personal life was almost impossible." data-context-vn="Lịch trình dày đặc đến mức anh hầu như không còn thời gian cá nhân.">dày đặc</span>
+    đến mức hầu như không còn thời gian cho
+    <span class="vocab" data-word-en="personal life" data-word-vn="cuộc sống cá nhân" data-pos="danh từ / noun phrase" data-def-en="The part of one's life that is private and not related to work." data-def-vn="Phần cuộc sống riêng tư, không liên quan đến công việc." data-context-en="His dense schedule left him almost no time for a personal life." data-context-vn="Lịch trình dày đặc khiến anh không còn thời gian cho cuộc sống cá nhân.">cuộc sống cá nhân</span>.
+    <span class="vocab" data-word-en="work performance / productivity" data-word-vn="hiệu suất làm việc" data-pos="danh từ / noun phrase" data-def-en="The level of efficiency or quality with which someone does their job." data-def-vn="Mức độ hiệu quả hoặc chất lượng mà ai đó thực hiện công việc." data-context-en="His work performance remained high, but his health began to deteriorate." data-context-vn="Hiệu suất làm việc vẫn cao nhưng sức khỏe đã bắt đầu suy giảm.">Hiệu suất làm việc</span>
+    của anh vẫn cao, nhưng
+    <span class="vocab" data-word-en="health" data-word-vn="sức khỏe" data-pos="danh từ / noun" data-def-en="The state of a person's physical and mental well-being." data-def-vn="Trạng thái thể chất và tinh thần của một người." data-context-en="Despite strong performance, his health had started to deteriorate." data-context-vn="Dù hiệu suất vẫn cao nhưng sức khỏe đã bắt đầu suy giảm.">sức khỏe</span>
+    đã bắt đầu
+    <span class="vocab" data-word-en="deteriorate / decline" data-word-vn="suy giảm" data-pos="động từ / verb" data-def-en="To gradually become worse in quality or condition." data-def-vn="Dần dần trở nên tệ hơn về chất lượng hoặc trạng thái." data-context-en="Minh's health began to deteriorate due to overwork." data-context-vn="Sức khỏe của Minh bắt đầu suy giảm do làm việc quá sức.">suy giảm</span>.
+  </p>
+
+  <p>Một ngày nọ, một
+    <span class="vocab" data-word-en="colleague" data-word-vn="đồng nghiệp" data-pos="danh từ / noun" data-def-en="A person who works in the same place or field." data-def-vn="Người làm việc cùng nơi hoặc cùng lĩnh vực." data-context-en="A colleague named Lan suggested that he should exercise regularly." data-context-vn="Một đồng nghiệp tên Lan gợi ý anh nên tập thể dục thường xuyên.">đồng nghiệp</span>
+    tên Lan
+    <span class="vocab" data-word-en="suggest" data-word-vn="gợi ý" data-pos="động từ / verb" data-def-en="To mention or propose an idea for someone to consider." data-def-vn="Đề xuất hoặc nêu ra một ý kiến để ai đó cân nhắc." data-context-en="Lan suggested that Minh should exercise regularly." data-context-vn="Lan gợi ý rằng Minh nên tập thể dục thường xuyên.">gợi ý</span>
+    rằng anh nên
+    <span class="vocab" data-word-en="exercise regularly" data-word-vn="tập thể dục thường xuyên" data-pos="động từ / verb phrase" data-def-en="To engage in physical activity on a consistent, repeated basis." data-def-vn="Tham gia vào các hoạt động thể chất một cách đều đặn, thường xuyên." data-context-en="Lan suggested that Minh should exercise regularly to improve his condition." data-context-vn="Lan gợi ý Minh nên tập thể dục thường xuyên để cải thiện tình trạng.">tập thể dục thường xuyên</span>.
+    "Tập buổi sáng có thể
+    <span class="vocab" data-word-en="transform / change" data-word-vn="thay đổi" data-pos="động từ / verb" data-def-en="To make something different; to transform in a notable way." data-def-vn="Làm cho điều gì đó khác đi; biến đổi theo cách đáng chú ý." data-context-en="Lan claimed that morning exercise could change the entire workday." data-context-vn="Lan khẳng định rằng tập buổi sáng có thể thay đổi cả ngày làm việc.">thay đổi</span>
+    cả ngày làm việc của bạn," cô
+    <span class="vocab" data-word-en="affirm / assert" data-word-vn="khẳng định" data-pos="động từ / verb" data-def-en="To state something confidently as being true." data-def-vn="Phát biểu điều gì đó một cách tự tin như là sự thật." data-context-en="Lan confidently asserted that morning exercise could transform a whole workday." data-context-vn="Cô khẳng định rằng tập buổi sáng có thể thay đổi cả ngày làm việc.">khẳng định</span>.
+  </p>
+
+  <p>Ban đầu Minh còn
+    <span class="vocab" data-word-en="hesitate" data-word-vn="do dự" data-pos="động từ / verb" data-def-en="To pause before doing something because of uncertainty or reluctance." data-def-vn="Dừng lại trước khi làm điều gì đó vì không chắc chắn hoặc ngần ngại." data-context-en="At first, Minh hesitated about adding exercise to his routine." data-context-vn="Ban đầu Minh còn do dự về việc thêm luyện tập vào thói quen.">do dự</span>.
+    Anh lo rằng việc dành thời gian
+    <span class="vocab" data-word-en="train / work out" data-word-vn="tập luyện" data-pos="động từ / verb" data-def-en="To engage in physical exercise or practice to improve fitness or skill." data-def-vn="Thực hiện các bài tập thể chất hoặc luyện tập để cải thiện thể lực hoặc kỹ năng." data-context-en="Minh worried that spending time working out would affect his work performance." data-context-vn="Anh lo rằng thời gian tập luyện sẽ ảnh hưởng đến hiệu suất công việc.">tập luyện</span>
+    sẽ
+    <span class="vocab" data-word-en="affect / impact" data-word-vn="ảnh hưởng đến" data-pos="động từ / verb phrase" data-def-en="To have an effect on something; to influence a result." data-def-vn="Có tác động đến điều gì đó; ảnh hưởng đến một kết quả." data-context-en="He feared that exercise time would negatively affect his work performance." data-context-vn="Anh lo rằng tập luyện sẽ ảnh hưởng tiêu cực đến hiệu suất công việc.">ảnh hưởng đến</span>
+    hiệu suất công việc. Tuy nhiên, Lan
+    <span class="vocab" data-word-en="persuade / convince" data-word-vn="thuyết phục" data-pos="động từ / verb" data-def-en="To cause someone to believe something or to do something through reasoning or argument." data-def-vn="Khiến ai đó tin vào điều gì hoặc làm điều gì thông qua lý lẽ hoặc lập luận." data-context-en="Lan convinced Minh that this was a feasible plan if he managed his time well." data-context-vn="Lan thuyết phục Minh rằng đây là kế hoạch khả thi nếu anh quản lý thời gian tốt.">thuyết phục</span>
+    anh rằng đây là một
+    <span class="vocab" data-word-en="feasible plan" data-word-vn="kế hoạch khả thi" data-pos="danh từ / noun phrase" data-def-en="A plan that is realistic and capable of being carried out successfully." data-def-vn="Một kế hoạch thực tế và có thể thực hiện thành công." data-context-en="Lan convinced Minh this was a feasible plan if he managed his time wisely." data-context-vn="Lan thuyết phục Minh rằng đây là kế hoạch khả thi nếu quản lý thời gian hợp lý.">kế hoạch khả thi</span>
+    nếu anh
+    <span class="vocab" data-word-en="manage time" data-word-vn="quản lý thời gian" data-pos="động từ / verb phrase" data-def-en="To organize and plan how to divide one's time between activities effectively." data-def-vn="Tổ chức và lên kế hoạch phân chia thời gian giữa các hoạt động một cách hiệu quả." data-context-en="The plan would work if Minh managed his time wisely." data-context-vn="Kế hoạch sẽ hiệu quả nếu Minh quản lý thời gian hợp lý.">quản lý thời gian</span>
+    hợp lý.
+  </p>
+
+  <p>Minh
+    <span class="vocab" data-word-en="decide" data-word-vn="quyết định" data-pos="động từ / verb" data-def-en="To make a choice or reach a conclusion after considering options." data-def-vn="Đưa ra lựa chọn hoặc kết luận sau khi cân nhắc các phương án." data-context-en="Minh decided to give it a try." data-context-vn="Minh quyết định thử.">quyết định</span>
+    thử. Anh bắt đầu
+    <span class="vocab" data-word-en="habit / routine" data-word-vn="thói quen" data-pos="danh từ / noun" data-def-en="A regular practice or behavior that is done routinely." data-def-vn="Một thực hành hoặc hành vi thường xuyên được thực hiện theo thói quen." data-context-en="He began a morning exercise habit that included running and strength training." data-context-vn="Anh bắt đầu thói quen tập thể dục mỗi sáng, bao gồm chạy bộ và tập sức mạnh.">thói quen</span>
+    tập thể dục mỗi sáng, bao gồm
+    <span class="vocab" data-word-en="running / jogging" data-word-vn="chạy bộ" data-pos="động từ / verb" data-def-en="To move at a steady pace faster than a walk; jogging or running as exercise." data-def-vn="Di chuyển với tốc độ nhanh hơn đi bộ; chạy bộ hoặc jogging như một bài tập." data-context-en="His morning routine included running as a form of cardio exercise." data-context-vn="Thói quen buổi sáng của anh bao gồm chạy bộ như một hình thức tập cardio.">chạy bộ</span>
+    và
+    <span class="vocab" data-word-en="strength training" data-word-vn="tập sức mạnh" data-pos="danh từ / noun phrase" data-def-en="Physical exercise designed to build muscular strength and endurance." data-def-vn="Bài tập thể chất được thiết kế để xây dựng sức mạnh và sức bền cơ bắp." data-context-en="His morning routine included both running and strength training." data-context-vn="Thói quen buổi sáng bao gồm chạy bộ và tập sức mạnh.">tập sức mạnh</span>.
+    Lúc đầu,
+    <span class="vocab" data-word-en="intensity" data-word-vn="cường độ" data-pos="danh từ / noun" data-def-en="The degree or level of strength, force, or effort involved in an activity." data-def-vn="Mức độ hoặc cấp độ sức mạnh, lực hay nỗ lực trong một hoạt động." data-context-en="At first the training intensity was fairly light, but gradually he increased it." data-context-vn="Ban đầu cường độ tập luyện khá nhẹ, nhưng dần dần anh tăng lên.">cường độ</span>
+    tập luyện khá nhẹ, nhưng dần dần anh tăng lên.
+  </p>
+
+  <p>Anh cũng chú ý đến việc
+    <span class="vocab" data-word-en="recovery" data-word-vn="phục hồi" data-pos="danh từ / noun" data-def-en="The process of returning to a normal state of health or strength after exercise or illness." data-def-vn="Quá trình phục hồi về trạng thái sức khỏe hoặc thể lực bình thường sau khi tập luyện hoặc bệnh tật." data-context-en="He paid attention to recovery after exercise, especially sleep and nutrition." data-context-vn="Anh chú ý đến việc phục hồi sau khi tập, đặc biệt là giấc ngủ và dinh dưỡng.">phục hồi</span>
+    sau khi tập, đặc biệt là
+    <span class="vocab" data-word-en="sleep" data-word-vn="giấc ngủ" data-pos="danh từ / noun" data-def-en="The natural, recurring state of rest for the mind and body." data-def-vn="Trạng thái nghỉ ngơi tự nhiên, định kỳ cho tâm trí và cơ thể." data-context-en="Sleep was highlighted as a key part of Minh's recovery routine." data-context-vn="Giấc ngủ được nhấn mạnh là phần quan trọng trong quá trình phục hồi của Minh.">giấc ngủ</span>
+    và
+    <span class="vocab" data-word-en="nutrition" data-word-vn="dinh dưỡng" data-pos="danh từ / noun" data-def-en="The process of obtaining food necessary for health and growth; diet quality." data-def-vn="Quá trình hấp thụ thức ăn cần thiết cho sức khỏe và sự phát triển; chất lượng chế độ ăn." data-context-en="Alongside sleep, nutrition was an important part of his recovery plan." data-context-vn="Cùng với giấc ngủ, dinh dưỡng là phần quan trọng trong kế hoạch phục hồi.">dinh dưỡng</span>.
+    Sau vài tuần, anh nhận ra
+    <span class="vocab" data-word-en="motivation / drive" data-word-vn="động lực" data-pos="danh từ / noun" data-def-en="The reason or enthusiasm that drives a person to act or achieve something." data-def-vn="Lý do hoặc sự nhiệt tình thúc đẩy người ta hành động hoặc đạt được điều gì đó." data-context-en="After a few weeks, Minh noticed that his work motivation increased significantly after each workout." data-context-vn="Sau vài tuần, anh nhận ra động lực làm việc tăng lên đáng kể sau mỗi buổi tập.">động lực</span>
+    làm việc của mình
+    <span class="vocab" data-word-en="increase significantly" data-word-vn="tăng lên đáng kể" data-pos="động từ / verb phrase" data-def-en="To become greater in amount or level by a noticeable degree." data-def-vn="Trở nên lớn hơn về số lượng hoặc mức độ theo cách đáng chú ý." data-context-en="His work motivation increased significantly after each training session." data-context-vn="Động lực làm việc tăng lên đáng kể sau mỗi buổi tập.">tăng lên đáng kể</span>
+    sau mỗi buổi tập.
+  </p>
+
+  <p>
+    <span class="vocab" data-word-en="work environment" data-word-vn="môi trường làm việc" data-pos="danh từ / noun phrase" data-def-en="The physical and social conditions in which people work." data-def-vn="Điều kiện vật chất và xã hội mà mọi người làm việc trong đó." data-context-en="The work environment also began to change as others joined the exercise habit." data-context-vn="Môi trường làm việc cũng bắt đầu thay đổi khi mọi người tham gia tập luyện chung.">Môi trường làm việc</span>
+    cũng bắt đầu thay đổi. Minh
+    <span class="vocab" data-word-en="share" data-word-vn="chia sẻ" data-pos="động từ / verb" data-def-en="To tell others about something; to communicate personal experience." data-def-vn="Kể cho người khác nghe về điều gì đó; chia sẻ kinh nghiệm cá nhân." data-context-en="Minh shared his experience with teammates, inspiring them to join group workouts." data-context-vn="Minh chia sẻ kinh nghiệm với các thành viên, khuyến khích họ tham gia tập luyện chung.">chia sẻ</span>
+    <span class="vocab" data-word-en="experience" data-word-vn="kinh nghiệm" data-pos="danh từ / noun" data-def-en="Practical knowledge or skill gained from doing something." data-def-vn="Kiến thức hoặc kỹ năng thực tế có được từ việc làm một điều gì đó." data-context-en="He shared his personal experience with the team about the benefits of exercise." data-context-vn="Anh chia sẻ kinh nghiệm của mình về lợi ích của việc tập thể dục.">kinh nghiệm</span>
+    của mình với các
+    <span class="vocab" data-word-en="team members" data-word-vn="thành viên trong nhóm" data-pos="danh từ / noun phrase" data-def-en="The individuals who are part of a particular group or team." data-def-vn="Những cá nhân là một phần của một nhóm hoặc đội nhất định." data-context-en="Minh shared his experience with team members, inspiring them gradually." data-context-vn="Minh chia sẻ kinh nghiệm với các thành viên trong nhóm, dần dần họ cùng tham gia.">thành viên trong nhóm</span>,
+    và dần dần cả nhóm bắt đầu
+    <span class="vocab" data-word-en="join / participate" data-word-vn="tham gia" data-pos="động từ / verb" data-def-en="To become part of a group activity or event." data-def-vn="Trở thành một phần của hoạt động nhóm hoặc sự kiện." data-context-en="Gradually, the whole team began to join in group workout sessions." data-context-vn="Dần dần cả nhóm bắt đầu tham gia các buổi tập luyện chung.">tham gia</span>
+    các buổi tập luyện chung.
+  </p>
+
+  <p>Câu chuyện của Minh
+    <span class="vocab" data-word-en="prove / demonstrate" data-word-vn="chứng minh" data-pos="động từ / verb" data-def-en="To show or establish the truth of something by evidence or argument." data-def-vn="Chứng tỏ hoặc xác lập sự thật của điều gì đó bằng bằng chứng hoặc lập luận." data-context-en="Minh's story proves that work-life balance is achievable, not just a slogan." data-context-vn="Câu chuyện của Minh chứng minh rằng cân bằng công việc và cuộc sống là điều có thể đạt được.">chứng minh</span>
+    rằng
+    <span class="vocab" data-word-en="work-life balance" data-word-vn="cân bằng giữa công việc và cuộc sống" data-pos="danh từ / noun phrase" data-def-en="The state of having a healthy division of time and energy between work and personal life." data-def-vn="Trạng thái phân chia thời gian và năng lượng lành mạnh giữa công việc và cuộc sống cá nhân." data-context-en="Minh's story shows that work-life balance is not just a slogan but an achievable lifestyle." data-context-vn="Câu chuyện chứng minh rằng cân bằng công việc và cuộc sống không chỉ là khẩu hiệu.">cân bằng giữa công việc và cuộc sống</span>
+    không chỉ là một
+    <span class="vocab" data-word-en="slogan / motto" data-word-vn="khẩu hiệu" data-pos="danh từ / noun" data-def-en="A short, memorable phrase used to express a principle or goal, often repeated as an ideal." data-def-vn="Một cụm từ ngắn, dễ nhớ dùng để diễn đạt một nguyên tắc hay mục tiêu, thường được lặp lại như lý tưởng." data-context-en="Work-life balance is not merely a slogan but a real, achievable way of living." data-context-vn="Cân bằng không chỉ là khẩu hiệu mà là một lối sống có thể đạt được.">khẩu hiệu</span>—mà là một
+    <span class="vocab" data-word-en="lifestyle" data-word-vn="lối sống" data-pos="danh từ / noun" data-def-en="The way a person or group lives, including habits, attitudes, and values." data-def-vn="Cách một người hoặc nhóm người sống, bao gồm thói quen, thái độ và giá trị." data-context-en="The story frames work-life balance as a lifestyle that can actually be achieved." data-context-vn="Câu chuyện mô tả cân bằng công việc và cuộc sống như một lối sống có thể đạt được.">lối sống</span>
+    có thể
+    <span class="vocab" data-word-en="achieve / attain" data-word-vn="đạt được" data-pos="động từ / verb phrase" data-def-en="To successfully reach or accomplish a goal." data-def-vn="Đạt được hoặc hoàn thành thành công một mục tiêu." data-context-en="The story shows that a balanced lifestyle can actually be achieved." data-context-vn="Câu chuyện cho thấy lối sống cân bằng là điều có thể đạt được.">đạt được</span>.
+    Khi
+    <span class="vocab" data-word-en="work capacity / capability" data-word-vn="năng lực làm việc" data-pos="danh từ / noun phrase" data-def-en="A person's ability or potential to perform work tasks effectively." data-def-vn="Khả năng hoặc tiềm năng của một người để thực hiện các công việc một cách hiệu quả." data-context-en="When work capacity improved through better health, the whole work environment benefited." data-context-vn="Khi năng lực làm việc được cải thiện nhờ sức khỏe tốt, toàn bộ môi trường làm việc được hưởng lợi.">năng lực làm việc</span>
+    được
+    <span class="vocab" data-word-en="improve" data-word-vn="cải thiện" data-pos="động từ / verb" data-def-en="To make something better; to enhance in quality or effectiveness." data-def-vn="Làm cho điều gì đó tốt hơn; nâng cao về chất lượng hoặc hiệu quả." data-context-en="When work capacity was improved through better health, the team as a whole benefited." data-context-vn="Khi năng lực làm việc được cải thiện nhờ sức khỏe tốt, cả nhóm đều được hưởng lợi.">cải thiện</span>
+    nhờ sức khỏe tốt hơn, toàn bộ môi trường làm việc cũng được
+    <span class="vocab" data-word-en="benefit" data-word-vn="hưởng lợi" data-pos="động từ / verb" data-def-en="To gain an advantage or profit from something." data-def-vn="Thu được lợi ích hoặc lợi thế từ điều gì đó." data-context-en="The entire work environment benefited when individuals improved their health and capacity." data-context-vn="Toàn bộ môi trường làm việc được hưởng lợi khi cá nhân cải thiện sức khỏe và năng lực.">hưởng lợi</span>.
+  </p>
+
+  
+
+  
+
+  
+
+  
+
+</div><div id="popup-overlay"></div><div id="popup-card"><div class="pc-word-en" id="pc-word-en"></div><div class="pc-word-vn" id="pc-word-vn"></div><div class="pc-pos" id="pc-pos"></div><hr class="pc-divider"><div class="pc-def" id="pc-def"></div><hr class="pc-divider"><div class="pc-context-label">In context:</div><div class="pc-context" id="pc-context"></div></div><script>var currentWord=null,popup=document.getElementById("popup-card"),overlay=document.getElementById("popup-overlay");function positionPopup(e){var x=e.clientX,y=e.clientY,pw=360,ph=220,vw=window.innerWidth,vh=window.innerHeight,left=x+12,top=y+12;if(left+pw>vw-10)left=x-pw-12;if(top+ph>vh-10)top=y-ph-12;if(left<8)left=8;if(top<8)top=8;popup.style.left=left+"px";popup.style.top=top+"px";}document.querySelectorAll(".vocab").forEach(function(el){el.addEventListener("click",function(e){e.stopPropagation();if(currentWord===this){closePopup();return;}currentWord=this;document.getElementById("pc-word-en").textContent=this.dataset.wordEn||"";document.getElementById("pc-word-vn").textContent=this.dataset.wordVn||"";document.getElementById("pc-pos").textContent=this.dataset.pos||"";document.getElementById("pc-def").textContent=this.dataset.defEn||"";document.getElementById("pc-context").textContent=this.dataset.contextEn||"";positionPopup(e);popup.style.display="block";overlay.style.display="block";});});overlay.addEventListener("click",function(){closePopup();});document.addEventListener("keydown",function(e){if(e.key==="Escape")closePopup();});function closePopup(){popup.style.display="none";overlay.style.display="none";currentWord=null;}</script></body></html>
