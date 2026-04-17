@@ -576,7 +576,27 @@ document.addEventListener('click', function(e) {
     {vn: 'toàn bộ', id: 'w-toanboo'},
     {vn: 'hưởng lợi', id: 'w-huongloi'},
   ];
+  // ── MEMORY WORD CLICK → SCROLL TO STORY ─────────────────────
+document.querySelectorAll('.memory-word').forEach(wordEl => {
+  wordEl.addEventListener('click', function() {
 
+    const text = this.textContent.trim();
+
+    // find matching vocab entry
+    const match = vocabWords.find(v => v.vn === text);
+    if (!match) return;
+
+    const target = document.getElementById(match.id);
+    if (!target) return;
+
+    // scroll to it
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+    // optional: brief highlight so user sees it
+    target.style.background = '#ffe082';
+    setTimeout(() => target.style.background = '', 1200);
+  });
+});
   const grid = document.getElementById('memory-grid');
   vocabWords.forEach(w => {
     const span = document.createElement('span');
