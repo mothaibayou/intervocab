@@ -641,32 +641,47 @@ document.addEventListener('click', function() {
 popup.addEventListener('click', function(e) { e.stopPropagation(); });
 
 // ---- Memory grid ----
-var vocabWords = [];
-document.querySelectorAll('#main-content .vocab').forEach(function(el) {
-  var w = el.dataset.wordEn;
-  if (w && !vocabWords.includes(w)) vocabWords.push(w);
-});
-
-var grid = document.getElementById('memory-grid');
-vocabWords.forEach(function(word) {
-  var span = document.createElement('span');
-  span.className = 'memory-word';
-  span.textContent = word;
-  span.title = 'Click to find in text';
-  span.addEventListener('click', function() {
-    // find first vocab span in main content with this word
-    var targets = document.querySelectorAll('#main-content .vocab');
-    var found = null;
-    for (var i = 0; i < targets.length; i++) {
-      if (targets[i].dataset.wordEn === word) { found = targets[i]; break; }
-    }
-    if (found) {
-      found.scrollIntoView({behavior: 'smooth', block: 'center'});
-      found.classList.add('highlight-scroll');
-      setTimeout(function() { found.classList.remove('highlight-scroll'); }, 1500);
-    }
+document.addEventListener('DOMContentLoaded', function() {
+  var vocabWords = [];
+  // Use a temporary Set to quickly handle unique words
+  var uniqueWords = new Set();
+  
+  document.querySelectorAll('#main-content .vocab').forEach(function(el) {
+    var w = el.dataset.wordEn;
+    if (w) uniqueWords.add(w);
   });
-  grid.appendChild(span);
+
+  var grid = document.getElementById('memory-grid');
+  // Clear the grid first in case it has static placeholder content
+  grid.innerHTML = ''; 
+
+  uniqueWords.forEach(function(word) {
+    var span = document.createElement('span');
+    span.className = 'memory-word';
+    span.textContent = word;
+    span.title = 'Click to find in text';
+    
+    // The logic you wrote was good, we just ensure it's attached correctly here
+    span.addEventListener('click', function() {
+      var targets = document.querySelectorAll('#main-content .vocab');
+      var found = null;
+      for (var i = 0; i < targets.length; i++) {
+        if (targets[i].dataset.wordEn === word) { 
+          found = targets[i]; 
+          break; 
+        }
+      }
+      
+      if (found) {
+        found.scrollIntoView({behavior: 'smooth', block: 'center'});
+        found.classList.add('highlight-scroll');
+        setTimeout(function() { 
+          found.classList.remove('highlight-scroll'); 
+        }, 1500);
+      }
+    });
+    grid.appendChild(span);
+  });
 });
 
 // ---- Download content only ----
