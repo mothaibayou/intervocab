@@ -628,7 +628,23 @@ ${document.querySelector('script').textContent}
     a.download = 'work-vn-content.html';
     a.click();
   }
-
+<!--NEW MEMORY GRID CLICK-TO-SCROLL -->
+document.querySelectorAll('.memory-grid span').forEach(span => {
+  span.style.cursor = 'pointer';
+  span.style.textDecoration = 'underline';
+  span.style.textDecorationStyle = 'dotted';
+  span.addEventListener('click', function() {
+    const word = this.textContent.trim().toLowerCase();
+    const match = [...document.querySelectorAll('.vocab')].find(el =>
+      el.dataset.wordEn && el.dataset.wordEn.toLowerCase() === word
+    );
+    if (match) {
+      match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      match.style.backgroundColor = '#ffe082';
+      setTimeout(() => match.style.backgroundColor = '', 1500);
+    }
+  });
+});
 </script>
 </body>
 </html>
