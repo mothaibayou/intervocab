@@ -132,14 +132,20 @@
   .rewind-btn:hover { background: #3e2f1a; }
 
   /* Popup card */
-  #popup-card {
-    display: none;
+ display: none;
     position: fixed;
     z-index: 1000;
+    
+    /* ADD THESE THREE LINES TO FIX THE SINKING & CENTER IT */
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%);
+
     background: #f0e6c8;
     border: 2px solid #7a4e1a;
     border-radius: 5px;
     padding: 16px 18px;
+    width: 90%; /* Helps with mobile responsiveness */
     max-width: 320px;
     min-width: 220px;
     box-shadow: 0 4px 18px rgba(0,0,0,0.45);
@@ -601,14 +607,45 @@
 let lastOpened = null;
 const popup = document.getElementById('popup-card');
 
-document.querySelectorAll('.vocab').forEach(function(el) {
-  el.addEventListener('click', function(e) {
-    e.stopPropagation();
-    if (lastOpened === el && popup.style.display === 'block') {
-      popup.style.display = 'none';
-      lastOpened = null;
-      return;
-    }
+// Updated vocab click handler to fix "sinking" and centeringdocument.querySelectorAll('.vocab').forEach(function(el) {
+
+el.addEventListener('click', function(e) {
+
+e.stopPropagation();
+
+var card = document.getElementById('popup-card');
+
+
+// Fill the card with data from the clicked word
+
+document.getElementById('popup-vn').textContent = el.dataset.wordVn;
+
+document.getElementById('popup-en').textContent = el.dataset.wordEn;
+
+document.getElementById('popup-pos').textContent = el.dataset.pos;
+
+document.getElementById('popup-def-en').textContent = el.dataset.defEn;
+
+document.getElementById('popup-def-vn').textContent = el.dataset.defVn;
+
+document.getElementById('popup-context-en').textContent = el.dataset.contextEn;
+
+document.getElementById('popup-context-vn').textContent = el.dataset.contextVn;
+
+
+
+// Show the card
+
+card.style.display = 'block';
+
+
+// We NO LONGER set card.style.top or card.style.left here.
+
+// The CSS handles the centering automatically.
+
+});
+
+});
     lastOpened = el;
     document.getElementById('popup-vn').textContent = el.dataset.wordVn || '';
     document.getElementById('popup-en').textContent = el.dataset.wordEn || '';
