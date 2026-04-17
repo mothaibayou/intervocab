@@ -461,44 +461,35 @@
 <script>
 
   // ── VOCAB POPUP ──────────────────────────────────────────────
-  const popup = document.getElementById('popup-card');
-  let lastWord = null;
+const popup = document.getElementById('popup-card');
+let lastWord = null;
 
-  document.querySelectorAll('.vocab').forEach(el => {
-    el.addEventListener('click', function(e) {
-      e.stopPropagation();
-      if (lastWord === this && popup.style.display === 'block') {
-        popup.style.display = 'none';
-        lastWord = null;
-        return;
-      }
-      lastWord = this;
-      document.getElementById('pop-word-en').textContent = this.dataset.wordEn || '';
-      document.getElementById('pop-word-vn').textContent = this.dataset.wordVn || '';
-      document.getElementById('pop-pos').textContent = this.dataset.pos || '';
-      document.getElementById('pop-def').textContent = this.dataset.defEn || '';
-      document.getElementById('pop-context').textContent = this.dataset.contextEn || '';
-
-      popup.style.display = 'block';
-      // position near click
-      let x = e.pageX + 14, y = e.pageY + 14;
-      const pw = popup.offsetWidth || 300;
-      if (x + pw > window.innerWidth - 10) x = e.pageX - pw - 10;
-      if (y + popup.offsetHeight > window.scrollY + window.innerHeight - 10)
-        y = e.pageY - popup.offsetHeight - 10;
-      popup.style.left = Math.max(8, x) + 'px';
-      popup.style.top  = Math.max(8, y) + 'px';
-    });
-  });
-
-  document.addEventListener('click', function(e) {
-    if (!popup.contains(e.target)) {
+document.querySelectorAll('.vocab').forEach(el => {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (lastWord === this && popup.style.display === 'block') {
       popup.style.display = 'none';
       lastWord = null;
+      return;
     }
+    lastWord = this;
+    document.getElementById('pop-word-en').textContent = this.dataset.wordEn || '';
+    document.getElementById('pop-word-vn').textContent = this.dataset.wordVn || '';
+    document.getElementById('pop-pos').textContent = this.dataset.pos || '';
+    document.getElementById('pop-def').textContent = this.dataset.defEn || '';
+    document.getElementById('pop-context').textContent = this.dataset.contextEn || '';
+    popup.style.display = 'block';
   });
+});
 
-  // ── MEMORY GRID ──────────────────────────────────────────────
+document.addEventListener('click', function(e) {
+  if (!popup.contains(e.target)) {
+    popup.style.display = 'none';
+    lastWord = null;
+  }
+});
+
+ // ── MEMORY GRID ──────────────────────────────────────────────
   const vocabWords = [
     {vn: 'kỹ sư phần mềm', id: 'w-kysuphu'},
     {vn: 'làm việc', id: 'w-lamviec1'},
