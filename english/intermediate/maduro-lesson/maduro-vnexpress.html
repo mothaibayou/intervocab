@@ -687,25 +687,25 @@ document.addEventListener('DOMContentLoaded', function() {
     var w = el.dataset.wordEn;
     if (w) uniqueWords.add(w);
   });
-
   var grid = document.getElementById('memory-grid');
-  // Clear the grid first in case it has static placeholder content
+  // Clear the grid first - this removes ALL static spans
   grid.innerHTML = ''; 
-
   uniqueWords.forEach(function(word) {
     var span = document.createElement('span');
     span.className = 'memory-word';
     span.textContent = word;
     span.title = 'Click to find in text';
     
-    // The logic you wrote was good, we just ensure it's attached correctly here
+    // Add click listener to find and scroll to first occurrence
     span.addEventListener('click', function() {
       var targets = document.querySelectorAll('#main-content .vocab');
       var found = null;
+      
+      // Find FIRST occurrence of this word
       for (var i = 0; i < targets.length; i++) {
         if (targets[i].dataset.wordEn === word) { 
           found = targets[i]; 
-          break; 
+          break;  // Stop at first match
         }
       }
       
@@ -714,9 +714,10 @@ document.addEventListener('DOMContentLoaded', function() {
         found.classList.add('highlight-scroll');
         setTimeout(function() { 
           found.classList.remove('highlight-scroll'); 
-        }, 1500);
+        }, 2000); // Increased highlight time for better visibility
       }
     });
+    
     grid.appendChild(span);
   });
 });
