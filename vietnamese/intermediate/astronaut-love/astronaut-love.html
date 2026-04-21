@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>"Mất Trí Thật Rồi" — Tam Giác Tình Yêu Kỳ Quái Của Phi Hành Gia</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    user-select: none;
+  }
+  .page {
+    background: #f0e6c8;
+    max-width: 820px;
+    margin: 32px auto;
+    padding: 36px 44px 44px 44px;
+    border: 2px solid #a0845a;
+    border-radius: 4px;
+    position: relative;
+  }
+  h1 {
+    font-family: Arial, sans-serif;
+    color: #3a1f00;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    color: #3a1f00;
+    font-size: 1.1rem;
+    font-style: italic;
+    margin-bottom: 24px;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 12px;
+  }
+  p { margin-bottom: 16px; line-height: 1.75; }
+  .section-heading {
+    font-family: Arial, sans-serif;
+    color: #3a1f00;
+    font-size: 1.1rem;
+    font-weight: bold;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 6px;
+    margin: 28px 0 14px 0;
+  }
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+  }
+  /* Correction styles */
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+  /* Audio player */
+  .audio-section {
+    margin-bottom: 28px;
+    padding: 14px 16px;
+    border: 1px solid #a0845a;
+    border-radius: 4px;
+    background: #e8d9b0;
+  }
+  .audio-label {
+    color: #7a4e1a;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+  }
+  audio#audio-player {
+    width: 100%;
+    margin-bottom: 10px;
+    accent-color: #c8a060;
+  }
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .rewind-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 5px 13px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 0.93rem;
+  }
+  .rewind-btn:hover { background: #3e2f1a; }
+  /* Download button */
+  #download-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 6px 12px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+  }
+  #download-btn:hover { background: #3e2f1a; }
+  /* Popup card */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0e6c8;
+    border: 2px solid #a0845a;
+    border-radius: 6px;
+    padding: 20px 24px;
+    max-width: 380px;
+    width: 90vw;
+    z-index: 1000;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.45);
+  }
+  #popup-card .pop-word-en {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #2a1500;
+    margin-bottom: 3px;
+  }
+  #popup-card .pop-word-vn {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #7a4e1a;
+    margin-bottom: 6px;
+  }
+  #popup-card .pop-pos {
+    font-size: 0.95rem;
+    color: #5a3a10;
+    margin-bottom: 10px;
+  }
+  #popup-card .pop-def {
+    font-size: 1rem;
+    color: #2a1500;
+    margin-bottom: 10px;
+    line-height: 1.5;
+  }
+  #popup-card .pop-context-label {
+    font-size: 0.95rem;
+    color: #7a4e1a;
+    font-weight: bold;
+    margin-bottom: 3px;
+  }
+  #popup-card .pop-context {
+    font-size: 0.95rem;
+    color: #4a2a00;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  #popup-overlay {
+    display: none;
+    position: fixed;
+    top:0; left:0; right:0; bottom:0;
+    z-index: 999;
+  }
+  /* Memory grid */
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px 12px;
+    margin-top: 12px;
+  }
+  .memory-word {
+    border-bottom: 1.5px dotted #7a4e1a;
+    cursor: pointer;
+    font-size: 0.97rem;
+    color: #2a1500;
+    padding: 2px 0;
+  }
+  .memory-word:hover { color: #1a5c20; }
+  .back-btn-wrap { margin: 28px 0 10px 0; }
+  .back-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 6px 16px;
+    border-radius: 3px;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    font-size: 0.93rem;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .back-btn:hover { background: #3e2f1a; }
+  /* Transcription notes */
+  .transcription-notes {
+    margin-top: 32px;
+    border-top: 1px solid #7a4e1a;
+    padding-top: 16px;
+  }
+  .transcription-notes table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+  }
+  .transcription-notes th, .transcription-notes td {
+    border: 1px solid #a0845a;
+    padding: 6px 10px;
+    text-align: left;
+    color: #2a1500;
+  }
+  .transcription-notes th { background: #e0cfaa; }
+  .skip-notes {
+    margin-top: 24px;
+    border-top: 1px solid #7a4e1a;
+    padding-top: 14px;
+    font-size: 0.88rem;
+    color: #7a4e1a;
+  }
+  .highlight-scroll {
+    background: #ffe082 !important;
+    transition: background 0.3s;
+  }
+  blockquote {
+    border-left: 3px solid #7a4e1a;
+    margin: 12px 0 12px 12px;
+    padding-left: 14px;
+    font-style: italic;
+    color: #3a1f00;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  
+
+  <!-- AUDIO PLAYER -->
+  <div class="audio-section">
+    <div class="audio-label">🎧 Listen to the text</div>
+    <audio id="audio-player" controls="">
+      <source src="astronaut.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+
+  <!-- TITLE -->
+  <h1><span class="vocab" data-word-en="Lost one's mind / Gone crazy" data-word-vn="Mất trí" data-pos="động từ / verb" data-def-en="To lose one's sanity; to go mad or act irrationally." data-def-vn="Mất đi lý trí, hành động điên rồ hoặc phi lý." data-context-en="Used in the title to describe the astronaut's shocking breakdown and criminal behavior." data-context-vn="Dùng trong tiêu đề để mô tả sự sụp đổ và hành vi phạm pháp gây sốc của phi hành gia.">Mất trí</span> <span class="vocab" data-word-en="truly / really" data-word-vn="thật rồi" data-pos="trạng từ / adverb" data-def-en="Truly; it has really happened — used for emphasis or disbelief." data-def-vn="Thực sự rồi — dùng để nhấn mạnh hoặc bày tỏ sự không tin." data-context-en="Combined with 'mất trí' to intensify the sense of disbelief: 'she has truly lost her mind.'" data-context-vn="Kết hợp với 'mất trí' để nhấn mạnh sự không thể tin được: 'cô ấy đã thật sự mất trí rồi.'">thật rồi</span>"</h1>
+  <div class="subtitle">
+    <span class="vocab" data-word-en="love triangle" data-word-vn="Tam giác tình yêu" data-pos="danh từ / noun" data-def-en="A romantic situation involving three people, where two people are rivals for the affection of a third." data-def-vn="Mối quan hệ tình cảm liên quan đến ba người, trong đó hai người tranh giành tình cảm của người thứ ba." data-context-en="The bizarre love triangle between astronaut Lisa Nowak, her ex-lover, and his new girlfriend drove the story's events." data-context-vn="Tam giác tình yêu kỳ quái giữa phi hành gia Lisa Nowak, người yêu cũ và bạn gái mới của anh ta là nguyên nhân của toàn bộ câu chuyện.">Tam giác tình yêu</span> <span class="vocab" data-word-en="bizarre / strange" data-word-vn="kỳ quái" data-pos="tính từ / adjective" data-def-en="Very strange or unusual; grotesque." data-def-vn="Rất kỳ lạ hoặc bất thường; quái dị." data-context-en="Describes the extremely unusual nature of the love triangle that destroyed the astronaut's career." data-context-vn="Mô tả tính chất cực kỳ bất thường của tam giác tình yêu đã hủy hoại sự nghiệp của phi hành gia.">kỳ quái</span> của <span class="vocab" data-word-en="astronaut" data-word-vn="phi hành gia" data-pos="danh từ / noun" data-def-en="A person trained to travel and work in space." data-def-vn="Người được đào tạo để du hành và làm việc trong không gian." data-context-en="Lisa Nowak was a NASA astronaut whose career was destroyed by her actions." data-context-vn="Lisa Nowak là một phi hành gia NASA có sự nghiệp bị hủy hoại bởi hành động của cô.">phi hành gia</span> <span class="vocab" data-word-en="destroy / shatter" data-word-vn="phá tan" data-pos="động từ / verb" data-def-en="To completely destroy or ruin something." data-def-vn="Phá hủy hoàn toàn hoặc làm tan vỡ điều gì đó." data-context-en="The love triangle shattered both her career and her life." data-context-vn="Tam giác tình yêu đã phá tan cả sự nghiệp lẫn cuộc đời cô.">phá tan</span> <span class="vocab" data-word-en="career" data-word-vn="sự nghiệp" data-pos="danh từ / noun" data-def-en="One's professional life and achievements over time." data-def-vn="Cuộc đời nghề nghiệp và những thành tựu của một người theo thời gian." data-context-en="Lisa Nowak's distinguished career as an astronaut was completely ruined." data-context-vn="Sự nghiệp lẫy lừng của Lisa Nowak với tư cách phi hành gia đã bị hủy hoại hoàn toàn.">sự nghiệp</span> và <span class="vocab" data-word-en="life" data-word-vn="cuộc đời" data-pos="danh từ / noun" data-def-en="One's life as a whole; the course of a person's existence." data-def-vn="Cuộc sống nói chung; toàn bộ hành trình tồn tại của một người." data-context-en="Not just her career but her entire life was destroyed by her obsession." data-context-vn="Không chỉ sự nghiệp mà toàn bộ cuộc đời cô cũng bị hủy hoại bởi nỗi ám ảnh của cô.">cuộc đời</span>
+  </div>
+
+  <!-- PARAGRAPH 1 -->
+  <p>Đây là một <span class="vocab" data-word-en="story / tale" data-word-vn="câu chuyện" data-pos="danh từ / noun" data-def-en="A narrative or account of events." data-def-vn="Một câu chuyện kể hoặc tường thuật về các sự kiện." data-context-en="Used here to introduce the extraordinary account of Lisa Nowak's downfall." data-context-vn="Dùng để giới thiệu câu chuyện phi thường về sự sụp đổ của Lisa Nowak.">câu chuyện</span> <span class="vocab" data-word-en="strange / odd" data-word-vn="kỳ lạ" data-pos="tính từ / adjective" data-def-en="Unusual, unexpected, or hard to explain." data-def-vn="Bất thường, không ngờ tới hoặc khó giải thích." data-context-en="The story is described as strange because of the extreme and irrational actions of the astronaut." data-context-vn="Câu chuyện được mô tả là kỳ lạ vì những hành động cực đoan và phi lý của phi hành gia.">kỳ lạ</span>, <span class="vocab" data-word-en="crazy / insane" data-word-vn="điên rồ" data-pos="tính từ / adjective" data-def-en="Extremely foolish, irrational, or mentally disordered." data-def-vn="Cực kỳ ngu ngốc, phi lý hoặc rối loạn tâm thần." data-context-en="The events are described as so insane that one doesn't know whether to laugh or cry." data-context-vn="Các sự kiện được mô tả điên rồ đến mức không biết nên cười hay nên khóc.">điên rồ</span> đến mức bạn không <span class="vocab" data-word-en="know" data-word-vn="biết" data-pos="động từ / verb" data-def-en="To have knowledge or awareness of something." data-def-vn="Có kiến thức hoặc nhận thức về điều gì đó." data-context-en="The narrator says the reader won't know whether to laugh or cry." data-context-vn="Người kể chuyện nói rằng người đọc sẽ không biết nên cười hay nên khóc.">biết</span> nên <span class="vocab" data-word-en="laugh" data-word-vn="cười" data-pos="động từ / verb" data-def-en="To make sounds and movements expressing amusement." data-def-vn="Tạo ra âm thanh và cử động thể hiện sự vui vẻ." data-context-en="The story is so bizarre the reader doesn't know whether to laugh or cry." data-context-vn="Câu chuyện quá kỳ lạ đến mức người đọc không biết nên cười hay nên khóc.">cười</span> hay nên <span class="vocab" data-word-en="cry / weep" data-word-vn="khóc" data-pos="động từ / verb" data-def-en="To shed tears, typically from sadness or strong emotion." data-def-vn="Rơi nước mắt, thường vì buồn bã hoặc cảm xúc mạnh." data-context-en="The story is so bizarre the reader doesn't know whether to laugh or cry." data-context-vn="Câu chuyện quá kỳ lạ đến mức người đọc không biết nên cười hay nên khóc.">khóc</span>.</p>
+
+  <!-- PARAGRAPH 2 -->
+  <p><span class="vocab" data-word-en="once / formerly" data-word-vn="Từng" data-pos="trạng từ / adverb" data-def-en="At a former time; used to be or do something in the past." data-def-vn="Vào một thời điểm trước đây; đã từng là hoặc làm gì đó trong quá khứ." data-context-en="Used to contrast Nowak's distinguished past as a pioneering astronaut with her later downfall." data-context-vn="Dùng để đối chiếu quá khứ lẫy lừng của Nowak với tư cách phi hành gia tiên phong và sự sụp đổ sau này của cô.">Từng</span> là một <span class="vocab" data-word-en="female astronaut / woman astronaut" data-word-vn="nữ phi hành gia" data-pos="danh từ / noun" data-def-en="A woman trained to travel and work in space." data-def-vn="Người phụ nữ được đào tạo để du hành và làm việc trong không gian." data-context-en="Lisa Nowak was celebrated as a pioneering female astronaut before her downfall." data-context-vn="Lisa Nowak từng được ca ngợi là một nữ phi hành gia tiên phong trước khi sụp đổ.">nữ phi hành gia</span> <span class="vocab" data-word-en="pioneer / trailblazer" data-word-vn="tiên phong" data-pos="tính từ / adjective" data-def-en="Being among the first to develop or use something new; leading the way." data-def-vn="Là người đầu tiên trong số những người phát triển hoặc sử dụng điều gì đó mới; dẫn đầu." data-context-en="Nowak was celebrated as a pioneering female astronaut, breaking barriers in her field." data-context-vn="Nowak được ca ngợi là một nữ phi hành gia tiên phong, phá vỡ rào cản trong lĩnh vực của mình.">tiên phong</span>, <span class="vocab" data-word-en="career" data-word-vn="sự nghiệp" data-pos="danh từ / noun" data-def-en="One's professional life and achievements over time." data-def-vn="Cuộc đời nghề nghiệp và những thành tựu của một người theo thời gian." data-context-en="Her once-glorious career took a dramatic turn after her obsessive actions." data-context-vn="Sự nghiệp từng rực rỡ của cô đã rẽ sang một hướng đầy kịch tính sau những hành động ám ảnh của cô.">sự nghiệp</span> của Lisa Nowak đã <span class="vocab" data-word-en="veer / turn in a direction" data-word-vn="rẽ sang" data-pos="động từ / verb" data-def-en="To turn or change direction, especially toward a new path." data-def-vn="Rẽ hoặc thay đổi hướng, đặc biệt theo một con đường mới." data-context-en="Her career veered in a dramatic and unexpected direction due to her actions." data-context-vn="Sự nghiệp của cô đã rẽ theo một hướng đầy kịch tính và bất ngờ vì hành động của cô.">rẽ sang</span> một <span class="vocab" data-word-en="direction / path" data-word-vn="hướng" data-pos="danh từ / noun" data-def-en="A course or path taken by someone or something." data-def-vn="Một con đường hoặc hướng đi mà ai đó hoặc điều gì đó theo." data-context-en="Her career took an unexpected and dramatic direction after her breakdown." data-context-vn="Sự nghiệp của cô đã đi theo một hướng bất ngờ và đầy kịch tính sau sự sụp đổ của cô.">hướng</span> đầy <span class="vocab" data-word-en="dramatic / theatrical" data-word-vn="kịch tính" data-pos="tính từ / adjective" data-def-en="Sudden, intense, and striking, like a scene from a play." data-def-vn="Đột ngột, mãnh liệt và nổi bật, giống như một cảnh trong vở kịch." data-context-en="Her career took a dramatic turn, meaning the change was sudden and shocking." data-context-vn="Sự nghiệp của cô đã rẽ theo hướng đầy kịch tính, nghĩa là sự thay đổi đột ngột và gây sốc.">kịch tính</span> sau khi cô <span class="vocab" data-word-en="drive / travel by car" data-word-vn="lái xe" data-pos="động từ / verb" data-def-en="To operate and travel in a vehicle, especially a car." data-def-vn="Vận hành và di chuyển bằng phương tiện, đặc biệt là ô tô." data-context-en="Nowak drove over 1,500 km to confront her rival — a shocking act of obsession." data-context-vn="Nowak lái xe hơn 1.500 km để đối đầu với đối thủ của mình — một hành động ám ảnh gây sốc.">lái xe</span> hơn 1.500 km để <span class="vocab" data-word-en="confront / face off" data-word-vn="đối đầu" data-pos="động từ / verb" data-def-en="To meet someone face to face in a hostile or challenging way." data-def-vn="Gặp ai đó trực tiếp theo cách thù địch hoặc thách thức." data-context-en="Nowak drove hundreds of kilometers to confront her ex-lover's new girlfriend." data-context-vn="Nowak lái xe hàng trăm km để đối đầu với bạn gái mới của người yêu cũ.">đối đầu</span> với <span class="vocab" data-word-en="new girlfriend" data-word-vn="bạn gái mới" data-pos="danh từ / noun" data-def-en="A man's newly acquired romantic female partner." data-def-vn="Người bạn gái mới của một người đàn ông." data-context-en="Nowak targeted her ex-lover's new girlfriend, Coleen Shipman, as the object of her obsessive rage." data-context-vn="Nowak nhắm vào bạn gái mới của người yêu cũ, Coleen Shipman, như là đối tượng của cơn thịnh nộ ám ảnh.">bạn gái mới</span> của <span class="vocab" data-word-en="ex-lover / former lover" data-word-vn="người yêu cũ" data-pos="danh từ / noun" data-def-en="A person who was formerly in a romantic relationship with someone." data-def-vn="Người từng có quan hệ tình cảm với ai đó." data-context-en="Nowak refused to accept her breakup with her ex-lover, driving her to extreme actions." data-context-vn="Nowak không thể chấp nhận việc chia tay với người yêu cũ, khiến cô có những hành động cực đoan.">người yêu cũ</span> trong một cuộc <span class="vocab" data-word-en="confrontation / clash" data-word-vn="chạm trán" data-pos="danh từ / noun" data-def-en="A direct and hostile encounter between two parties." data-def-vn="Một cuộc gặp gỡ trực tiếp và thù địch giữa hai bên." data-context-en="The confrontation at Orlando airport shocked the world." data-context-vn="Cuộc chạm trán tại sân bay Orlando đã gây sốc cho toàn thế giới.">chạm trán</span> <span class="vocab" data-word-en="shocking / causing shock" data-word-vn="gây sốc" data-pos="tính từ / adjective" data-def-en="Causing a strong feeling of surprise or disbelief; deeply disturbing." data-def-vn="Gây ra cảm giác ngạc nhiên hay không tin được mạnh mẽ; cực kỳ đáng lo ngại." data-context-en="The confrontation was described as shocking because of its violence and absurdity." data-context-vn="Cuộc chạm trán được mô tả là gây sốc vì tính bạo lực và phi lý của nó.">gây sốc</span>.</p>
+
+  <!-- PARAGRAPH 3 -->
+  <p>Nowak <span class="vocab" data-word-en="was praised / was celebrated" data-word-vn="từng được ca ngợi" data-pos="động từ / verb" data-def-en="Was publicly acknowledged and praised for achievements." data-def-vn="Được công nhận và khen ngợi công khai vì những thành tích." data-context-en="Nowak had been celebrated as an ideal American woman before her shocking downfall." data-context-vn="Nowak từng được ca ngợi là người phụ nữ Mỹ lý tưởng trước khi sụp đổ gây sốc.">từng được ca ngợi</span> là <span class="vocab" data-word-en="role model / ideal" data-word-vn="hình mẫu" data-pos="danh từ / noun" data-def-en="A person looked up to as an example to be followed or admired." data-def-vn="Người được ngưỡng mộ và coi là tấm gương để noi theo." data-context-en="She was described as a role model for American women, making her fall even more shocking." data-context-vn="Cô được mô tả là hình mẫu cho phụ nữ Mỹ, khiến sự sụp đổ của cô càng gây sốc hơn.">hình mẫu</span> <span class="vocab" data-word-en="ideal / perfect" data-word-vn="lý tưởng" data-pos="tính từ / adjective" data-def-en="Conforming to the highest standard; perfect." data-def-vn="Phù hợp với tiêu chuẩn cao nhất; hoàn hảo." data-context-en="She was held up as the ideal American woman according to NASA's profile." data-context-vn="Cô được nêu lên là người phụ nữ Mỹ lý tưởng theo hồ sơ của NASA.">lý tưởng</span>, theo <span class="vocab" data-word-en="profile / file / record" data-word-vn="hồ sơ" data-pos="danh từ / noun" data-def-en="A formal document or record containing detailed information about a person." data-def-vn="Tài liệu chính thức hoặc hồ sơ chứa thông tin chi tiết về một người." data-context-en="According to NASA's official profile, Nowak was described as an ideal American woman." data-context-vn="Theo hồ sơ chính thức của NASA, Nowak được mô tả là người phụ nữ Mỹ lý tưởng.">hồ sơ</span> của NASA. Sau khi <span class="vocab" data-word-en="graduate" data-word-vn="tốt nghiệp" data-pos="động từ / verb" data-def-en="To complete and receive a degree or diploma from an educational institution." data-def-vn="Hoàn thành và nhận bằng cấp từ một cơ sở giáo dục." data-context-en="After graduating from the Naval Academy, Nowak began her distinguished military career." data-context-vn="Sau khi tốt nghiệp Học viện Hải quân, Nowak bắt đầu sự nghiệp quân sự lẫy lừng của mình.">tốt nghiệp</span> <span class="vocab" data-word-en="Naval Academy" data-word-vn="Học viện Hải quân" data-pos="danh từ / noun" data-def-en="A military college that trains officers for the navy." data-def-vn="Trường quân sự đào tạo sĩ quan cho lực lượng hải quân." data-context-en="Nowak graduated from the Naval Academy, which set the foundation for her astronaut career." data-context-vn="Nowak tốt nghiệp Học viện Hải quân, tạo nền tảng cho sự nghiệp phi hành gia của cô.">Học viện Hải quân</span>, cô trở thành <span class="vocab" data-word-en="fighter pilot" data-word-vn="phi công chiến đấu" data-pos="danh từ / noun" data-def-en="A military pilot who flies combat aircraft." data-def-vn="Phi công quân sự lái máy bay chiến đấu." data-context-en="Nowak became a fighter pilot after graduating from the Naval Academy." data-context-vn="Nowak trở thành phi công chiến đấu sau khi tốt nghiệp Học viện Hải quân.">phi công chiến đấu</span> và được NASA <span class="vocab" data-word-en="select / recruit" data-word-vn="tuyển chọn" data-pos="động từ / verb" data-def-en="To choose carefully from a group for a special purpose." data-def-vn="Lựa chọn cẩn thận từ một nhóm cho một mục đích đặc biệt." data-context-en="NASA selected Nowak for the astronaut program in 1996." data-context-vn="NASA tuyển chọn Nowak vào chương trình phi hành gia vào năm 1996.">tuyển chọn</span> vào năm 1996 trong <span class="vocab" data-word-en="astronaut program" data-word-vn="chương trình phi hành gia" data-pos="danh từ / noun" data-def-en="NASA's program for training and developing astronauts." data-def-vn="Chương trình của NASA để đào tạo và phát triển phi hành gia." data-context-en="Nowak was selected into NASA's astronaut program in 1996." data-context-vn="Nowak được tuyển chọn vào chương trình phi hành gia của NASA vào năm 1996.">chương trình phi hành gia</span>. Năm 2006, cô <span class="vocab" data-word-en="serve / fulfill a role" data-word-vn="phục vụ" data-pos="động từ / verb" data-def-en="To work in or carry out duties for a particular role or organization." data-def-vn="Làm việc hoặc thực hiện nhiệm vụ cho một vai trò hoặc tổ chức cụ thể." data-context-en="In 2006, Nowak served as a flight engineer aboard the Space Shuttle Discovery." data-context-vn="Năm 2006, Nowak phục vụ với vai trò kỹ sư chuyến bay trên tàu con thoi Discovery.">phục vụ</span> với vai trò <span class="vocab" data-word-en="flight engineer" data-word-vn="kỹ sư chuyến bay" data-pos="danh từ / noun" data-def-en="A crew member responsible for operating and monitoring spacecraft systems during a mission." data-def-vn="Thành viên phi hành đoàn chịu trách nhiệm vận hành và giám sát các hệ thống tàu vũ trụ trong nhiệm vụ." data-context-en="Nowak served as a flight engineer on the Space Shuttle Discovery mission in 2006." data-context-vn="Nowak phục vụ với vai trò kỹ sư chuyến bay trong nhiệm vụ tàu con thoi Discovery năm 2006.">kỹ sư chuyến bay</span> trên <span class="vocab" data-word-en="space shuttle" data-word-vn="tàu con thoi" data-pos="danh từ / noun" data-def-en="A reusable spacecraft used by NASA to carry astronauts and cargo to space." data-def-vn="Tàu vũ trụ có thể tái sử dụng được NASA dùng để đưa phi hành gia và hàng hóa lên không gian." data-context-en="Nowak flew aboard the Space Shuttle Discovery on a 13-day mission in 2006." data-context-vn="Nowak bay trên tàu con thoi Discovery trong một nhiệm vụ kéo dài 13 ngày năm 2006.">tàu con thoi</span> Discovery, <span class="vocab" data-word-en="operate / control" data-word-vn="điều khiển" data-pos="động từ / verb" data-def-en="To operate or control a machine or device." data-def-vn="Vận hành hoặc điều khiển một máy móc hoặc thiết bị." data-context-en="During the mission, Nowak operated the robotic arm during spacewalks." data-context-vn="Trong nhiệm vụ, Nowak điều khiển cánh tay robot trong các chuyến đi bộ ngoài không gian.">điều khiển</span> <span class="vocab" data-word-en="robotic arm" data-word-vn="cánh tay robot" data-pos="danh từ / noun" data-def-en="A mechanical arm on a spacecraft, controlled by astronauts, used for tasks outside the vehicle." data-def-vn="Cánh tay cơ học trên tàu vũ trụ, được phi hành gia điều khiển, dùng để thực hiện các công việc bên ngoài tàu." data-context-en="Nowak operated the robotic arm during spacewalks on the Discovery mission." data-context-vn="Nowak điều khiển cánh tay robot trong các chuyến đi bộ ngoài không gian của nhiệm vụ Discovery.">cánh tay robot</span> trong nhiều <span class="vocab" data-word-en="spacewalk" data-word-vn="chuyến đi bộ ngoài không gian" data-pos="danh từ / noun" data-def-en="An activity where an astronaut moves and works outside a spacecraft in space." data-def-vn="Hoạt động trong đó phi hành gia di chuyển và làm việc bên ngoài tàu vũ trụ trong không gian." data-context-en="Nowak performed multiple spacewalks during the 13-day Discovery mission." data-context-vn="Nowak thực hiện nhiều chuyến đi bộ ngoài không gian trong nhiệm vụ Discovery kéo dài 13 ngày.">chuyến đi bộ ngoài không gian</span> suốt <span class="vocab" data-word-en="mission" data-word-vn="nhiệm vụ" data-pos="danh từ / noun" data-def-en="An important task or journey, especially a space flight assignment." data-def-vn="Một nhiệm vụ hoặc hành trình quan trọng, đặc biệt là chuyến bay vũ trụ được giao." data-context-en="The Discovery mission lasted 13 days and was a high point of Nowak's career." data-context-vn="Nhiệm vụ Discovery kéo dài 13 ngày và là đỉnh cao sự nghiệp của Nowak.">nhiệm vụ</span> <span class="vocab" data-word-en="lasting / that lasted" data-word-vn="kéo dài" data-pos="động từ / verb" data-def-en="To continue for a period of time; to last." data-def-vn="Tiếp tục trong một khoảng thời gian; kéo dài." data-context-en="The mission lasted 13 days in space." data-context-vn="Nhiệm vụ kéo dài 13 ngày trong không gian.">kéo dài</span> 13 ngày.</p>
+
+  <!-- PARAGRAPH 4 -->
+  <p>Cô đã <span class="vocab" data-word-en="married" data-word-vn="kết hôn" data-pos="động từ / verb" data-def-en="To have entered into a legal marriage with someone." data-def-vn="Đã tiến hành hôn nhân hợp pháp với ai đó." data-context-en="Nowak was married and had three children, making her later actions even more shocking." data-context-vn="Nowak đã kết hôn và có ba con, khiến những hành động sau này của cô càng gây sốc hơn.">kết hôn</span> và có ba <span class="vocab" data-word-en="children" data-word-vn="con" data-pos="danh từ / noun" data-def-en="One's offspring; a son or daughter." data-def-vn="Con cái; con trai hoặc con gái." data-context-en="Despite being married with three children, Nowak began an affair with a fellow astronaut." data-context-vn="Mặc dù đã kết hôn và có ba con, Nowak bắt đầu có quan hệ tình cảm với một phi hành gia đồng nghiệp.">con</span>, nhưng theo <span class="vocab" data-word-en="time / over time" data-word-vn="thời gian" data-pos="danh từ / noun" data-def-en="The passage of time; over time." data-def-vn="Sự trôi qua của thời gian; theo thời gian." data-context-en="Over time, she developed a romantic relationship with a fellow astronaut during intense training." data-context-vn="Theo thời gian, cô nảy sinh quan hệ tình cảm với một phi hành gia đồng nghiệp trong quá trình huấn luyện cường độ cao.">thời gian</span>, cô <span class="vocab" data-word-en="develop feelings / fall for" data-word-vn="nảy sinh quan hệ tình cảm" data-pos="động từ / verb" data-def-en="To gradually develop a romantic attachment to someone." data-def-vn="Dần dần phát triển tình cảm lãng mạn với ai đó." data-context-en="Nowak gradually developed a romantic relationship with a male astronaut during their shared training." data-context-vn="Nowak dần nảy sinh quan hệ tình cảm với một nam phi hành gia trong quá trình huấn luyện chung của họ.">nảy sinh quan hệ tình cảm</span> với một <span class="vocab" data-word-en="male astronaut" data-word-vn="nam phi hành gia" data-pos="danh từ / noun" data-def-en="A male person trained to travel in space." data-def-vn="Người đàn ông được đào tạo để du hành vũ trụ." data-context-en="Nowak fell for a male astronaut colleague during high-intensity space mission training." data-context-vn="Nowak đã nảy sinh tình cảm với một nam phi hành gia đồng nghiệp trong quá trình huấn luyện cường độ cao cho sứ mệnh không gian.">nam phi hành gia</span> sau khi cùng <span class="vocab" data-word-en="train / undergo training" data-word-vn="huấn luyện" data-pos="động từ / verb" data-def-en="To practice and prepare intensively for a skill or mission." data-def-vn="Tập luyện và chuẩn bị tích cực cho một kỹ năng hoặc nhiệm vụ." data-context-en="They trained together intensively for a space mission, leading to their romantic relationship." data-context-vn="Họ cùng nhau huấn luyện cường độ cao cho một sứ mệnh không gian, dẫn đến mối quan hệ tình cảm của họ.">huấn luyện</span> <span class="vocab" data-word-en="high-intensity / intense" data-word-vn="cường độ cao" data-pos="tính từ / adjective" data-def-en="Characterized by great effort, pressure, or concentration." data-def-vn="Được đặc trưng bởi nỗ lực, áp lực hoặc sự tập trung cao độ." data-context-en="The high-intensity training for the space mission brought the two astronauts closer together." data-context-vn="Quá trình huấn luyện cường độ cao cho sứ mệnh không gian đã khiến hai phi hành gia xích lại gần nhau hơn.">cường độ cao</span> cho một <span class="vocab" data-word-en="space mission" data-word-vn="sứ mệnh không gian" data-pos="danh từ / noun" data-def-en="An assigned task or journey into space." data-def-vn="Nhiệm vụ hoặc hành trình được giao vào không gian." data-context-en="Nowak and Oefelein trained together for a space mission, which sparked their affair." data-context-vn="Nowak và Oefelein cùng nhau huấn luyện cho một sứ mệnh không gian, điều này đã nhen nhóm mối quan hệ của họ.">sứ mệnh không gian</span>. Cuộc <span class="vocab" data-word-en="marriage" data-word-vn="hôn nhân" data-pos="danh từ / noun" data-def-en="The legal union of two people as partners in a relationship." data-def-vn="Sự kết hợp hợp pháp của hai người với tư cách là đối tác trong một mối quan hệ." data-context-en="Nowak's marriage gradually fell apart as she continued her affair with Oefelein." data-context-vn="Hôn nhân của Nowak dần tan vỡ khi cô tiếp tục mối quan hệ ngoài luồng với Oefelein.">hôn nhân</span> của cô dần "<span class="vocab" data-word-en="fall apart / break up" data-word-vn="tan vỡ" data-pos="động từ / verb" data-def-en="To disintegrate or come to an end; to break apart." data-def-vn="Tan rã hoặc kết thúc; vỡ tan." data-context-en="Her marriage fell apart as she pursued her affair with a fellow astronaut." data-context-vn="Hôn nhân của cô tan vỡ khi cô theo đuổi mối quan hệ ngoài luồng với đồng nghiệp phi hành gia.">tan vỡ</span>" khi cô tiếp tục <span class="vocab" data-word-en="affair / extramarital relationship" data-word-vn="mối quan hệ ngoài luồng" data-pos="danh từ / noun" data-def-en="A romantic or sexual relationship outside of one's marriage." data-def-vn="Mối quan hệ tình cảm hoặc tình dục ngoài hôn nhân của mình." data-context-en="Nowak continued her extramarital affair with astronaut William Oefelein." data-context-vn="Nowak tiếp tục mối quan hệ ngoài luồng với phi hành gia William Oefelein.">mối quan hệ ngoài luồng</span> với <span class="vocab" data-word-en="astronaut" data-word-vn="phi hành gia" data-pos="danh từ / noun" data-def-en="A person trained to travel and work in space." data-def-vn="Người được đào tạo để du hành và làm việc trong không gian." data-context-en="William Oefelein was the astronaut with whom Nowak had her affair." data-context-vn="William Oefelein là phi hành gia mà Nowak có mối quan hệ ngoài luồng.">phi hành gia</span> William Oefelein. Nhưng rồi Oefelein nói rằng anh đã <span class="vocab" data-word-en="fallen in love with" data-word-vn="yêu" data-pos="động từ / verb" data-def-en="To have developed romantic love for someone." data-def-vn="Đã phát triển tình yêu lãng mạn với ai đó." data-context-en="Oefelein told Nowak he had fallen in love with another woman, Coleen Shipman." data-context-vn="Oefelein nói với Nowak rằng anh đã yêu một người phụ nữ khác, Coleen Shipman.">yêu</span> một người <span class="vocab" data-word-en="other woman / another woman" data-word-vn="người phụ nữ khác" data-pos="danh từ / noun" data-def-en="A different woman; in this context, a romantic rival." data-def-vn="Một người phụ nữ khác; trong bối cảnh này là đối thủ tình cảm." data-context-en="Oefelein told Nowak he had fallen for another woman, Coleen Shipman, triggering Nowak's breakdown." data-context-vn="Oefelein nói với Nowak rằng anh đã yêu một người phụ nữ khác, Coleen Shipman, kích động sự sụp đổ của Nowak.">người phụ nữ khác</span>, Coleen Shipman, và <span class="vocab" data-word-en="end things / break up with" data-word-vn="chấm dứt" data-pos="động từ / verb" data-def-en="To bring something to an end; to terminate a relationship." data-def-vn="Đưa điều gì đó đến hồi kết; chấm dứt một mối quan hệ." data-context-en="Oefelein ended his relationship with Nowak, triggering her obsessive and violent response." data-context-vn="Oefelein chấm dứt mối quan hệ với Nowak, kích động phản ứng ám ảnh và bạo lực của cô.">chấm dứt</span> với Nowak. Điều này đã khiến <span class="vocab" data-word-en="life" data-word-vn="cuộc đời" data-pos="danh từ / noun" data-def-en="The course of a person's existence; one's life." data-def-vn="Hành trình tồn tại của một người; cuộc sống của một người." data-context-en="After the breakup, Nowak's life went into a rapid and uncontrollable downward spiral." data-context-vn="Sau khi chia tay, cuộc đời Nowak lao dốc không phanh.">cuộc đời</span> Nowak <span class="vocab" data-word-en="spiral downward / plummet" data-word-vn="lao dốc không phanh" data-pos="động từ / verb" data-def-en="To fall rapidly and uncontrollably, with nothing to stop the decline." data-def-vn="Rơi xuống nhanh chóng và không thể kiểm soát, không có gì để dừng lại." data-context-en="After Oefelein broke up with her, Nowak's life went into freefall — lao dốc không phanh." data-context-vn="Sau khi Oefelein chia tay cô, cuộc đời Nowak lao dốc không phanh.">lao dốc không phanh</span>.</p>
+
+  <!-- PARAGRAPH 5 -->
+  <p>Cô không thể <span class="vocab" data-word-en="accept" data-word-vn="chấp nhận" data-pos="động từ / verb" data-def-en="To agree or come to terms with something; to tolerate a situation." data-def-vn="Đồng ý hoặc chấp nhận điều gì đó; chịu đựng một tình huống." data-context-en="Nowak could not accept the breakup and refused to move on." data-context-vn="Nowak không thể chấp nhận việc chia tay và từ chối tiếp tục sống.">chấp nhận</span> việc <span class="vocab" data-word-en="breakup / separation" data-word-vn="chia tay" data-pos="danh từ / noun" data-def-en="The ending of a romantic relationship." data-def-vn="Sự kết thúc của một mối quan hệ tình cảm." data-context-en="Nowak could not come to terms with the breakup, leading her to obsessive behavior." data-context-vn="Nowak không thể chấp nhận việc chia tay, dẫn cô đến hành vi ám ảnh.">chia tay</span>. Cô <span class="vocab" data-word-en="called / phoned" data-word-vn="gọi" data-pos="động từ / verb" data-def-en="To telephone or contact someone by phone." data-def-vn="Gọi điện hoặc liên hệ với ai đó qua điện thoại." data-context-en="Nowak called Oefelein many times every day after their breakup." data-context-vn="Nowak gọi cho Oefelein nhiều lần mỗi ngày sau khi chia tay.">gọi</span> cho Oefelein nhiều lần mỗi ngày. <span class="vocab" data-word-en="Rage / anger" data-word-vn="Cơn giận dữ" data-pos="danh từ / noun" data-def-en="A feeling of intense anger; fury." data-def-vn="Cảm giác tức giận dữ dội; sự giận dữ." data-context-en="Nowak's rage grew so intense that she began planning to kidnap and kill her rival." data-context-vn="Cơn giận dữ của Nowak dâng trào đến mức cô bắt đầu lên kế hoạch bắt cóc và giết đối thủ.">Cơn giận dữ</span> <span class="vocab" data-word-en="surge / rise up" data-word-vn="dâng trào" data-pos="động từ / verb" data-def-en="To rise suddenly and powerfully, like a wave of emotion." data-def-vn="Dâng lên đột ngột và mạnh mẽ, như một làn sóng cảm xúc." data-context-en="Her rage surged so powerfully that she began to plan a kidnapping and murder." data-context-vn="Cơn giận của cô dâng trào đến mức cô bắt đầu lên kế hoạch bắt cóc và giết người.">dâng trào</span> đến mức cô lên <span class="vocab" data-word-en="plan / scheme" data-word-vn="kế hoạch" data-pos="danh từ / noun" data-def-en="A detailed strategy or method for doing something." data-def-vn="Chiến lược hoặc phương pháp chi tiết để làm điều gì đó." data-context-en="Nowak formed a plan to kidnap and kill Coleen Shipman." data-context-vn="Nowak lên kế hoạch bắt cóc và giết Coleen Shipman.">kế hoạch</span> <span class="vocab" data-word-en="kidnap / abduct" data-word-vn="bắt cóc" data-pos="động từ / verb" data-def-en="To seize and take away a person by force, especially to demand a ransom." data-def-vn="Bắt và đưa đi một người bằng vũ lực, đặc biệt là để đòi tiền chuộc." data-context-en="Nowak planned to kidnap and kill Shipman out of obsessive jealousy." data-context-vn="Nowak lên kế hoạch bắt cóc và giết Shipman vì ghen tuông ám ảnh.">bắt cóc</span> và <span class="vocab" data-word-en="kill / murder" data-word-vn="giết" data-pos="động từ / verb" data-def-en="To cause the death of a person or animal." data-def-vn="Gây ra cái chết của một người hoặc động vật." data-context-en="Nowak planned to kidnap and kill Shipman, her ex-lover's new girlfriend." data-context-vn="Nowak lên kế hoạch bắt cóc và giết Shipman, bạn gái mới của người yêu cũ.">giết</span> Shipman. Khi đó Nowak ở Houston, Texas, còn Shipman ở Florida. Nowak <span class="vocab" data-word-en="prepare / make ready" data-word-vn="chuẩn bị" data-pos="động từ / verb" data-def-en="To make ready for a purpose; to gather and organize what is needed." data-def-vn="Chuẩn bị sẵn sàng cho một mục đích; thu thập và tổ chức những gì cần thiết." data-context-en="Nowak carefully prepared a set of weapons and disguise items before setting off to Florida." data-context-vn="Nowak cẩn thận chuẩn bị một bộ vũ khí và đồ cải trang trước khi lên đường đến Florida.">chuẩn bị</span> một bộ <span class="vocab" data-word-en="wig / fake hair" data-word-vn="tóc giả" data-pos="danh từ / noun" data-def-en="Artificial hair worn as a disguise or for cosmetic reasons." data-def-vn="Tóc giả được đội như một bộ cải trang hoặc vì lý do thẩm mỹ." data-context-en="Nowak brought a wig as part of her disguise for the planned attack on Shipman." data-context-vn="Nowak mang theo một bộ tóc giả như một phần của bộ cải trang cho cuộc tấn công đã lên kế hoạch vào Shipman.">tóc giả</span>, <span class="vocab" data-word-en="pepper spray" data-word-vn="bình xịt hơi cay" data-pos="danh từ / noun" data-def-en="A spray containing an irritant derived from chili peppers, used as a weapon." data-def-vn="Bình xịt chứa chất kích ứng từ ớt, dùng làm vũ khí." data-context-en="Nowak carried pepper spray as one of her weapons against Shipman." data-context-vn="Nowak mang theo bình xịt hơi cay như một trong những vũ khí của cô chống lại Shipman.">bình xịt hơi cay</span>, <span class="vocab" data-word-en="BB gun" data-word-vn="súng BB" data-pos="danh từ / noun" data-def-en="A type of air gun that fires small metal pellets (BBs)." data-def-vn="Loại súng hơi bắn đạn bi kim loại nhỏ (BB)." data-context-en="Among her weapons, Nowak brought a BB gun as part of her planned attack." data-context-vn="Trong số các vũ khí của mình, Nowak mang theo súng BB như một phần trong kế hoạch tấn công của cô.">súng BB</span>, <span class="vocab" data-word-en="rope" data-word-vn="dây thừng" data-pos="danh từ / noun" data-def-en="A length of strong cord made from twisted fibers, used for binding." data-def-vn="Một sợi dây mạnh làm từ sợi xoắn, dùng để buộc." data-context-en="Nowak packed rope, presumably to restrain Shipman during the planned kidnapping." data-context-vn="Nowak mang theo dây thừng, có lẽ để trói Shipman trong vụ bắt cóc đã lên kế hoạch.">dây thừng</span>, <span class="vocab" data-word-en="garbage bags / trash bags" data-word-vn="túi rác" data-pos="danh từ / noun" data-def-en="Plastic bags used for collecting and disposing of trash; here carried as part of a kidnapping kit." data-def-vn="Túi nhựa dùng để thu gom và đổ rác; ở đây được mang theo như một phần của bộ đồ bắt cóc." data-context-en="Nowak packed garbage bags among her disturbing collection of items prepared for the attack." data-context-vn="Nowak mang theo túi rác trong bộ đồ đáng lo ngại mà cô chuẩn bị cho cuộc tấn công.">túi rác</span>, <span class="vocab" data-word-en="handcuffs" data-word-vn="còng tay" data-pos="danh từ / noun" data-def-en="A pair of linked metal rings used to restrain a person's wrists." data-def-vn="Một cặp vòng kim loại nối với nhau dùng để khóa cổ tay người bị bắt." data-context-en="Nowak brought handcuffs — intended to restrain her victim — as part of her planned abduction." data-context-vn="Nowak mang theo còng tay — dùng để khóa nạn nhân — như một phần trong kế hoạch bắt cóc của cô.">còng tay</span> và một <span class="vocab" data-word-en="knife / blade" data-word-vn="con dao" data-pos="danh từ / noun" data-def-en="A tool or weapon with a sharp blade used for cutting." data-def-vn="Dụng cụ hoặc vũ khí có lưỡi sắc dùng để cắt." data-context-en="Nowak packed a knife approximately 20 cm long as one of her weapons." data-context-vn="Nowak mang theo một con dao dài khoảng 20 cm như một trong những vũ khí của cô.">con dao</span> dài <span class="vocab" data-word-en="approximately" data-word-vn="khoảng" data-pos="trạng từ / adverb" data-def-en="Used to show that a number or amount is not exact; roughly." data-def-vn="Dùng để chỉ một con số hoặc lượng không chính xác; khoảng chừng." data-context-en="The knife was approximately 20 cm long." data-context-vn="Con dao dài khoảng 20 cm.">khoảng</span> 20 cm, rồi <span class="vocab" data-word-en="drive / travel by car" data-word-vn="lái xe" data-pos="động từ / verb" data-def-en="To operate and travel in a vehicle, especially a car." data-def-vn="Vận hành và di chuyển bằng xe, đặc biệt là ô tô." data-context-en="Nowak drove over 1,400 km to Florida to confront Shipman." data-context-vn="Nowak lái xe hơn 1.400 km đến Florida để đối đầu với Shipman.">lái xe</span> hơn 1.400 km đến Florida. Cô <span class="vocab" data-word-en="in a hurry / rushed" data-word-vn="vội vàng" data-pos="tính từ / adjective" data-def-en="Done with excessive speed or urgency." data-def-vn="Làm với tốc độ hoặc sự khẩn cấp quá mức." data-context-en="Nowak was in such a hurry that she wore a space diaper to avoid stopping on the drive." data-context-vn="Nowak vội vàng đến mức phải mặc 'tã không gian' để tránh dừng xe trong suốt chuyến đi.">vội vàng</span> đến mức phải mặc "<span class="vocab" data-word-en="space diaper" data-word-vn="tã không gian" data-pos="danh từ / noun" data-def-en="An adult diaper used by astronauts during space missions to avoid bathroom breaks; here worn during the long drive." data-def-vn="Tã người lớn được phi hành gia sử dụng trong các sứ mệnh vũ trụ để tránh đi vệ sinh; ở đây được mặc trong suốt chuyến đi dài." data-context-en="Nowak wore a space diaper to avoid stopping to use the bathroom during her 1,400+ km drive to Florida." data-context-vn="Nowak mặc tã không gian để tránh dừng đi vệ sinh trong suốt chuyến đi hơn 1.400 km đến Florida.">tã không gian</span>" để khỏi phải <span class="vocab" data-word-en="stop" data-word-vn="dừng lại" data-pos="động từ / verb" data-def-en="To come to a halt; to cease movement." data-def-vn="Dừng lại; ngừng chuyển động." data-context-en="Nowak wore a space diaper so she would not need to stop during the long drive." data-context-vn="Nowak mặc tã không gian để khỏi phải dừng lại trong suốt chuyến đi dài.">dừng lại</span> đi <span class="vocab" data-word-en="use the bathroom / relieve oneself" data-word-vn="đi vệ sinh" data-pos="động từ / verb" data-def-en="To use the toilet; to urinate or defecate." data-def-vn="Sử dụng nhà vệ sinh; tiểu tiện hoặc đại tiện." data-context-en="Nowak wore a space diaper so she wouldn't have to stop to use the bathroom." data-context-vn="Nowak mặc tã không gian để không phải dừng lại đi vệ sinh.">đi vệ sinh</span> trong suốt chuyến đi dài đến Orlando.</p>
+
+  <!-- PARAGRAPH 6 -->
+  <p>Cô <span class="vocab" data-word-en="waited / waited for" data-word-vn="chờ" data-pos="động từ / verb" data-def-en="To stay somewhere in expectation of someone's arrival." data-def-vn="Ở lại một nơi nào đó trong sự mong đợi ai đó đến." data-context-en="Nowak waited at Orlando airport for Shipman to get off her plane." data-context-vn="Nowak chờ tại sân bay Orlando cho Shipman xuống máy bay.">chờ</span> Shipman <span class="vocab" data-word-en="get off the plane / disembark" data-word-vn="xuống máy bay" data-pos="động từ / verb" data-def-en="To leave an aircraft after landing." data-def-vn="Rời máy bay sau khi hạ cánh." data-context-en="Nowak waited at the airport for Shipman to disembark from her plane." data-context-vn="Nowak chờ ở sân bay cho Shipman xuống máy bay.">xuống máy bay</span> tại <span class="vocab" data-word-en="airport" data-word-vn="sân bay" data-pos="danh từ / noun" data-def-en="A place where aircraft take off and land, with facilities for passengers." data-def-vn="Nơi máy bay cất cánh và hạ cánh, có các cơ sở phục vụ hành khách." data-context-en="The confrontation took place at Orlando airport." data-context-vn="Cuộc chạm trán diễn ra tại sân bay Orlando.">sân bay</span> Orlando. Khi Shipman vừa <span class="vocab" data-word-en="get in the car / board the vehicle" data-word-vn="lên xe" data-pos="động từ / verb" data-def-en="To get into a vehicle." data-def-vn="Bước lên một phương tiện." data-context-en="When Shipman got into her car, Nowak approached and asked for a ride." data-context-vn="Khi Shipman vừa lên xe, Nowak tiếp cận và xin đi nhờ.">lên xe</span>, Nowak <span class="vocab" data-word-en="ask for a ride / hitchhike" data-word-vn="xin đi nhờ" data-pos="động từ / verb" data-def-en="To ask a driver for a free ride to a destination." data-def-vn="Xin một tài xế cho đi nhờ miễn phí đến điểm đến." data-context-en="Nowak asked Shipman for a ride as a pretext to get close to her and attack her." data-context-vn="Nowak xin Shipman cho đi nhờ như một cái cớ để tiếp cận và tấn công cô.">xin đi nhờ</span>. Sau đó cô <span class="vocab" data-word-en="spray / squirt" data-word-vn="xịt" data-pos="động từ / verb" data-def-en="To send liquid out in a fine stream or spray." data-def-vn="Phun chất lỏng ra thành dòng nhỏ hoặc tia phun." data-context-en="Nowak sprayed pepper spray into Shipman's face in an attempt to incapacitate her." data-context-vn="Nowak xịt hơi cay vào mặt Shipman nhằm làm cô bất lực.">xịt</span> <span class="vocab" data-word-en="pepper spray" data-word-vn="hơi cay" data-pos="danh từ / noun" data-def-en="An aerosol spray containing a chemical irritant, used as a weapon." data-def-vn="Bình xịt khí dung chứa chất kích ứng hóa học, dùng làm vũ khí." data-context-en="Nowak sprayed Shipman with pepper spray in her attempted kidnapping." data-context-vn="Nowak xịt hơi cay vào Shipman trong vụ tấn công bắt cóc.">hơi cay</span> vào Shipman và <span class="vocab" data-word-en="attempt / try to" data-word-vn="cố gắng" data-pos="động từ / verb" data-def-en="To try hard to do something; to make an effort." data-def-vn="Cố gắng hết sức để làm điều gì đó; nỗ lực." data-context-en="After spraying Shipman, Nowak attempted to kidnap her." data-context-vn="Sau khi xịt hơi cay vào Shipman, Nowak cố gắng bắt cóc cô.">cố gắng</span> <span class="vocab" data-word-en="kidnap / abduct" data-word-vn="bắt cóc" data-pos="động từ / verb" data-def-en="To seize and carry away a person by force." data-def-vn="Bắt và mang đi một người bằng vũ lực." data-context-en="Nowak attempted to kidnap Shipman after spraying her with pepper spray." data-context-vn="Nowak cố gắng bắt cóc Shipman sau khi xịt hơi cay vào cô.">bắt cóc</span> cô. Shipman đã kịp <span class="vocab" data-word-en="drive away / flee by car" data-word-vn="lái xe bỏ chạy" data-pos="động từ / verb" data-def-en="To escape by driving a vehicle away quickly." data-def-vn="Trốn thoát bằng cách lái xe đi nhanh chóng." data-context-en="Shipman managed to drive away and escape from Nowak's attack." data-context-vn="Shipman đã kịp lái xe bỏ chạy và thoát khỏi cuộc tấn công của Nowak.">lái xe bỏ chạy</span> và <span class="vocab" data-word-en="call the police" data-word-vn="gọi cảnh sát" data-pos="động từ / verb" data-def-en="To contact law enforcement by phone for help or to report a crime." data-def-vn="Liên hệ với cơ quan thực thi pháp luật qua điện thoại để xin giúp đỡ hoặc báo cáo tội phạm." data-context-en="Shipman called the police after escaping Nowak's attack at the airport." data-context-vn="Shipman đã gọi cảnh sát sau khi thoát khỏi cuộc tấn công của Nowak tại sân bay.">gọi cảnh sát</span>, và Nowak <span class="vocab" data-word-en="was arrested / was caught" data-word-vn="bị bắt" data-pos="động từ / verb" data-def-en="To be seized by law enforcement and taken into custody." data-def-vn="Bị cơ quan thực thi pháp luật bắt giữ và giam giữ." data-context-en="Nowak was arrested at the scene by police responding to Shipman's call." data-context-vn="Nowak bị bắt tại hiện trường bởi cảnh sát đáp lại cuộc gọi của Shipman.">bị bắt</span> với các <span class="vocab" data-word-en="charges / accusations" data-word-vn="cáo buộc" data-pos="danh từ / noun" data-def-en="Formal accusations of a crime made by authorities." data-def-vn="Các cáo buộc tội phạm chính thức được đưa ra bởi cơ quan có thẩm quyền." data-context-en="Nowak was arrested on charges of kidnapping and attempted murder." data-context-vn="Nowak bị bắt với các cáo buộc bắt cóc và mưu sát.">cáo buộc</span> <span class="vocab" data-word-en="kidnapping" data-word-vn="bắt cóc" data-pos="danh từ / noun" data-def-en="The crime of taking a person away illegally by force." data-def-vn="Tội phạm đưa người đi bất hợp pháp bằng vũ lực." data-context-en="Nowak faced kidnapping charges after her attack on Shipman." data-context-vn="Nowak đối mặt với cáo buộc bắt cóc sau cuộc tấn công vào Shipman.">bắt cóc</span> và <span class="vocab" data-word-en="attempted murder" data-word-vn="mưu sát" data-pos="danh từ / noun" data-def-en="The crime of trying but failing to kill someone." data-def-vn="Tội phạm cố gắng nhưng không thực hiện được việc giết người." data-context-en="Nowak was arrested on charges that included attempted murder of Coleen Shipman." data-context-vn="Nowak bị bắt với các cáo buộc bao gồm mưu sát Coleen Shipman.">mưu sát</span>.</p>
+
+  <!-- PARAGRAPH 7 -->
+  <p>Nowak <span class="vocab" data-word-en="immediately" data-word-vn="ngay lập tức" data-pos="trạng từ / adverb" data-def-en="Without any delay; at once." data-def-vn="Không có bất kỳ sự chậm trễ nào; ngay lập tức." data-context-en="Nowak was immediately fired from NASA after her arrest." data-context-vn="Nowak bị sa thải khỏi NASA ngay lập tức sau khi bị bắt.">ngay lập tức</span> bị <span class="vocab" data-word-en="fired / dismissed" data-word-vn="sa thải" data-pos="động từ / verb" data-def-en="To be dismissed from a job; to be let go involuntarily." data-def-vn="Bị sa thải khỏi công việc; bị buộc thôi việc." data-context-en="Nowak was immediately fired from NASA following her arrest." data-context-vn="Nowak bị sa thải khỏi NASA ngay sau khi bị bắt.">sa thải</span> khỏi NASA và bị <span class="vocab" data-word-en="forced to leave / ordered to leave" data-word-vn="buộc rời khỏi" data-pos="động từ / verb" data-def-en="Compelled to leave an organization or position." data-def-vn="Bị buộc phải rời khỏi một tổ chức hoặc vị trí." data-context-en="Nowak was forced to leave the U.S. Navy as well as NASA." data-context-vn="Nowak bị buộc rời khỏi Hải quân Mỹ cũng như NASA.">buộc rời khỏi</span> <span class="vocab" data-word-en="U.S. Navy" data-word-vn="Hải quân Mỹ" data-pos="danh từ / noun" data-def-en="The naval military force of the United States." data-def-vn="Lực lượng quân sự hải quân của Hoa Kỳ." data-context-en="Nowak was forced out of the U.S. Navy in addition to being fired from NASA." data-context-vn="Nowak bị buộc rời khỏi Hải quân Mỹ ngoài việc bị sa thải khỏi NASA.">Hải quân Mỹ</span>. Cô bị <span class="vocab" data-word-en="sentenced to / given a verdict of" data-word-vn="tuyên án" data-pos="động từ / verb" data-def-en="To have a judicial sentence officially declared and imposed." data-def-vn="Bị tuyên bố và áp đặt bản án tư pháp chính thức." data-context-en="Nowak was sentenced to one year of probation by the court." data-context-vn="Nowak bị tuyên án một năm quản chế bởi tòa án.">tuyên án</span> một năm <span class="vocab" data-word-en="probation" data-word-vn="quản chế" data-pos="danh từ / noun" data-def-en="A period of supervision ordered by a court as an alternative to imprisonment." data-def-vn="Giai đoạn giám sát do tòa án ra lệnh thay thế cho việc giam giữ." data-context-en="Instead of prison, Nowak was sentenced to one year of probation." data-context-vn="Thay vì ngồi tù, Nowak bị tuyên án một năm quản chế.">quản chế</span>. Vụ việc <span class="vocab" data-word-en="attract / draw" data-word-vn="thu hút" data-pos="động từ / verb" data-def-en="To draw interest, attention, or notice." data-def-vn="Thu hút sự quan tâm, chú ý hoặc chú ý." data-context-en="The case attracted worldwide media attention due to its bizarre and shocking nature." data-context-vn="Vụ việc thu hút sự chú ý của truyền thông trên toàn thế giới vì tính chất kỳ lạ và gây sốc.">thu hút</span> sự <span class="vocab" data-word-en="attention" data-word-vn="chú ý" data-pos="danh từ / noun" data-def-en="Notice or interest directed toward something." data-def-vn="Sự chú ý hoặc quan tâm hướng đến điều gì đó." data-context-en="The case attracted media attention from around the world." data-context-vn="Vụ việc thu hút sự chú ý của truyền thông trên toàn thế giới.">chú ý</span> của <span class="vocab" data-word-en="media" data-word-vn="truyền thông" data-pos="danh từ / noun" data-def-en="Mass communication channels such as television, newspapers, and the internet." data-def-vn="Các kênh truyền thông đại chúng như truyền hình, báo chí và internet." data-context-en="The global media covered the story extensively due to its sensational nature." data-context-vn="Truyền thông toàn cầu đưa tin rộng rãi về câu chuyện vì tính chất giật gân của nó.">truyền thông</span> trên <span class="vocab" data-word-en="throughout the world / worldwide" data-word-vn="toàn thế giới" data-pos="danh từ / noun" data-def-en="Everywhere in the world; globally." data-def-vn="Khắp nơi trên thế giới; trên toàn cầu." data-context-en="The case drew media attention from all over the world." data-context-vn="Vụ việc thu hút sự chú ý của truyền thông trên toàn thế giới.">toàn thế giới</span>. <span class="vocab" data-word-en="life" data-word-vn="Cuộc đời" data-pos="danh từ / noun" data-def-en="The course of a person's existence; one's life." data-def-vn="Hành trình tồn tại của một người; cuộc sống của một người." data-context-en="Both Nowak's life and career were completely destroyed by her actions." data-context-vn="Cả cuộc đời lẫn sự nghiệp của Nowak đều bị hủy hoại hoàn toàn bởi hành động của cô.">Cuộc đời</span> và <span class="vocab" data-word-en="career" data-word-vn="sự nghiệp" data-pos="danh từ / noun" data-def-en="One's professional life and achievements over time." data-def-vn="Cuộc đời nghề nghiệp và những thành tựu của một người theo thời gian." data-context-en="Nowak's career was completely ruined by her obsessive and criminal actions." data-context-vn="Sự nghiệp của Nowak bị hủy hoại hoàn toàn bởi hành động ám ảnh và phạm pháp của cô.">sự nghiệp</span> của cô đều <span class="vocab" data-word-en="ruined / shattered" data-word-vn="tan nát" data-pos="tính từ / adjective" data-def-en="Completely destroyed or broken into pieces; in ruins." data-def-vn="Bị phá hủy hoàn toàn hoặc vỡ vụn; tan tành." data-context-en="Both her life and career were described as utterly shattered by her actions." data-context-vn="Cả cuộc đời lẫn sự nghiệp của cô được mô tả là hoàn toàn tan nát vì hành động của cô.">tan nát</span>. Từ một <span class="vocab" data-word-en="naval officer" data-word-vn="sĩ quan hải quân" data-pos="danh từ / noun" data-def-en="A commissioned officer serving in the navy." data-def-vn="Sĩ quan được bổ nhiệm phục vụ trong hải quân." data-context-en="Nowak went from being a respected naval officer to a convicted criminal." data-context-vn="Nowak từ một sĩ quan hải quân được tôn trọng đã trở thành một tội phạm bị kết tội.">sĩ quan hải quân</span>, <span class="vocab" data-word-en="fighter pilot" data-word-vn="phi công chiến đấu" data-pos="danh từ / noun" data-def-en="A military pilot who flies combat aircraft." data-def-vn="Phi công quân sự lái máy bay chiến đấu." data-context-en="Before her downfall, Nowak had been a distinguished fighter pilot." data-context-vn="Trước khi sụp đổ, Nowak đã là một phi công chiến đấu xuất sắc.">phi công chiến đấu</span>, <span class="vocab" data-word-en="wife" data-word-vn="người vợ" data-pos="danh từ / noun" data-def-en="A married woman; a female spouse." data-def-vn="Người phụ nữ đã kết hôn; người bạn đời nữ." data-context-en="Nowak was not only a professional but also a wife and mother before her downfall." data-context-vn="Nowak không chỉ là một chuyên gia mà còn là người vợ và người mẹ trước khi sụp đổ.">người vợ</span>, <span class="vocab" data-word-en="mother" data-word-vn="người mẹ" data-pos="danh từ / noun" data-def-en="A woman who has children; a maternal figure." data-def-vn="Người phụ nữ có con cái; người mẹ." data-context-en="Nowak was a mother of three, making her fall from grace all the more tragic." data-context-vn="Nowak là người mẹ của ba đứa con, khiến sự sa ngã của cô càng thêm bi thảm.">người mẹ</span> và một trong những <span class="vocab" data-word-en="admired" data-word-vn="được ngưỡng mộ" data-pos="động từ / verb" data-def-en="Regarded with respect, approval, and esteem." data-def-vn="Được tôn trọng, chấp thuận và quý trọng." data-context-en="She had been one of the most admired women in America before her downfall." data-context-vn="Cô đã là một trong những phụ nữ được ngưỡng mộ nhất ở Mỹ trước khi sụp đổ.">được ngưỡng mộ</span> nhất nước Mỹ, cô <span class="vocab" data-word-en="fall / plunge" data-word-vn="rơi xuống" data-pos="động từ / verb" data-def-en="To drop or fall to a lower level; to plunge downward." data-def-vn="Rơi hoặc sa xuống một mức thấp hơn; lao dốc xuống." data-context-en="Nowak fell into the abyss of disgrace after her criminal acts were exposed." data-context-vn="Nowak rơi xuống vực thẳm danh dự sau khi những hành vi phạm tội của cô bị phơi bày.">rơi xuống</span> <span class="vocab" data-word-en="abyss / deep pit" data-word-vn="vực thẳm" data-pos="danh từ / noun" data-def-en="A deep chasm or pit; used figuratively to mean a catastrophic low point." data-def-vn="Vực sâu hoặc hố sâu; dùng theo nghĩa bóng để chỉ điểm thấp thảm khốc." data-context-en="Nowak fell into the abyss of disgrace — a catastrophic fall from her former glory." data-context-vn="Nowak rơi xuống vực thẳm danh dự — một cú ngã thảm khốc từ vinh quang trước đây.">vực thẳm</span> <span class="vocab" data-word-en="honor / reputation" data-word-vn="danh dự" data-pos="danh từ / noun" data-def-en="One's good name or reputation; the quality of being honorable." data-def-vn="Tên tuổi tốt đẹp hoặc danh tiếng của một người; phẩm chất đáng được tôn trọng." data-context-en="Nowak's honor was completely destroyed by her criminal actions." data-context-vn="Danh dự của Nowak bị hủy hoại hoàn toàn bởi những hành vi phạm tội của cô.">danh dự</span> — một cú <span class="vocab" data-word-en="fall / tumble" data-word-vn="ngã" data-pos="danh từ / noun" data-def-en="A sudden drop from a high position; a downfall." data-def-vn="Sự rơi xuống đột ngột từ vị trí cao; sự sụp đổ." data-context-en="It was described as a shocking fall for someone once praised as a perfect woman." data-context-vn="Đó được mô tả là một cú ngã choáng váng đối với người từng được ca ngợi là người phụ nữ hoàn hảo.">ngã</span> <span class="vocab" data-word-en="shocking / stunning / dizzying" data-word-vn="choáng váng" data-pos="tính từ / adjective" data-def-en="Causing a feeling of shock or disorientation; staggering." data-def-vn="Gây ra cảm giác sốc hoặc mất phương hướng; choáng ngợp." data-context-en="Her fall from grace was described as choáng váng — shocking and disorienting to witness." data-context-vn="Sự sa ngã của cô được mô tả là choáng váng — gây sốc và mất phương hướng khi chứng kiến.">choáng váng</span> đối với người <span class="vocab" data-word-en="was praised as / was celebrated as" data-word-vn="từng được ca ngợi là" data-pos="động từ / verb" data-def-en="Was once publicly acknowledged and praised as something." data-def-vn="Từng được công nhận và khen ngợi công khai là điều gì đó." data-context-en="Nowak had once been praised as the 'perfect American woman' — making her fall even more dramatic." data-context-vn="Nowak từng được ca ngợi là 'người phụ nữ Mỹ hoàn hảo' — khiến sự sụp đổ của cô càng kịch tính hơn.">từng được ca ngợi là</span> "người phụ nữ Mỹ <span class="vocab" data-word-en="perfect / flawless" data-word-vn="hoàn hảo" data-pos="tính từ / adjective" data-def-en="Having no faults or defects; completely satisfactory." data-def-vn="Không có khuyết điểm hay sai sót; hoàn toàn thỏa mãn." data-context-en="Nowak had been called the 'perfect American woman' — a title that made her downfall all the more shocking." data-context-vn="Nowak đã được gọi là 'người phụ nữ Mỹ hoàn hảo' — một danh hiệu khiến sự sụp đổ của cô càng gây sốc hơn.">hoàn hảo</span>".</p>
+
+  <!-- PARAGRAPH 8 — Proverb -->
+  <p>Có một câu nói trong <span class="vocab" data-word-en="circle / community / world (of a field)" data-word-vn="giới" data-pos="danh từ / noun" data-def-en="A circle or community of people in a particular field or profession." data-def-vn="Vòng tròn hoặc cộng đồng người trong một lĩnh vực hoặc nghề nghiệp cụ thể." data-context-en="The saying comes from investigators in the world of criminal investigation." data-context-vn="Câu nói đến từ các điều tra viên trong giới điều tra tội phạm.">giới</span> <span class="vocab" data-word-en="investigators / investigators of crime" data-word-vn="điều tra" data-pos="động từ / verb" data-def-en="To carry out a systematic inquiry; to investigate." data-def-vn="Tiến hành điều tra có hệ thống; điều tra." data-context-en="The quote comes from those who investigate terrible and senseless crimes." data-context-vn="Câu nói đến từ những người điều tra những tội ác khủng khiếp và vô lý.">điều tra</span> những <span class="vocab" data-word-en="terrible" data-word-vn="khủng khiếp" data-pos="tính từ / adjective" data-def-en="Extremely bad, serious, or shocking; causing horror or fear." data-def-vn="Cực kỳ tệ, nghiêm trọng hoặc gây sốc; gây ra nỗi kinh hoàng hoặc sợ hãi." data-context-en="The crimes investigated are described as both terrible and senseless." data-context-vn="Những tội ác được điều tra được mô tả là vừa khủng khiếp vừa vô lý.">khủng khiếp</span> và <span class="vocab" data-word-en="senseless / absurd" data-word-vn="vô lý" data-pos="tính từ / adjective" data-def-en="Without reason or logic; absurd; making no sense." data-def-vn="Không có lý do hoặc logic; phi lý; không có ý nghĩa." data-context-en="The crimes are described as vô lý — senseless and impossible to explain rationally." data-context-vn="Những tội ác được mô tả là vô lý — phi lý và không thể giải thích theo lý trí.">vô lý</span>:</p>
+
+  <blockquote>"<span class="vocab" data-word-en="heart" data-word-vn="Trái tim" data-pos="danh từ / noun" data-def-en="The heart as the seat of emotion; used figuratively for feelings and desires." data-def-vn="Trái tim như là chỗ ở của cảm xúc; dùng theo nghĩa bóng để chỉ cảm xúc và mong muốn." data-context-en="The quote refers to the heart as the source of irrational desires that reason cannot explain." data-context-vn="Câu trích dẫn đề cập đến trái tim như là nguồn gốc của những ham muốn phi lý mà lý trí không thể giải thích.">Trái tim</span> có những <span class="vocab" data-word-en="reasons / logic" data-word-vn="lý do" data-pos="danh từ / noun" data-def-en="A cause, explanation, or justification for an action or event." data-def-vn="Nguyên nhân, giải thích hoặc lý do chính đáng cho một hành động hoặc sự kiện." data-context-en="The heart has its own reasons that reason cannot understand." data-context-vn="Trái tim có những lý do của riêng mà lý trí không thể hiểu được.">lý do</span> mà <span class="vocab" data-word-en="reason / rational mind" data-word-vn="lý trí" data-pos="danh từ / noun" data-def-en="The power of the mind to think and make judgments logically; rationality." data-def-vn="Năng lực của tâm trí để suy nghĩ và đưa ra phán đoán một cách logic; lý trí." data-context-en="The quote contrasts the irrational heart with reason, which cannot understand it." data-context-vn="Câu trích dẫn đối chiếu trái tim phi lý với lý trí, vốn không thể hiểu được nó.">lý trí</span> không thể <span class="vocab" data-word-en="understand / comprehend" data-word-vn="hiểu được" data-pos="động từ / verb" data-def-en="To grasp the meaning or nature of something; to comprehend." data-def-vn="Nắm bắt ý nghĩa hoặc bản chất của điều gì đó; hiểu." data-context-en="The quote says that reason cannot understand the heart's motivations." data-context-vn="Câu trích dẫn nói rằng lý trí không thể hiểu được những động cơ của trái tim.">hiểu được</span>."</blockquote>
+
+  <p>Đó <span class="vocab" data-word-en="actually / in fact" data-word-vn="thực chất" data-pos="trạng từ / adverb" data-def-en="In reality; used to clarify the true nature of something." data-def-vn="Trong thực tế; dùng để làm rõ bản chất thực sự của điều gì đó." data-context-en="The narrator clarifies that the saying is actually a modern expression of a Biblical verse." data-context-vn="Người kể chuyện làm rõ rằng câu nói thực chất là cách diễn đạt hiện đại của một câu Kinh Thánh.">thực chất</span> là cách <span class="vocab" data-word-en="expression / way of expressing" data-word-vn="diễn đạt" data-pos="động từ / verb" data-def-en="To convey thoughts or feelings in words or other medium." data-def-vn="Truyền đạt suy nghĩ hoặc cảm xúc bằng lời nói hoặc phương tiện khác." data-context-en="The saying is identified as a modern expression of an ancient Biblical truth." data-context-vn="Câu nói được xác định là cách diễn đạt hiện đại của một chân lý Kinh Thánh cổ xưa.">diễn đạt</span> <span class="vocab" data-word-en="modern / contemporary" data-word-vn="hiện đại" data-pos="tính từ / adjective" data-def-en="Relating to the present time; of the current era." data-def-vn="Liên quan đến thời đại hiện tại; của thời đại hiện nay." data-context-en="The saying is a modern version of a Biblical verse from Jeremiah." data-context-vn="Câu nói là phiên bản hiện đại của một câu Kinh Thánh từ Giê-rê-mi.">hiện đại</span> của câu Kinh Thánh trong Giê-rê-mi 17:9:</p>
+
+  <blockquote>"<span class="vocab" data-word-en="heart / mind / innermost being" data-word-vn="Lòng người" data-pos="danh từ / noun" data-def-en="The innermost nature of a person; the human heart as the seat of desires and motivations." data-def-vn="Bản chất sâu thẳm nhất của một người; trái tim con người như nơi chứa đựng ham muốn và động cơ." data-context-en="The Biblical verse says the human heart is the most deceitful of all things." data-context-vn="Câu Kinh Thánh nói rằng lòng người là dối trá hơn hết mọi sự.">Lòng người</span> là <span class="vocab" data-word-en="deceitful / deceptive" data-word-vn="dối trá" data-pos="tính từ / adjective" data-def-en="Having a tendency to deceive; not honest or truthful." data-def-vn="Có xu hướng lừa dối; không trung thực hoặc chân thật." data-context-en="The Bible says the human heart is deceitful above all things." data-context-vn="Kinh Thánh nói rằng lòng người là dối trá hơn hết mọi sự.">dối trá</span> hơn hết mọi sự và vô cùng <span class="vocab" data-word-en="wicked / evil" data-word-vn="gian ác" data-pos="tính từ / adjective" data-def-en="Morally very wrong or evil; wickedly bad." data-def-vn="Rất sai hoặc ác về mặt đạo đức; tàn ác." data-context-en="The Biblical verse describes the human heart as desperately wicked." data-context-vn="Câu Kinh Thánh mô tả lòng người là vô cùng gian ác.">gian ác</span>; ai có thể <span class="vocab" data-word-en="understand / know" data-word-vn="hiểu được" data-pos="động từ / verb" data-def-en="To grasp the meaning or nature of something." data-def-vn="Nắm bắt ý nghĩa hoặc bản chất của điều gì đó." data-context-en="The rhetorical question asks: who can understand the depths of the human heart?" data-context-vn="Câu hỏi tu từ hỏi: ai có thể hiểu được chiều sâu của lòng người?">hiểu được</span>?"</blockquote>
+
+  <p><span class="vocab" data-word-en="verdict / judgment" data-word-vn="Phán quyết" data-pos="danh từ / noun" data-def-en="A judgment or decision made about something; an opinion or conclusion." data-def-vn="Phán xét hoặc quyết định được đưa ra về điều gì đó; ý kiến hoặc kết luận." data-context-en="The narrator asks the reader for their verdict on the story: laugh or cry?" data-context-vn="Người kể chuyện hỏi ý kiến người đọc về câu chuyện: cười hay khóc?">Phán quyết</span> của bạn là gì? <span class="vocab" data-word-en="Laugh" data-word-vn="Cười" data-pos="động từ / verb" data-def-en="To express amusement or joy with sounds and facial movements." data-def-vn="Thể hiện sự vui vẻ hoặc niềm vui bằng âm thanh và nét mặt." data-context-en="The narrator asks whether the reader's reaction to this strange story is to laugh." data-context-vn="Người kể chuyện hỏi liệu phản ứng của người đọc với câu chuyện kỳ lạ này là cười.">Cười</span> hay <span class="vocab" data-word-en="cry / weep" data-word-vn="khóc" data-pos="động từ / verb" data-def-en="To shed tears from sadness or strong emotion." data-def-vn="Rơi nước mắt vì buồn bã hoặc cảm xúc mạnh." data-context-en="The narrator ends by asking whether the reader's reaction to the story is to cry." data-context-vn="Người kể chuyện kết thúc bằng cách hỏi liệu phản ứng của người đọc với câu chuyện là khóc.">khóc</span>?</p>
+
+  <!-- TEST YOUR MEMORY -->
+  <div class="section-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</div>
+  <div id="memory-grid"></div>
+
+  <!-- BACK BUTTON -->
+  <div class="back-btn-wrap">
+    <a href="../" class="back-btn">← Back</a>
+  </div>
+
+  <!-- TRANSCRIPTION NOTES -->
+  
+
+  <!-- SKIP NOTES -->
+  
+</div>
+
+<!-- POPUP CARD -->
+<div id="popup-overlay" onclick="closePopup()"></div>
+<div id="popup-card" onclick="closePopup()">
+  <div class="pop-word-en" id="pop-word-en"></div>
+  <div class="pop-word-vn" id="pop-word-vn"></div>
+  <div class="pop-pos" id="pop-pos"></div>
+  <div class="pop-def" id="pop-def"></div>
+  <div class="pop-context-label">In context:</div>
+  <div class="pop-context" id="pop-context"></div>
+</div>
+
+<script>
+// ---- POPUP LOGIC ----
+// Vietnamese input: show English heading, Vietnamese sub, English def, English context
+let lastClicked = null;
+
+function showPopup(el) {
+  if (lastClicked === el) {
+    closePopup();
+    return;
+  }
+  lastClicked = el;
+  document.getElementById('pop-word-en').textContent = el.dataset.wordEn || '';
+  document.getElementById('pop-word-vn').textContent = el.dataset.wordVn || '';
+  document.getElementById('pop-pos').textContent = el.dataset.pos || '';
+  document.getElementById('pop-def').textContent = el.dataset.defEn || '';
+  document.getElementById('pop-context').textContent = el.dataset.contextEn || '';
+  document.getElementById('popup-card').style.display = 'block';
+  document.getElementById('popup-overlay').style.display = 'block';
+}
+
+function closePopup() {
+  document.getElementById('popup-card').style.display = 'none';
+  document.getElementById('popup-overlay').style.display = 'none';
+  lastClicked = null;
+}
+
+document.querySelectorAll('.vocab').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    showPopup(el);
+  });
+});
+
+// ---- MEMORY GRID ----
+const memoryGrid = document.getElementById('memory-grid');
+const vocabWords = Array.from(document.querySelectorAll('.vocab'));
+
+// Deduplicate by Vietnamese text
+const seen = new Set();
+const uniqueWords = [];
+vocabWords.forEach(function(el) {
+  const key = (el.dataset.wordVn || el.textContent.trim()).toLowerCase();
+  if (!seen.has(key)) {
+    seen.add(key);
+    uniqueWords.push(el);
+  }
+});
+
+uniqueWords.forEach(function(srcEl) {
+  const span = document.createElement('span');
+  span.className = 'memory-word';
+  span.textContent = srcEl.dataset.wordVn || srcEl.textContent.trim();
+  span.addEventListener('click', function() {
+    // Find first occurrence in main text
+    const allVocab = document.querySelectorAll('.vocab');
+    const targetVn = srcEl.dataset.wordVn || srcEl.textContent.trim();
+    let target = null;
+    for (let i = 0; i < allVocab.length; i++) {
+      if ((allVocab[i].dataset.wordVn || allVocab[i].textContent.trim()) === targetVn) {
+        target = allVocab[i];
+        break;
+      }
+    }
+    if (target) {
+      target.scrollIntoView({behavior: 'smooth', block: 'center'});
+      target.classList.add('highlight-scroll');
+      setTimeout(function() { target.classList.remove('highlight-scroll'); }, 1500);
+    }
+  });
+  memoryGrid.appendChild(span);
+});
+
+// ---- DOWNLOAD CONTENT ONLY ----
+function downloadContentOnly() {
+  const clone = document.documentElement.cloneNode(true);
+  // Remove .skip-notes
+  clone.querySelectorAll('.skip-notes').forEach(function(el) { el.remove(); });
+  // Remove .transcription-notes
+  clone.querySelectorAll('.transcription-notes').forEach(function(el) { el.remove(); });
+  // Remove download button
+  const btn = clone.querySelector('#download-btn');
+  if (btn) btn.remove();
+  // Clear memory grid
+  const mg = clone.querySelector('#memory-grid');
+  if (mg) mg.innerHTML = '';
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], {type: 'text/html'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'astronaut_content.html';
+  a.click();
+}
+</script>
+
+
+</body></html>
