@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lan và Lễ Hội Songkran</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    user-select: none;
+    min-height: 100vh;
+    padding: 30px 15px;
+  }
+  .page {
+    background: #f0e6c8;
+    max-width: 820px;
+    margin: 0 auto;
+    border: 2px solid #a0845a;
+    border-radius: 4px;
+    padding: 36px 44px 44px 44px;
+    position: relative;
+  }
+  h1 {
+    color: #3a1f00;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+    font-family: Arial, sans-serif;
+  }
+  .subtitle {
+    color: #3a1f00;
+    font-size: 1.1rem;
+    margin-bottom: 22px;
+    font-style: italic;
+  }
+  h2 {
+    color: #3a1f00;
+    font-size: 1.15rem;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 6px;
+    margin: 28px 0 14px 0;
+    font-family: Arial, sans-serif;
+  }
+  p { margin-bottom: 16px; line-height: 1.75; }
+
+  /* Audio player */
+  .audio-section {
+    background: #e8d9b5;
+    border: 1px solid #a0845a;
+    border-radius: 4px;
+    padding: 14px 18px 12px 18px;
+    margin-bottom: 24px;
+  }
+  .audio-label {
+    color: #7a4e1a;
+    font-size: 0.95rem;
+    margin-bottom: 8px;
+    font-family: Arial, sans-serif;
+  }
+  audio#audio-player {
+    width: 100%;
+    display: block;
+    margin-bottom: 10px;
+    accent-color: #c8a060;
+  }
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 4px;
+  }
+  .rewind-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 5px 12px;
+    font-size: 0.9rem;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .rewind-btn:hover { background: #4a3218; }
+
+  /* Vocab underline */
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+    transition: background 0.1s;
+  }
+  .vocab:hover { background: rgba(26,92,32,0.08); border-radius: 2px; }
+
+  /* Correction styles */
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+
+  /* Popup card */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0e6c8;
+    border: 2px solid #a0845a;
+    border-radius: 6px;
+    padding: 20px 24px 18px 24px;
+    min-width: 280px;
+    max-width: 380px;
+    width: 90vw;
+    z-index: 1000;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.45);
+    font-family: Arial, sans-serif;
+  }
+  #popup-card .pop-en-word {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #3a1f00;
+    margin-bottom: 3px;
+  }
+  #popup-card .pop-vn-word {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #7a4e1a;
+    margin-bottom: 7px;
+  }
+  #popup-card .pop-pos {
+    font-size: 0.95rem;
+    color: #5a3a10;
+    margin-bottom: 9px;
+  }
+  #popup-card .pop-def {
+    font-size: 1rem;
+    color: #2a1500;
+    margin-bottom: 9px;
+    line-height: 1.5;
+  }
+  #popup-card .pop-context-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #5a3a10;
+    margin-bottom: 3px;
+  }
+  #popup-card .pop-context {
+    font-size: 0.95rem;
+    color: #2a1500;
+    font-style: italic;
+    line-height: 1.5;
+  }
+  #popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background: transparent;
+  }
+
+  /* Download button */
+  #download-btn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 5px 12px;
+    font-size: 0.88rem;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    z-index: 10;
+  }
+  #download-btn:hover { background: #4a3218; }
+
+  /* Back button */
+  .back-btn {
+    display: inline-block;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 6px 16px;
+    font-size: 0.92rem;
+    font-family: Arial, sans-serif;
+    cursor: pointer;
+    margin: 18px 0 10px 0;
+    text-decoration: none;
+  }
+  .back-btn:hover { background: #4a3218; }
+
+  /* Memory grid */
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 12px;
+    margin-top: 12px;
+  }
+  #memory-grid span {
+    border-bottom: 1.5px dotted #1a5c20;
+    cursor: pointer;
+    font-size: 0.97rem;
+    color: #2a1500;
+    padding: 2px 0;
+    line-height: 1.6;
+  }
+  #memory-grid span:hover { background: rgba(26,92,32,0.08); border-radius: 2px; }
+
+  /* Highlight flash */
+  .flash-highlight {
+    background: #ffe082 !important;
+    border-radius: 2px;
+    transition: background 0.5s;
+  }
+
+  /* Skip/transcription notes */
+  .skip-notes, .transcription-notes {
+    margin-top: 28px;
+    background: #e8d9b5;
+    border: 1px solid #a0845a;
+    border-radius: 4px;
+    padding: 14px 18px;
+  }
+  .skip-notes h2, .transcription-notes h2 {
+    border-bottom: 1px solid #7a4e1a;
+    margin-top: 0;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.93rem;
+    margin-top: 10px;
+  }
+  th, td {
+    border: 1px solid #a0845a;
+    padding: 6px 9px;
+    text-align: left;
+    color: #2a1500;
+  }
+  th { background: #d6c49a; font-weight: bold; }
+  tr:nth-child(even) td { background: #ede1c2; }
+</style>
+</head>
+<body>
+<div class="page">
+  
+
+  <h1><span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — a Vietnamese female given name" data-def-vn="Lan — tên riêng của một cô gái Việt Nam" data-context-en="Lan is the main character who travels from Vietnam to experience the Songkran festival." data-context-vn="Lan là nhân vật chính trong câu chuyện, cô đến từ Việt Nam và đi du lịch để trải nghiệm lễ hội Songkran.">Lan</span> và <span class="vocab" data-word-en="festival" data-word-vn="Lễ Hội" data-pos="danh từ / noun" data-def-en="A festival; a public celebration or holiday event." data-def-vn="Lễ hội; một sự kiện kỷ niệm hoặc ngày nghỉ công cộng." data-context-en="Lan hears about the Songkran water festival in Thailand and decides to go." data-context-vn="Lan nghe về lễ hội nước Songkran ở Thái Lan và quyết định đi.">Lễ Hội</span> <span class="vocab" data-word-en="Songkran" data-word-vn="Songkran" data-pos="danh từ riêng / proper noun" data-def-en="Songkran — the Thai New Year water festival, celebrated in April." data-def-vn="Songkran — lễ hội nước Tết Thái Lan, được tổ chức vào tháng Tư." data-context-en="Songkran is the name of the Thai New Year festival that forms the centerpiece of this story." data-context-vn="Songkran là tên của lễ hội Tết Thái Lan, là tâm điểm của câu chuyện này.">Songkran</span></h1>
+  <div class="subtitle">Một câu chuyện về <span class="vocab" data-word-en="culture" data-word-vn="văn hóa" data-pos="danh từ / noun" data-def-en="Culture; the customs, traditions, and way of life of a people." data-def-vn="Văn hóa; phong tục, truyền thống và lối sống của một dân tộc." data-context-en="Lan appreciates Thai culture, calling it distinctive (đặc sắc) at the end of the story." data-context-vn="Lan trân trọng văn hóa Thái và gọi nó là đặc sắc vào cuối câu chuyện.">văn hóa</span>, <span class="vocab" data-word-en="friendship" data-word-vn="tình bạn" data-pos="danh từ / noun" data-def-en="Friendship; a relationship of mutual affection between people." data-def-vn="Tình bạn; mối quan hệ yêu mến lẫn nhau giữa mọi người." data-context-en="Lan forms a cross-cultural friendship with Arun despite the language barrier." data-context-vn="Lan kết bạn xuyên văn hóa với Arun dù có rào cản ngôn ngữ.">tình bạn</span>, và <span class="vocab" data-word-en="water" data-word-vn="nước" data-pos="danh từ / noun" data-def-en="Water; the liquid essential to life, and here the central element of the Songkran festival." data-def-vn="Nước; chất lỏng thiết yếu cho sự sống, và ở đây là yếu tố trung tâm của lễ hội Songkran." data-context-en="Water is the defining element of Songkran, used both in spiritual rituals and joyful street battles." data-context-vn="Nước là yếu tố đặc trưng của Songkran, được dùng cả trong nghi lễ tâm linh lẫn cuộc chiến vui nhộn trên đường phố.">nước</span></div>
+
+  <!-- AUDIO PLAYER -->
+  <div class="audio-section">
+    <div class="audio-label">🎧 Listen to the text</div>
+    <audio id="audio-player" controls="">
+      <source src="songkran.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+  <!-- END AUDIO PLAYER -->
+
+  <!-- PARAGRAPH 1 -->
+  <p>
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — a Vietnamese female given name, the protagonist of the story." data-def-vn="Lan — tên riêng của một cô gái Việt Nam, nhân vật chính của câu chuyện." data-context-en="Lan is a young Vietnamese girl who travels to Thailand to experience Songkran." data-context-vn="Lan là một cô gái trẻ người Việt Nam đi Thái Lan để trải nghiệm Songkran.">Lan</span> là một 
+    <span class="vocab" data-word-en="young" data-word-vn="trẻ" data-pos="tính từ / adjective" data-def-en="Young; at an early stage of life, not old." data-def-vn="Trẻ; ở giai đoạn đầu của cuộc sống, không già." data-context-en="Lan is described as a young girl (cô gái trẻ) from Vietnam." data-context-vn="Lan được miêu tả là một cô gái trẻ đến từ Việt Nam.">trẻ</span> 
+    <span class="vocab" data-word-en="girl" data-word-vn="cô gái" data-pos="danh từ / noun" data-def-en="Girl; a young female person." data-def-vn="Cô gái; một người nữ trẻ tuổi." data-context-en="The story opens introducing Lan as a young girl from Vietnam." data-context-vn="Câu chuyện mở đầu giới thiệu Lan là một cô gái trẻ từ Việt Nam.">cô gái</span> 
+    <span class="vocab" data-word-en="come from" data-word-vn="đến từ" data-pos="cụm động từ / verb phrase" data-def-en="To come from; to originate from a place." data-def-vn="Đến từ; xuất phát từ một nơi nào đó." data-context-en="Lan comes from (đến từ) Vietnam, establishing her background at the start." data-context-vn="Lan đến từ Việt Nam, điều này được giới thiệu ngay từ đầu câu chuyện.">đến từ</span> 
+    Việt Nam. Cô 
+    <span class="vocab" data-word-en="live" data-word-vn="sống" data-pos="động từ / verb" data-def-en="To live; to reside or dwell in a place." data-def-vn="Sống; cư trú hoặc sinh sống ở một nơi." data-context-en="Lan lives (sống) in Ho Chi Minh City." data-context-vn="Lan sống ở Thành phố Hồ Chí Minh.">sống</span> ở 
+    <span class="vocab" data-word-en="Ho Chi Minh City" data-word-vn="Thành phố Hồ Chí Minh" data-pos="danh từ riêng / proper noun" data-def-en="Ho Chi Minh City; the largest city in Vietnam, formerly known as Saigon." data-def-vn="Thành phố Hồ Chí Minh; thành phố lớn nhất Việt Nam, trước đây gọi là Sài Gòn." data-context-en="Lan lives in Ho Chi Minh City, the major southern Vietnamese metropolis." data-context-vn="Lan sống ở Thành phố Hồ Chí Minh, đô thị lớn miền Nam Việt Nam.">Thành phố Hồ Chí Minh</span>. 
+    <span class="vocab" data-word-en="one day" data-word-vn="một ngày nọ" data-pos="cụm trạng từ / adverbial phrase" data-def-en="One day; used to introduce a new event at an unspecified time in the past." data-def-vn="Một ngày nọ; dùng để giới thiệu một sự kiện mới vào một thời điểm không xác định trong quá khứ." data-context-en="The phrase 'một ngày nọ' (one day) marks the turning point when Lan hears about Songkran." data-context-vn="Cụm từ 'một ngày nọ' đánh dấu bước ngoặt khi Lan nghe về Songkran.">Một ngày nọ</span>, cô 
+    <span class="vocab" data-word-en="hear about" data-word-vn="nghe về" data-pos="cụm động từ / verb phrase" data-def-en="To hear about; to receive information or news about something." data-def-vn="Nghe về; nhận thông tin hoặc tin tức về điều gì đó." data-context-en="Lan hears about (nghe về) a big water festival in Thailand." data-context-vn="Lan nghe về một lễ hội nước rất lớn ở Thái Lan.">nghe về</span> một 
+    <span class="vocab" data-word-en="water festival" data-word-vn="lễ hội nước" data-pos="danh từ / noun phrase" data-def-en="Water festival; a celebration centered on water, such as Songkran." data-def-vn="Lễ hội nước; một lễ hội lấy nước làm trung tâm, như Songkran." data-context-en="Lan hears about a very large water festival (lễ hội nước rất lớn) in Thailand." data-context-vn="Lan nghe về một lễ hội nước rất lớn ở Thái Lan.">lễ hội nước</span> rất 
+    <span class="vocab" data-word-en="large / big" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Large, big; of great size or scale." data-def-vn="Lớn; có quy mô hoặc kích thước lớn." data-context-en="The water festival is described as very large (rất lớn), hinting at its scale." data-context-vn="Lễ hội nước được miêu tả là rất lớn, gợi ý về quy mô của nó.">lớn</span> ở Thái Lan. 
+    <span class="vocab" data-word-en="this festival" data-word-vn="Lễ hội này" data-pos="cụm danh từ / noun phrase" data-def-en="This festival; a reference to the specific festival just mentioned." data-def-vn="Lễ hội này; đề cập đến lễ hội cụ thể vừa được nhắc đến." data-context-en="'Lễ hội này' refers back to the water festival, which is then named as Songkran." data-context-vn="'Lễ hội này' đề cập lại lễ hội nước, sau đó được gọi tên là Songkran.">Lễ hội này</span> 
+    <span class="vocab" data-word-en="called / named" data-word-vn="gọi là" data-pos="cụm động từ / verb phrase" data-def-en="To be called, to be named; to have a specific name." data-def-vn="Gọi là; được đặt tên hoặc được biết đến với một cái tên cụ thể." data-context-en="The festival is called (gọi là) Songkran." data-context-vn="Lễ hội này gọi là Songkran.">gọi là</span> 
+    <span class="vocab" data-word-en="Songkran" data-word-vn="Songkran" data-pos="danh từ riêng / proper noun" data-def-en="Songkran — the Thai New Year water festival celebrated in April." data-def-vn="Songkran — lễ hội nước Tết Thái Lan được tổ chức vào tháng Tư." data-context-en="The water festival is named Songkran, which is introduced as the Thai New Year." data-context-vn="Lễ hội nước này có tên là Songkran, được giới thiệu là Tết năm mới của người Thái.">Songkran</span>. 
+    <span class="vocab" data-word-en="This" data-word-vn="Đây" data-pos="đại từ / pronoun" data-def-en="This; used here to emphatically point to and identify something." data-def-vn="Đây; được dùng để chỉ rõ và xác định điều gì đó một cách nhấn mạnh." data-context-en="'Đây là Tết năm mới...' — 'This is the New Year' — used to define what Songkran is." data-context-vn="'Đây là Tết năm mới...' — dùng để giải thích Songkran là gì.">Đây</span> là 
+    <span class="vocab" data-word-en="New Year" data-word-vn="Tết năm mới" data-pos="danh từ / noun phrase" data-def-en="New Year; the celebration marking the beginning of a new year." data-def-vn="Tết năm mới; lễ kỷ niệm đánh dấu sự khởi đầu của một năm mới." data-context-en="Songkran is described as the New Year (Tết năm mới) of Thai people." data-context-vn="Songkran được miêu tả là Tết năm mới của người Thái.">Tết năm mới</span> của người Thái. 
+    <span class="vocab" data-word-en="everyone / people" data-word-vn="Mọi người" data-pos="đại từ / pronoun" data-def-en="Everyone, all people; referring to people in general or collectively." data-def-vn="Mọi người; đề cập đến tất cả mọi người nói chung hoặc tập thể." data-context-en="Everyone (Mọi người) celebrates Songkran in April each year." data-context-vn="Mọi người tổ chức Songkran vào tháng Tư mỗi năm.">Mọi người</span> 
+    <span class="vocab" data-word-en="celebrate / hold" data-word-vn="tổ chức" data-pos="động từ / verb" data-def-en="To celebrate, to organize, to hold (an event); to arrange and carry out a gathering or festival." data-def-vn="Tổ chức; sắp xếp và thực hiện một buổi tụ họp hoặc lễ hội." data-context-en="People celebrate/hold (tổ chức) the festival every April." data-context-vn="Mọi người tổ chức lễ hội vào tháng Tư mỗi năm.">tổ chức</span> vào tháng Tư 
+    <span class="vocab" data-word-en="every year" data-word-vn="mỗi năm" data-pos="cụm trạng từ / adverbial phrase" data-def-en="Every year; annually, once per year." data-def-vn="Mỗi năm; hàng năm, một lần mỗi năm." data-context-en="Songkran is held in April every year (mỗi năm)." data-context-vn="Songkran được tổ chức vào tháng Tư mỗi năm.">mỗi năm</span>.
+  </p>
+
+  <!-- PARAGRAPH 2 -->
+  <p>
+    <span class="vocab" data-word-en="In the past / Long ago" data-word-vn="Ngày xưa" data-pos="cụm trạng từ / adverbial phrase" data-def-en="In the past, long ago; referring to a time before the present." data-def-vn="Ngày xưa; đề cập đến một thời điểm trong quá khứ." data-context-en="'Ngày xưa' signals a contrast between the old, peaceful Songkran and the modern celebration." data-context-vn="'Ngày xưa' báo hiệu sự tương phản giữa Songkran cũ yên bình và lễ hội hiện đại.">Ngày xưa</span>, Songkran là một ngày lễ 
+    <span class="vocab" data-word-en="peaceful" data-word-vn="yên bình" data-pos="tính từ / adjective" data-def-en="Peaceful; calm, quiet, free from conflict or disturbance." data-def-vn="Yên bình; bình yên, tĩnh lặng, không có xung đột hay xáo trộn." data-context-en="In the past, Songkran was a peaceful (yên bình) holiday, contrasting with the modern water battles." data-context-vn="Ngày xưa, Songkran là một ngày lễ yên bình, trái ngược với cuộc chiến nước sôi động hiện nay.">yên bình</span>. 
+    <span class="vocab" data-word-en="people / they" data-word-vn="Người ta" data-pos="đại từ / pronoun" data-def-en="People in general; an impersonal pronoun meaning 'one' or 'they'." data-def-vn="Người ta; đại từ chỉ người nói chung, nghĩa là 'người ta' hay 'họ'." data-context-en="'Người ta' (people/they) would clean the house and visit family during old Songkran." data-context-vn="'Người ta' dọn dẹp nhà cửa và thăm gia đình trong Songkran ngày xưa.">Người ta</span> 
+    <span class="vocab" data-word-en="clean up / tidy" data-word-vn="dọn dẹp" data-pos="động từ / verb" data-def-en="To clean up, to tidy; to put things in order and remove dirt." data-def-vn="Dọn dẹp; sắp xếp, lau chùi và loại bỏ bụi bẩn." data-context-en="People would clean their homes (dọn dẹp nhà cửa) as part of the old Songkran tradition." data-context-vn="Người ta dọn dẹp nhà cửa như một phần của truyền thống Songkran ngày xưa.">dọn dẹp</span> 
+    <span class="vocab" data-word-en="house / home" data-word-vn="nhà cửa" data-pos="danh từ / noun" data-def-en="House, home; dwelling place, residence." data-def-vn="Nhà cửa; nơi ở, nhà ở." data-context-en="Cleaning the house (dọn dẹp nhà cửa) was a traditional Songkran activity." data-context-vn="Dọn dẹp nhà cửa là một hoạt động truyền thống của Songkran.">nhà cửa</span> và 
+    <span class="vocab" data-word-en="visit" data-word-vn="thăm" data-pos="động từ / verb" data-def-en="To visit; to go to see someone, especially family." data-def-vn="Thăm; đến gặp ai đó, đặc biệt là thành viên gia đình." data-context-en="People would visit (thăm) family as part of the Songkran tradition." data-context-vn="Người ta thăm gia đình như một phần truyền thống của Songkran.">thăm</span> 
+    <span class="vocab" data-word-en="family" data-word-vn="gia đình" data-pos="danh từ / noun" data-def-en="Family; a group of people related by blood or marriage." data-def-vn="Gia đình; một nhóm người có quan hệ huyết thống hoặc hôn nhân." data-context-en="Visiting family (gia đình) was an important part of traditional Songkran." data-context-vn="Thăm gia đình là một phần quan trọng của Songkran truyền thống.">gia đình</span>. Họ cũng 
+    <span class="vocab" data-word-en="pour water on / sprinkle water on" data-word-vn="rưới nước lên" data-pos="cụm động từ / verb phrase" data-def-en="To pour or sprinkle water on; a ritual act of blessing." data-def-vn="Rưới nước lên; hành động nghi lễ tưới nước lên ai đó hoặc vật gì đó để chúc phúc." data-context-en="People would pour water on (rưới nước lên) Buddha statues and elders as a sign of respect." data-context-vn="Người ta rưới nước lên tượng Phật và người lớn tuổi như dấu hiệu tôn trọng.">rưới nước lên</span> 
+    <span class="vocab" data-word-en="Buddha statue" data-word-vn="tượng Phật" data-pos="danh từ / noun phrase" data-def-en="Buddha statue; a sculpture or image representing the Buddha, used in Buddhist worship." data-def-vn="Tượng Phật; tượng hoặc hình ảnh đại diện của Đức Phật, được dùng trong thờ cúng Phật giáo." data-context-en="Pouring water on Buddha statues (tượng Phật) was a ritual of respect in traditional Songkran." data-context-vn="Rưới nước lên tượng Phật là một nghi lễ tôn kính trong Songkran truyền thống.">tượng Phật</span> và lên 
+    <span class="vocab" data-word-en="elders / older people" data-word-vn="người lớn tuổi" data-pos="danh từ / noun phrase" data-def-en="Elders, older people; people who are senior in age, deserving of respect." data-def-vn="Người lớn tuổi; những người lớn hơn về tuổi tác, xứng đáng được kính trọng." data-context-en="Water was poured on elders (người lớn tuổi) to show respect and wish them good luck." data-context-vn="Nước được rưới lên người lớn tuổi để thể hiện sự tôn trọng và chúc may mắn.">người lớn tuổi</span> để 
+    <span class="vocab" data-word-en="show / express" data-word-vn="thể hiện" data-pos="động từ / verb" data-def-en="To show, to express, to demonstrate; to make a feeling or quality visible." data-def-vn="Thể hiện; làm cho cảm xúc hoặc phẩm chất nào đó trở nên rõ ràng, biểu đạt." data-context-en="The water ritual was a way to express (thể hiện) respect." data-context-vn="Nghi lễ nước là cách thể hiện sự tôn trọng.">thể hiện</span> sự 
+    <span class="vocab" data-word-en="respect" data-word-vn="tôn trọng" data-pos="danh từ / noun" data-def-en="Respect; a feeling of deep admiration and esteem for someone." data-def-vn="Tôn trọng; cảm giác ngưỡng mộ và kính trọng sâu sắc dành cho ai đó." data-context-en="Pouring water expressed respect (tôn trọng) for elders and sacred objects." data-context-vn="Rưới nước thể hiện sự tôn trọng đối với người lớn tuổi và vật thần thánh.">tôn trọng</span> và 
+    <span class="vocab" data-word-en="wish good luck" data-word-vn="chúc may mắn" data-pos="cụm động từ / verb phrase" data-def-en="To wish good luck; to express hope that someone will have fortune and success." data-def-vn="Chúc may mắn; bày tỏ hy vọng rằng ai đó sẽ gặp may mắn và thành công." data-context-en="The water ritual was also done to wish good luck (chúc may mắn) to elders." data-context-vn="Nghi lễ nước cũng được thực hiện để chúc may mắn cho người lớn tuổi.">chúc may mắn</span>. 
+    <span class="vocab" data-word-en="Water" data-word-vn="Nước" data-pos="danh từ / noun" data-def-en="Water; here used symbolically — it carries meaning beyond the literal liquid." data-def-vn="Nước; ở đây dùng theo nghĩa biểu tượng — mang ý nghĩa vượt ra ngoài chất lỏng thông thường." data-context-en="Water (Nước) symbolically washes away the bad things of the old year in Songkran." data-context-vn="Nước mang ý nghĩa biểu tượng rửa trôi những điều xấu của năm cũ trong Songkran.">Nước</span> có 
+    <span class="vocab" data-word-en="meaning / significance" data-word-vn="ý nghĩa" data-pos="danh từ / noun" data-def-en="Meaning, significance; the idea or importance represented by something." data-def-vn="Ý nghĩa; ý tưởng hoặc tầm quan trọng được đại diện bởi điều gì đó." data-context-en="Water has the meaning (ý nghĩa) of washing away the bad things of the old year." data-context-vn="Nước có ý nghĩa rửa trôi những điều xấu của năm cũ.">ý nghĩa</span> 
+    <span class="vocab" data-word-en="wash away" data-word-vn="rửa trôi" data-pos="cụm động từ / verb phrase" data-def-en="To wash away; to cleanse or remove something by the action of water." data-def-vn="Rửa trôi; làm sạch hoặc loại bỏ điều gì đó bằng tác động của nước." data-context-en="Water symbolically washes away (rửa trôi) the bad things of the old year." data-context-vn="Nước có ý nghĩa biểu tượng rửa trôi những điều xấu của năm cũ.">rửa trôi</span> những 
+    <span class="vocab" data-word-en="bad things" data-word-vn="điều xấu" data-pos="danh từ / noun phrase" data-def-en="Bad things; negative events, misfortunes, or wrongdoings of the past year." data-def-vn="Điều xấu; những sự kiện tiêu cực, bất hạnh hoặc lỗi lầm của năm cũ." data-context-en="Water washes away the bad things (điều xấu) of the old year, symbolizing a fresh start." data-context-vn="Nước rửa trôi những điều xấu của năm cũ, tượng trưng cho một khởi đầu mới.">điều xấu</span> của năm 
+    <span class="vocab" data-word-en="old / last" data-word-vn="cũ" data-pos="tính từ / adjective" data-def-en="Old, past; referring to the previous year or something from before." data-def-vn="Cũ; đề cập đến năm trước hoặc điều gì đó từ trước đây." data-context-en="The 'old year' (năm cũ) represents the past that is washed away by the water ritual." data-context-vn="'Năm cũ' đại diện cho quá khứ được rửa trôi bởi nghi lễ nước.">cũ</span>. 
+    <span class="vocab" data-word-en="Now / Nowadays" data-word-vn="Bây giờ" data-pos="trạng từ / adverb" data-def-en="Now, nowadays; at the present time, in contrast with the past." data-def-vn="Bây giờ; vào thời điểm hiện tại, tương phản với quá khứ." data-context-en="'Bây giờ' (now) signals the shift from old traditions to the modern water-fight celebration." data-context-vn="'Bây giờ' báo hiệu sự chuyển đổi từ truyền thống cũ sang lễ hội chiến nước hiện đại.">Bây giờ</span>, lễ hội cũng là một 
+    <span class="vocab" data-word-en="water battle / water fight" data-word-vn="cuộc chiến nước" data-pos="danh từ / noun phrase" data-def-en="Water battle, water fight; a playful contest where people splash each other with water." data-def-vn="Cuộc chiến nước; một cuộc thi vui nhộn nơi mọi người té nước vào nhau." data-context-en="Nowadays Songkran is also a fun water battle (cuộc chiến nước) in the streets." data-context-vn="Bây giờ lễ hội cũng là một cuộc chiến nước rất vui trên đường phố.">cuộc chiến nước</span> rất 
+    <span class="vocab" data-word-en="fun / enjoyable" data-word-vn="vui" data-pos="tính từ / adjective" data-def-en="Fun, enjoyable, happy; causing pleasure or laughter." data-def-vn="Vui; gây ra niềm vui hoặc tiếng cười, thú vị." data-context-en="The water battle is described as very fun (rất vui) in the streets." data-context-vn="Cuộc chiến nước được miêu tả là rất vui trên đường phố.">vui</span> trên 
+    <span class="vocab" data-word-en="street" data-word-vn="đường phố" data-pos="danh từ / noun" data-def-en="Street; a public road in a town or city." data-def-vn="Đường phố; con đường công cộng trong một thị trấn hoặc thành phố." data-context-en="The modern Songkran water battle takes place in the streets (đường phố)." data-context-vn="Cuộc chiến nước Songkran hiện đại diễn ra trên đường phố.">đường phố</span>!
+  </p>
+
+  <!-- PARAGRAPH 3 -->
+  <p>
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist of the story." data-def-vn="Lan — nhân vật chính của câu chuyện." data-context-en="Lan is very excited and decides to fly to Thailand." data-context-vn="Lan rất hào hứng và quyết định bay đến Thái Lan.">Lan</span> rất 
+    <span class="vocab" data-word-en="excited / enthusiastic" data-word-vn="hào hứng" data-pos="tính từ / adjective" data-def-en="Excited, enthusiastic; feeling eager and full of energy about something." data-def-vn="Hào hứng; cảm thấy háo hức và tràn đầy năng lượng về điều gì đó." data-context-en="Lan is very excited (rất hào hứng) when she hears about Songkran." data-context-vn="Lan rất hào hứng khi nghe về lễ hội Songkran.">hào hứng</span>. Cô 
+    <span class="vocab" data-word-en="go by plane / fly" data-word-vn="đi máy bay" data-pos="cụm động từ / verb phrase" data-def-en="To go by plane, to fly; to travel using an aircraft." data-def-vn="Đi máy bay; di chuyển bằng máy bay." data-context-en="Lan travels by plane (đi máy bay) to Thailand to attend the festival." data-context-vn="Lan đi máy bay đến Thái Lan để tham dự lễ hội.">đi máy bay</span> đến Thái Lan. Khi 
+    <span class="vocab" data-word-en="arrive" data-word-vn="đến nơi" data-pos="cụm động từ / verb phrase" data-def-en="To arrive, to reach a destination." data-def-vn="Đến nơi; tới điểm đến." data-context-en="When she arrives (đến nơi), Lan sees many people with water guns and buckets." data-context-vn="Khi đến nơi, Lan thấy rất nhiều người cầm súng nước và xô nước.">đến nơi</span>, cô 
+    <span class="vocab" data-word-en="see" data-word-vn="thấy" data-pos="động từ / verb" data-def-en="To see; to perceive with the eyes, to notice." data-def-vn="Thấy; nhận thức bằng mắt, nhìn thấy." data-context-en="When she arrives, Lan sees (thấy) many people holding water guns and buckets." data-context-vn="Khi đến nơi, Lan thấy rất nhiều người cầm súng nước và xô nước.">thấy</span> rất nhiều người 
+    <span class="vocab" data-word-en="hold / carry" data-word-vn="cầm" data-pos="động từ / verb" data-def-en="To hold, to carry; to grip something in the hand." data-def-vn="Cầm; nắm giữ thứ gì đó trong tay." data-context-en="People were holding (cầm) water guns and buckets." data-context-vn="Mọi người cầm súng nước và xô nước.">cầm</span> 
+    <span class="vocab" data-word-en="water gun" data-word-vn="súng nước" data-pos="danh từ / noun" data-def-en="Water gun; a toy gun that shoots water, used in play." data-def-vn="Súng nước; súng đồ chơi bắn nước, dùng để vui chơi." data-context-en="People were carrying water guns (súng nước) to participate in the Songkran water fight." data-context-vn="Mọi người cầm súng nước để tham gia cuộc chiến nước Songkran.">súng nước</span> và 
+    <span class="vocab" data-word-en="bucket" data-word-vn="xô nước" data-pos="danh từ / noun phrase" data-def-en="Water bucket; a container used to carry or throw water." data-def-vn="Xô nước; thùng chứa dùng để mang hoặc ném nước." data-context-en="Along with water guns, people carried buckets (xô nước) of water for the festival." data-context-vn="Cùng với súng nước, mọi người cầm xô nước để tham dự lễ hội.">xô nước</span>. 
+    <span class="vocab" data-word-en="everyone / anyone" data-word-vn="Ai cũng" data-pos="đại từ / pronoun" data-def-en="Everyone, anyone; every single person without exception." data-def-vn="Ai cũng; mọi người, không có ngoại lệ." data-context-en="Everyone (Ai cũng) was laughing and very happy." data-context-vn="Ai cũng cười và rất vui.">Ai cũng</span> 
+    <span class="vocab" data-word-en="laugh / smile" data-word-vn="cười" data-pos="động từ / verb" data-def-en="To laugh, to smile; to express happiness or amusement." data-def-vn="Cười; biểu đạt sự vui vẻ hoặc thích thú." data-context-en="Everyone was laughing (cười) and very happy at the festival." data-context-vn="Ai cũng cười và rất vui tại lễ hội.">cười</span> và rất 
+    <span class="vocab" data-word-en="happy / joyful" data-word-vn="vui" data-pos="tính từ / adjective" data-def-en="Happy, joyful; feeling or showing pleasure and contentment." data-def-vn="Vui; cảm thấy hoặc thể hiện sự vui vẻ và hài lòng." data-context-en="Everyone was laughing and very happy (rất vui) at the festival." data-context-vn="Ai cũng cười và rất vui tại lễ hội.">vui</span>. 
+    <span class="vocab" data-word-en="Weather" data-word-vn="Thời tiết" data-pos="danh từ / noun" data-def-en="Weather; the atmospheric conditions at a particular time and place." data-def-vn="Thời tiết; điều kiện khí quyển tại một thời điểm và địa điểm cụ thể." data-context-en="The weather (thời tiết) was very hot, making the cool water pleasant." data-context-vn="Thời tiết rất nóng, làm cho nước mát trở nên dễ chịu.">Thời tiết</span> rất 
+    <span class="vocab" data-word-en="hot" data-word-vn="nóng" data-pos="tính từ / adjective" data-def-en="Hot; having a high temperature." data-def-vn="Nóng; có nhiệt độ cao." data-context-en="The weather was very hot (rất nóng), making the cool water all the more refreshing." data-context-vn="Thời tiết rất nóng, làm cho nước mát càng thêm dễ chịu.">nóng</span>, nên nước 
+    <span class="vocab" data-word-en="cool / cold" data-word-vn="mát" data-pos="tính từ / adjective" data-def-en="Cool, refreshingly cold; pleasantly low in temperature." data-def-vn="Mát; mát mẻ, dễ chịu về nhiệt độ." data-context-en="Because the weather was hot, the water felt cool (mát) and pleasant." data-context-vn="Vì thời tiết nóng, nên nước mát và dễ chịu.">mát</span> và 
+    <span class="vocab" data-word-en="pleasant / comfortable" data-word-vn="dễ chịu" data-pos="tính từ / adjective" data-def-en="Pleasant, comfortable; giving a feeling of ease and contentment." data-def-vn="Dễ chịu; gây ra cảm giác thoải mái và hài lòng." data-context-en="The cool water was pleasant (dễ chịu) because of the hot weather." data-context-vn="Nước mát và dễ chịu vì thời tiết rất nóng.">dễ chịu</span>.
+  </p>
+
+  <!-- PARAGRAPH 4 -->
+  <p>
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist." data-def-vn="Lan — nhân vật chính." data-context-en="Lan buys water balloons and joins in the fun." data-context-vn="Lan mua vài quả bóng nước và tham gia vào trò vui.">Lan</span> 
+    <span class="vocab" data-word-en="buy" data-word-vn="mua" data-pos="động từ / verb" data-def-en="To buy, to purchase; to obtain something by paying money for it." data-def-vn="Mua; mua lại thứ gì đó bằng cách trả tiền cho nó." data-context-en="Lan buys (mua) a few water balloons to join in the festival." data-context-vn="Lan mua vài quả bóng nước để tham gia lễ hội.">mua</span> vài 
+    <span class="vocab" data-word-en="water balloon" data-word-vn="quả bóng nước" data-pos="danh từ / noun phrase" data-def-en="Water balloon; a balloon filled with water, used as a projectile in play." data-def-vn="Quả bóng nước; bóng bay chứa đầy nước, dùng như đạn trong trò chơi." data-context-en="Lan buys water balloons (quả bóng nước) to throw at people during Songkran." data-context-vn="Lan mua vài quả bóng nước để ném vào mọi người trong Songkran.">quả bóng nước</span>. Cô 
+    <span class="vocab" data-word-en="fill / pour" data-word-vn="đổ nước vào" data-pos="cụm động từ / verb phrase" data-def-en="To fill with water, to pour water into; to add water to something." data-def-vn="Đổ nước vào; thêm nước vào thứ gì đó." data-context-en="She fills the balloons with water (đổ nước vào) before throwing them." data-context-vn="Cô đổ nước vào bóng trước khi ném.">đổ nước vào</span> và 
+    <span class="vocab" data-word-en="throw" data-word-vn="ném" data-pos="động từ / verb" data-def-en="To throw; to propel something through the air with force." data-def-vn="Ném; phóng thứ gì đó qua không khí bằng lực." data-context-en="Lan throws (ném) water balloons at people." data-context-vn="Lan ném bóng nước vào mọi người.">ném</span> vào mọi người. Tõm! Một 
+    <span class="vocab" data-word-en="boy" data-word-vn="cậu bé" data-pos="danh từ / noun" data-def-en="Boy; a male child or young person." data-def-vn="Cậu bé; một đứa trẻ hoặc người trẻ tuổi giới tính nam." data-context-en="A boy (cậu bé) throws a water balloon at Lan." data-context-vn="Một cậu bé cũng ném vào cô.">cậu bé</span> cũng 
+    <span class="vocab" data-word-en="throw" data-word-vn="ném" data-pos="động từ / verb" data-def-en="To throw; to propel something through the air." data-def-vn="Ném; phóng thứ gì đó qua không khí." data-context-en="A boy also throws (ném) at Lan, continuing the playful exchange." data-context-vn="Một cậu bé cũng ném vào cô, tiếp tục trò vui nhộn.">ném</span> vào cô. Cô 
+    <span class="vocab" data-word-en="laugh / smile" data-word-vn="cười" data-pos="động từ / verb" data-def-en="To laugh; to express amusement or joy." data-def-vn="Cười; biểu đạt sự vui thích hoặc niềm vui." data-context-en="Lan laughs (cười) and runs when hit by the water balloon." data-context-vn="Cô cười và chạy khi bị ném bóng nước.">cười</span> và 
+    <span class="vocab" data-word-en="run" data-word-vn="chạy" data-pos="động từ / verb" data-def-en="To run; to move quickly on foot." data-def-vn="Chạy; di chuyển nhanh bằng chân." data-context-en="Lan laughs and runs (chạy) away playfully after being splashed." data-context-vn="Cô cười và chạy sau khi bị té nước.">chạy</span>. 
+    <span class="vocab" data-word-en="before long / soon" data-word-vn="Chẳng bao lâu" data-pos="cụm trạng từ / adverbial phrase" data-def-en="Before long, soon; after only a short time." data-def-vn="Chẳng bao lâu; sau một khoảng thời gian ngắn." data-context-en="Before long (chẳng bao lâu), Lan was completely soaked but very happy." data-context-vn="Chẳng bao lâu, cô ướt hết nhưng rất vui.">Chẳng bao lâu</span>, cô 
+    <span class="vocab" data-word-en="soaked / wet all over" data-word-vn="ướt hết" data-pos="cụm tính từ / adjective phrase" data-def-en="Completely soaked, wet all over; completely drenched with water." data-def-vn="Ướt hết; bị ướt hoàn toàn từ đầu đến chân." data-context-en="Lan becomes completely soaked (ướt hết) but remains very happy." data-context-vn="Lan bị ướt hết nhưng rất vui.">ướt hết</span>, nhưng rất 
+    <span class="vocab" data-word-en="happy" data-word-vn="vui" data-pos="tính từ / adjective" data-def-en="Happy; feeling pleasure or contentment." data-def-vn="Vui; cảm thấy vui vẻ hoặc hài lòng." data-context-en="Although soaked, Lan was very happy (rất vui)." data-context-vn="Dù ướt hết, cô vẫn rất vui.">vui</span>. Cô 
+    <span class="vocab" data-word-en="play" data-word-vn="chơi" data-pos="động từ / verb" data-def-en="To play; to engage in activity for enjoyment." data-def-vn="Chơi; tham gia hoạt động để vui chơi giải trí." data-context-en="Lan plays (chơi) all day long in the streets." data-context-vn="Cô chơi cả ngày trên đường phố.">chơi</span> 
+    <span class="vocab" data-word-en="all day" data-word-vn="cả ngày" data-pos="cụm trạng từ / adverbial phrase" data-def-en="All day; for the entire day, without stopping." data-def-vn="Cả ngày; suốt cả ngày, không dừng lại." data-context-en="Lan plays all day (cả ngày) in the streets of Thailand." data-context-vn="Cô chơi cả ngày trên đường phố Thái Lan.">cả ngày</span> trên 
+    <span class="vocab" data-word-en="street" data-word-vn="đường phố" data-pos="danh từ / noun" data-def-en="Street; a public road in a city or town." data-def-vn="Đường phố; con đường công cộng trong thành phố hoặc thị trấn." data-context-en="Lan plays all day in the streets (đường phố)." data-context-vn="Cô chơi cả ngày trên đường phố.">đường phố</span>.
+  </p>
+
+  <!-- PARAGRAPH 5 -->
+  <p>
+    <span class="vocab" data-word-en="After that / Afterward" data-word-vn="Sau đó" data-pos="cụm trạng từ / adverbial phrase" data-def-en="After that, afterward; following the event just described." data-def-vn="Sau đó; sau sự kiện vừa được mô tả." data-context-en="After playing all day, Lan felt hungry (sau đó, Lan thấy đói)." data-context-vn="Sau khi chơi cả ngày, Lan thấy đói.">Sau đó</span>, 
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist." data-def-vn="Lan — nhân vật chính." data-context-en="After playing, Lan felt hungry and tried Thai food." data-context-vn="Sau khi chơi, Lan thấy đói và thử món ăn Thái.">Lan</span> thấy 
+    <span class="vocab" data-word-en="hungry" data-word-vn="đói" data-pos="tính từ / adjective" data-def-en="Hungry; feeling the need to eat." data-def-vn="Đói; cảm thấy cần phải ăn." data-context-en="After playing all day, Lan felt hungry (thấy đói)." data-context-vn="Sau khi chơi cả ngày, Lan thấy đói.">đói</span>. Cô 
+    <span class="vocab" data-word-en="try" data-word-vn="thử" data-pos="động từ / verb" data-def-en="To try; to taste or attempt something for the first time." data-def-vn="Thử; nếm thử hoặc lần đầu tiên làm điều gì đó." data-context-en="Lan tries (thử) Thai food at a small restaurant." data-context-vn="Cô thử món ăn Thái ở một quán nhỏ.">thử</span> 
+    <span class="vocab" data-word-en="Thai food" data-word-vn="món ăn Thái" data-pos="danh từ / noun phrase" data-def-en="Thai food; cuisine originating from Thailand, known for being spicy and flavorful." data-def-vn="Món ăn Thái; ẩm thực có nguồn gốc từ Thái Lan, nổi tiếng là cay và nhiều hương vị." data-context-en="Lan tries Thai food (món ăn Thái) at a small restaurant after playing all day." data-context-vn="Lan thử món ăn Thái ở một quán nhỏ sau khi chơi cả ngày.">món ăn Thái</span> ở một 
+    <span class="vocab" data-word-en="small restaurant / small stall" data-word-vn="quán nhỏ" data-pos="danh từ / noun phrase" data-def-en="A small restaurant or food stall; a modest eatery." data-def-vn="Quán nhỏ; một nhà hàng hoặc quán ăn nhỏ, đơn giản." data-context-en="Lan eats at a small restaurant (quán nhỏ), suggesting a casual, local eatery." data-context-vn="Lan ăn ở một quán nhỏ, gợi ý một quán ăn bình dị, địa phương.">quán nhỏ</span>. Cô ăn 
+    <span class="vocab" data-word-en="pad thai" data-word-vn="pad thai" data-pos="danh từ riêng / proper noun" data-def-en="Pad thai; a famous Thai stir-fried noodle dish." data-def-vn="Pad thai; một món mì xào nổi tiếng của Thái Lan." data-context-en="Lan eats pad thai, one of Thailand's most iconic dishes." data-context-vn="Lan ăn pad thai, một trong những món ăn biểu tượng nhất của Thái Lan.">pad thai</span> và 
+    <span class="vocab" data-word-en="spicy soup" data-word-vn="canh cay" data-pos="danh từ / noun phrase" data-def-en="Spicy soup; a hot, spiced broth dish." data-def-vn="Canh cay; món canh nóng, nhiều gia vị cay." data-context-en="Along with pad thai, Lan also eats spicy soup (canh cay)." data-context-vn="Cùng với pad thai, Lan cũng ăn canh cay.">canh cay</span>. 
+    <span class="vocab" data-word-en="Food / The food" data-word-vn="Đồ ăn" data-pos="danh từ / noun" data-def-en="Food; things eaten for nourishment." data-def-vn="Đồ ăn; những thứ được ăn để cung cấp dinh dưỡng." data-context-en="The food (đồ ăn) was very delicious but also very spicy." data-context-vn="Đồ ăn rất ngon nhưng cũng rất cay.">Đồ ăn</span> rất 
+    <span class="vocab" data-word-en="delicious" data-word-vn="ngon" data-pos="tính từ / adjective" data-def-en="Delicious; having a very pleasant taste." data-def-vn="Ngon; có vị rất ngon miệng." data-context-en="The Thai food was delicious (ngon) but also very spicy." data-context-vn="Đồ ăn rất ngon nhưng cũng rất cay.">ngon</span>, nhưng cũng rất 
+    <span class="vocab" data-word-en="spicy / hot" data-word-vn="cay" data-pos="tính từ / adjective" data-def-en="Spicy, hot; having a burning taste from spices like chili." data-def-vn="Cay; có vị cay nồng từ ớt hoặc gia vị." data-context-en="The food was very spicy (rất cay), causing Lan to exclaim." data-context-vn="Đồ ăn rất cay, khiến Lan kêu lên.">cay</span>. "Ôi! 
+    <span class="vocab" data-word-en="Spicy / Too spicy!" data-word-vn="Cay quá!" data-pos="tính từ + trạng từ / adjective + intensifier" data-def-en="Too spicy! — an exclamation that something is excessively hot and spicy." data-def-vn="Cay quá! — thán từ chỉ điều gì đó quá cay." data-context-en="Lan exclaims 'Ôi! Cay quá!' (Oh! Too spicy!) when eating the Thai food." data-context-vn="Lan kêu lên 'Ôi! Cay quá!' khi ăn món Thái.">Cay quá!</span>" cô nói, nhưng 
+    <span class="vocab" data-word-en="still / nevertheless" data-word-vn="vẫn" data-pos="trạng từ / adverb" data-def-en="Still, nevertheless; continuing to do something despite a circumstance." data-def-vn="Vẫn; tiếp tục làm điều gì đó mặc dù có hoàn cảnh nhất định." data-context-en="Despite it being very spicy, Lan still (vẫn) ate and smiled." data-context-vn="Dù rất cay, cô vẫn ăn và mỉm cười.">vẫn</span> ăn và 
+    <span class="vocab" data-word-en="smile" data-word-vn="mỉm cười" data-pos="động từ / verb" data-def-en="To smile; to form a pleased, kind, or amused expression on the face." data-def-vn="Mỉm cười; tạo biểu cảm vui vẻ, thân thiện hoặc thích thú trên khuôn mặt." data-context-en="Even though the food was spicy, Lan still ate and smiled (mỉm cười)." data-context-vn="Dù đồ ăn rất cay, Lan vẫn ăn và mỉm cười.">mỉm cười</span>.
+  </p>
+
+  <!-- PARAGRAPH 6 -->
+  <p>
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist." data-def-vn="Lan — nhân vật chính." data-context-en="Lan meets a friendly Thai young man named Arun." data-context-vn="Lan gặp một chàng trai Thái dễ mến tên là Arun.">Lan</span> 
+    <span class="vocab" data-word-en="meet" data-word-vn="gặp" data-pos="động từ / verb" data-def-en="To meet; to encounter someone for the first time or by chance." data-def-vn="Gặp; gặp gỡ ai đó lần đầu tiên hoặc tình cờ." data-context-en="Lan meets (gặp) a friendly Thai young man named Arun." data-context-vn="Lan gặp một chàng trai Thái dễ mến tên là Arun.">gặp</span> một 
+    <span class="vocab" data-word-en="young man" data-word-vn="chàng trai" data-pos="danh từ / noun" data-def-en="Young man; a male person who is young." data-def-vn="Chàng trai; một người nam trẻ tuổi." data-context-en="Lan meets a Thai young man (chàng trai) named Arun." data-context-vn="Lan gặp một chàng trai Thái tên là Arun.">chàng trai</span> Thái 
+    <span class="vocab" data-word-en="likeable / friendly" data-word-vn="dễ mến" data-pos="tính từ / adjective" data-def-en="Likeable, easy to like, friendly; having a pleasant and approachable nature." data-def-vn="Dễ mến; dễ thương, thân thiện; có tính cách dễ chịu và dễ tiếp cận." data-context-en="The young man Arun is described as likeable/friendly (dễ mến)." data-context-vn="Chàng trai Arun được miêu tả là dễ mến.">dễ mến</span> tên là Arun. 
+    <span class="vocab" data-word-en="He / That guy" data-word-vn="Cậu" data-pos="đại từ / pronoun" data-def-en="He, him; a pronoun used informally among peers to refer to a young male." data-def-vn="Cậu; đại từ dùng thân mật giữa bạn bè để chỉ một người nam trẻ." data-context-en="'Cậu mỉm cười' — He smiled and said 'Hello!' to Lan." data-context-vn="'Cậu mỉm cười' — Arun mỉm cười và nói 'Hello!' với Lan.">Cậu</span> 
+    <span class="vocab" data-word-en="smile" data-word-vn="mỉm cười" data-pos="động từ / verb" data-def-en="To smile; to form a pleased expression on the face." data-def-vn="Mỉm cười; tạo biểu cảm vui vẻ trên khuôn mặt." data-context-en="Arun smiles (mỉm cười) and says 'Hello!' when he meets Lan." data-context-vn="Arun mỉm cười và nói 'Hello!' khi gặp Lan.">mỉm cười</span> và nói: "Hello!" 
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist." data-def-vn="Lan — nhân vật chính." data-context-en="Lan greets Arun back." data-context-vn="Lan cũng chào lại Arun.">Lan</span> cũng 
+    <span class="vocab" data-word-en="greet back" data-word-vn="chào lại" data-pos="cụm động từ / verb phrase" data-def-en="To greet back; to return a greeting to someone who greeted you first." data-def-vn="Chào lại; đáp lại lời chào của người đã chào mình trước." data-context-en="Lan greets Arun back (chào lại) in return." data-context-vn="Lan cũng chào lại Arun.">chào lại</span>. Arun không 
+    <span class="vocab" data-word-en="speak / say" data-word-vn="nói" data-pos="động từ / verb" data-def-en="To speak, to say; to use words to communicate." data-def-vn="Nói; sử dụng lời nói để giao tiếp." data-context-en="Arun doesn't speak (nói) Vietnamese, and Lan doesn't speak Thai." data-context-vn="Arun không nói tiếng Việt, và Lan không nói tiếng Thái.">nói</span> 
+    <span class="vocab" data-word-en="Vietnamese (language)" data-word-vn="tiếng Việt" data-pos="danh từ / noun" data-def-en="Vietnamese; the language spoken in Vietnam." data-def-vn="Tiếng Việt; ngôn ngữ được nói ở Việt Nam." data-context-en="Arun does not speak Vietnamese (tiếng Việt)." data-context-vn="Arun không nói tiếng Việt.">tiếng Việt</span>, và 
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist." data-def-vn="Lan — nhân vật chính." data-context-en="Lan doesn't speak Thai either." data-context-vn="Lan cũng không nói tiếng Thái.">Lan</span> không 
+    <span class="vocab" data-word-en="speak" data-word-vn="nói" data-pos="động từ / verb" data-def-en="To speak; to use a language to communicate." data-def-vn="Nói; sử dụng ngôn ngữ để giao tiếp." data-context-en="Lan doesn't speak (nói) Thai either." data-context-vn="Lan cũng không nói tiếng Thái.">nói</span> 
+    <span class="vocab" data-word-en="Thai (language)" data-word-vn="tiếng Thái" data-pos="danh từ / noun" data-def-en="Thai; the language spoken in Thailand." data-def-vn="Tiếng Thái; ngôn ngữ được nói ở Thái Lan." data-context-en="Lan doesn't speak Thai (tiếng Thái)." data-context-vn="Lan không nói tiếng Thái.">tiếng Thái</span>. 
+    <span class="vocab" data-word-en="Because of that / Therefore" data-word-vn="Vì vậy" data-pos="liên từ / conjunction" data-def-en="Because of that, therefore; used to introduce a result or conclusion." data-def-vn="Vì vậy; dùng để giới thiệu kết quả hoặc kết luận." data-context-en="'Vì vậy' (therefore) explains why they chose English as a common language." data-context-vn="'Vì vậy' giải thích tại sao họ chọn tiếng Anh làm ngôn ngữ chung.">Vì vậy</span>, họ 
+    <span class="vocab" data-word-en="try / make an effort" data-word-vn="cố gắng" data-pos="động từ / verb" data-def-en="To try, to make an effort; to put in effort to achieve something." data-def-vn="Cố gắng; nỗ lực để đạt được điều gì đó." data-context-en="They try (cố gắng) to talk to each other in English." data-context-vn="Họ cố gắng nói chuyện bằng tiếng Anh.">cố gắng</span> 
+    <span class="vocab" data-word-en="talk / converse" data-word-vn="nói chuyện" data-pos="động từ / verb" data-def-en="To talk, to converse; to exchange words with someone." data-def-vn="Nói chuyện; trao đổi lời nói với ai đó." data-context-en="They try to talk to each other (nói chuyện) using English." data-context-vn="Họ cố gắng nói chuyện bằng tiếng Anh.">nói chuyện</span> bằng 
+    <span class="vocab" data-word-en="English (language)" data-word-vn="tiếng Anh" data-pos="danh từ / noun" data-def-en="English; the language used as a common means of communication between Lan and Arun." data-def-vn="Tiếng Anh; ngôn ngữ được dùng như phương tiện giao tiếp chung giữa Lan và Arun." data-context-en="Lan and Arun try to communicate in English (tiếng Anh) since neither speaks the other's language." data-context-vn="Lan và Arun cố gắng giao tiếp bằng tiếng Anh vì không ai nói được ngôn ngữ của nhau.">tiếng Anh</span>. 
+    <span class="vocab" data-word-en="English (their English)" data-word-vn="Tiếng Anh của họ" data-pos="danh từ / noun phrase" data-def-en="Their English; referring to Lan and Arun's level of English ability." data-def-vn="Tiếng Anh của họ; đề cập đến trình độ tiếng Anh của Lan và Arun." data-context-en="Their English (tiếng Anh của họ) was not perfect, but they laughed and understood each other a little." data-context-vn="Tiếng Anh của họ không hoàn hảo, nhưng họ cười và hiểu nhau một chút.">Tiếng Anh của họ</span> không 
+    <span class="vocab" data-word-en="perfect" data-word-vn="hoàn hảo" data-pos="tính từ / adjective" data-def-en="Perfect; completely free from flaws or faults." data-def-vn="Hoàn hảo; hoàn toàn không có lỗi hoặc khiếm khuyết." data-context-en="Their English was not perfect (hoàn hảo), but they still communicated." data-context-vn="Tiếng Anh của họ không hoàn hảo, nhưng họ vẫn giao tiếp được.">hoàn hảo</span>, nhưng họ 
+    <span class="vocab" data-word-en="laugh" data-word-vn="cười" data-pos="động từ / verb" data-def-en="To laugh; to express happiness or amusement." data-def-vn="Cười; biểu đạt sự vui vẻ hoặc hài hước." data-context-en="They laughed (cười) despite the language barrier." data-context-vn="Họ cười dù có rào cản ngôn ngữ.">cười</span> và 
+    <span class="vocab" data-word-en="understand" data-word-vn="hiểu" data-pos="động từ / verb" data-def-en="To understand; to comprehend what someone is saying." data-def-vn="Hiểu; nắm bắt được ý nghĩa của điều gì đó." data-context-en="They understood (hiểu) each other a little despite imperfect English." data-context-vn="Họ hiểu nhau một chút dù tiếng Anh không hoàn hảo.">hiểu</span> nhau một 
+    <span class="vocab" data-word-en="a little / a bit" data-word-vn="một chút" data-pos="cụm trạng từ / adverbial phrase" data-def-en="A little, a bit; a small amount or degree." data-def-vn="Một chút; một lượng nhỏ hoặc mức độ nhỏ." data-context-en="They understood each other a little (một chút) despite the language difference." data-context-vn="Họ hiểu nhau một chút dù khác ngôn ngữ.">một chút</span>. Họ 
+    <span class="vocab" data-word-en="point at" data-word-vn="chỉ vào" data-pos="cụm động từ / verb phrase" data-def-en="To point at; to indicate something by extending a finger toward it." data-def-vn="Chỉ vào; chỉ vào thứ gì đó bằng cách duỗi ngón tay về phía đó." data-context-en="They pointed at (chỉ vào) objects to help communicate across the language gap." data-context-vn="Họ chỉ vào đồ vật để giúp giao tiếp qua rào cản ngôn ngữ.">chỉ vào</span> đồ vật, dùng 
+    <span class="vocab" data-word-en="simple words" data-word-vn="từ đơn giản" data-pos="danh từ / noun phrase" data-def-en="Simple words; basic vocabulary that is easy to understand." data-def-vn="Từ đơn giản; từ vựng cơ bản, dễ hiểu." data-context-en="They used simple words (từ đơn giản) to communicate in English." data-context-vn="Họ dùng từ đơn giản để giao tiếp bằng tiếng Anh.">từ đơn giản</span>, và 
+    <span class="vocab" data-word-en="joke around / have fun" data-word-vn="đùa vui" data-pos="động từ / verb" data-def-en="To joke around, to have fun; to exchange jokes and laugh together." data-def-vn="Đùa vui; trao đổi câu đùa và cười cùng nhau." data-context-en="They joked around (đùa vui) together despite not sharing a common language." data-context-vn="Họ đùa vui cùng nhau dù không có ngôn ngữ chung.">đùa vui</span>.
+  </p>
+
+  <!-- PARAGRAPH 7 -->
+  <p>
+    Họ 
+    <span class="vocab" data-word-en="together" data-word-vn="cùng nhau" data-pos="trạng từ / adverb" data-def-en="Together; with each other, at the same time." data-def-vn="Cùng nhau; với nhau, cùng một lúc." data-context-en="Lan and Arun play water games and take photos together (cùng nhau)." data-context-vn="Lan và Arun cùng nhau chơi nước và chụp ảnh.">cùng nhau</span> 
+    <span class="vocab" data-word-en="play water games" data-word-vn="chơi nước" data-pos="cụm động từ / verb phrase" data-def-en="To play water games; to engage in water-based play activities." data-def-vn="Chơi nước; tham gia các hoạt động vui chơi với nước." data-context-en="Lan and Arun play water games (chơi nước) together." data-context-vn="Lan và Arun cùng nhau chơi nước.">chơi nước</span> và 
+    <span class="vocab" data-word-en="take photos" data-word-vn="chụp ảnh" data-pos="cụm động từ / verb phrase" data-def-en="To take photos; to capture images using a camera or phone." data-def-vn="Chụp ảnh; ghi lại hình ảnh bằng máy ảnh hoặc điện thoại." data-context-en="They also take photos (chụp ảnh) together to remember the day." data-context-vn="Họ cũng cùng nhau chụp ảnh để ghi nhớ ngày này.">chụp ảnh</span>. 
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist." data-def-vn="Lan — nhân vật chính." data-context-en="Lan feels very happy to have a new friend from another country." data-context-vn="Lan cảm thấy rất vui khi có một người bạn mới từ một đất nước khác.">Lan</span> 
+    <span class="vocab" data-word-en="feel" data-word-vn="cảm thấy" data-pos="động từ / verb" data-def-en="To feel; to experience an emotion or sensation." data-def-vn="Cảm thấy; trải nghiệm một cảm xúc hoặc cảm giác." data-context-en="Lan feels (cảm thấy) very happy to have a new friend from another country." data-context-vn="Lan cảm thấy rất vui khi có một người bạn mới từ một đất nước khác.">cảm thấy</span> rất 
+    <span class="vocab" data-word-en="happy" data-word-vn="vui" data-pos="tính từ / adjective" data-def-en="Happy; feeling pleasure and positivity." data-def-vn="Vui; cảm thấy vui vẻ và tích cực." data-context-en="Lan feels very happy (rất vui) when she has a new friend from a different country." data-context-vn="Lan cảm thấy rất vui khi có một người bạn mới từ một đất nước khác.">vui</span> khi có một 
+    <span class="vocab" data-word-en="new friend" data-word-vn="người bạn mới" data-pos="danh từ / noun phrase" data-def-en="New friend; a person recently befriended." data-def-vn="Người bạn mới; một người bạn vừa mới kết thân." data-context-en="Lan is happy to have a new friend (người bạn mới) from another country." data-context-vn="Lan vui khi có một người bạn mới từ một đất nước khác.">người bạn mới</span> từ một 
+    <span class="vocab" data-word-en="different country / another country" data-word-vn="đất nước khác" data-pos="danh từ / noun phrase" data-def-en="A different country, another country; a nation other than one's own." data-def-vn="Đất nước khác; một quốc gia khác với quê hương của mình." data-context-en="Arun is from a different country (đất nước khác) — Thailand — while Lan is from Vietnam." data-context-vn="Arun đến từ một đất nước khác — Thái Lan — trong khi Lan đến từ Việt Nam.">đất nước khác</span>.
+  </p>
+
+  <!-- PARAGRAPH 8 -->
+  <p>
+    Khi 
+    <span class="vocab" data-word-en="end / finish" data-word-vn="kết thúc" data-pos="động từ / verb" data-def-en="To end, to finish; to come to a close." data-def-vn="Kết thúc; đến lúc kết, chấm dứt." data-context-en="When the trip ends (kết thúc), Lan reflects on her experience in Thailand." data-context-vn="Khi chuyến đi kết thúc, Lan suy nghĩ về trải nghiệm ở Thái Lan.">kết thúc</span> 
+    <span class="vocab" data-word-en="trip / journey" data-word-vn="chuyến đi" data-pos="danh từ / noun" data-def-en="Trip, journey; a travel or excursion to a destination." data-def-vn="Chuyến đi; một chuyến du lịch hoặc tham quan đến một điểm đến." data-context-en="At the end of her trip (chuyến đi), Lan reflects on Thailand." data-context-vn="Khi kết thúc chuyến đi, Lan suy nghĩ về Thái Lan.">chuyến đi</span>, 
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist." data-def-vn="Lan — nhân vật chính." data-context-en="At the end of the trip, Lan thinks about Thailand." data-context-vn="Khi kết thúc chuyến đi, Lan nghĩ về Thái Lan.">Lan</span> 
+    <span class="vocab" data-word-en="think about / reflect on" data-word-vn="nghĩ về" data-pos="cụm động từ / verb phrase" data-def-en="To think about, to reflect on; to consider or ponder something." data-def-vn="Nghĩ về; suy nghĩ hoặc suy ngẫm về điều gì đó." data-context-en="Lan thinks about (nghĩ về) Thailand at the end of her trip." data-context-vn="Lan nghĩ về Thái Lan khi kết thúc chuyến đi.">nghĩ về</span> Thái Lan. Cô 
+    <span class="vocab" data-word-en="like / enjoy" data-word-vn="thích" data-pos="động từ / verb" data-def-en="To like, to enjoy; to find something pleasing or agreeable." data-def-vn="Thích; thấy điều gì đó hấp dẫn hoặc dễ chịu." data-context-en="Lan likes (thích) the friendly people, fun festival, and distinctive culture." data-context-vn="Lan thích con người thân thiện, lễ hội vui nhộn, và văn hóa đặc sắc.">thích</span> 
+    <span class="vocab" data-word-en="people" data-word-vn="con người" data-pos="danh từ / noun" data-def-en="People; human beings considered collectively." data-def-vn="Con người; những người được xem xét như một tập thể." data-context-en="Lan liked the people (con người) of Thailand for being friendly." data-context-vn="Lan thích con người Thái Lan vì họ thân thiện.">con người</span> 
+    <span class="vocab" data-word-en="friendly" data-word-vn="thân thiện" data-pos="tính từ / adjective" data-def-en="Friendly; kind and pleasant in manner." data-def-vn="Thân thiện; tốt bụng và dễ chịu trong cách cư xử." data-context-en="Lan liked the friendly (thân thiện) people she met in Thailand." data-context-vn="Lan thích những con người thân thiện cô gặp ở Thái Lan.">thân thiện</span>, 
+    <span class="vocab" data-word-en="festival" data-word-vn="lễ hội" data-pos="danh từ / noun" data-def-en="Festival; a celebration or event with special activities." data-def-vn="Lễ hội; một buổi lễ hoặc sự kiện với các hoạt động đặc biệt." data-context-en="Lan also liked the festival (lễ hội) which was fun and lively." data-context-vn="Lan cũng thích lễ hội vui nhộn.">lễ hội</span> 
+    <span class="vocab" data-word-en="fun / lively" data-word-vn="vui nhộn" data-pos="tính từ / adjective" data-def-en="Fun, lively, spirited; full of energy and gaiety." data-def-vn="Vui nhộn; tràn đầy năng lượng và sự sôi nổi." data-context-en="The festival was described as fun and lively (vui nhộn)." data-context-vn="Lễ hội được miêu tả là vui nhộn.">vui nhộn</span>, và 
+    <span class="vocab" data-word-en="culture" data-word-vn="văn hóa" data-pos="danh từ / noun" data-def-en="Culture; the customs, arts, and social institutions of a group of people." data-def-vn="Văn hóa; phong tục, nghệ thuật và thể chế xã hội của một nhóm người." data-context-en="Lan was impressed by the distinctive Thai culture (văn hóa đặc sắc)." data-context-vn="Lan ấn tượng với văn hóa đặc sắc của Thái Lan.">văn hóa</span> 
+    <span class="vocab" data-word-en="distinctive / unique" data-word-vn="đặc sắc" data-pos="tính từ / adjective" data-def-en="Distinctive, unique, special; having qualities that make something stand out." data-def-vn="Đặc sắc; có những phẩm chất làm nổi bật điều gì đó." data-context-en="Lan found Thai culture distinctive and special (đặc sắc)." data-context-vn="Lan thấy văn hóa Thái Lan đặc sắc và độc đáo.">đặc sắc</span>. Cô nói: "
+    <span class="vocab" data-word-en="Next year" data-word-vn="Năm sau" data-pos="cụm danh từ / noun phrase" data-def-en="Next year; the year following the current one." data-def-vn="Năm sau; năm tiếp theo sau năm hiện tại." data-context-en="Lan says 'Năm sau mình muốn quay lại!' meaning she wants to return next year." data-context-vn="Lan nói 'Năm sau mình muốn quay lại!' nghĩa là cô muốn trở lại vào năm sau.">Năm sau</span> mình 
+    <span class="vocab" data-word-en="want to" data-word-vn="muốn" data-pos="động từ / verb" data-def-en="To want; to have a desire or wish for something." data-def-vn="Muốn; có mong muốn hoặc ước muốn về điều gì đó." data-context-en="Lan says she wants (muốn) to come back next year." data-context-vn="Lan nói cô muốn quay lại vào năm sau.">muốn</span> 
+    <span class="vocab" data-word-en="come back / return" data-word-vn="quay lại" data-pos="cụm động từ / verb phrase" data-def-en="To come back, to return; to go back to a place previously visited." data-def-vn="Quay lại; trở về nơi đã từng đến." data-context-en="Lan wants to come back (quay lại) to Thailand next year." data-context-vn="Lan muốn quay lại Thái Lan vào năm sau.">quay lại</span>!"
+  </p>
+
+  <!-- PARAGRAPH 9 -->
+  <p>
+    <span class="vocab" data-word-en="Lan" data-word-vn="Lan" data-pos="danh từ riêng / proper noun" data-def-en="Lan — the protagonist." data-def-vn="Lan — nhân vật chính." data-context-en="Lan returns to Vietnam with beautiful memories and a bright smile." data-context-vn="Lan trở về Việt Nam với nhiều kỷ niệm đẹp và một nụ cười thật tươi.">Lan</span> 
+    <span class="vocab" data-word-en="return / go back" data-word-vn="trở về" data-pos="cụm động từ / verb phrase" data-def-en="To return, to go back; to come back to one's home or starting point." data-def-vn="Trở về; quay trở lại nhà hoặc điểm xuất phát." data-context-en="Lan returns (trở về) to Vietnam at the end of the story." data-context-vn="Lan trở về Việt Nam vào cuối câu chuyện.">trở về</span> Việt Nam với nhiều 
+    <span class="vocab" data-word-en="beautiful memories" data-word-vn="kỷ niệm đẹp" data-pos="danh từ / noun phrase" data-def-en="Beautiful memories; cherished recollections of pleasant past experiences." data-def-vn="Kỷ niệm đẹp; những ký ức đáng trân trọng về trải nghiệm dễ chịu trong quá khứ." data-context-en="Lan returns home with many beautiful memories (kỷ niệm đẹp) from Thailand." data-context-vn="Lan trở về nhà với nhiều kỷ niệm đẹp từ Thái Lan.">kỷ niệm đẹp</span>, 
+    <span class="vocab" data-word-en="new experiences" data-word-vn="trải nghiệm mới" data-pos="danh từ / noun phrase" data-def-en="New experiences; things encountered or undergone for the first time." data-def-vn="Trải nghiệm mới; những điều được trải qua hoặc gặp gỡ lần đầu tiên." data-context-en="Lan also brings back new experiences (trải nghiệm mới) from her trip." data-context-vn="Lan cũng mang về những trải nghiệm mới từ chuyến đi.">trải nghiệm mới</span>, và một 
+    <span class="vocab" data-word-en="bright smile" data-word-vn="nụ cười thật tươi" data-pos="danh từ / noun phrase" data-def-en="A bright, radiant smile; a warm and joyful expression on the face." data-def-vn="Nụ cười thật tươi; nụ cười rạng rỡ và vui vẻ trên khuôn mặt." data-context-en="Lan returns home with a bright smile (nụ cười thật tươi), showing she is truly happy." data-context-vn="Lan trở về nhà với một nụ cười thật tươi, cho thấy cô thực sự hạnh phúc.">nụ cười thật tươi</span>.
+  </p>
+
+  <!-- BACK BUTTON -->
+  <div style="margin: 24px 0 8px 0;">
+    <button class="back-btn" onclick="history.back()">← Back</button>
+  </div>
+
+  <!-- TEST YOUR MEMORY -->
+  <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+  <div id="memory-grid"></div>
+
+  <!-- TRANSCRIPTION NOTES -->
+  
+
+  
+
+</div><!-- end .page -->
+
+<!-- POPUP OVERLAY + CARD -->
+<div id="popup-overlay" onclick="closePopup()"></div>
+<div id="popup-card" onclick="closePopup()">
+  <div class="pop-en-word" id="pop-en-word"></div>
+  <div class="pop-vn-word" id="pop-vn-word"></div>
+  <div class="pop-pos" id="pop-pos"></div>
+  <div class="pop-def" id="pop-def"></div>
+  <div class="pop-context-label">In context:</div>
+  <div class="pop-context" id="pop-context"></div>
+</div>
+
+<script>
+// ---- POPUP LOGIC ----
+// Input is Vietnamese, so: English = large heading, Vietnamese = small secondary
+var currentWord = null;
+
+function openPopup(el) {
+  var enWord = el.getAttribute('data-word-en') || '';
+  var vnWord = el.getAttribute('data-word-vn') || '';
+  var pos    = el.getAttribute('data-pos') || '';
+  var defEn  = el.getAttribute('data-def-en') || '';
+  var ctxEn  = el.getAttribute('data-context-en') || '';
+
+  document.getElementById('pop-en-word').textContent = enWord;
+  document.getElementById('pop-vn-word').textContent = vnWord;
+  document.getElementById('pop-pos').textContent = pos;
+  document.getElementById('pop-def').textContent = defEn;
+  document.getElementById('pop-context').textContent = ctxEn;
+
+  document.getElementById('popup-card').style.display = 'block';
+  document.getElementById('popup-overlay').style.display = 'block';
+  currentWord = el;
+}
+
+function closePopup() {
+  document.getElementById('popup-card').style.display = 'none';
+  document.getElementById('popup-overlay').style.display = 'none';
+  currentWord = null;
+}
+
+document.querySelectorAll('.vocab').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (currentWord === el) {
+      closePopup();
+    } else {
+      openPopup(el);
+    }
+  });
+});
+
+// ---- MEMORY GRID ----
+// Collect all vocab words preserving order, deduplicate by data-word-vn
+var seen = {};
+var memoryWords = [];
+document.querySelectorAll('.vocab').forEach(function(el) {
+  var key = (el.getAttribute('data-word-vn') || '').toLowerCase().trim();
+  var display = el.getAttribute('data-word-vn') || el.textContent.trim();
+  if (key && !seen[key]) {
+    seen[key] = true;
+    memoryWords.push({ display: display, key: key });
+  }
+});
+
+var grid = document.getElementById('memory-grid');
+memoryWords.forEach(function(w) {
+  var span = document.createElement('span');
+  span.textContent = w.display;
+  span.addEventListener('click', function() {
+    // find first vocab element with this vn word
+    var targets = document.querySelectorAll('.vocab');
+    var target = null;
+    for (var i = 0; i < targets.length; i++) {
+      if ((targets[i].getAttribute('data-word-vn') || '').toLowerCase().trim() === w.key) {
+        target = targets[i];
+        break;
+      }
+    }
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('flash-highlight');
+      setTimeout(function() { target.classList.remove('flash-highlight'); }, 1500);
+    }
+  });
+  grid.appendChild(span);
+});
+
+// ---- DOWNLOAD CONTENT ONLY ----
+function downloadContentOnly() {
+  var clone = document.documentElement.cloneNode(true);
+  // Remove .skip-notes and .transcription-notes
+  clone.querySelectorAll('.skip-notes, .transcription-notes').forEach(function(el) {
+    el.parentNode.removeChild(el);
+  });
+  // Remove download button
+  var btn = clone.querySelector('#download-btn');
+  if (btn) btn.parentNode.removeChild(btn);
+  // Clear memory grid so it rebuilds via JS
+  var mg = clone.querySelector('#memory-grid');
+  if (mg) mg.innerHTML = '';
+
+  var html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  var blob = new Blob([html], { type: 'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'songkran_content.html';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+</script>
+
+
+</body></html>
