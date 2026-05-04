@@ -1,0 +1,420 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Episode 2: The Stranger in Seat 4B</title><style>
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    margin: 0;
+    padding: 30px 16px;
+    user-select: none;
+  }
+  .page {
+    background: #f0e6c8;
+    color: #2a1500;
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 36px 42px 42px 42px;
+    border: 2px solid #a0845a;
+    border-radius: 4px;
+    position: relative;
+  }
+  h1 {
+    color: #3a1f00;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    font-size: 1.45rem;
+    margin-top: 0;
+  }
+  h2, h3 {
+    color: #3a1f00;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 6px;
+  }
+  p { line-height: 1.75; margin-bottom: 1.1em; }
+
+  /* VOCAB CLICKABLE */
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+  }
+
+  /* CORRECTION STYLES */
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .corrected.vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+
+  /* AUDIO PLAYER */
+  .audio-section {
+    margin-bottom: 24px;
+  }
+  .audio-label {
+    color: #7a5a2a;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+  }
+  audio#audio-player {
+    width: 100%;
+    accent-color: #c8a060;
+    display: block;
+    margin-bottom: 8px;
+  }
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .rewind-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 5px 10px;
+    font-family: Arial, sans-serif;
+    font-size: 0.92rem;
+    cursor: pointer;
+  }
+  .rewind-btn:hover { background: #4a3318; }
+
+  /* POPUP CARD */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0e6c8;
+    border: 2px solid #7a4e1a;
+    border-radius: 6px;
+    padding: 20px 24px;
+    max-width: 380px;
+    width: 90vw;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    color: #2a1500;
+  }
+  #popup-card .popup-word-en {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #3a1f00;
+    margin-bottom: 2px;
+  }
+  #popup-card .popup-word-vn {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #7a5a2a;
+    margin-bottom: 6px;
+  }
+  #popup-card .popup-pos {
+    font-size: 0.95rem;
+    color: #5a3a0a;
+    margin-bottom: 8px;
+  }
+  #popup-card .popup-def {
+    font-size: 1rem;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  #popup-card .popup-def .def-en { display: block; margin-bottom: 2px; }
+  #popup-card .popup-def .def-vn { display: block; color: #5a3a0a; font-style: italic; }
+  #popup-card .popup-context-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #5a3a0a;
+    margin-top: 8px;
+  }
+  #popup-card .popup-context {
+    font-size: 0.95rem;
+    color: #3a1f00;
+    font-style: italic;
+    margin-top: 3px;
+  }
+  #popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 999;
+  }
+
+  /* DOWNLOAD BUTTON */
+  #download-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 6px 11px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  #download-btn:hover { background: #4a3318; }
+
+  /* BACK BUTTON */
+  .back-btn {
+    display: inline-block;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.92rem;
+    cursor: pointer;
+    margin: 18px 0 10px 0;
+    text-decoration: none;
+  }
+  .back-btn:hover { background: #4a3318; }
+
+  /* MEMORY GRID */
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 7px 10px;
+    margin-top: 12px;
+  }
+  #memory-grid span {
+    cursor: pointer;
+    border-bottom: 1px dotted #1a5c20;
+    color: #2a1500;
+    font-size: 0.97rem;
+    padding: 2px 0;
+  }
+  #memory-grid span:hover { color: #1a5c20; }
+  .highlight-scroll {
+    background: #ffe082 !important;
+    transition: background 0.2s;
+  }
+
+  /* TRANSCRIPTION NOTES */
+  .skip-notes, .transcription-notes {
+    margin-top: 28px;
+    font-size: 0.92rem;
+    color: #5a3a0a;
+  }
+  .transcription-notes table {
+    border-collapse: collapse;
+    width: 100%;
+    margin-top: 8px;
+  }
+  .transcription-notes th, .transcription-notes td {
+    border: 1px solid #a0845a;
+    padding: 5px 9px;
+    text-align: left;
+    font-size: 0.9rem;
+  }
+  .transcription-notes th { background: #e0cfa0; color: #3a1f00; }
+</style></head><body><div class="page" id="main-page">
+  
+
+  <h1>Episode 2: The <span class="vocab" data-word-en="Stranger" data-word-vn="người lạ" data-pos="danh từ / noun" data-def-en="A person who is unknown or unfamiliar." data-def-vn="Một người không quen biết hoặc xa lạ." data-context-en="The story's title uses 'stranger' to hint at the mysterious unknown man on the plane." data-context-vn="Tựa đề câu chuyện dùng 'stranger' để gợi ý về người đàn ông bí ẩn trên máy bay.">Stranger</span> in Seat 4B</h1>
+
+  <!-- AUDIO PLAYER SECTION -->
+  <div class="audio-section">
+    <div class="audio-label">🎧 Listen to the text</div>
+    <audio id="audio-player" controls="">
+      <source src="ep2.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+
+  <!-- MAIN TEXT -->
+  <div id="story-content">
+
+    <p>Maya <span class="vocab" id="w-fall" data-word-en="fall" data-word-vn="ngã / rơi" data-pos="động từ / verb" data-def-en="To drop downward due to gravity or lose balance." data-def-vn="Rơi xuống do trọng lực hoặc mất thăng bằng." data-context-en="Maya did not fall off the building — she grabbed a pipe at the last moment." data-context-vn="Maya đã không ngã — cô ấy bám vào ống nước vào khoảnh khắc cuối.">didn't fall</span>. At the <span class="vocab" id="w-last" data-word-en="last second" data-word-vn="giây cuối" data-pos="cụm danh từ / noun phrase" data-def-en="The final possible moment before something happens." data-def-vn="Khoảnh khắc cuối cùng trước khi điều gì đó xảy ra." data-context-en="Maya caught the pipe at the last second, meaning she barely avoided falling." data-context-vn="Maya bám vào ống nước vào giây cuối, nghĩa là cô ấy vừa thoát khỏi việc ngã.">last second</span>, her <span class="vocab" id="w-caught" data-word-en="caught" data-word-vn="bắt / nắm lấy" data-pos="động từ / verb" data-def-en="Grabbed and held something to stop it or steady oneself." data-def-vn="Nắm lấy và giữ thứ gì đó để dừng lại hoặc ổn định bản thân." data-context-en="Maya's hand caught the pipe — she grabbed it to stop herself from falling." data-context-vn="Tay Maya nắm lấy ống nước — cô ấy bám vào để khỏi rơi xuống.">caught</span> the <span class="vocab" id="w-cold" data-word-en="cold" data-word-vn="lạnh" data-pos="tính từ / adjective" data-def-en="Having a low temperature; not warm." data-def-vn="Có nhiệt độ thấp; không ấm." data-context-en="The metal pipe is described as cold, emphasising the dangerous outdoor setting." data-context-vn="Ống kim loại được miêu tả là lạnh, nhấn mạnh bối cảnh ngoài trời nguy hiểm.">cold</span> <span class="vocab" id="w-metal" data-word-en="metal" data-word-vn="kim loại" data-pos="danh từ / noun" data-def-en="A hard, solid material such as iron, steel, or copper." data-def-vn="Vật liệu cứng, rắn như sắt, thép hoặc đồng." data-context-en="The rain pipe is made of cold metal, which Maya grabs as she falls." data-context-vn="Ống thoát nước làm bằng kim loại lạnh mà Maya nắm lấy khi rơi.">metal</span> of a <span class="vocab" id="w-rain-pipe" data-word-en="rain pipe" data-word-vn="ống thoát nước mưa" data-pos="danh từ / noun" data-def-en="A vertical drainpipe attached to the outside of a building to carry rainwater away." data-def-vn="Ống dẫn nước dọc theo bên ngoài tòa nhà để thoát nước mưa." data-context-en="Maya grabs the rain pipe on the outside of the building to stop herself from falling." data-context-vn="Maya bám vào ống thoát nước bên ngoài tòa nhà để khỏi rơi xuống.">rain pipe</span>. She <span class="vocab" id="w-swung" data-word-en="swung" data-word-vn="đu / đung đưa" data-pos="động từ / verb" data-def-en="Moved in a sweeping arc while hanging or holding onto something." data-def-vn="Di chuyển theo cung tròn khi treo người hoặc bám vào thứ gì đó." data-context-en="Maya swung her body through a window — she used momentum to move herself sideways." data-context-vn="Maya đu người qua cửa sổ — cô dùng đà để xoay người sang ngang.">swung</span> her body through an <span class="vocab" id="w-open" data-word-en="open" data-word-vn="mở" data-pos="tính từ / adjective" data-def-en="Not closed or blocked; accessible." data-def-vn="Không đóng hoặc bị chặn; có thể tiếp cận được." data-context-en="The window was open, allowing Maya to swing through it to safety." data-context-vn="Cửa sổ đang mở, cho phép Maya đu qua để đến nơi an toàn.">open</span> window two <span class="vocab" id="w-floors" data-word-en="floors" data-word-vn="tầng" data-pos="danh từ / noun" data-def-en="Levels or stories of a building." data-def-vn="Các tầng hoặc lầu của một tòa nhà." data-context-en="Maya swings into a window two floors below where she started, landing in a kitchen." data-context-vn="Maya đu vào cửa sổ hai tầng phía dưới, đáp xuống một căn bếp.">floors</span> down, <span class="vocab" id="w-landing" data-word-en="landing" data-word-vn="đáp xuống / tiếp đất" data-pos="động từ (dạng tiếp diễn) / verb (present participle)" data-def-en="Coming down and stopping after a jump, swing, or fall." data-def-vn="Đáp xuống và dừng lại sau khi nhảy, đu hoặc rơi." data-context-en="After swinging through the window, Maya lands in her neighbour's kitchen." data-context-vn="Sau khi đu qua cửa sổ, Maya tiếp đất trong bếp nhà hàng xóm.">landing</span> in her <span class="vocab" id="w-neighbor" data-word-en="neighbor's" data-word-vn="hàng xóm" data-pos="danh từ / noun" data-def-en="A person who lives next door or very nearby." data-def-vn="Người sống kề bên hoặc rất gần." data-context-en="Maya lands in her neighbour's kitchen — the woman living near her." data-context-vn="Maya tiếp đất trong bếp nhà hàng xóm — người phụ nữ sống gần cô.">neighbor's</span> kitchen.</p>
+
+    <p>"<span class="vocab" id="w-sorry" data-word-en="Sorry" data-word-vn="xin lỗi" data-pos="thán từ / interjection" data-def-en="An expression of regret or apology." data-def-vn="Lời bày tỏ sự hối tiếc hoặc xin lỗi." data-context-en="Maya apologises to Mrs Higgins as she runs through her kitchen uninvited." data-context-vn="Maya xin lỗi bà Higgins khi chạy qua bếp nhà bà mà không được mời.">Sorry</span>, Mrs. Higgins!" Maya <span class="vocab" id="w-yelled" data-word-en="yelled" data-word-vn="la hét / hét lên" data-pos="động từ / verb" data-def-en="Shouted loudly, usually in a hurry or emotion." data-def-vn="Hét to, thường trong lúc vội vàng hoặc xúc động." data-context-en="Maya yells an apology as she sprints through the kitchen — no time to stop." data-context-vn="Maya hét lên lời xin lỗi khi chạy qua bếp — không có thời gian dừng lại.">yelled</span> as she <span class="vocab" id="w-ran" data-word-en="ran" data-word-vn="chạy" data-pos="động từ / verb" data-def-en="Moved quickly on foot, past tense of 'run'." data-def-vn="Di chuyển nhanh bằng chân, quá khứ của 'run'." data-context-en="Maya ran past the old lady — she was in a rush to escape." data-context-vn="Maya chạy qua người phụ nữ lớn tuổi — cô đang vội thoát ra ngoài.">ran</span> past a very <span class="vocab" id="w-surprised" data-word-en="surprised" data-word-vn="ngạc nhiên / bất ngờ" data-pos="tính từ / adjective" data-def-en="Feeling shock or astonishment at something unexpected." data-def-vn="Cảm thấy sốc hoặc kinh ngạc trước điều bất ngờ." data-context-en="Mrs Higgins was very surprised — she did not expect anyone to come through her window." data-context-vn="Bà Higgins rất ngạc nhiên — bà không ngờ có ai nhảy qua cửa sổ nhà mình.">surprised</span> old lady and out the front door.</p>
+
+    <p><span class="vocab" id="w-twenty-four" data-word-en="Twenty-four hours later" data-word-vn="hai mươi bốn giờ sau" data-pos="cụm trạng từ / adverbial phrase" data-def-en="Exactly one day after a previous event." data-def-vn="Đúng một ngày sau một sự kiện trước đó." data-context-en="The story jumps forward a full day — Maya has now reached the airport." data-context-vn="Câu chuyện nhảy vọt lên một ngày sau — Maya giờ đã đến sân bay.">Twenty-four hours later</span>, Maya <span class="vocab" id="w-boarded" data-word-en="boarded" data-word-vn="lên (máy bay, tàu)" data-pos="động từ / verb" data-def-en="Got on a plane, ship, or other vehicle to travel." data-def-vn="Lên máy bay, tàu hoặc phương tiện khác để đi." data-context-en="Maya boarded the Vietnam Airlines jet — she got on the plane to travel to Vietnam." data-context-vn="Maya lên máy bay Vietnam Airlines — cô bước vào máy bay để đến Việt Nam.">boarded</span> a <span class="vocab" id="w-beautiful" data-word-en="beautiful" data-word-vn="đẹp" data-pos="tính từ / adjective" data-def-en="Pleasing to the eye; attractive in appearance." data-def-vn="Đẹp về mặt thị giác; hấp dẫn về ngoại hình." data-context-en="The jet is described as beautiful, with blue and gold colours — a striking visual image." data-context-vn="Máy bay được miêu tả là đẹp, với màu xanh và vàng — một hình ảnh ấn tượng.">beautiful</span> blue and gold Vietnam Airlines <span class="vocab" id="w-jet" data-word-en="jet" data-word-vn="máy bay phản lực" data-pos="danh từ / noun" data-def-en="A fast aircraft powered by jet engines." data-def-vn="Máy bay tốc độ cao sử dụng động cơ phản lực." data-context-en="Maya boards a Vietnam Airlines jet — a large commercial aircraft." data-context-vn="Maya lên máy bay phản lực Vietnam Airlines — một máy bay thương mại lớn.">jet</span>. Soon she was <span class="vocab" id="w-sitting" data-word-en="sitting" data-word-vn="ngồi" data-pos="động từ / verb" data-def-en="Being in a position with one's weight resting on a seat." data-def-vn="Ở tư thế ngồi, trọng lượng tựa trên ghế." data-context-en="Maya was sitting in a comfortable seat on the plane, flying through the clouds." data-context-vn="Maya ngồi trên ghế thoải mái trong máy bay, bay qua những đám mây.">sitting</span> in a <span class="vocab" id="w-comfortable" data-word-en="comfortable" data-word-vn="thoải mái / dễ chịu" data-pos="tính từ / adjective" data-def-en="Providing physical ease and relaxation; not causing discomfort." data-def-vn="Mang lại sự thoải mái về thể chất; không gây khó chịu." data-context-en="Maya's seat is described as comfortable, though she still cannot sleep." data-context-vn="Ghế của Maya được miêu tả là thoải mái, dù cô vẫn không ngủ được.">comfortable</span> seat, <span class="vocab" id="w-flying" data-word-en="flying" data-word-vn="bay" data-pos="động từ / verb" data-def-en="Travelling through the air in an aircraft." data-def-vn="Di chuyển trên không bằng máy bay." data-context-en="Maya was flying over the clouds, high in the sky on her way to Vietnam." data-context-vn="Maya đang bay trên những đám mây, trên đường đến Việt Nam.">flying</span> over the clouds. She <span class="vocab" id="w-looked1" data-word-en="looked" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="Directed one's gaze toward something." data-def-vn="Hướng ánh mắt về phía thứ gì đó." data-context-en="Maya looked at her reflection in the window of the plane." data-context-vn="Maya nhìn vào hình phản chiếu của mình trong cửa sổ máy bay.">looked</span> at her <span class="vocab" id="w-reflection" data-word-en="reflection" data-word-vn="hình phản chiếu / bóng phản chiếu" data-pos="danh từ / noun" data-def-en="An image of oneself seen in a mirror or other reflective surface." data-def-vn="Hình ảnh của bản thân nhìn thấy trong gương hoặc bề mặt phản chiếu." data-context-en="Maya gazed at her reflection in the small window, observing her own appearance." data-context-vn="Maya nhìn vào hình phản chiếu của mình trong cửa sổ nhỏ, quan sát ngoại hình của bản thân.">reflection</span> in the small window. With her long dark hair <span class="vocab" id="w-tied" data-word-en="tied back" data-word-vn="buộc ra sau" data-pos="cụm động từ / verb phrase" data-def-en="Fastened or secured behind the head, as with hair." data-def-vn="Cột hoặc buộc ra sau đầu, như kiểu tóc buộc lại." data-context-en="Maya's hair was tied back — pulled away from her face and secured behind her head." data-context-vn="Tóc của Maya được buộc ra sau — kéo khỏi mặt và cột gọn sau đầu.">tied back</span> and her <span class="vocab" id="w-sharp" data-word-en="sharp" data-word-vn="sắc bén / sắc sảo" data-pos="tính từ / adjective" data-def-en="Mentally quick and perceptive; keen and alert." data-def-vn="Nhạy bén về mặt tư duy; tinh tế và lanh lợi." data-context-en="Maya's eyes are described as sharp — a sign of her intelligence and alertness." data-context-vn="Mắt của Maya được miêu tả là sắc sảo — dấu hiệu của trí tuệ và sự cảnh giác.">sharp</span>, <span class="vocab" id="w-intelligent" data-word-en="intelligent" data-word-vn="thông minh" data-pos="tính từ / adjective" data-def-en="Having a high level of mental ability; clever and quick to understand." data-def-vn="Có khả năng tư duy cao; thông minh và hiểu nhanh." data-context-en="Maya is described as having intelligent eyes — she is a smart, observant person." data-context-vn="Maya được miêu tả có đôi mắt thông minh — cô là người thông thái, tinh tế.">intelligent</span> eyes, she <span class="vocab" id="w-looked2" data-word-en="looked" data-word-vn="trông / có vẻ" data-pos="động từ / verb" data-def-en="Appeared to be a certain way; seemed." data-def-vn="Có vẻ như là theo một cách nào đó; trông giống như." data-context-en="Maya looked more like a soldier than a professor — her appearance gave that impression." data-context-vn="Maya trông giống một người lính hơn là một giáo sư — ngoại hình của cô tạo ra ấn tượng đó.">looked</span> more like a <span class="vocab" id="w-soldier" data-word-en="soldier" data-word-vn="người lính / binh sĩ" data-pos="danh từ / noun" data-def-en="A person who serves in an army." data-def-vn="Người phục vụ trong quân đội." data-context-en="Maya looks more like a soldier than a professor — tough and alert rather than academic." data-context-vn="Maya trông giống lính hơn giáo sư — cứng rắn và cảnh giác hơn là học thuật.">soldier</span> than a <span class="vocab" id="w-professor" data-word-en="professor" data-word-vn="giáo sư" data-pos="danh từ / noun" data-def-en="A senior teacher or academic expert at a university." data-def-vn="Giáo viên cấp cao hoặc chuyên gia học thuật tại trường đại học." data-context-en="Maya is a professor by profession, but her appearance in this moment suggests otherwise." data-context-vn="Maya là giáo sư theo nghề nghiệp, nhưng ngoại hình của cô lúc này lại gợi lên điều khác.">professor</span>. She was <span class="vocab" id="w-exhausted" data-word-en="exhausted" data-word-vn="kiệt sức / mệt mỏi hoàn toàn" data-pos="tính từ / adjective" data-def-en="Extremely tired, with no energy remaining." data-def-vn="Mệt mỏi cực độ, không còn chút sức lực nào." data-context-en="Maya was exhausted after her dangerous escape, but still couldn't sleep." data-context-vn="Maya kiệt sức sau vụ trốn thoát nguy hiểm, nhưng vẫn không thể ngủ.">exhausted</span>, but she <span class="vocab" id="w-couldnt" data-word-en="couldn't sleep" data-word-vn="không thể ngủ" data-pos="cụm động từ / verb phrase" data-def-en="Was unable to fall asleep." data-def-vn="Không thể chìm vào giấc ngủ." data-context-en="Despite being exhausted, Maya couldn't sleep — her mind was too active." data-context-vn="Dù kiệt sức, Maya không thể ngủ — đầu óc cô quá bận rộn.">couldn't sleep</span>. She <span class="vocab" id="w-kept" data-word-en="kept" data-word-vn="tiếp tục / cứ" data-pos="động từ / verb" data-def-en="Continued doing something repeatedly without stopping." data-def-vn="Tiếp tục làm điều gì đó liên tục mà không dừng." data-context-en="Maya kept thinking about the key — she couldn't stop thinking about it." data-context-vn="Maya cứ nghĩ về chiếc chìa khóa — cô không thể ngừng suy nghĩ về nó.">kept</span> <span class="vocab" id="w-thinking" data-word-en="thinking" data-word-vn="suy nghĩ / nghĩ" data-pos="động từ / verb" data-def-en="Using one's mind to consider or reflect on something." data-def-vn="Dùng tâm trí để suy xét hoặc suy ngẫm về điều gì đó." data-context-en="Maya kept thinking about the golden key — it dominated her thoughts." data-context-vn="Maya cứ suy nghĩ về chiếc chìa khóa vàng — nó chiếm lĩnh suy nghĩ của cô.">thinking</span> about the <span class="vocab" id="w-golden" data-word-en="golden" data-word-vn="vàng / màu vàng" data-pos="tính từ / adjective" data-def-en="Made of gold or having the colour of gold." data-def-vn="Làm bằng vàng hoặc có màu vàng." data-context-en="The golden key is the important object Maya is carrying and worrying about." data-context-vn="Chiếc chìa khóa vàng là vật quan trọng mà Maya đang mang theo và lo lắng.">golden</span> key in her <span class="vocab" id="w-bag" data-word-en="bag" data-word-vn="túi / túi xách" data-pos="danh từ / noun" data-def-en="A container made of flexible material for carrying things." data-def-vn="Vật đựng làm bằng vật liệu mềm để mang đồ." data-context-en="The golden key is hidden in Maya's bag — she is worried about someone finding it." data-context-vn="Chiếc chìa khóa vàng được giấu trong túi của Maya — cô lo người khác tìm thấy nó.">bag</span>.</p>
+
+    <p>"<span class="vocab" id="w-first-time" data-word-en="First time" data-word-vn="lần đầu tiên" data-pos="cụm danh từ / noun phrase" data-def-en="The initial occasion when something happens." data-def-vn="Lần đầu tiên một điều gì đó xảy ra." data-context-en="Jack asks if this is Maya's first time visiting Vietnam — suggesting she looks nervous or inexperienced." data-context-vn="Jack hỏi đây có phải lần đầu Maya đến Việt Nam không — gợi ý rằng cô trông có vẻ lo lắng hoặc chưa quen.">First time</span> to Vietnam?" a <span class="vocab" id="w-voice" data-word-en="voice" data-word-vn="giọng nói" data-pos="danh từ / noun" data-def-en="The sound produced in a person's mouth when speaking." data-def-vn="Âm thanh phát ra từ miệng người khi nói chuyện." data-context-en="A voice asked Maya a question — she didn't know who it was yet." data-context-vn="Một giọng nói hỏi Maya — cô chưa biết đó là ai.">voice</span> asked.</p>
+
+    <p>Maya <span class="vocab" id="w-turned" data-word-en="turned" data-word-vn="quay lại / ngoảnh lại" data-pos="động từ / verb" data-def-en="Rotated one's body or head to look in a different direction." data-def-vn="Xoay người hoặc đầu để nhìn theo hướng khác." data-context-en="Maya turned to look at who had spoken to her on the plane." data-context-vn="Maya quay lại xem ai vừa nói chuyện với cô trên máy bay.">turned</span>. Sitting in the seat next to her was a man with a <span class="vocab" id="w-friendly" data-word-en="friendly" data-word-vn="thân thiện / vui vẻ" data-pos="tính từ / adjective" data-def-en="Kind, pleasant, and easy to get along with." data-def-vn="Tốt bụng, dễ chịu và dễ gần." data-context-en="The man has a friendly smile — he appears warm and approachable to Maya." data-context-vn="Người đàn ông có nụ cười thân thiện — anh ta trông ấm áp và dễ gần với Maya.">friendly</span> <span class="vocab" id="w-smile" data-word-en="smile" data-word-vn="nụ cười" data-pos="danh từ / noun" data-def-en="A facial expression showing pleasure or friendliness, with the corners of the mouth turned up." data-def-vn="Biểu cảm khuôn mặt thể hiện sự vui vẻ hoặc thân thiện, với khóe miệng cong lên." data-context-en="Jack's friendly smile was the first thing Maya noticed about him." data-context-vn="Nụ cười thân thiện của Jack là điều đầu tiên Maya nhận thấy về anh ta.">smile</span> and <span class="vocab" id="w-messy" data-word-en="messy" data-word-vn="bù xù / lộn xộn" data-pos="tính từ / adjective" data-def-en="Untidy or dishevelled in appearance." data-def-vn="Bề ngoài không gọn gàng hoặc bù xù." data-context-en="Jack had messy blonde hair — it was unkempt and casually untidy." data-context-vn="Jack có mái tóc vàng bù xù — không gọn gàng và cẩu thả.">messy</span> <span class="vocab" id="w-blonde" data-word-en="blonde" data-word-vn="tóc vàng hoe" data-pos="tính từ / adjective" data-def-en="Having light yellow or golden-coloured hair." data-def-vn="Có mái tóc màu vàng nhạt hoặc vàng kim." data-context-en="Jack is described as having blonde hair — a light yellow colour." data-context-vn="Jack được miêu tả có mái tóc vàng hoe — màu vàng nhạt.">blonde</span> hair. He was <span class="vocab" id="w-wearing" data-word-en="wearing" data-word-vn="mặc / đeo" data-pos="động từ / verb" data-def-en="Having clothing or accessories on one's body." data-def-vn="Có quần áo hoặc phụ kiện trên người." data-context-en="Jack was wearing a rugged jacket — it was part of his casual, outdoorsy appearance." data-context-vn="Jack đang mặc một chiếc áo khoác phong trần — là một phần ngoại hình bình thường, phóng khoáng của anh.">wearing</span> a <span class="vocab" id="w-rugged" data-word-en="rugged" data-word-vn="thô ráp / cứng cáp" data-pos="tính từ / adjective" data-def-en="Sturdy and tough-looking, with a rough or worn appearance." data-def-vn="Chắc chắn và trông cứng cáp, với vẻ ngoài thô ráp hoặc đã qua sử dụng." data-context-en="Jack wore a rugged jacket — durable and rough-looking, like that of an adventurer." data-context-vn="Jack mặc áo khoác thô ráp — bền chắc và trông phong trần, như của một nhà thám hiểm.">rugged</span> <span class="vocab" id="w-jacket" data-word-en="jacket" data-word-vn="áo khoác" data-pos="danh từ / noun" data-def-en="A short coat worn on the upper body." data-def-vn="Áo khoác ngắn mặc phần thân trên." data-context-en="Jack's rugged jacket, along with his camera, suggested he was a traveller or adventurer." data-context-vn="Áo khoác thô ráp của Jack cùng chiếc máy ảnh gợi ý rằng anh là một người du lịch hoặc nhà thám hiểm.">jacket</span> and had a <span class="vocab" id="w-camera" data-word-en="camera" data-word-vn="máy ảnh" data-pos="danh từ / noun" data-def-en="A device used to take photographs or record video." data-def-vn="Thiết bị dùng để chụp ảnh hoặc quay video." data-context-en="Jack had a camera around his neck — supporting his claim of being a photographer." data-context-vn="Jack đeo máy ảnh quanh cổ — củng cố tuyên bố của anh rằng anh là nhiếp ảnh gia.">camera</span> around his neck.</p>
+
+    <p>"Is it that <span class="vocab" id="w-obvious" data-word-en="obvious" data-word-vn="rõ ràng / hiển nhiên" data-pos="tính từ / adjective" data-def-en="Easy to see or understand; clearly apparent." data-def-vn="Dễ nhìn thấy hoặc hiểu; rõ ràng." data-context-en="Maya asks if it is obvious that it's her first time — she is worried about appearing nervous." data-context-vn="Maya hỏi có rõ ràng không khi đây là lần đầu tiên cô đến — cô lo lắng vì trông có vẻ hồi hộp.">obvious</span>?" Maya asked, <span class="vocab" id="w-trying" data-word-en="trying" data-word-vn="cố gắng" data-pos="động từ / verb" data-def-en="Making an effort to do something." data-def-vn="Cố gắng làm điều gì đó." data-context-en="Maya was trying to hide her anxiety — making an effort to appear calm." data-context-vn="Maya đang cố gắng che giấu sự lo lắng — cố tỏ ra bình tĩnh.">trying</span> to <span class="vocab" id="w-hide" data-word-en="hide" data-word-vn="che giấu / giấu" data-pos="động từ / verb" data-def-en="To conceal something or keep it from being seen or known." data-def-vn="Che giấu điều gì đó hoặc ngăn nó bị nhìn thấy hoặc biết đến." data-context-en="Maya tried to hide her anxiety — she didn't want Jack to know she was nervous." data-context-vn="Maya cố che giấu sự lo lắng — cô không muốn Jack biết cô đang hồi hộp.">hide</span> her <span class="vocab" id="w-anxiety" data-word-en="anxiety" data-word-vn="lo lắng / sự lo âu" data-pos="danh từ / noun" data-def-en="A feeling of worry, nervousness, or unease." data-def-vn="Cảm giác lo lắng, hồi hộp hoặc bất an." data-context-en="Maya tried to hide her anxiety — she was nervous and didn't want Jack to notice." data-context-vn="Maya cố che giấu sự lo âu — cô đang hồi hộp và không muốn Jack nhận ra.">anxiety</span>.</p>
+
+    <p>"You're <span class="vocab" id="w-holding" data-word-en="holding" data-word-vn="cầm / giữ" data-pos="động từ / verb" data-def-en="Keeping something gripped tightly in the hands." data-def-vn="Giữ chặt thứ gì đó trong tay." data-context-en="Jack noticed Maya holding her journal tightly — he made a joke about it." data-context-vn="Jack nhận thấy Maya đang cầm chặt cuốn nhật ký — anh đùa về điều đó.">holding</span> that <span class="vocab" id="w-journal" data-word-en="journal" data-word-vn="nhật ký / tạp chí" data-pos="danh từ / noun" data-def-en="A notebook or diary in which one writes regularly." data-def-vn="Cuốn sổ tay hoặc nhật ký để ghi chép thường xuyên." data-context-en="Maya was holding a journal tightly — Jack noticed and joked about it." data-context-vn="Maya đang cầm chặt cuốn nhật ký — Jack nhận thấy và đùa về nó.">journal</span> like it's <span class="vocab" id="w-made-of-gold" data-word-en="made of gold" data-word-vn="làm bằng vàng" data-pos="cụm tính từ / adjective phrase" data-def-en="Constructed from gold; here used figuratively to mean treated as extremely precious." data-def-vn="Được làm bằng vàng; ở đây dùng theo nghĩa bóng để chỉ được đối xử như rất quý giá." data-context-en="Jack joked that Maya held her journal as if it were made of gold — meaning she treated it as extremely precious." data-context-vn="Jack đùa rằng Maya cầm cuốn nhật ký như thể nó làm bằng vàng — nghĩa là cô đối xử với nó như rất quý giá.">made of gold</span>," the man <span class="vocab" id="w-joked" data-word-en="joked" data-word-vn="đùa / nói đùa" data-pos="động từ / verb" data-def-en="Said something humorous, not meant to be taken seriously." data-def-vn="Nói điều gì đó hài hước, không có ý nghiêm túc." data-context-en="Jack joked about how tightly Maya held her journal — a light, playful remark." data-context-vn="Jack đùa về việc Maya cầm chặt cuốn nhật ký — một câu đùa nhẹ nhàng, vui vẻ.">joked</span>. He <span class="vocab" id="w-held-out" data-word-en="held out" data-word-vn="chìa ra / đưa ra" data-pos="cụm động từ / phrasal verb" data-def-en="Extended one's hand toward someone as an offer to shake or receive." data-def-vn="Đưa tay về phía người khác để bắt tay hoặc nhận." data-context-en="Jack held out his hand to introduce himself — offering a handshake." data-context-vn="Jack đưa tay ra để giới thiệu bản thân — mời bắt tay.">held out</span> a hand. "I'm Jack. I'm a <span class="vocab" id="w-travel" data-word-en="travel" data-word-vn="du lịch / đi lại" data-pos="tính từ (dùng như định ngữ) / adjective (attributive)" data-def-en="Relating to the act of journeying to different places." data-def-vn="Liên quan đến việc đi lại hoặc du lịch đến các nơi khác." data-context-en="Jack described himself as a travel photographer — someone who takes pictures while travelling." data-context-vn="Jack tự giới thiệu là nhiếp ảnh gia du lịch — người chụp ảnh khi đi du lịch.">travel</span> <span class="vocab" id="w-photographer" data-word-en="photographer" data-word-vn="nhiếp ảnh gia" data-pos="danh từ / noun" data-def-en="A person who takes photographs, often professionally." data-def-vn="Người chụp ảnh, thường là chuyên nghiệp." data-context-en="Jack claimed to be a travel photographer — but Maya later began to doubt this." data-context-vn="Jack tự nhận là nhiếp ảnh gia du lịch — nhưng Maya sau đó bắt đầu nghi ngờ điều này.">photographer</span>."</p>
+
+    <p>Maya <span class="vocab" id="w-hesitated" data-word-en="hesitated" data-word-vn="do dự / ngập ngừng" data-pos="động từ / verb" data-def-en="Paused before acting, due to uncertainty or caution." data-def-vn="Dừng lại trước khi hành động do không chắc chắn hoặc thận trọng." data-context-en="Maya hesitated before shaking Jack's hand — she was cautious about trusting strangers." data-context-vn="Maya do dự trước khi bắt tay Jack — cô thận trọng về việc tin tưởng người lạ.">hesitated</span>, then <span class="vocab" id="w-shook" data-word-en="shook" data-word-vn="bắt tay / lắc" data-pos="động từ / verb" data-def-en="Moved something up and down or back and forth; here means clasped and moved a hand in greeting." data-def-vn="Di chuyển thứ gì đó lên xuống hoặc qua lại; ở đây có nghĩa là nắm và lắc tay chào hỏi." data-context-en="Maya shook his hand — she accepted Jack's handshake greeting." data-context-vn="Maya bắt tay anh ta — cô chấp nhận cái bắt tay của Jack.">shook</span> his hand. "I'm Maya. I'm just... <span class="vocab" id="w-visiting" data-word-en="visiting" data-word-vn="đến thăm / ghé thăm" data-pos="động từ / verb" data-def-en="Going to see someone or a place for a period of time." data-def-vn="Đến gặp ai đó hoặc một nơi nào đó trong một khoảng thời gian." data-context-en="Maya claimed she was just visiting family — this was likely a cover story." data-context-vn="Maya tuyên bố chỉ đến thăm gia đình — đây có thể là câu chuyện bịa đặt để che giấu.">visiting</span> family."</p>
+
+    <p>Jack was <span class="vocab" id="w-handsome" data-word-en="handsome" data-word-vn="đẹp trai / điển trai" data-pos="tính từ / adjective" data-def-en="Attractive in appearance, especially for a man." data-def-vn="Có ngoại hình hấp dẫn, đặc biệt dành cho nam giới." data-context-en="Jack is described as handsome — physically attractive in appearance." data-context-vn="Jack được miêu tả là đẹp trai — có ngoại hình hấp dẫn.">handsome</span>, with a <span class="vocab" id="w-playful" data-word-en="playful" data-word-vn="vui tươi / tinh nghịch" data-pos="tính từ / adjective" data-def-en="Fun-loving, lighthearted, and fond of joking." data-def-vn="Yêu thích vui vẻ, nhẹ nhàng và thích đùa giỡn." data-context-en="Jack had a playful spark in his eyes — his look was mischievous and light-hearted." data-context-vn="Jack có ánh mắt tinh nghịch — vẻ nhìn của anh ranh mãnh và vui tươi.">playful</span> <span class="vocab" id="w-spark" data-word-en="spark" data-word-vn="tia sáng / tia lửa" data-pos="danh từ / noun" data-def-en="A small flash of light; figuratively, a lively quality in someone's eyes." data-def-vn="Tia sáng nhỏ; nghĩa bóng là nét sống động trong ánh mắt ai đó." data-context-en="There was a playful spark in Jack's eyes — a lively, mischievous quality." data-context-vn="Có một tia sáng tinh nghịch trong mắt Jack — nét sống động, nghịch ngợm.">spark</span> in his eyes that <span class="vocab" id="w-made" data-word-en="made" data-word-vn="khiến / làm cho" data-pos="động từ / verb" data-def-en="Caused something to happen or caused someone to feel a certain way." data-def-vn="Khiến điều gì đó xảy ra hoặc khiến ai đó cảm thấy theo một cách nào đó." data-context-en="Jack's playful look made Maya blush — it caused an involuntary reaction in her." data-context-vn="Vẻ tinh nghịch của Jack khiến Maya đỏ mặt — gây ra phản ứng không chủ ý ở cô.">made</span> Maya <span class="vocab" id="w-blush" data-word-en="blush" data-word-vn="đỏ mặt / ửng hồng" data-pos="động từ / verb" data-def-en="To become red in the face due to embarrassment or shyness." data-def-vn="Đỏ mặt vì xấu hổ hoặc ngại ngùng." data-context-en="Maya blushed slightly because of Jack's playful eyes — she was a little embarrassed." data-context-vn="Maya hơi đỏ mặt vì ánh mắt tinh nghịch của Jack — cô cảm thấy hơi ngại.">blush</span> <span class="vocab" id="w-slightly" data-word-en="slightly" data-word-vn="hơi / một chút" data-pos="trạng từ / adverb" data-def-en="To a small degree; a little." data-def-vn="Ở mức độ nhỏ; một chút." data-context-en="Maya blushed slightly — just a little, not a lot." data-context-vn="Maya hơi đỏ mặt — chỉ một chút, không nhiều.">slightly</span>. They <span class="vocab" id="w-talked" data-word-en="talked" data-word-vn="nói chuyện / trò chuyện" data-pos="động từ / verb" data-def-en="Communicated with each other verbally." data-def-vn="Giao tiếp bằng lời nói với nhau." data-context-en="Maya and Jack talked for hours — they had a long conversation during the flight." data-context-vn="Maya và Jack nói chuyện nhiều giờ — họ trò chuyện dài trong chuyến bay.">talked</span> for hours about the best places to <span class="vocab" id="w-eat" data-word-en="eat" data-word-vn="ăn" data-pos="động từ / verb" data-def-en="To consume food." data-def-vn="Tiêu thụ thức ăn." data-context-en="They talked about the best places to eat Phở in Sài Gòn — sharing food recommendations." data-context-vn="Họ nói về những nơi ngon nhất để ăn Phở ở Sài Gòn — chia sẻ gợi ý ẩm thực.">eat</span> Phở in Sài Gòn. For a <span class="vocab" id="w-moment" data-word-en="moment" data-word-vn="khoảnh khắc / lúc" data-pos="danh từ / noun" data-def-en="A very short period of time." data-def-vn="Một khoảng thời gian rất ngắn." data-context-en="For a moment, Maya forgot her troubles — just briefly, during the pleasant conversation." data-context-vn="Trong một khoảnh khắc, Maya quên đi những rắc rối của mình — chỉ thoáng qua trong cuộc trò chuyện dễ chịu.">moment</span>, Maya <span class="vocab" id="w-forgot" data-word-en="forgot" data-word-vn="quên" data-pos="động từ / verb" data-def-en="Failed to remember; let something slip from one's mind." data-def-vn="Không nhớ; để điều gì đó trôi ra khỏi tâm trí." data-context-en="Maya forgot about Marcus Thorne and the dangerous secret — distracted by her conversation with Jack." data-context-vn="Maya quên đi Marcus Thorne và bí mật nguy hiểm — bị cuốn vào cuộc trò chuyện với Jack.">forgot</span> about Marcus Thorne and the <span class="vocab" id="w-dangerous" data-word-en="dangerous" data-word-vn="nguy hiểm" data-pos="tính từ / adjective" data-def-en="Likely to cause harm, injury, or risk." data-def-vn="Có khả năng gây hại, chấn thương hoặc rủi ro." data-context-en="The secret in Maya's bag is described as dangerous — it poses a threat." data-context-vn="Bí mật trong túi của Maya được miêu tả là nguy hiểm — nó gây ra mối đe dọa.">dangerous</span> <span class="vocab" id="w-secret" data-word-en="secret" data-word-vn="bí mật" data-pos="danh từ / noun" data-def-en="Information kept hidden from others; something not meant to be known." data-def-vn="Thông tin được giữ kín với người khác; điều không muốn để người khác biết." data-context-en="Maya carries a dangerous secret in her bag — the golden key and whatever it unlocks." data-context-vn="Maya mang một bí mật nguy hiểm trong túi — chiếc chìa khóa vàng và bất cứ thứ gì nó mở được.">secret</span> in her bag.</p>
+
+    <p>But as the <span class="vocab" id="w-plane" data-word-en="plane" data-word-vn="máy bay" data-pos="danh từ / noun" data-def-en="An aircraft used for flying passengers or cargo." data-def-vn="Máy bay được dùng để chở khách hoặc hàng hóa." data-context-en="The plane began its descent into Tan Son Nhat Airport — the journey was nearly over." data-context-vn="Máy bay bắt đầu hạ cánh xuống Sân bay Tân Sơn Nhất — hành trình sắp kết thúc.">plane</span> <span class="vocab" id="w-began" data-word-en="began" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Started; commenced an action or process." data-def-vn="Bắt đầu; khởi đầu một hành động hoặc quá trình." data-context-en="The plane began its descent — it started the process of landing." data-context-vn="Máy bay bắt đầu hạ độ cao — nó khởi đầu quá trình hạ cánh.">began</span> its <span class="vocab" id="w-descent" data-word-en="descent" data-word-vn="sự hạ cánh / sự xuống" data-pos="danh từ / noun" data-def-en="The process of moving downward, especially of an aircraft approaching to land." data-def-vn="Quá trình di chuyển xuống phía dưới, đặc biệt là máy bay chuẩn bị hạ cánh." data-context-en="The plane began its descent into the airport — it was coming down to land." data-context-vn="Máy bay bắt đầu hạ độ cao xuống sân bay — nó đang hạ xuống để hạ cánh.">descent</span> into Tan Son Nhat Airport, Jack <span class="vocab" id="w-stood-up" data-word-en="stood up" data-word-vn="đứng dậy" data-pos="cụm động từ / phrasal verb" data-def-en="Rose from a seated position to a standing one." data-def-vn="Đứng dậy từ tư thế ngồi." data-context-en="Jack stood up to get his bag from the overhead compartment." data-context-vn="Jack đứng dậy để lấy túi từ ngăn đựng hành lý phía trên.">stood up</span> to get his bag. As he <span class="vocab" id="w-reached" data-word-en="reached" data-word-vn="với tay / vươn tay" data-pos="động từ / verb" data-def-en="Extended one's arm or body to grasp or touch something." data-def-vn="Đưa tay hoặc cơ thể ra để nắm hoặc chạm vào thứ gì đó." data-context-en="Jack reached into the overhead bin to get his bag — stretching up to retrieve it." data-context-vn="Jack với tay vào ngăn hành lý phía trên để lấy túi — vươn người lên để lấy nó.">reached</span> into the <span class="vocab" id="w-overhead" data-word-en="overhead bin" data-word-vn="ngăn đựng hành lý phía trên" data-pos="danh từ / noun" data-def-en="The storage compartment above passenger seats in an aircraft." data-def-vn="Ngăn lưu trữ phía trên ghế hành khách trong máy bay." data-context-en="Jack reached into the overhead bin — the storage space above the seats on the plane." data-context-vn="Jack với tay vào ngăn hành lý phía trên — không gian chứa đồ phía trên ghế trên máy bay.">overhead bin</span>, his jacket <span class="vocab" id="w-pulled-up" data-word-en="pulled up" data-word-vn="kéo lên / trật lên" data-pos="cụm động từ / phrasal verb" data-def-en="Rose or shifted upward, revealing something underneath." data-def-vn="Kéo lên hoặc dịch lên trên, để lộ thứ bên dưới." data-context-en="Jack's jacket pulled up as he reached — it moved upward and revealed what was in his belt." data-context-vn="Áo khoác của Jack kéo lên khi anh vươn tay — nó bị kéo lên và để lộ thứ trong thắt lưng.">pulled up</span>. Maya's <span class="vocab" id="w-heart" data-word-en="heart" data-word-vn="tim / trái tim" data-pos="danh từ / noun" data-def-en="The organ that pumps blood; figuratively, the centre of one's emotional reaction." data-def-vn="Cơ quan bơm máu; nghĩa bóng là trung tâm cảm xúc." data-context-en="Maya's heart stopped — used figuratively to mean she felt sudden shock or fear." data-context-vn="Tim Maya ngừng đập — dùng theo nghĩa bóng để chỉ cô đột ngột cảm thấy sốc hoặc sợ hãi.">heart</span> <span class="vocab" id="w-stopped" data-word-en="stopped" data-word-vn="ngừng / dừng lại" data-pos="động từ / verb" data-def-en="Ceased moving or functioning." data-def-vn="Ngừng chuyển động hoặc hoạt động." data-context-en="Maya's heart stopped — a figurative expression for sudden shock or fright." data-context-vn="Tim Maya ngừng đập — cách diễn đạt nghĩa bóng về sự sốc hoặc sợ hãi đột ngột.">stopped</span>. <span class="vocab" id="w-tucked" data-word-en="Tucked" data-word-vn="nhét / giấu vào" data-pos="động từ / verb" data-def-en="Placed or hidden neatly in a folded or concealed position." data-def-vn="Đặt hoặc giấu gọn vào một vị trí bị che khuất." data-context-en="A gadget was tucked into Jack's belt — hidden or placed inside discreetly." data-context-vn="Một thiết bị được nhét vào thắt lưng của Jack — được giấu hoặc đặt vào một cách kín đáo.">Tucked</span> into his <span class="vocab" id="w-belt" data-word-en="belt" data-word-vn="thắt lưng / dây nịt" data-pos="danh từ / noun" data-def-en="A strip of leather or other material worn around the waist." data-def-vn="Dải da hoặc vật liệu khác đeo quanh eo." data-context-en="A silver gadget was tucked into Jack's belt — concealed at his waist." data-context-vn="Một thiết bị bạc được nhét vào thắt lưng của Jack — được giấu ở phần eo.">belt</span> was a <span class="vocab" id="w-silver" data-word-en="silver" data-word-vn="màu bạc / bạc" data-pos="tính từ / adjective" data-def-en="Having the colour of the metal silver; a shiny grey-white." data-def-vn="Có màu của kim loại bạc; xám trắng bóng." data-context-en="The gadget was silver-coloured — a shiny metallic grey." data-context-vn="Thiết bị có màu bạc — màu xám kim loại bóng.">silver</span> <span class="vocab" id="w-gadget" data-word-en="gadget" data-word-vn="thiết bị / dụng cụ" data-pos="danh từ / noun" data-def-en="A small mechanical or electronic device, often with a specialised purpose." data-def-vn="Thiết bị cơ học hoặc điện tử nhỏ, thường có mục đích chuyên biệt." data-context-en="Maya saw a silver gadget in Jack's belt — the same type used by Marcus Thorne's men." data-context-vn="Maya nhìn thấy một thiết bị bạc trong thắt lưng Jack — cùng loại mà đàn em của Marcus Thorne sử dụng.">gadget</span>—the <span class="vocab" id="w-exact" data-word-en="exact" data-word-vn="chính xác / đúng" data-pos="tính từ / adjective" data-def-en="Precisely correct; with no difference." data-def-vn="Chính xác; không có sự khác biệt." data-context-en="It was the exact same kind — precisely matching what Thorne's men carried." data-context-vn="Đó là đúng loại đó — khớp chính xác với thứ đàn em của Thorne mang theo.">exact</span> same kind Marcus Thorne's men <span class="vocab" id="w-used" data-word-en="used" data-word-vn="sử dụng / dùng" data-pos="động từ / verb" data-def-en="Employed or operated something for a purpose." data-def-vn="Sử dụng hoặc vận hành thứ gì đó cho một mục đích." data-context-en="The gadget was the same kind Thorne's men used — implying Jack may be connected to them." data-context-vn="Thiết bị là loại mà đàn em của Thorne sử dụng — gợi ý Jack có thể có liên hệ với họ.">used</span>.</p>
+
+    <p>Was Jack <span class="vocab" id="w-really" data-word-en="really" data-word-vn="thực sự / thật ra" data-pos="trạng từ / adverb" data-def-en="In actual fact; used to question the truth of something." data-def-vn="Trên thực tế; dùng để đặt câu hỏi về sự thật của điều gì đó." data-context-en="Maya questioned whether Jack was really a photographer — she doubted his true identity." data-context-vn="Maya đặt câu hỏi Jack có thực sự là nhiếp ảnh gia không — cô nghi ngờ danh tính thật của anh.">really</span> a photographer, or was he a <span class="vocab" id="w-spy" data-word-en="spy" data-word-vn="điệp viên / gián điệp" data-pos="danh từ / noun" data-def-en="A person employed to gather secret information about others, especially for a government." data-def-vn="Người được thuê để thu thập thông tin bí mật về người khác, đặc biệt cho chính phủ." data-context-en="Maya wondered if Jack was a spy sent to watch her — working for her enemies." data-context-vn="Maya tự hỏi liệu Jack có phải điệp viên được cử để theo dõi cô không — làm việc cho kẻ thù của cô.">spy</span> <span class="vocab" id="w-sent" data-word-en="sent" data-word-vn="được cử / được gửi" data-pos="động từ / verb" data-def-en="Dispatched or directed to go somewhere for a purpose." data-def-vn="Được điều động hoặc chỉ định đi đến đâu đó với mục đích." data-context-en="Maya wondered if Jack had been sent to watch her — deliberately placed next to her." data-context-vn="Maya tự hỏi liệu Jack có được cử đến để theo dõi cô không — được sắp xếp ngồi cạnh cô.">sent</span> to <span class="vocab" id="w-watch" data-word-en="watch" data-word-vn="theo dõi / giám sát" data-pos="động từ / verb" data-def-en="To observe someone carefully, often in a secretive or suspicious way." data-def-vn="Quan sát ai đó một cách cẩn thận, thường theo cách bí mật hoặc đáng ngờ." data-context-en="Was Jack sent to watch her — to spy on Maya and report back?" data-context-vn="Liệu Jack có được cử để theo dõi cô — để do thám Maya và báo cáo lại?">watch</span> her?</p>
+
+    <p>As the plane <span class="vocab" id="w-landed" data-word-en="landed" data-word-vn="hạ cánh" data-pos="động từ / verb" data-def-en="Came down and touched the ground after flying." data-def-vn="Hạ xuống và chạm đất sau khi bay." data-context-en="The plane landed — it touched down at Tan Son Nhat Airport." data-context-vn="Máy bay hạ cánh — chạm xuống đất tại Sân bay Tân Sơn Nhất.">landed</span> with a loud <span class="vocab" id="w-thump" data-word-en="thump" data-word-vn="tiếng bịch / tiếng đập mạnh" data-pos="danh từ / noun" data-def-en="A heavy, dull sound made by something hitting a surface." data-def-vn="Âm thanh nặng, tối khi thứ gì đó va vào một bề mặt." data-context-en="The plane landed with a loud thump — the heavy sound of the aircraft touching the runway." data-context-vn="Máy bay hạ cánh với tiếng bịch lớn — âm thanh nặng nề khi máy bay chạm đường băng.">thump</span>, Jack <span class="vocab" id="w-turned2" data-word-en="turned" data-word-vn="quay lại" data-pos="động từ / verb" data-def-en="Rotated or moved to face another direction." data-def-vn="Xoay hoặc di chuyển để đối mặt theo hướng khác." data-context-en="Jack turned to Maya — he looked at her to speak." data-context-vn="Jack quay sang Maya — anh nhìn cô để nói chuyện.">turned</span> to her. "Can I give you a <span class="vocab" id="w-lift" data-word-en="lift" data-word-vn="đưa đi / cho đi nhờ xe" data-pos="danh từ / noun" data-def-en="A free ride in someone's vehicle to a destination." data-def-vn="Đi nhờ xe miễn phí trong xe của ai đó đến điểm đến." data-context-en="Jack offered Maya a lift to her hotel — a free ride in his vehicle." data-context-vn="Jack đề nghị đưa Maya đến khách sạn — đi nhờ xe miễn phí.">lift</span> to your hotel, Maya?"</p>
+
+    <p>Maya <span class="vocab" id="w-looked3" data-word-en="looked" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="Directed her gaze toward something." data-def-vn="Hướng ánh mắt về phía thứ gì đó." data-context-en="Maya looked at the exit — she was thinking about whether to escape." data-context-vn="Maya nhìn về phía lối ra — cô đang suy nghĩ liệu có nên thoát ra không.">looked</span> at the <span class="vocab" id="w-exit" data-word-en="exit" data-word-vn="lối ra / cửa ra" data-pos="danh từ / noun" data-def-en="A way out of a building, vehicle, or area." data-def-vn="Đường ra khỏi tòa nhà, phương tiện hoặc khu vực.." data-context-en="Maya looked at the exit — she considered making a run for it." data-context-vn="Maya nhìn về phía lối ra — cô cân nhắc việc chạy thoát.">exit</span>. The <span class="vocab" id="w-cabin" data-word-en="cabin" data-word-vn="khoang máy bay" data-pos="danh từ / noun" data-def-en="The interior passenger area of an aircraft." data-def-vn="Khu vực hành khách bên trong máy bay." data-context-en="The cabin lights flickered — the lights inside the passenger area of the plane." data-context-vn="Đèn trong khoang máy bay nhấp nháy — đèn chiếu sáng bên trong khu vực hành khách của máy bay.">cabin</span> lights <span class="vocab" id="w-flickered" data-word-en="flickered" data-word-vn="nhấp nháy / lập lòe" data-pos="động từ / verb" data-def-en="Shone unsteadily, going on and off quickly." data-def-vn="Chiếu sáng không ổn định, bật tắt nhanh chóng." data-context-en="The cabin lights flickered — they briefly went unsteady, creating a tense atmosphere." data-context-vn="Đèn trong khoang nhấp nháy — chúng thoáng bất ổn, tạo ra bầu không khí căng thẳng.">flickered</span>, and for a <span class="vocab" id="w-second" data-word-en="second" data-word-vn="giây / một khoảnh khắc" data-pos="danh từ / noun" data-def-en="A very brief moment in time." data-def-vn="Một khoảnh khắc rất ngắn trong thời gian." data-context-en="For a second, Maya saw Thorne's assistant — just a brief, fleeting moment." data-context-vn="Trong một giây, Maya nhìn thấy trợ lý của Thorne — chỉ một khoảnh khắc ngắn ngủi.">second</span>, she saw a man in an <span class="vocab" id="w-expensive" data-word-en="expensive" data-word-vn="đắt tiền / xa xỉ" data-pos="tính từ / adjective" data-def-en="Costing a lot of money." data-def-vn="Tốn nhiều tiền." data-context-en="The man wore an expensive custom-made suit — indicating wealth or status." data-context-vn="Người đàn ông mặc một bộ vest đắt tiền may đo — cho thấy sự giàu có hoặc địa vị.">expensive</span> <span class="vocab" id="w-custom-made" data-word-en="custom-made" data-word-vn="may đo / đặt riêng" data-pos="tính từ / adjective" data-def-en="Made specifically for one person according to their measurements, not mass-produced." data-def-vn="Được làm riêng cho một người theo số đo của họ, không phải sản xuất hàng loạt." data-context-en="Thorne's assistant wore a custom-made suit — tailored specifically for him, signalling wealth." data-context-vn="Trợ lý của Thorne mặc bộ vest may đo — được may riêng cho anh ta, báo hiệu sự giàu có.">custom-made</span> suit <span class="vocab" id="w-standing" data-word-en="standing" data-word-vn="đứng" data-pos="động từ / verb" data-def-en="Being in an upright position on one's feet." data-def-vn="Đứng thẳng trên đôi chân." data-context-en="Thorne's assistant was standing at the front of the plane — positioned near the exit." data-context-vn="Trợ lý của Thorne đang đứng ở phía trước máy bay — đứng gần lối ra.">standing</span> at the front of the plane. It was Thorne's <span class="vocab" id="w-assistant" data-word-en="assistant" data-word-vn="trợ lý / phụ tá" data-pos="danh từ / noun" data-def-en="A person who helps or supports someone in their work." data-def-vn="Người giúp đỡ hoặc hỗ trợ ai đó trong công việc." data-context-en="It was Thorne's assistant — someone who works for the villain, Marcus Thorne." data-context-vn="Đó là trợ lý của Thorne — người làm việc cho kẻ phản diện Marcus Thorne.">assistant</span>! She was <span class="vocab" id="w-trapped" data-word-en="trapped" data-word-vn="bị mắc kẹt / bị bẫy" data-pos="động từ (dạng bị động) / verb (passive)" data-def-en="Caught in a situation with no easy way out." data-def-vn="Bị mắc vào tình huống không có lối thoát dễ dàng." data-context-en="Maya was trapped — caught between two threats with nowhere to go." data-context-vn="Maya bị mắc kẹt — bị kẹp giữa hai mối đe dọa mà không có nơi nào để đi.">trapped</span> between a <span class="vocab" id="w-handsome2" data-word-en="handsome" data-word-vn="đẹp trai / điển trai" data-pos="tính từ / adjective" data-def-en="Attractive in appearance, especially for a man." data-def-vn="Có ngoại hình hấp dẫn, đặc biệt dành cho nam giới." data-context-en="Maya was trapped between a handsome stranger and a dangerous thief — Jack and Thorne's assistant." data-context-vn="Maya bị kẹp giữa một người lạ đẹp trai và một tên trộm nguy hiểm — Jack và trợ lý của Thorne.">handsome</span> <span class="vocab" id="w-stranger2" data-word-en="stranger" data-word-vn="người lạ" data-pos="danh từ / noun" data-def-en="A person who is not known or familiar." data-def-vn="Người không quen biết hoặc xa lạ." data-context-en="Maya was trapped between a handsome stranger — Jack, whom she doesn't truly know — and Thorne's man." data-context-vn="Maya bị kẹp giữa một người lạ đẹp trai — Jack, người cô chưa thực sự biết — và người của Thorne.">stranger</span> and a <span class="vocab" id="w-thief" data-word-en="thief" data-word-vn="tên trộm / kẻ trộm" data-pos="danh từ / noun" data-def-en="A person who steals things from others." data-def-vn="Người lấy trộm đồ của người khác." data-context-en="Thorne's assistant is called a dangerous thief — he works for someone who steals secrets." data-context-vn="Trợ lý của Thorne được gọi là tên trộm nguy hiểm — anh ta làm việc cho người đánh cắp bí mật.">thief</span>.</p>
+
+  </div><!-- end story-content -->
+
+  <!-- BACK BUTTON -->
+  <div style="margin: 22px 0 10px 0;">
+    <a href="../" class="back-btn">← Back</a>
+  </div>
+
+  <!-- TEST YOUR MEMORY SECTION -->
+  <div id="memory-section">
+    <h2>Test Your Memory</h2>
+    <p style="font-size:0.95rem; color:#5a3a0a; margin-top:-6px;">After each pass through the content, try to remember the meaning and where in the story each word appeared.</p>
+    <div id="memory-grid"></div>
+  </div>
+
+  <!-- TRANSCRIPTION NOTES (none needed — text is clearly written, not VTT) -->
+  
+  
+
+</div><div id="popup-overlay" onclick="closePopup()"></div><div id="popup-card">
+  <div class="popup-word-en" id="pc-word-en"></div>
+  <div class="popup-word-vn" id="pc-word-vn"></div>
+  <div class="popup-pos" id="pc-pos"></div>
+  <div class="popup-def" id="pc-def"></div>
+  <div class="popup-context-label">In context:</div>
+  <div class="popup-context" id="pc-context"></div>
+</div><script>
+// ---- POPUP LOGIC ----
+var lastClicked = null;
+
+function openPopup(el) {
+  var card = document.getElementById('popup-card');
+  var overlay = document.getElementById('popup-overlay');
+
+  if (lastClicked === el) {
+    closePopup();
+    return;
+  }
+  lastClicked = el;
+
+  // Input is English text — show English heading on top, Vietnamese secondary
+  // Per instructions for English input:
+  // Vietnamese word = large heading, English word = smaller secondary line
+  document.getElementById('pc-word-en').textContent = el.getAttribute('data-word-vn') || '';
+  document.getElementById('pc-word-en').style.fontSize = '1.3rem';
+  document.getElementById('pc-word-en').style.fontWeight = 'bold';
+
+  document.getElementById('pc-word-vn').textContent = el.getAttribute('data-word-en') || '';
+  document.getElementById('pc-word-vn').style.fontSize = '0.95rem';
+  document.getElementById('pc-word-vn').style.fontStyle = 'italic';
+
+  document.getElementById('pc-pos').textContent = el.getAttribute('data-pos') || '';
+
+  var defEn = el.getAttribute('data-def-en') || '';
+  var defVn = el.getAttribute('data-def-vn') || '';
+  var defDiv = document.getElementById('pc-def');
+  defDiv.innerHTML = '<span class="def-en">' + defEn + '</span><span class="def-vn">' + defVn + '</span>';
+
+  // Context in Vietnamese per instructions for English input
+  var ctxVn = el.getAttribute('data-context-vn') || '';
+  document.querySelector('.popup-context-label').textContent = 'Trong văn bản:';
+  document.getElementById('pc-context').textContent = ctxVn;
+
+  card.style.display = 'block';
+  overlay.style.display = 'block';
+}
+
+function closePopup() {
+  document.getElementById('popup-card').style.display = 'none';
+  document.getElementById('popup-overlay').style.display = 'none';
+  lastClicked = null;
+}
+
+document.getElementById('popup-card').addEventListener('click', function(e) {
+  e.stopPropagation();
+});
+
+// Attach click handlers to all vocab spans
+document.querySelectorAll('.vocab').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    openPopup(el);
+  });
+});
+
+// ---- MEMORY GRID ----
+var vocabWords = [];
+document.querySelectorAll('#story-content .vocab').forEach(function(el) {
+  var wordEn = el.getAttribute('data-word-en') || el.textContent.trim();
+  // Deduplicate by data-word-en
+  var already = vocabWords.some(function(v) { return v.key === wordEn.toLowerCase(); });
+  if (!already) {
+    vocabWords.push({ key: wordEn.toLowerCase(), label: wordEn, id: el.id });
+  }
+});
+
+var grid = document.getElementById('memory-grid');
+vocabWords.forEach(function(v) {
+  var span = document.createElement('span');
+  span.textContent = v.label;
+  span.addEventListener('click', function() {
+    // Find first occurrence in story
+    var target = document.getElementById(v.id) || document.querySelector('[data-word-en="' + v.label + '"]');
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('highlight-scroll');
+      setTimeout(function() { target.classList.remove('highlight-scroll'); }, 1500);
+    }
+  });
+  grid.appendChild(span);
+});
+
+// ---- DOWNLOAD CONTENT-ONLY VERSION ----
+function downloadContentOnly() {
+  var clone = document.getElementById('main-page').cloneNode(true);
+
+  // Remove .skip-notes
+  clone.querySelectorAll('.skip-notes').forEach(function(el) { el.remove(); });
+  // Remove .transcription-notes
+  clone.querySelectorAll('.transcription-notes').forEach(function(el) { el.remove(); });
+  // Remove the download button itself
+  var dlBtn = clone.querySelector('#download-btn');
+  if (dlBtn) dlBtn.remove();
+  // Clear memory grid so it rebuilds via JS
+  var mg = clone.querySelector('#memory-grid');
+  if (mg) mg.innerHTML = '';
+
+  var html = '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Episode 2: The Stranger in Seat 4B</title>'
+    + document.querySelector('style').outerHTML
+    + '</head><body>'
+    + clone.outerHTML
+    + document.querySelector('#popup-overlay').outerHTML
+    + document.querySelector('#popup-card').outerHTML
+    + '<script>' + document.querySelector('script').textContent + '<\/script>'
+    + '</body></html>';
+
+  var blob = new Blob([html], { type: 'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ep2_vocab_content.html';
+  a.click();
+}
+
+// highlight-scroll style injection (in case not in CSS)
+var styleEl = document.createElement('style');
+styleEl.textContent = '.highlight-scroll { background: #ffe082 !important; transition: background 0.2s; }';
+document.head.appendChild(styleEl);
+</script></body></html>
