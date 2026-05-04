@@ -1,0 +1,1231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode 6: The Ghost in the Fog</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    user-select: none;
+    min-height: 100vh;
+    padding: 30px 16px 60px;
+  }
+
+  .page {
+    background: #f0e6c8;
+    border: 2px solid #a0845a;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 36px 44px 44px;
+    border-radius: 4px;
+  }
+
+  h1 {
+    font-family: Arial, sans-serif;
+    font-size: 1.55rem;
+    color: #3a1f00;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+  }
+
+  h2 {
+    font-family: Arial, sans-serif;
+    font-size: 1.2rem;
+    color: #3a1f00;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 6px;
+    margin-bottom: 16px;
+    margin-top: 32px;
+  }
+
+  p {
+    line-height: 1.75;
+    margin-bottom: 16px;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+  }
+
+  /* VOCAB WORDS */
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+  }
+  .vocab:hover { background: rgba(26,92,32,0.07); }
+
+  /* VTT CORRECTIONS */
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+
+  /* AUDIO SECTION */
+  .audio-section {
+    margin-bottom: 28px;
+    padding: 14px 16px;
+    background: rgba(46,31,10,0.06);
+    border: 1px solid #a0845a;
+    border-radius: 4px;
+  }
+
+  .audio-label {
+    font-size: 0.9rem;
+    color: #7a4e1a;
+    margin-bottom: 8px;
+    font-family: Arial, sans-serif;
+  }
+
+  audio#audio-player {
+    width: 100%;
+    height: 36px;
+    display: block;
+    accent-color: #c8a060;
+    margin-bottom: 10px;
+  }
+
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 4px;
+  }
+
+  .rewind-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 5px 12px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    border-radius: 3px;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .rewind-btn:hover { background: #4a3218; }
+
+  /* POPUP CARD */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 9999;
+    background: #f0e6c8;
+    border: 2px solid #a0845a;
+    border-radius: 6px;
+    padding: 22px 26px;
+    min-width: 280px;
+    max-width: 380px;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  }
+  #popup-card .pop-word-vn {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #3a1f00;
+    font-family: Arial, sans-serif;
+    margin-bottom: 3px;
+  }
+  #popup-card .pop-word-en {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #7a4e1a;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
+  }
+  #popup-card .pop-pos {
+    font-size: 0.95rem;
+    color: #5a3a10;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+  }
+  #popup-card .pop-def {
+    font-size: 1rem;
+    color: #2a1500;
+    margin-bottom: 10px;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+  }
+  #popup-card .pop-context-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #7a4e1a;
+    font-family: Arial, sans-serif;
+    margin-bottom: 3px;
+  }
+  #popup-card .pop-context {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #5a3a10;
+    font-family: Arial, sans-serif;
+    line-height: 1.5;
+  }
+  #popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    background: transparent;
+  }
+
+  /* DOWNLOAD BUTTON */
+  #download-btn {
+    position: fixed;
+    top: 16px;
+    right: 16px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 7px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    border-radius: 3px;
+    cursor: pointer;
+    z-index: 100;
+    transition: background 0.15s;
+  }
+  #download-btn:hover { background: #4a3218; }
+
+  /* MEMORY GRID */
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 14px;
+    margin-top: 12px;
+  }
+  #memory-grid span {
+    font-family: Arial, sans-serif;
+    font-size: 0.97rem;
+    color: #2a1500;
+    border-bottom: 1.5px dotted #7a4e1a;
+    cursor: pointer;
+    padding-bottom: 1px;
+  }
+  #memory-grid span:hover { background: rgba(122,78,26,0.09); }
+
+  .highlight-scroll {
+    background: #ffe082 !important;
+    transition: background 1.5s ease;
+  }
+
+  /* BACK BUTTON */
+  .back-btn {
+    display: inline-block;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 7px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    border-radius: 3px;
+    cursor: pointer;
+    margin: 24px 0 8px;
+    text-decoration: none;
+    transition: background 0.15s;
+  }
+  .back-btn:hover { background: #4a3218; }
+
+  /* TRANSCRIPTION NOTES */
+  .transcription-notes {
+    margin-top: 32px;
+    font-family: Arial, sans-serif;
+    font-size: 0.93rem;
+  }
+  .transcription-notes table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  .transcription-notes th, .transcription-notes td {
+    border: 1px solid #a0845a;
+    padding: 7px 10px;
+    text-align: left;
+    font-family: Arial, sans-serif;
+    font-size: 0.92rem;
+    color: #2a1500;
+  }
+  .transcription-notes th {
+    background: rgba(46,31,10,0.1);
+    font-weight: bold;
+  }
+
+  .skip-notes {
+    margin-top: 28px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    color: #7a4e1a;
+    border-top: 1px solid #c9a87a;
+    padding-top: 12px;
+  }
+  .skip-notes summary { cursor: pointer; font-weight: bold; }
+</style>
+</head>
+<body>
+
+<button id="download-btn" onclick="downloadContent()">⬇ content only version</button>
+
+<!-- POPUP OVERLAY & CARD -->
+<div id="popup-overlay" onclick="closePopup()"></div>
+<div id="popup-card" onclick="closePopup()">
+  <div class="pop-word-vn" id="pop-word-vn"></div>
+  <div class="pop-word-en" id="pop-word-en"></div>
+  <div class="pop-pos" id="pop-pos"></div>
+  <div class="pop-def" id="pop-def"></div>
+  <div class="pop-context-label">Trong văn bản:</div>
+  <div class="pop-context" id="pop-context"></div>
+</div>
+
+<div class="page" id="main-page">
+
+  <h1><span class="vocab"
+    data-word-en="Episode"
+    data-word-vn="Tập phim"
+    data-pos="danh từ / noun"
+    data-def-en="A single installment of a serialized story or broadcast."
+    data-def-vn="Một phần riêng lẻ trong chuỗi câu chuyện hoặc chương trình phát sóng."
+    data-context-en="The title uses 'Episode' to indicate this is the sixth part of an ongoing series."
+    data-context-vn="Tiêu đề dùng 'Episode' để cho thấy đây là phần thứ sáu của một loạt câu chuyện đang diễn ra.">Episode</span> 6: The <span class="vocab"
+    data-word-en="Ghost"
+    data-word-vn="Bóng ma"
+    data-pos="danh từ / noun"
+    data-def-en="The spirit of a dead person, said to appear as a shadowy figure."
+    data-def-vn="Linh hồn của người đã chết, được cho là xuất hiện dưới dạng bóng hình mờ ảo."
+    data-context-en="'Ghost' in the title hints at an unseen, mysterious threat lurking in the story."
+    data-context-vn="'Ghost' trong tiêu đề gợi lên mối đe dọa vô hình, bí ẩn ẩn náu trong câu chuyện.">Ghost</span> in the <span class="vocab"
+    data-word-en="Fog"
+    data-word-vn="Sương mù"
+    data-pos="danh từ / noun"
+    data-def-en="A thick cloud of tiny water droplets suspended in the air near the ground, reducing visibility."
+    data-def-vn="Một đám mây dày đặc gồm các giọt nước nhỏ lơ lửng trong không khí gần mặt đất, làm giảm tầm nhìn."
+    data-context-en="The fog in the title foreshadows the mysterious, obscuring conditions at the end of the episode."
+    data-context-vn="Sương mù trong tiêu đề báo trước những điều kiện huyền bí, che khuất ở cuối tập phim.">Fog</span></h1>
+
+  <!-- AUDIO PLAYER -->
+  <div class="audio-section">
+    <div class="audio-label">🎧 Listen to the text</div>
+    <audio id="audio-player" controls>
+      <source src="ep6.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+  <!-- END AUDIO PLAYER -->
+
+  <!-- PARAGRAPH 1 -->
+  <p>The <span class="vocab"
+    data-word-en="train"
+    data-word-vn="tàu hỏa"
+    data-pos="danh từ / noun"
+    data-def-en="A series of connected railway carriages pulled by a locomotive."
+    data-def-vn="Một chuỗi toa xe lửa được kết nối và kéo bởi đầu máy."
+    data-context-en="The train is the main setting of the story, sitting still in a dark forest."
+    data-context-vn="Tàu hỏa là bối cảnh chính của câu chuyện, đứng yên trong khu rừng tối.">train</span> <span class="vocab"
+    data-word-en="sat"
+    data-word-vn="đứng yên / nằm im"
+    data-pos="động từ / verb"
+    data-def-en="To remain stationary; to be positioned in a place (here used for an object)."
+    data-def-vn="Đứng yên; ở một vị trí cố định (ở đây dùng cho vật thể)."
+    data-context-en="'Sat' describes the train being completely still and motionless in the dark forest."
+    data-context-vn="'Sat' mô tả tàu hoàn toàn bất động trong khu rừng tối.">sat</span> <span class="vocab"
+    data-word-en="silent"
+    data-word-vn="im lặng"
+    data-pos="tính từ / adjective"
+    data-def-en="Making no sound; completely quiet."
+    data-def-vn="Không có tiếng động; hoàn toàn yên tĩnh."
+    data-context-en="'Silent' emphasizes the eerie, tense atmosphere as the train sits motionless in the forest."
+    data-context-vn="'Silent' nhấn mạnh bầu không khí rùng rợn, căng thẳng khi tàu đứng bất động trong rừng.">silent</span> in the <span class="vocab"
+    data-word-en="dark"
+    data-word-vn="tối tăm"
+    data-pos="tính từ / adjective"
+    data-def-en="Having little or no light; gloomy and threatening in atmosphere."
+    data-def-vn="Ít hoặc không có ánh sáng; ảm đạm và đe dọa về bầu không khí."
+    data-context-en="'Dark' describes the forest at night, creating a threatening and mysterious setting."
+    data-context-vn="'Dark' mô tả khu rừng vào ban đêm, tạo bối cảnh đe dọa và bí ẩn.">dark</span> <span class="vocab"
+    data-word-en="forest"
+    data-word-vn="khu rừng"
+    data-pos="danh từ / noun"
+    data-def-en="A large area densely covered with trees."
+    data-def-vn="Một khu vực rộng lớn được bao phủ dày đặc bởi cây cối."
+    data-context-en="The forest is the isolated, dangerous setting where the train has stopped."
+    data-context-vn="Khu rừng là bối cảnh biệt lập, nguy hiểm nơi tàu đã dừng lại.">forest</span>. <span class="vocab"
+    data-word-en="Jack"
+    data-word-vn="Jack"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="One of the main characters in the story."
+    data-def-vn="Một trong những nhân vật chính trong câu chuyện."
+    data-context-en="Jack is one of the two protagonists escaping danger on the train."
+    data-context-vn="Jack là một trong hai nhân vật chính đang trốn thoát nguy hiểm trên tàu.">Jack</span> <span class="vocab"
+    data-word-en="grabbed"
+    data-word-vn="vớ lấy / chộp lấy"
+    data-pos="động từ / verb"
+    data-def-en="To take hold of something quickly and forcefully."
+    data-def-vn="Nắm lấy thứ gì đó một cách nhanh chóng và mạnh mẽ."
+    data-context-en="Jack grabbed the flashlight quickly, showing urgency and alertness in the dangerous situation."
+    data-context-vn="Jack vớ lấy đèn pin một cách nhanh chóng, cho thấy sự khẩn cấp và cảnh giác trong tình huống nguy hiểm.">grabbed</span> a <span class="vocab"
+    data-word-en="small"
+    data-word-vn="nhỏ"
+    data-pos="tính từ / adjective"
+    data-def-en="Of less than normal size."
+    data-def-vn="Có kích thước nhỏ hơn bình thường."
+    data-context-en="'Small' describes the flashlight as compact and easy to carry, suitable for concealment."
+    data-context-vn="'Small' mô tả chiếc đèn pin gọn nhẹ, dễ mang theo, phù hợp để che giấu.">small</span> <span class="vocab"
+    data-word-en="flashlight"
+    data-word-vn="đèn pin"
+    data-pos="danh từ / noun"
+    data-def-en="A portable battery-powered electric torch."
+    data-def-vn="Đèn điện cầm tay chạy bằng pin, có thể mang theo."
+    data-context-en="The flashlight is a key prop — Jack takes it but deliberately doesn't turn it on to avoid detection."
+    data-context-vn="Đèn pin là đạo cụ quan trọng — Jack cầm lấy nhưng cố ý không bật để tránh bị phát hiện.">flashlight</span> from his <span class="vocab"
+    data-word-en="bag"
+    data-word-vn="túi"
+    data-pos="danh từ / noun"
+    data-def-en="A container made of flexible material for carrying belongings."
+    data-def-vn="Túi đựng đồ được làm từ vật liệu mềm dẻo."
+    data-context-en="The bag suggests Jack is prepared and has supplies with him during the escape."
+    data-context-vn="Chiếc túi gợi ý rằng Jack đã chuẩn bị sẵn sàng và mang theo đồ dùng trong lúc trốn thoát.">bag</span>, but he didn't <span class="vocab"
+    data-word-en="turn it on"
+    data-word-vn="bật lên"
+    data-pos="cụm động từ / phrasal verb"
+    data-def-en="To activate a device or light by switching it on."
+    data-def-vn="Kích hoạt một thiết bị hoặc đèn bằng cách bật nó lên."
+    data-context-en="Jack chose not to turn the flashlight on, deliberately staying in darkness to avoid being seen."
+    data-context-vn="Jack chọn không bật đèn pin lên, cố ý ở trong bóng tối để tránh bị nhìn thấy.">turn it on</span>. "We <span class="vocab"
+    data-word-en="can't"
+    data-word-vn="không thể"
+    data-pos="động từ khuyết / modal verb"
+    data-def-en="Are unable to; it is not possible or advisable to."
+    data-def-vn="Không có khả năng; không thể hoặc không nên."
+    data-context-en="'Can't' expresses that staying in the cabin is not a safe option for them."
+    data-context-vn="'Can't' bày tỏ rằng ở lại trong cabin không phải là lựa chọn an toàn cho họ.">can't</span> <span class="vocab"
+    data-word-en="stay"
+    data-word-vn="ở lại"
+    data-pos="động từ / verb"
+    data-def-en="To remain in a place rather than leaving."
+    data-def-vn="Ở lại một nơi thay vì rời đi."
+    data-context-en="Jack urges that they cannot stay in the cabin because it is a trap."
+    data-context-vn="Jack thúc giục rằng họ không thể ở lại cabin vì đó là bẫy.">stay</span> in this <span class="vocab"
+    data-word-en="cabin"
+    data-word-vn="toa / buồng"
+    data-pos="danh từ / noun"
+    data-def-en="A small private compartment on a train or ship."
+    data-def-vn="Một khoang riêng nhỏ trên tàu hỏa hoặc tàu thủy."
+    data-context-en="The cabin is the compartment inside the train where Jack and Maya are hiding."
+    data-context-vn="Cabin là khoang trong tàu hỏa nơi Jack và Maya đang ẩn náu.">cabin</span>," he <span class="vocab"
+    data-word-en="whispered"
+    data-word-vn="thì thầm"
+    data-pos="động từ / verb"
+    data-def-en="To speak very softly so as not to be heard by others nearby."
+    data-def-vn="Nói rất khẽ để người khác ở gần không nghe thấy."
+    data-context-en="Jack whispered to avoid alerting whoever is watching or chasing them."
+    data-context-vn="Jack thì thầm để tránh cảnh báo bất kỳ ai đang theo dõi hoặc truy đuổi họ.">whispered</span>. "It's a <span class="vocab"
+    data-word-en="trap"
+    data-word-vn="cái bẫy"
+    data-pos="danh từ / noun"
+    data-def-en="A device or scheme intended to catch or trick someone."
+    data-def-vn="Thiết bị hoặc kế hoạch nhằm bắt hoặc lừa ai đó."
+    data-context-en="Jack identifies the cabin as a trap, meaning someone deliberately lured them there."
+    data-context-vn="Jack xác định cabin là một cái bẫy, nghĩa là ai đó đã cố ý dụ họ vào đó.">trap</span>".</p>
+
+  <!-- PARAGRAPH 2 -->
+  <p>They <span class="vocab"
+    data-word-en="stepped"
+    data-word-vn="bước vào"
+    data-pos="động từ / verb"
+    data-def-en="To move by lifting and placing one's foot in a new position; to enter by walking."
+    data-def-vn="Di chuyển bằng cách nhấc và đặt chân vào vị trí mới; bước vào bằng cách đi."
+    data-context-en="'Stepped' describes Maya and Jack quietly moving out of the cabin into the hallway."
+    data-context-vn="'Stepped' mô tả Maya và Jack bước khẽ ra khỏi cabin vào hành lang.">stepped</span> into the <span class="vocab"
+    data-word-en="narrow"
+    data-word-vn="hẹp"
+    data-pos="tính từ / adjective"
+    data-def-en="Small in width; not wide."
+    data-def-vn="Có chiều rộng nhỏ; không rộng."
+    data-context-en="'Narrow' describes the limited space in the train corridor, adding to the sense of confinement and danger."
+    data-context-vn="'Narrow' mô tả không gian hạn chế trong hành lang tàu, làm tăng cảm giác bị giam cầm và nguy hiểm.">narrow</span> <span class="vocab"
+    data-word-en="hallway"
+    data-word-vn="hành lang"
+    data-pos="danh từ / noun"
+    data-def-en="A corridor or passage in a building or vehicle."
+    data-def-vn="Hành lang hoặc lối đi trong một tòa nhà hoặc phương tiện."
+    data-context-en="The hallway is the corridor of the train where they run to escape their pursuer."
+    data-context-vn="Hành lang là lối đi trong tàu hỏa nơi họ chạy để trốn thoát kẻ truy đuổi.">hallway</span> just as a <span class="vocab"
+    data-word-en="flashlight"
+    data-word-vn="đèn pin"
+    data-pos="danh từ / noun"
+    data-def-en="A portable battery-powered electric torch."
+    data-def-vn="Đèn điện cầm tay chạy bằng pin."
+    data-context-en="A pursuer's flashlight beam appears in the hallway, confirming they are being hunted."
+    data-context-vn="Chùm đèn pin của kẻ truy đuổi xuất hiện trong hành lang, xác nhận họ đang bị săn đuổi.">flashlight</span> <span class="vocab"
+    data-word-en="beam"
+    data-word-vn="chùm sáng"
+    data-pos="danh từ / noun"
+    data-def-en="A ray or shaft of light shining in a particular direction."
+    data-def-vn="Một tia sáng hoặc chùm sáng chiếu theo hướng cụ thể."
+    data-context-en="The flashlight beam sweeping the wall signals that someone is searching the train for them."
+    data-context-vn="Chùm đèn pin quét qua tường báo hiệu ai đó đang lùng sục trên tàu tìm họ.">beam</span> <span class="vocab"
+    data-word-en="hit"
+    data-word-vn="chiếu vào / quét vào"
+    data-pos="động từ / verb"
+    data-def-en="To strike or fall upon; here, a beam of light strikes a surface."
+    data-def-vn="Va chạm hoặc rọi vào; ở đây, một chùm sáng chiếu lên bề mặt."
+    data-context-en="'Hit' is used to describe light striking the wall, creating urgency as the pursuer is very close."
+    data-context-vn="'Hit' được dùng để mô tả ánh sáng rọi vào tường, tạo sự khẩn cấp khi kẻ truy đuổi rất gần.">hit</span> the wall behind them. <span class="vocab"
+    data-word-en="Maya"
+    data-word-vn="Maya"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="One of the main characters in the story."
+    data-def-vn="Một trong những nhân vật chính trong câu chuyện."
+    data-context-en="Maya is Jack's companion fleeing together from danger on the train."
+    data-context-vn="Maya là người đồng hành của Jack cùng chạy trốn khỏi nguy hiểm trên tàu.">Maya</span> and <span class="vocab"
+    data-word-en="Jack"
+    data-word-vn="Jack"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="One of the main characters in the story."
+    data-def-vn="Một trong những nhân vật chính trong câu chuyện."
+    data-context-en="Jack and Maya are the two protagonists running together toward the back of the train."
+    data-context-vn="Jack và Maya là hai nhân vật chính cùng chạy về phía sau tàu.">Jack</span> <span class="vocab"
+    data-word-en="ran"
+    data-word-vn="chạy"
+    data-pos="động từ / verb"
+    data-def-en="To move swiftly on foot."
+    data-def-vn="Di chuyển nhanh bằng chân."
+    data-context-en="They ran toward the back of the train to escape the pursuer with the flashlight."
+    data-context-vn="Họ chạy về phía sau tàu để trốn thoát khỏi kẻ truy đuổi có đèn pin.">ran</span> <span class="vocab"
+    data-word-en="toward"
+    data-word-vn="về phía"
+    data-pos="giới từ / preposition"
+    data-def-en="In the direction of; moving in the direction of something."
+    data-def-vn="Theo hướng của; di chuyển theo hướng của điều gì đó."
+    data-context-en="'Toward' indicates the direction of their escape — heading to the back of the train."
+    data-context-vn="'Toward' chỉ ra hướng trốn thoát của họ — tiến về phía sau tàu.">toward</span> the back of the <span class="vocab"
+    data-word-en="train"
+    data-word-vn="tàu hỏa"
+    data-pos="danh từ / noun"
+    data-def-en="A series of connected railway carriages."
+    data-def-vn="Một chuỗi toa xe lửa được kết nối."
+    data-context-en="They run to the back of the train to find an escape route to the roof."
+    data-context-vn="Họ chạy đến phía sau tàu để tìm đường thoát lên nóc tàu.">train</span>. They <span class="vocab"
+    data-word-en="climbed"
+    data-word-vn="leo lên"
+    data-pos="động từ / verb"
+    data-def-en="To go upward by using hands and feet, or to ascend with effort."
+    data-def-vn="Di chuyển lên cao bằng tay và chân, hoặc leo lên một cách cố gắng."
+    data-context-en="They climbed a ladder to reach the roof of the moving train."
+    data-context-vn="Họ leo lên cái thang để đến nóc tàu đang chuyển động.">climbed</span> a <span class="vocab"
+    data-word-en="small"
+    data-word-vn="nhỏ"
+    data-pos="tính từ / adjective"
+    data-def-en="Of less than normal size."
+    data-def-vn="Có kích thước nhỏ hơn bình thường."
+    data-context-en="'Small' describes the ladder as compact and tight, fitting the confined spaces of a train."
+    data-context-vn="'Small' mô tả chiếc thang nhỏ gọn và chật hẹp, phù hợp với không gian chật chội của tàu.">small</span> <span class="vocab"
+    data-word-en="ladder"
+    data-word-vn="cái thang"
+    data-pos="danh từ / noun"
+    data-def-en="A structure with rungs used for climbing up or down."
+    data-def-vn="Cấu trúc có bậc dùng để leo lên hoặc xuống."
+    data-context-en="The ladder is the means by which they climb to escape to the top of the train."
+    data-context-vn="Chiếc thang là phương tiện để họ leo lên thoát ra nóc tàu.">ladder</span> and <span class="vocab"
+    data-word-en="pushed open"
+    data-word-vn="đẩy mở"
+    data-pos="cụm động từ / phrasal verb"
+    data-def-en="To open something by applying force by pushing."
+    data-def-vn="Mở thứ gì đó bằng cách dùng lực đẩy."
+    data-context-en="They pushed open the heavy hatch, requiring effort to force it open under pressure."
+    data-context-vn="Họ đẩy mở cái nắp nặng, cần phải dùng sức để mở nó trong áp lực.">pushed open</span> a <span class="vocab"
+    data-word-en="heavy"
+    data-word-vn="nặng nề"
+    data-pos="tính từ / adjective"
+    data-def-en="Of great weight; difficult to move or lift."
+    data-def-vn="Có trọng lượng lớn; khó di chuyển hoặc nhấc lên."
+    data-context-en="'Heavy' describes the metal hatch, making the effort of escaping more physically demanding."
+    data-context-vn="'Heavy' mô tả cái nắp kim loại, làm cho việc trốn thoát đòi hỏi nhiều thể lực hơn.">heavy</span> <span class="vocab"
+    data-word-en="metal"
+    data-word-vn="kim loại"
+    data-pos="danh từ / noun (as modifier)"
+    data-def-en="A hard, typically shiny material; here used to describe what the hatch is made of."
+    data-def-vn="Vật liệu cứng, thường sáng bóng; ở đây dùng để mô tả vật liệu làm nắp."
+    data-context-en="'Metal' emphasizes the solid, industrial nature of the hatch on the train roof."
+    data-context-vn="'Metal' nhấn mạnh bản chất chắc chắn, công nghiệp của cái nắp trên nóc tàu.">metal</span> <span class="vocab"
+    data-word-en="hatch"
+    data-word-vn="cửa nắp / nắp thoát"
+    data-pos="danh từ / noun"
+    data-def-en="A small opening or door in a floor, roof, or ceiling."
+    data-def-vn="Một lỗ mở hoặc cửa nhỏ trên sàn, mái hoặc trần."
+    data-context-en="The hatch is the emergency exit they use to get from inside the train to the roof."
+    data-context-vn="Cái nắp là lối thoát khẩn cấp họ dùng để từ bên trong tàu ra nóc tàu.">hatch</span>. <span class="vocab"
+    data-word-en="Suddenly"
+    data-word-vn="đột nhiên"
+    data-pos="trạng từ / adverb"
+    data-def-en="Quickly and unexpectedly."
+    data-def-vn="Nhanh chóng và bất ngờ."
+    data-context-en="'Suddenly' marks the abrupt transition from inside the train to standing exposed on top of it."
+    data-context-vn="'Suddenly' đánh dấu sự chuyển đổi đột ngột từ bên trong tàu ra đứng lộ trên nóc.">Suddenly</span>, they were <span class="vocab"
+    data-word-en="standing"
+    data-word-vn="đứng"
+    data-pos="động từ / verb"
+    data-def-en="Being in an upright position on one's feet."
+    data-def-vn="Ở tư thế đứng thẳng trên hai chân."
+    data-context-en="'Standing' on top of a moving train puts them in an exposed and precarious position."
+    data-context-vn="'Standing' trên nóc một đoàn tàu đang chạy đặt họ vào vị trí phơi bày và bấp bênh.">standing</span> on <span class="vocab"
+    data-word-en="top"
+    data-word-vn="trên đỉnh / nóc"
+    data-pos="danh từ / noun"
+    data-def-en="The highest point or upper surface of something."
+    data-def-vn="Điểm cao nhất hoặc bề mặt trên cùng của thứ gì đó."
+    data-context-en="They are literally on top of the moving train — the highest, most exposed position."
+    data-context-vn="Họ đang ở ngay trên nóc đoàn tàu đang chạy — vị trí cao nhất, phơi trần nhất.">top</span> of the <span class="vocab"
+    data-word-en="moving"
+    data-word-vn="đang di chuyển"
+    data-pos="tính từ / adjective (participial)"
+    data-def-en="In motion; traveling from one place to another."
+    data-def-vn="Đang chuyển động; di chuyển từ nơi này đến nơi khác."
+    data-context-en="'Moving' is crucial — the train is in motion again, making their position on the roof extremely dangerous."
+    data-context-vn="'Moving' rất quan trọng — tàu đang chạy trở lại, khiến vị trí của họ trên nóc cực kỳ nguy hiểm.">moving</span> <span class="vocab"
+    data-word-en="train"
+    data-word-vn="tàu hỏa"
+    data-pos="danh từ / noun"
+    data-def-en="A series of connected railway carriages."
+    data-def-vn="Một chuỗi toa xe lửa được kết nối."
+    data-context-en="They are now on top of the moving train, fully exposed to the elements and the threat above."
+    data-context-vn="Họ giờ đang ở trên nóc tàu đang chạy, hoàn toàn phơi bày trước các yếu tố và mối đe dọa phía trên.">train</span>.</p>
+
+  <!-- PARAGRAPH 3 -->
+  <p>The <span class="vocab"
+    data-word-en="air"
+    data-word-vn="không khí"
+    data-pos="danh từ / noun"
+    data-def-en="The invisible gaseous mixture surrounding the Earth, which living things breathe."
+    data-def-vn="Hỗn hợp khí vô hình bao quanh Trái Đất mà sinh vật hít thở."
+    data-context-en="The air on top of the moving train is described as freezing and misty, adding to the danger."
+    data-context-vn="Không khí trên nóc tàu đang chạy được mô tả là lạnh giá và đầy sương, làm tăng thêm nguy hiểm.">air</span> was <span class="vocab"
+    data-word-en="freezing"
+    data-word-vn="lạnh giá"
+    data-pos="tính từ / adjective"
+    data-def-en="Extremely cold; at or below the temperature at which water turns to ice."
+    data-def-vn="Cực kỳ lạnh; ở hoặc dưới nhiệt độ mà nước đóng băng."
+    data-context-en="'Freezing' describes the intense cold they face on top of the moving train in the night air."
+    data-context-vn="'Freezing' mô tả cái lạnh dữ dội họ phải chịu trên nóc tàu đang chạy trong đêm.">freezing</span> and <span class="vocab"
+    data-word-en="misty"
+    data-word-vn="mờ sương / đầy sương mù"
+    data-pos="tính từ / adjective"
+    data-def-en="Full of or covered with a light fog or mist; slightly hazy."
+    data-def-vn="Đầy hoặc phủ đầy sương nhẹ; hơi mờ ảo."
+    data-context-en="'Misty' describes the foggy conditions that reduce visibility and make the environment eerie."
+    data-context-vn="'Misty' mô tả điều kiện sương mù làm giảm tầm nhìn và khiến môi trường rùng rợn.">misty</span>. As the <span class="vocab"
+    data-word-en="train"
+    data-word-vn="tàu hỏa"
+    data-pos="danh từ / noun"
+    data-def-en="A series of connected railway carriages."
+    data-def-vn="Một chuỗi toa xe lửa được kết nối."
+    data-context-en="The train begins to move again as they stand on top, increasing the peril."
+    data-context-vn="Tàu bắt đầu di chuyển trở lại khi họ đứng trên nóc, làm tăng thêm hiểm nguy.">train</span> <span class="vocab"
+    data-word-en="began"
+    data-word-vn="bắt đầu"
+    data-pos="động từ / verb"
+    data-def-en="To start doing or happening."
+    data-def-vn="Bắt đầu làm hoặc xảy ra điều gì đó."
+    data-context-en="The train began to move again just as they reached the roof, trapping them at speed."
+    data-context-vn="Tàu bắt đầu di chuyển trở lại ngay khi họ lên được nóc, giam giữ họ ở tốc độ cao.">began</span> to <span class="vocab"
+    data-word-en="move"
+    data-word-vn="di chuyển"
+    data-pos="động từ / verb"
+    data-def-en="To change position or location; to travel."
+    data-def-vn="Thay đổi vị trí hoặc địa điểm; di chuyển."
+    data-context-en="The train moving again while they're on the roof dramatically increases the danger."
+    data-context-vn="Tàu di chuyển trở lại khi họ ở trên nóc làm tăng đáng kể mức độ nguy hiểm.">move</span> again, the <span class="vocab"
+    data-word-en="wind"
+    data-word-vn="gió"
+    data-pos="danh từ / noun"
+    data-def-en="The natural movement of air, especially in a strong current."
+    data-def-vn="Sự chuyển động tự nhiên của không khí, đặc biệt là luồng gió mạnh."
+    data-context-en="The wind created by the moving train whistles past their ears, intensifying the danger."
+    data-context-vn="Gió do tàu chạy tạo ra rít qua tai họ, làm tăng thêm mức độ nguy hiểm.">wind</span> <span class="vocab"
+    data-word-en="whistled"
+    data-word-vn="rít lên"
+    data-pos="động từ / verb"
+    data-def-en="To make a high-pitched sound as air passes through a narrow opening; here, the wind makes a shrill sound."
+    data-def-vn="Tạo ra âm thanh cao khi không khí đi qua khe hẹp; ở đây, gió tạo ra tiếng rít the thé."
+    data-context-en="The wind 'whistled' past Maya's ears, a vivid sound image of their high-speed, exposed position."
+    data-context-vn="Gió 'rít lên' qua tai Maya, một hình ảnh âm thanh sống động về vị trí tốc độ cao và phơi trần của họ.">whistled</span> past <span class="vocab"
+    data-word-en="Maya"
+    data-word-vn="Maya"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="One of the main characters in the story."
+    data-def-vn="Một trong những nhân vật chính trong câu chuyện."
+    data-context-en="Maya is mentioned specifically as feeling the wind, placing her in the physical experience of the scene."
+    data-context-vn="Maya được đề cập cụ thể khi cảm nhận gió, đặt cô ấy vào trải nghiệm vật lý của cảnh này.">Maya</span>'s ears. "Look!" she <span class="vocab"
+    data-word-en="shouted"
+    data-word-vn="hét lên"
+    data-pos="động từ / verb"
+    data-def-en="To say something in a very loud voice."
+    data-def-vn="Nói điều gì đó bằng giọng rất to."
+    data-context-en="Maya shouted to be heard over the noise of the wind and the moving train."
+    data-context-vn="Maya hét lên để được nghe qua tiếng gió và tiếng tàu đang chạy.">shouted</span>, <span class="vocab"
+    data-word-en="pointing"
+    data-word-vn="chỉ tay về"
+    data-pos="động từ / verb (participial)"
+    data-def-en="Directing someone's attention to something by extending a finger."
+    data-def-vn="Thu hút sự chú ý của ai đó đến điều gì đó bằng cách chỉ ngón tay."
+    data-context-en="Maya pointed at the next carriage to draw Jack's attention to the approaching threat."
+    data-context-vn="Maya chỉ tay về toa tàu tiếp theo để thu hút sự chú ý của Jack đến mối đe dọa đang đến gần.">pointing</span> at the <span class="vocab"
+    data-word-en="next"
+    data-word-vn="tiếp theo / kế bên"
+    data-pos="tính từ / adjective"
+    data-def-en="Coming immediately after in order or position."
+    data-def-vn="Đến ngay sau theo thứ tự hoặc vị trí."
+    data-context-en="'Next' carriage indicates the adjacent car of the train where the threat is visible."
+    data-context-vn="Toa 'tiếp theo' chỉ toa tàu liền kề nơi mối đe dọa có thể nhìn thấy.">next</span> <span class="vocab"
+    data-word-en="carriage"
+    data-word-vn="toa tàu"
+    data-pos="danh từ / noun"
+    data-def-en="One of the individual passenger cars that make up a train."
+    data-def-vn="Một trong những toa chở khách riêng lẻ tạo nên đoàn tàu."
+    data-context-en="The carriage is the next section of the train where the menacing man is spotted."
+    data-context-vn="Toa tàu là phần tiếp theo của đoàn tàu nơi người đàn ông đáng sợ bị phát hiện.">carriage</span>. A <span class="vocab"
+    data-word-en="man"
+    data-word-vn="người đàn ông"
+    data-pos="danh từ / noun"
+    data-def-en="An adult male person."
+    data-def-vn="Một người đàn ông trưởng thành."
+    data-context-en="A mysterious man appears on the roof of the next carriage, moving toward them threateningly."
+    data-context-vn="Một người đàn ông bí ẩn xuất hiện trên nóc toa tàu tiếp theo, tiến về phía họ một cách đe dọa.">man</span> was <span class="vocab"
+    data-word-en="swinging"
+    data-word-vn="đu / vung"
+    data-pos="động từ / verb (participial)"
+    data-def-en="Moving back and forth or forward in a sweeping motion."
+    data-def-vn="Đung đưa qua lại hoặc tiến về phía trước theo chuyển động quét."
+    data-context-en="The man is swinging from the roof, showing dangerous, acrobatic movement as he approaches them."
+    data-context-vn="Người đàn ông đang đu trên nóc tàu, cho thấy chuyển động nguy hiểm, nhào lộn khi tiến đến gần họ.">swinging</span> from the <span class="vocab"
+    data-word-en="roof"
+    data-word-vn="nóc / mái"
+    data-pos="danh từ / noun"
+    data-def-en="The top outer surface of a vehicle or building."
+    data-def-vn="Bề mặt phía trên cùng của phương tiện hoặc tòa nhà."
+    data-context-en="The man swings from the roof of the train, showing he is skilled and fearless."
+    data-context-vn="Người đàn ông đu trên nóc tàu, cho thấy anh ta lành nghề và không biết sợ.">roof</span>, <span class="vocab"
+    data-word-en="moving"
+    data-word-vn="tiến lại"
+    data-pos="động từ / verb (participial)"
+    data-def-en="Traveling in a particular direction; approaching."
+    data-def-vn="Di chuyển theo một hướng cụ thể; đang đến gần."
+    data-context-en="The man is moving toward them, actively closing the gap and presenting a direct threat."
+    data-context-vn="Người đàn ông đang tiến về phía họ, tích cực thu hẹp khoảng cách và tạo ra mối đe dọa trực tiếp.">moving</span> <span class="vocab"
+    data-word-en="toward"
+    data-word-vn="về phía"
+    data-pos="giới từ / preposition"
+    data-def-en="In the direction of; approaching."
+    data-def-vn="Theo hướng của; đang đến gần."
+    data-context-en="'Toward them' confirms the man is deliberately advancing on Maya and Jack."
+    data-context-vn="'Toward them' xác nhận người đàn ông đang cố ý tiến về phía Maya và Jack.">toward</span> them with a <span class="vocab"
+    data-word-en="menacing"
+    data-word-vn="đe dọa / đáng sợ"
+    data-pos="tính từ / adjective"
+    data-def-en="Suggesting the possibility of danger; threatening."
+    data-def-vn="Gợi lên khả năng nguy hiểm; đe dọa."
+    data-context-en="'Menacing' describes the man's expression as openly threatening and hostile."
+    data-context-vn="'Menacing' mô tả vẻ mặt của người đàn ông là đang đe dọa và thù địch rõ ràng.">menacing</span> look.</p>
+
+  <!-- PARAGRAPH 4 -->
+  <p>"<span class="vocab"
+    data-word-en="Jump"
+    data-word-vn="Nhảy"
+    data-pos="động từ / verb (imperative)"
+    data-def-en="To leap or spring off the ground; here, an urgent command to leap across a gap."
+    data-def-vn="Nhảy hoặc bật khỏi mặt đất; ở đây, mệnh lệnh khẩn cấp nhảy qua khoảng cách."
+    data-context-en="'Jump!' is Jack's urgent command for them to leap across to the next car immediately."
+    data-context-vn="'Jump!' là mệnh lệnh khẩn cấp của Jack để họ lập tức nhảy sang toa tiếp theo.">Jump</span>!" <span class="vocab"
+    data-word-en="Jack"
+    data-word-vn="Jack"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="One of the main characters."
+    data-def-vn="Một trong những nhân vật chính."
+    data-context-en="Jack gives the command to jump, showing he is the one making quick decisions under pressure."
+    data-context-vn="Jack ra lệnh nhảy, cho thấy anh là người đưa ra quyết định nhanh chóng dưới áp lực.">Jack</span> <span class="vocab"
+    data-word-en="yelled"
+    data-word-vn="la hét / hét to"
+    data-pos="động từ / verb"
+    data-def-en="To shout in a loud or forceful way."
+    data-def-vn="La hét bằng giọng to hoặc mạnh mẽ."
+    data-context-en="Jack yelled the command, conveying extreme urgency and the need for immediate action."
+    data-context-vn="Jack hét lên mệnh lệnh, truyền đạt sự cấp bách tột độ và nhu cầu hành động ngay lập tức.">yelled</span>.</p>
+
+  <!-- PARAGRAPH 5 -->
+  <p>They <span class="vocab"
+    data-word-en="leaped"
+    data-word-vn="lao người nhảy"
+    data-pos="động từ / verb"
+    data-def-en="To jump with great force or energy."
+    data-def-vn="Nhảy với lực hoặc năng lượng lớn."
+    data-context-en="'Leaped' describes a powerful, committed jump across the dangerous gap between moving cars."
+    data-context-vn="'Leaped' mô tả một cú nhảy mạnh mẽ, quyết đoán qua khoảng cách nguy hiểm giữa các toa đang chạy.">leaped</span> <span class="vocab"
+    data-word-en="across"
+    data-word-vn="qua / băng qua"
+    data-pos="giới từ / preposition"
+    data-def-en="From one side to the other; over a gap or space."
+    data-def-vn="Từ bên này sang bên kia; qua một khoảng trống."
+    data-context-en="'Across' describes the direction of their leap — spanning the dangerous gap between train cars."
+    data-context-vn="'Across' mô tả hướng nhảy của họ — vượt qua khoảng cách nguy hiểm giữa các toa tàu.">across</span> the <span class="vocab"
+    data-word-en="gap"
+    data-word-vn="khoảng cách / khe hở"
+    data-pos="danh từ / noun"
+    data-def-en="An empty space or opening between two things."
+    data-def-vn="Khoảng không gian hoặc lỗ hổng trống giữa hai vật."
+    data-context-en="The gap between the cars is the dangerous space they must leap over while the train moves."
+    data-context-vn="Khoảng cách giữa các toa là không gian nguy hiểm họ phải nhảy qua trong khi tàu đang chạy.">gap</span> between the <span class="vocab"
+    data-word-en="cars"
+    data-word-vn="các toa"
+    data-pos="danh từ / noun (plural)"
+    data-def-en="Individual carriages or sections of a train."
+    data-def-vn="Các toa riêng lẻ hoặc các phần của đoàn tàu."
+    data-context-en="The 'cars' are the separate sections of the train with a dangerous gap between them."
+    data-context-vn="'Cars' là các phần riêng biệt của đoàn tàu với khoảng cách nguy hiểm giữa chúng.">cars</span> just as the <span class="vocab"
+    data-word-en="train"
+    data-word-vn="tàu hỏa"
+    data-pos="danh từ / noun"
+    data-def-en="A series of connected railway carriages."
+    data-def-vn="Một chuỗi toa xe lửa."
+    data-context-en="The train enters the tunnel just as they leap, compounding the danger dramatically."
+    data-context-vn="Tàu vào hầm ngay lúc họ nhảy, làm tăng thêm nguy hiểm một cách kịch tính.">train</span> <span class="vocab"
+    data-word-en="entered"
+    data-word-vn="vào / tiến vào"
+    data-pos="động từ / verb"
+    data-def-en="To go into or come into a place."
+    data-def-vn="Đi vào hoặc tiến vào một nơi."
+    data-context-en="The train entering the tunnel at the moment of their jump puts them in immediate mortal danger."
+    data-context-vn="Tàu vào hầm vào đúng lúc họ nhảy đặt họ vào nguy hiểm tính mạng ngay lập tức.">entered</span> a long, <span class="vocab"
+    data-word-en="dark"
+    data-word-vn="tối tăm"
+    data-pos="tính từ / adjective"
+    data-def-en="Having little or no light."
+    data-def-vn="Ít hoặc không có ánh sáng."
+    data-context-en="The dark tunnel adds blindness to their already extreme danger on the roof."
+    data-context-vn="Đường hầm tối tăm thêm vào sự mù quáng trong tình huống nguy hiểm cực độ của họ trên nóc tàu.">dark</span> <span class="vocab"
+    data-word-en="tunnel"
+    data-word-vn="đường hầm"
+    data-pos="danh từ / noun"
+    data-def-en="An underground or mountain passage for vehicles or trains."
+    data-def-vn="Đường hầm dưới lòng đất hoặc qua núi cho phương tiện hoặc tàu."
+    data-context-en="The tunnel forces them flat against the roof as the stone walls close in around them."
+    data-context-vn="Đường hầm buộc họ nằm sát nóc tàu khi những bức tường đá siết chặt xung quanh họ.">tunnel</span>. <span class="vocab"
+    data-word-en="Maya"
+    data-word-vn="Maya"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="One of the main characters."
+    data-def-vn="Một trong những nhân vật chính."
+    data-context-en="Maya is described feeling the stone walls of the tunnel, conveying visceral fear."
+    data-context-vn="Maya được mô tả cảm nhận những bức tường đá của đường hầm, truyền đạt nỗi sợ hãi rõ ràng.">Maya</span> <span class="vocab"
+    data-word-en="felt"
+    data-word-vn="cảm thấy"
+    data-pos="động từ / verb"
+    data-def-en="To be aware of through physical sensation."
+    data-def-vn="Ý thức được thông qua cảm giác thể chất."
+    data-context-en="Maya felt the stone walls physically close to her, a terrifying sensory experience."
+    data-context-vn="Maya cảm nhận những bức tường đá về mặt vật lý gần cô, một trải nghiệm cảm giác kinh hoàng.">felt</span> the <span class="vocab"
+    data-word-en="cold"
+    data-word-vn="lạnh"
+    data-pos="tính từ / adjective"
+    data-def-en="At a low temperature; lacking warmth."
+    data-def-vn="Ở nhiệt độ thấp; thiếu hơi ấm."
+    data-context-en="'Cold' stone walls emphasize the hostile, harsh environment inside the tunnel."
+    data-context-vn="Tường đá 'lạnh' nhấn mạnh môi trường thù địch, khắc nghiệt bên trong đường hầm.">cold</span> <span class="vocab"
+    data-word-en="stone"
+    data-word-vn="đá"
+    data-pos="danh từ / noun (as modifier)"
+    data-def-en="Rock used as a building material; hard and rough."
+    data-def-vn="Đá dùng làm vật liệu xây dựng; cứng và thô ráp."
+    data-context-en="'Stone walls' describes the rough, dangerous tunnel walls that nearly graze Maya's head."
+    data-context-vn="'Stone walls' mô tả những bức tường hầm thô ráp, nguy hiểm suýt cọ vào đầu Maya.">stone</span> walls of the <span class="vocab"
+    data-word-en="tunnel"
+    data-word-vn="đường hầm"
+    data-pos="danh từ / noun"
+    data-def-en="An underground or mountain passage for vehicles or trains."
+    data-def-vn="Đường hầm dưới lòng đất hoặc qua núi."
+    data-context-en="The tunnel walls pass dangerously close to Maya's head as the train rushes through."
+    data-context-vn="Các bức tường hầm đi ngang nguy hiểm gần đầu Maya khi tàu lao qua.">tunnel</span> <span class="vocab"
+    data-word-en="passing"
+    data-word-vn="lướt qua"
+    data-pos="động từ / verb (participial)"
+    data-def-en="Going past; moving alongside and beyond."
+    data-def-vn="Đi qua; di chuyển dọc theo và vượt qua."
+    data-context-en="The walls are passing her head at speed, creating a near-death experience for Maya."
+    data-context-vn="Những bức tường lướt qua đầu cô ở tốc độ cao, tạo ra trải nghiệm suýt chết cho Maya.">passing</span> <span class="vocab"
+    data-word-en="inches"
+    data-word-vn="vài inch / rất gần"
+    data-pos="danh từ / noun (used figuratively)"
+    data-def-en="A unit of length; here used to mean an extremely small distance."
+    data-def-vn="Đơn vị chiều dài; ở đây dùng để chỉ khoảng cách cực nhỏ."
+    data-context-en="'Inches from her head' vividly conveys how extremely close the tunnel walls come to killing her."
+    data-context-vn="'Inches from her head' diễn đạt sống động mức độ cực gần của tường hầm suýt giết chết cô.">inches</span> from her head. When they <span class="vocab"
+    data-word-en="emerged"
+    data-word-vn="xuất hiện / thoát ra"
+    data-pos="động từ / verb"
+    data-def-en="To come out from a place where one has been hidden or enclosed."
+    data-def-vn="Ra khỏi nơi mà người ta đã bị che giấu hoặc bao bọc."
+    data-context-en="They emerged from the other side of the tunnel, having survived the dangerous passage."
+    data-context-vn="Họ thoát ra từ phía bên kia đường hầm, đã sống sót qua đoạn đường nguy hiểm.">emerged</span> on the other <span class="vocab"
+    data-word-en="side"
+    data-word-vn="phía / bên"
+    data-pos="danh từ / noun"
+    data-def-en="One of the two surfaces or regions divided by something; here, the exit end of the tunnel."
+    data-def-vn="Một trong hai bề mặt hoặc vùng được chia bởi thứ gì đó; ở đây là đầu ra của đường hầm."
+    data-context-en="'The other side' of the tunnel is where they arrive safely after the terrifying passage."
+    data-context-vn="'Phía bên kia' đường hầm là nơi họ đến an toàn sau đoạn đường kinh hoàng.">side</span>, the <span class="vocab"
+    data-word-en="man"
+    data-word-vn="người đàn ông"
+    data-pos="danh từ / noun"
+    data-def-en="An adult male person."
+    data-def-vn="Một người đàn ông trưởng thành."
+    data-context-en="The man who was threatening them has disappeared — he is gone when they exit the tunnel."
+    data-context-vn="Người đàn ông đang đe dọa họ đã biến mất — anh ta không còn đó khi họ ra khỏi hầm.">man</span> was <span class="vocab"
+    data-word-en="gone"
+    data-word-vn="biến mất / đã đi"
+    data-pos="tính từ / adjective (predicative)"
+    data-def-en="No longer present; having departed or disappeared."
+    data-def-vn="Không còn hiện diện; đã rời đi hoặc biến mất."
+    data-context-en="'Gone' creates a new mystery — the pursuer has vanished without explanation."
+    data-context-vn="'Gone' tạo ra bí ẩn mới — kẻ truy đuổi đã biến mất mà không có lời giải thích.">gone</span>. He had <span class="vocab"
+    data-word-en="vanished"
+    data-word-vn="tan biến / biến mất hoàn toàn"
+    data-pos="động từ / verb"
+    data-def-en="To disappear suddenly and completely, often in a mysterious way."
+    data-def-vn="Biến mất đột ngột và hoàn toàn, thường theo cách bí ẩn."
+    data-context-en="'Vanished' is stronger than 'gone' — it suggests a sudden, complete, unexplained disappearance."
+    data-context-vn="'Vanished' mạnh hơn 'gone' — nó gợi lên sự biến mất đột ngột, hoàn toàn và không giải thích được.">vanished</span> into the <span class="vocab"
+    data-word-en="fog"
+    data-word-vn="sương mù"
+    data-pos="danh từ / noun"
+    data-def-en="A thick cloud of tiny water droplets suspended near the ground, reducing visibility."
+    data-def-vn="Một đám mây dày đặc gồm các giọt nước nhỏ gần mặt đất, làm giảm tầm nhìn."
+    data-context-en="The man vanished into the fog, creating the mysterious, ghostly ending hinted at in the title."
+    data-context-vn="Người đàn ông tan biến vào sương mù, tạo ra kết thúc bí ẩn, ma quái được gợi ý trong tiêu đề.">fog</span>.</p>
+
+  <!-- PARAGRAPH 6 -->
+  <p>"Who was that?" <span class="vocab"
+    data-word-en="Maya"
+    data-word-vn="Maya"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="One of the main characters."
+    data-def-vn="Một trong những nhân vật chính."
+    data-context-en="Maya asks who the man was, voicing the central mystery of the encounter."
+    data-context-vn="Maya hỏi người đàn ông đó là ai, nêu lên bí ẩn trung tâm của cuộc chạm trán.">Maya</span> <span class="vocab"
+    data-word-en="gasped"
+    data-word-vn="thở hổn hển / thốt lên"
+    data-pos="động từ / verb"
+    data-def-en="To inhale sharply with surprise or exhaustion; to say something breathlessly."
+    data-def-vn="Hít vào mạnh với sự ngạc nhiên hoặc kiệt sức; nói điều gì đó một cách hổn hển."
+    data-context-en="Maya gasped her question, showing she is physically exhausted and shocked by what just happened."
+    data-context-vn="Maya hổn hển hỏi, cho thấy cô kiệt sức về mặt thể chất và sốc trước những gì vừa xảy ra.">gasped</span>, her <span class="vocab"
+    data-word-en="lungs"
+    data-word-vn="phổi"
+    data-pos="danh từ / noun (plural)"
+    data-def-en="The paired organs in the chest used for breathing."
+    data-def-vn="Cặp cơ quan trong ngực dùng để thở."
+    data-context-en="Maya's lungs are burning from the extreme cold and physical exertion of their escape."
+    data-context-vn="Phổi của Maya đang rát bỏng vì cái lạnh khắc nghiệt và sự vận động thể chất dữ dội trong cuộc trốn thoát.">lungs</span> <span class="vocab"
+    data-word-en="burning"
+    data-word-vn="rát bỏng / bốc lửa"
+    data-pos="tính từ / adjective (participial)"
+    data-def-en="Experiencing a painful, hot sensation; here used figuratively for the pain of cold air in the lungs."
+    data-def-vn="Trải qua cảm giác đau, nóng rát; ở đây dùng theo nghĩa bóng về cơn đau do không khí lạnh trong phổi."
+    data-context-en="'Burning' lungs vividly captures the physical pain of breathing fast in freezing air."
+    data-context-vn="Phổi 'burning' diễn tả sống động cơn đau vật lý khi thở nhanh trong không khí lạnh giá.">burning</span> from the <span class="vocab"
+    data-word-en="cold"
+    data-word-vn="lạnh"
+    data-pos="tính từ / adjective"
+    data-def-en="At a low temperature; lacking warmth."
+    data-def-vn="Ở nhiệt độ thấp; thiếu hơi ấm."
+    data-context-en="The 'cold air' is causing Maya's lungs to burn, showing the extreme physical conditions of the escape."
+    data-context-vn="'Không khí lạnh' đang làm phổi Maya rát bỏng, cho thấy điều kiện vật lý khắc nghiệt của cuộc trốn thoát.">cold</span> <span class="vocab"
+    data-word-en="air"
+    data-word-vn="không khí"
+    data-pos="danh từ / noun"
+    data-def-en="The invisible mixture of gases surrounding the Earth."
+    data-def-vn="Hỗn hợp khí vô hình bao quanh Trái Đất."
+    data-context-en="The cold air burns Maya's lungs as she breathes hard after their desperate escape."
+    data-context-vn="Không khí lạnh đốt cháy phổi Maya khi cô thở gấp sau cuộc trốn thoát tuyệt vọng.">air</span>.</p>
+
+  <!-- PARAGRAPH 7 -->
+  <p>"A <span class="vocab"
+    data-word-en="mercenary"
+    data-word-vn="lính đánh thuê"
+    data-pos="danh từ / noun"
+    data-def-en="A professional soldier hired to fight for a foreign country or group, motivated by money rather than loyalty."
+    data-def-vn="Lính chuyên nghiệp được thuê để chiến đấu cho nước ngoài hoặc một nhóm, động cơ là tiền thay vì lòng trung thành."
+    data-context-en="Jack identifies the attacker as a mercenary — a paid professional, raising the stakes significantly."
+    data-context-vn="Jack xác định kẻ tấn công là lính đánh thuê — một chuyên gia được trả tiền, nâng cao đáng kể mức độ nguy hiểm.">mercenary</span>," <span class="vocab"
+    data-word-en="Jack"
+    data-word-vn="Jack"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="One of the main characters."
+    data-def-vn="Một trong những nhân vật chính."
+    data-context-en="Jack answers Maya's question, identifying the threat and showing he has prior knowledge."
+    data-context-vn="Jack trả lời câu hỏi của Maya, xác định mối đe dọa và cho thấy anh có kiến thức trước đó.">Jack</span> <span class="vocab"
+    data-word-en="replied"
+    data-word-vn="trả lời"
+    data-pos="động từ / verb"
+    data-def-en="To respond to someone's question or statement."
+    data-def-vn="Phản hồi câu hỏi hoặc tuyên bố của ai đó."
+    data-context-en="Jack replied to Maya's question, providing the alarming information about who their pursuer was."
+    data-context-vn="Jack trả lời câu hỏi của Maya, cung cấp thông tin đáng lo ngại về kẻ truy đuổi họ là ai.">replied</span>, looking <span class="vocab"
+    data-word-en="worried"
+    data-word-vn="lo lắng"
+    data-pos="tính từ / adjective"
+    data-def-en="Feeling or showing anxiety or concern."
+    data-def-vn="Cảm thấy hoặc thể hiện lo lắng hoặc quan tâm."
+    data-context-en="Jack looks worried, revealing that even he is alarmed by this new escalation."
+    data-context-vn="Jack trông lo lắng, cho thấy ngay cả anh cũng bị báo động bởi sự leo thang mới này.">worried</span>. "<span class="vocab"
+    data-word-en="Thorne"
+    data-word-vn="Thorne"
+    data-pos="danh từ riêng / proper noun"
+    data-def-en="The name of the antagonist in the story."
+    data-def-vn="Tên của nhân vật phản diện trong câu chuyện."
+    data-context-en="Thorne is the villain who is sending mercenaries after Jack and Maya."
+    data-context-vn="Thorne là kẻ phản diện đang cử lính đánh thuê đến truy đuổi Jack và Maya.">Thorne</span> is <span class="vocab"
+    data-word-en="tired"
+    data-word-vn="chán / mệt mỏi vì"
+    data-pos="tính từ / adjective"
+    data-def-en="Fed up; no longer willing to wait or tolerate something."
+    data-def-vn="Chán ngán; không còn sẵn lòng chờ đợi hoặc chịu đựng điều gì đó."
+    data-context-en="'Tired of waiting' means Thorne has lost patience and is now taking more aggressive action."
+    data-context-vn="'Tired of waiting' nghĩa là Thorne đã mất kiên nhẫn và hiện đang thực hiện hành động tích cực hơn.">tired</span> of <span class="vocab"
+    data-word-en="waiting"
+    data-word-vn="chờ đợi"
+    data-pos="động từ / verb (gerund)"
+    data-def-en="Remaining inactive until something expected happens."
+    data-def-vn="Ở yên không hoạt động cho đến khi điều gì đó được mong đợi xảy ra."
+    data-context-en="Thorne has been waiting for something from Jack and Maya; his patience has now run out."
+    data-context-vn="Thorne đã chờ đợi điều gì đó từ Jack và Maya; sự kiên nhẫn của anh ta hiện đã cạn kiệt.">waiting</span>. He's <span class="vocab"
+    data-word-en="sending"
+    data-word-vn="cử đến / phái đến"
+    data-pos="động từ / verb (participial)"
+    data-def-en="Causing someone to go somewhere; dispatching someone for a purpose."
+    data-def-vn="Khiến ai đó đến đâu đó; cử ai đó vì một mục đích."
+    data-context-en="Thorne is 'sending' professionals, indicating he is directing and controlling the threat remotely."
+    data-context-vn="Thorne đang 'cử' chuyên gia đến, cho thấy anh ta đang chỉ đạo và kiểm soát mối đe dọa từ xa.">sending</span> <span class="vocab"
+    data-word-en="professionals"
+    data-word-vn="chuyên nghiệp / dân chuyên nghiệp"
+    data-pos="danh từ / noun (plural)"
+    data-def-en="People who are skilled and experienced in a particular type of work, especially dangerous work."
+    data-def-vn="Những người có kỹ năng và kinh nghiệm trong một loại công việc cụ thể, đặc biệt là công việc nguy hiểm."
+    data-context-en="'Professionals' means trained killers or agents, raising the danger level significantly above amateurs."
+    data-context-vn="'Professionals' có nghĩa là những kẻ giết người hoặc điệp viên được huấn luyện, nâng mức độ nguy hiểm lên đáng kể so với tay mơ.">professionals</span> now".</p>
+
+  <!-- TEST YOUR MEMORY -->
+  <h2>Test Your Memory</h2>
+  <p style="font-size:0.95rem; color:#5a3a10; margin-bottom:12px;">After each pass through the content, try to remember the meaning and where in the story each word appeared.</p>
+  <div id="memory-grid"></div>
+
+  <a href="../" class="back-btn">← Back</a>
+
+  <!-- TRANSCRIPTION NOTES -->
+  <div class="skip-notes">
+    <details>
+      <summary>Skip List (words not made clickable)</summary>
+      <p style="margin-top:8px; line-height:1.7;">Articles: <em>a, an, the</em>. Pronouns: <em>he, she, they, we, it, his, her, them</em>. Conjunctions: <em>and, but, as, just, or</em>. Auxiliary verbs: <em>was, were, had, didn't, is, has, be</em>. Prepositions (literal use): <em>in, on, at, from, of, between, with, past, into, out</em>. Pure function words: <em>that, this, not, no, now, who, when</em>. Proper names treated as identifiers only: <em>Jack, Maya, Thorne</em> (noted in vocabulary for character reference but not re-linked every instance). Numbers. Quotation words with no meaning beyond punctuation.</p>
+    </details>
+  </div>
+
+  <div class="transcription-notes">
+    <h2>Transcription Notes</h2>
+    <p style="font-size:0.93rem; color:#5a3a10; margin-bottom:8px;">The input text appears to be clean written prose, not voice-to-text output. No VTT errors were detected. No corrections were necessary.</p>
+    <table>
+      <thead><tr><th>#</th><th>Original</th><th>Corrected</th><th>Reason</th></tr></thead>
+      <tbody>
+        <tr><td colspan="4" style="font-style:italic; color:#7a4e1a;">No corrections — text was clean written prose with no voice-to-text errors detected.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div><!-- end .page -->
+
+<script>
+// ---- POPUP LOGIC ----
+let activeWord = null;
+
+function openPopup(el) {
+  const isEnglishText = true; // Input text is in English
+  document.getElementById('pop-word-vn').textContent = el.dataset.wordVn || '';
+  document.getElementById('pop-word-en').textContent = el.dataset.wordEn || '';
+  document.getElementById('pop-pos').textContent = el.dataset.pos || '';
+
+  if (isEnglishText) {
+    // English text: show bilingual def (EN above VN), context in Vietnamese
+    const defEn = el.dataset.defEn || '';
+    const defVn = el.dataset.defVn || '';
+    document.getElementById('pop-def').innerHTML = defEn + (defVn ? '<br><span style="color:#7a4e1a;">' + defVn + '</span>' : '');
+    document.getElementById('pop-context').textContent = el.dataset.contextVn || el.dataset.contextEn || '';
+    document.querySelector('.pop-context-label').textContent = 'Trong văn bản:';
+  }
+
+  document.getElementById('popup-overlay').style.display = 'block';
+  document.getElementById('popup-card').style.display = 'block';
+  activeWord = el;
+}
+
+function closePopup() {
+  document.getElementById('popup-overlay').style.display = 'none';
+  document.getElementById('popup-card').style.display = 'none';
+  activeWord = null;
+}
+
+document.querySelectorAll('.vocab').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (activeWord === el) {
+      closePopup();
+    } else {
+      openPopup(el);
+    }
+  });
+});
+
+// ---- MEMORY GRID ----
+(function buildMemoryGrid() {
+  const grid = document.getElementById('memory-grid');
+  if (!grid) return;
+
+  const vocabEls = document.querySelectorAll('.vocab');
+  const seen = new Set();
+  const words = [];
+
+  vocabEls.forEach(function(el) {
+    const key = (el.dataset.wordEn || el.textContent.trim()).toLowerCase();
+    if (!seen.has(key)) {
+      seen.add(key);
+      words.push({ label: el.dataset.wordEn || el.textContent.trim(), key: key });
+    }
+  });
+
+  words.forEach(function(w) {
+    const span = document.createElement('span');
+    span.textContent = w.label;
+    span.addEventListener('click', function() {
+      // Find first occurrence in main text
+      const allVocab = document.querySelectorAll('.vocab');
+      let target = null;
+      for (let i = 0; i < allVocab.length; i++) {
+        const el = allVocab[i];
+        const k = (el.dataset.wordEn || el.textContent.trim()).toLowerCase();
+        if (k === w.key) { target = el; break; }
+      }
+      if (target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        target.style.background = '#ffe082';
+        setTimeout(function() { target.style.background = ''; }, 1500);
+      }
+    });
+    grid.appendChild(span);
+  });
+})();
+
+// ---- DOWNLOAD (content only) ----
+function downloadContent() {
+  const clone = document.getElementById('main-page').cloneNode(true);
+
+  // Remove skip-notes and transcription-notes
+  const skipNotes = clone.querySelector('.skip-notes');
+  if (skipNotes) skipNotes.remove();
+  const transNotes = clone.querySelector('.transcription-notes');
+  if (transNotes) transNotes.remove();
+
+  // Clear memory grid so it rebuilds via JS
+  const memGrid = clone.querySelector('#memory-grid');
+  if (memGrid) memGrid.innerHTML = '';
+
+  const html = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode 6: The Ghost in the Fog</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { background: #2b2b2b; font-family: Arial, sans-serif; font-size: 17px; color: #2a1500; user-select: none; min-height: 100vh; padding: 30px 16px 60px; }
+.page { background: #f0e6c8; border: 2px solid #a0845a; max-width: 820px; margin: 0 auto; padding: 36px 44px 44px; border-radius: 4px; }
+h1 { font-family: Arial, sans-serif; font-size: 1.55rem; color: #3a1f00; border-bottom: 2px solid #7a4e1a; padding-bottom: 10px; margin-bottom: 22px; }
+h2 { font-family: Arial, sans-serif; font-size: 1.2rem; color: #3a1f00; border-bottom: 1px solid #7a4e1a; padding-bottom: 6px; margin-bottom: 16px; margin-top: 32px; }
+p { line-height: 1.75; margin-bottom: 16px; font-family: Arial, sans-serif; font-size: 17px; }
+.vocab { border-bottom: 2.5px dotted #1a5c20; cursor: pointer; font-family: Arial, sans-serif; }
+.vocab:hover { background: rgba(26,92,32,0.07); }
+.corrected { background: #fff3e0; color: #c04a00; font-weight: bold; border-radius: 2px; padding: 0 2px; }
+.original-word { text-decoration: line-through; color: #aaa; font-size: 0.82rem; margin-left: 2px; font-style: italic; }
+.audio-section { margin-bottom: 28px; padding: 14px 16px; background: rgba(46,31,10,0.06); border: 1px solid #a0845a; border-radius: 4px; }
+.audio-label { font-size: 0.9rem; color: #7a4e1a; margin-bottom: 8px; font-family: Arial, sans-serif; }
+audio#audio-player { width: 100%; height: 36px; display: block; accent-color: #c8a060; margin-bottom: 10px; }
+.audio-controls { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 4px; }
+.rewind-btn { background: #2e1f0a; color: #f0d9a0; border: 1px solid #7a4e1a; padding: 5px 12px; font-family: Arial, sans-serif; font-size: 0.88rem; border-radius: 3px; cursor: pointer; }
+.rewind-btn:hover { background: #4a3218; }
+#popup-card { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 9999; background: #f0e6c8; border: 2px solid #a0845a; border-radius: 6px; padding: 22px 26px; min-width: 280px; max-width: 380px; box-shadow: 0 8px 32px rgba(0,0,0,0.45); }
+#popup-card .pop-word-vn { font-size: 1.3rem; font-weight: bold; color: #3a1f00; font-family: Arial, sans-serif; margin-bottom: 3px; }
+#popup-card .pop-word-en { font-size: 0.95rem; font-style: italic; color: #7a4e1a; font-family: Arial, sans-serif; margin-bottom: 8px; }
+#popup-card .pop-pos { font-size: 0.95rem; color: #5a3a10; margin-bottom: 10px; font-family: Arial, sans-serif; }
+#popup-card .pop-def { font-size: 1rem; color: #2a1500; margin-bottom: 10px; font-family: Arial, sans-serif; line-height: 1.5; }
+#popup-card .pop-context-label { font-size: 0.95rem; font-weight: bold; color: #7a4e1a; font-family: Arial, sans-serif; margin-bottom: 3px; }
+#popup-card .pop-context { font-size: 0.95rem; font-style: italic; color: #5a3a10; font-family: Arial, sans-serif; line-height: 1.5; }
+#popup-overlay { display: none; position: fixed; inset: 0; z-index: 9998; background: transparent; }
+.back-btn { display: inline-block; background: #2e1f0a; color: #f0d9a0; border: 1px solid #7a4e1a; padding: 7px 16px; font-family: Arial, sans-serif; font-size: 0.9rem; border-radius: 3px; cursor: pointer; margin: 24px 0 8px; text-decoration: none; }
+.back-btn:hover { background: #4a3218; }
+#memory-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 14px; margin-top: 12px; }
+#memory-grid span { font-family: Arial, sans-serif; font-size: 0.97rem; color: #2a1500; border-bottom: 1.5px dotted #7a4e1a; cursor: pointer; padding-bottom: 1px; }
+#memory-grid span:hover { background: rgba(122,78,26,0.09); }
+</style>
+</head>
+<body>
+<div id="popup-overlay" onclick="closePopup()"></div>
+<div id="popup-card" onclick="closePopup()">
+  <div class="pop-word-vn" id="pop-word-vn"></div>
+  <div class="pop-word-en" id="pop-word-en"></div>
+  <div class="pop-pos" id="pop-pos"></div>
+  <div class="pop-def" id="pop-def"></div>
+  <div class="pop-context-label">Trong văn bản:</div>
+  <div class="pop-context" id="pop-context"></div>
+</div>
+${clone.outerHTML}
+<script>
+var activeWord=null;
+function openPopup(el){document.getElementById('pop-word-vn').textContent=el.dataset.wordVn||'';document.getElementById('pop-word-en').textContent=el.dataset.wordEn||'';document.getElementById('pop-pos').textContent=el.dataset.pos||'';var defEn=el.dataset.defEn||'';var defVn=el.dataset.defVn||'';document.getElementById('pop-def').innerHTML=defEn+(defVn?'<br><span style="color:#7a4e1a;">'+defVn+'</span>':'');document.getElementById('pop-context').textContent=el.dataset.contextVn||el.dataset.contextEn||'';document.getElementById('popup-overlay').style.display='block';document.getElementById('popup-card').style.display='block';activeWord=el;}
+function closePopup(){document.getElementById('popup-overlay').style.display='none';document.getElementById('popup-card').style.display='none';activeWord=null;}
+document.querySelectorAll('.vocab').forEach(function(el){el.addEventListener('click',function(e){e.stopPropagation();if(activeWord===el){closePopup();}else{openPopup(el);}});});
+(function buildMemoryGrid(){var grid=document.getElementById('memory-grid');if(!grid)return;var vocabEls=document.querySelectorAll('.vocab');var seen=new Set();var words=[];vocabEls.forEach(function(el){var key=(el.dataset.wordEn||el.textContent.trim()).toLowerCase();if(!seen.has(key)){seen.add(key);words.push({label:el.dataset.wordEn||el.textContent.trim(),key:key});}});words.forEach(function(w){var span=document.createElement('span');span.textContent=w.label;span.addEventListener('click',function(){var allVocab=document.querySelectorAll('.vocab');var target=null;for(var i=0;i<allVocab.length;i++){var el=allVocab[i];var k=(el.dataset.wordEn||el.textContent.trim()).toLowerCase();if(k===w.key){target=el;break;}}if(target){target.scrollIntoView({behavior:'smooth',block:'center'});target.style.background='#ffe082';setTimeout(function(){target.style.background='';},1500);}});grid.appendChild(span);});})();
+<\/script>
+</body>
+</html>`;
+
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'ep6_ghost_in_the_fog_content.html';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+}
+</script>
+</body>
+</html>
