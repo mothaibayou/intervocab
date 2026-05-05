@@ -95,7 +95,11 @@
    }
 
 .button-link {
-  display: inline-block;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+
   padding: 12px 18px;
   background: #d6cbb8;   /* light brown */
   color: #4a3f35;        /* dark text */
@@ -103,6 +107,11 @@
   border-radius: 8px;
   font-weight: bold;
   box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+
+  flex: 1 1 180px;
+  max-width: 220px;
+  min-height: 56px;
+  line-height: 1.2;
 }
 
     
