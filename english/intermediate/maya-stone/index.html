@@ -94,7 +94,38 @@
      text-align: center;
    }
 
+button-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
 
+  padding: 12px 18px;
+  background: #d6cbb8;   /* light brown */
+  color: #4a3f35;        /* dark text */
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: bold;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+
+  flex: 1 1 180px;
+  max-width: 220px;
+  min-height: 56px;
+  line-height: 1.2;
+}
+   
+.button-link:hover {
+  background: #c5b8a3;
+}
+.folder-button {
+  margin: 20px 0 30px 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 12px 16px;
+}
+    
+<!--
  .button-link {
   display: inline-block;
   padding: 12px 18px;
@@ -114,7 +145,7 @@
   margin: 20px 0 30px 0;  /* space above and below */
   text-align: center;
 }
-
+-->
 </style>
 </head>
 <body>
@@ -128,16 +159,16 @@
   <p class="section-heading">🇺🇸 English — Intermediate</p>
 
 <ul class="lesson-list">
-  <li><a href="ep1/attic-secret.html">Ep 1 Secret in the Attic</a></li>
-  <li><a href="ep2/airplane-stranger.html">Ep 2 Stranger on a Plane</a></li>
-  <li><a href="ep3/motorbike-escape.html">Ep 3 Motorbike-Escape</a></li>
-  <li><a href="ep4/strong-coffee.html">Ep 4 Secrets and Strong Coffee</a></li>
-  <li><a href="ep5/midnight-train.html">Ep 5 The Midnight Train</a></li>
-  <li><a href="ep6/ghost-fog.html">Ep 6 The Ghost in the Fog</a></li>
-  <li><a href="ep7/pine-trail.html">Ep 7 The Pine Forest Trail</a></li>
-  <li><a href="ep8/temple-whispers.html">Ep 8 The Temple of Whispers</a></li>
-  <li><a href="ep9/ultimate-choice.html">Ep 9 The Ultimate Choice</a></li>
-  <li><a href="ep10/finale.html">Ep 10 The Cliffhanger (season finale)</a></li>
+  <li><a href="ep1/attic-secret.html" class="button-link">Ep 1 Secret in the Attic</a></li>
+  <li><a href="ep2/airplane-stranger.html" class="button-link">Ep 2 Stranger on a Plane</a></li>
+  <li><a href="ep3/motorbike-escape.html" class="button-link">Ep 3 Motorbike-Escape</a></li>
+  <li><a href="ep4/strong-coffee.html" class="button-link">Ep 4 Secrets and Strong Coffee</a></li>
+  <li><a href="ep5/midnight-train.html" class="button-link">Ep 5 The Midnight Train</a></li>
+  <li><a href="ep6/ghost-fog.html" class="button-link">Ep 6 The Ghost in the Fog</a></li>
+  <li><a href="ep7/pine-trail.html" class="button-link">Ep 7 The Pine Forest Trail</a></li>
+  <li><a href="ep8/temple-whispers.html" class="button-link">Ep 8 The Temple of Whispers</a></li>
+  <li><a href="ep9/ultimate-choice.html" class="button-link">Ep 9 The Ultimate Choice</a></li>
+  <li><a href="ep10/finale.html" class="button-link">Ep 10 The Cliffhanger (season finale)</a></li>
 
 
 </ul>
