@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode 10: The Cliffhanger (Season Finale)</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    user-select: none;
+    min-height: 100vh;
+    padding: 30px 16px;
+  }
+  .page {
+    background: #f0e6c8;
+    border: 2px solid #a0845a;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 36px 44px 44px 44px;
+    border-radius: 4px;
+    position: relative;
+  }
+  h1 {
+    font-family: Arial, sans-serif;
+    color: #3a1f00;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+  }
+  h2 {
+    font-family: Arial, sans-serif;
+    color: #3a1f00;
+    font-size: 1.15rem;
+    border-bottom: 1.5px solid #7a4e1a;
+    padding-bottom: 6px;
+    margin: 32px 0 14px 0;
+  }
+  p {
+    line-height: 1.8;
+    margin-bottom: 14px;
+  }
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+    display: inline;
+  }
+  .vocab:hover { background: rgba(26,92,32,0.08); }
+
+  /* Audio player area */
+  .audio-section {
+    margin-bottom: 24px;
+    padding: 14px 16px 12px 16px;
+    border: 1.5px solid #a0845a;
+    border-radius: 4px;
+    background: #e8d9b0;
+  }
+  .audio-label {
+    font-size: 0.92rem;
+    color: #7a4e1a;
+    margin-bottom: 7px;
+    font-style: italic;
+  }
+  audio#audio-player {
+    width: 100%;
+    height: 36px;
+    display: block;
+    accent-color: #c8a060;
+    margin-bottom: 10px;
+  }
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 7px;
+    margin-top: 4px;
+  }
+  .rewind-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 5px 11px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .rewind-btn:hover { background: #4a3318; }
+
+  /* Download button */
+  #download-btn {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 6px 13px;
+    font-family: Arial, sans-serif;
+    font-size: 0.85rem;
+    cursor: pointer;
+  }
+  #download-btn:hover { background: #4a3318; }
+
+  /* Popup card */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0e6c8;
+    border: 2px solid #a0845a;
+    border-radius: 5px;
+    padding: 22px 26px;
+    max-width: 380px;
+    width: 90vw;
+    z-index: 1000;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.45);
+    font-family: Arial, sans-serif;
+  }
+  #popup-card.active { display: block; }
+  .popup-word-en { font-size: 1.3rem; font-weight: bold; color: #3a1f00; margin-bottom: 2px; }
+  .popup-word-vn { font-size: 0.95rem; font-style: italic; color: #7a4e1a; margin-bottom: 8px; }
+  .popup-pos { font-size: 0.95rem; color: #5a3a10; margin-bottom: 8px; }
+  .popup-def { font-size: 1rem; color: #2a1500; margin-bottom: 5px; }
+  .popup-def-vn { font-size: 1rem; color: #2a1500; margin-bottom: 10px; }
+  .popup-context-label { font-size: 0.95rem; color: #7a4e1a; font-style: italic; margin-bottom: 3px; }
+  .popup-context { font-size: 0.95rem; color: #3a1f00; font-style: italic; }
+  #popup-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+  }
+  #popup-overlay.active { display: block; }
+
+  /* Corrected words */
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+
+  /* Memory grid */
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 12px;
+    margin-top: 14px;
+  }
+  .memory-word {
+    cursor: pointer;
+    border-bottom: 1.5px dotted #7a4e1a;
+    display: inline-block;
+    color: #3a1f00;
+    font-size: 0.97rem;
+    padding: 2px 0;
+  }
+  .memory-word:hover { color: #1a5c20; }
+
+  /* Back button */
+  .back-btn {
+    display: inline-block;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 6px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 18px 0;
+  }
+  .back-btn:hover { background: #4a3318; }
+
+  /* Transcription notes */
+  .skip-notes, .transcription-notes {
+    margin-top: 28px;
+    padding-top: 14px;
+    border-top: 1px dashed #a0845a;
+  }
+  .transcription-notes table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.92rem;
+    margin-top: 10px;
+  }
+  .transcription-notes th, .transcription-notes td {
+    border: 1px solid #a0845a;
+    padding: 6px 9px;
+    text-align: left;
+    vertical-align: top;
+  }
+  .transcription-notes th {
+    background: #e0cfa0;
+    color: #3a1f00;
+  }
+
+  .highlight-scroll {
+    background: #ffe082 !important;
+    transition: background 0.3s;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  
+
+  <h1>Episode 10: The <span class="vocab" data-word-en="Cliffhanger" data-word-vn="tình huống gay cấn" data-pos="danh từ / noun" data-def-en="An ending to a story or episode that leaves the audience in suspense, not knowing what will happen next." data-def-vn="Một kết thúc của câu chuyện hoặc tập phim khiến khán giả hồi hộp, không biết điều gì sẽ xảy ra tiếp theo." data-context-en="The episode ends with Maya and Jack trapped with armed men descending — a classic cliffhanger." data-context-vn="The episode ends with Maya and Jack trapped with armed men descending — a classic cliffhanger.">Cliffhanger</span> (Season <span class="vocab" data-word-en="Finale" data-word-vn="hồi kết / tập cuối" data-pos="danh từ / noun" data-def-en="The last episode or concluding part of a season or series." data-def-vn="Tập cuối cùng hoặc phần kết của một mùa hay loạt phim." data-context-en="This episode is the season finale, wrapping up the events of the season with a dramatic ending." data-context-vn="This episode is the season finale, wrapping up the events of the season with a dramatic ending.">Finale</span>)</h1>
+
+  <!-- Audio Player -->
+  <div class="audio-section">
+    <div class="audio-label">🎧 Listen to the text</div>
+    <audio id="audio-player" controls="">
+      <source src="ep10.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+
+  <!-- Main content -->
+  <p>The <span class="vocab" id="w-temple-1" data-word-en="temple" data-word-vn="ngôi đền" data-pos="danh từ / noun" data-def-en="A building used for religious worship or as a place of historical significance." data-def-vn="Một tòa nhà dùng cho việc thờ cúng tôn giáo hoặc có ý nghĩa lịch sử." data-context-en="In this story, the temple is an ancient structure that collapses during the characters' escape." data-context-vn="In this story, the temple is an ancient structure that collapses during the characters' escape.">temple</span> was <span class="vocab" id="w-collapsing-1" data-word-en="collapsing" data-word-vn="đang sụp đổ" data-pos="động từ / verb" data-def-en="Falling down or caving in suddenly, often of a structure." data-def-vn="Đột ngột đổ xuống hoặc sụp vào bên trong, thường nói về một công trình." data-context-en="The temple was collapsing around the characters, forcing them to flee immediately." data-context-vn="The temple was collapsing around the characters, forcing them to flee immediately.">collapsing</span>. "<span class="vocab" id="w-run-1" data-word-en="Run" data-word-vn="Chạy" data-pos="động từ / verb" data-def-en="To move at speed; used here as a command to flee danger." data-def-vn="Di chuyển nhanh; dùng ở đây như một mệnh lệnh thoát khỏi nguy hiểm." data-context-en="Jack screamed 'Run!' to urge Maya to escape the collapsing temple." data-context-vn="Jack screamed 'Run!' to urge Maya to escape the collapsing temple.">Run</span>!" Jack <span class="vocab" id="w-screamed-1" data-word-en="screamed" data-word-vn="hét lên" data-pos="động từ / verb" data-def-en="To cry out loudly in fear, pain, or urgency." data-def-vn="Kêu to vì sợ hãi, đau đớn, hoặc khẩn cấp." data-context-en="Jack screamed the warning to Maya as the temple began to fall apart around them." data-context-vn="Jack screamed the warning to Maya as the temple began to fall apart around them.">screamed</span>.</p>
+
+  <p><span class="vocab" id="w-grabbed-1" data-word-en="grabbed" data-word-vn="chộp lấy" data-pos="động từ / verb" data-def-en="To seize something quickly and forcefully." data-def-vn="Nắm lấy thứ gì đó nhanh chóng và mạnh mẽ." data-context-en="Maya grabbed the scroll and the jade dragon before trying to escape." data-context-vn="Maya grabbed the scroll and the jade dragon before trying to escape.">Maya grabbed</span> the <span class="vocab" id="w-scroll-1" data-word-en="scroll" data-word-vn="cuộn giấy / bản đồ cuộn" data-pos="danh từ / noun" data-def-en="A roll of parchment or paper, often containing writing or a map." data-def-vn="Một cuộn giấy da hoặc giấy, thường chứa chữ viết hoặc bản đồ." data-context-en="The scroll contains the map that all the characters are competing to obtain." data-context-vn="The scroll contains the map that all the characters are competing to obtain.">scroll</span> and the <span class="vocab" id="w-jade-1" data-word-en="jade" data-word-vn="ngọc bích" data-pos="tính từ / adjective" data-def-en="A hard, typically green precious stone used in ornaments and jewelry." data-def-vn="Một loại đá quý cứng, thường có màu xanh lá, dùng để làm đồ trang trí và trang sức." data-context-en="The jade dragon is a small green stone figurine that turns out to contain a hidden microchip." data-context-vn="The jade dragon is a small green stone figurine that turns out to contain a hidden microchip.">jade</span> <span class="vocab" id="w-dragon-1" data-word-en="dragon" data-word-vn="con rồng" data-pos="danh từ / noun" data-def-en="A mythical fire-breathing creature; here, a figurine shaped like one." data-def-vn="Một sinh vật huyền thoại phun lửa; ở đây là một bức tượng nhỏ có hình dạng của nó." data-context-en="The jade dragon is a small statue that Maya carries out of the temple and later discovers hides a microchip." data-context-vn="The jade dragon is a small statue that Maya carries out of the temple and later discovers hides a microchip.">dragon</span>, but a <span class="vocab" id="w-falling-1" data-word-en="falling" data-word-vn="đang rơi" data-pos="động từ / verb (participle)" data-def-en="Moving downward under the force of gravity." data-def-vn="Di chuyển xuống dưới do lực hút của trái đất." data-context-en="A falling rock struck Maya's shoulder as the temple crumbled." data-context-vn="A falling rock struck Maya's shoulder as the temple crumbled.">falling</span> rock <span class="vocab" id="w-hit-1" data-word-en="hit" data-word-vn="đập vào / va vào" data-pos="động từ / verb" data-def-en="To strike something with force." data-def-vn="Đập vào thứ gì đó với lực mạnh." data-context-en="The rock hit Maya's shoulder, causing her to drop the scroll." data-context-vn="The rock hit Maya's shoulder, causing her to drop the scroll.">hit</span> her <span class="vocab" id="w-shoulder-1" data-word-en="shoulder" data-word-vn="vai" data-pos="danh từ / noun" data-def-en="The joint connecting the arm to the body." data-def-vn="Khớp nối cánh tay với thân người." data-context-en="Maya's shoulder was struck by the rock, causing her to lose grip of the scroll." data-context-vn="Maya's shoulder was struck by the rock, causing her to lose grip of the scroll.">shoulder</span>, making her <span class="vocab" id="w-drop-1" data-word-en="drop" data-word-vn="đánh rơi" data-pos="động từ / verb" data-def-en="To let something fall from one's hand, often unintentionally." data-def-vn="Để thứ gì đó rơi khỏi tay, thường là vô tình." data-context-en="The impact of the rock caused Maya to drop the scroll, which then rolled toward the pit." data-context-vn="The impact of the rock caused Maya to drop the scroll, which then rolled toward the pit.">drop</span> the <span class="vocab" id="w-scroll-2" data-word-en="scroll" data-word-vn="cuộn giấy / bản đồ cuộn" data-pos="danh từ / noun" data-def-en="A roll of parchment or paper, often containing writing or a map." data-def-vn="Một cuộn giấy da hoặc giấy, thường chứa chữ viết hoặc bản đồ." data-context-en="After being dropped, the scroll rolled toward the edge of the pit." data-context-vn="After being dropped, the scroll rolled toward the edge of the pit.">scroll</span>. It <span class="vocab" id="w-rolled-1" data-word-en="rolled" data-word-vn="lăn" data-pos="động từ / verb" data-def-en="Moved by turning over and over on a surface." data-def-vn="Di chuyển bằng cách lăn tròn trên một bề mặt." data-context-en="The scroll rolled toward the edge of the pit after Maya dropped it." data-context-vn="The scroll rolled toward the edge of the pit after Maya dropped it.">rolled</span> toward the <span class="vocab" id="w-edge-1" data-word-en="edge" data-word-vn="mép / rìa" data-pos="danh từ / noun" data-def-en="The outermost part or boundary of something, especially a dangerous drop." data-def-vn="Phần ngoài cùng hoặc ranh giới của thứ gì đó, đặc biệt là vực thẳm nguy hiểm." data-context-en="The scroll rolled toward the edge of the pit, threatening to fall in." data-context-vn="The scroll rolled toward the edge of the pit, threatening to fall in.">edge</span> of the <span class="vocab" id="w-pit-1" data-word-en="pit" data-word-vn="hố sâu" data-pos="danh từ / noun" data-def-en="A deep hole in the ground, often dangerous." data-def-vn="Một cái hố sâu trong lòng đất, thường nguy hiểm." data-context-en="The scroll was at risk of falling into the pit, a deep dangerous hole inside the temple." data-context-vn="The scroll was at risk of falling into the pit, a deep dangerous hole inside the temple.">pit</span>.</p>
+
+  <p>"The <span class="vocab" id="w-map-1" data-word-en="map" data-word-vn="bản đồ" data-pos="danh từ / noun" data-def-en="A diagram representing an area or route, here one that leads to something valuable." data-def-vn="Một sơ đồ biểu thị một khu vực hoặc tuyến đường, ở đây dẫn đến thứ gì đó có giá trị." data-context-en="Thorne calls the scroll 'the map,' revealing it contains directions to a valuable location." data-context-vn="Thorne calls the scroll 'the map,' revealing it contains directions to a valuable location.">map</span>!" Thorne <span class="vocab" id="w-yelled-1" data-word-en="yelled" data-word-vn="la hét" data-pos="động từ / verb" data-def-en="Shouted loudly, typically in urgency or anger." data-def-vn="Hét lớn, thường là vì khẩn cấp hoặc tức giận." data-context-en="Thorne yelled 'The map!' showing he cared more about the scroll than his own safety." data-context-vn="Thorne yelled 'The map!' showing he cared more about the scroll than his own safety.">yelled</span>, <span class="vocab" id="w-ignoring-1" data-word-en="ignoring" data-word-vn="phớt lờ" data-pos="động từ / verb" data-def-en="Deliberately paying no attention to something." data-def-vn="Cố tình không chú ý đến điều gì đó." data-context-en="Thorne ignored the falling stones around him, focused only on recovering the scroll." data-context-vn="Thorne ignored the falling stones around him, focused only on recovering the scroll.">ignoring</span> the <span class="vocab" id="w-falling-2" data-word-en="falling" data-word-vn="đang rơi" data-pos="động từ / verb (participle)" data-def-en="Moving downward under the force of gravity." data-def-vn="Di chuyển xuống dưới do lực hút của trái đất." data-context-en="Thorne ignored the falling stones, prioritizing the map over his personal safety." data-context-vn="Thorne ignored the falling stones, prioritizing the map over his personal safety.">falling</span> stones. He <span class="vocab" id="w-lunged-1" data-word-en="lunged" data-word-vn="lao người về phía trước" data-pos="động từ / verb" data-def-en="Made a sudden forward movement, typically to grab something." data-def-vn="Thực hiện một động tác lao về phía trước đột ngột, thường để chộp lấy thứ gì đó." data-context-en="Thorne lunged for the scroll, diving forward to reach it before it could fall into the pit." data-context-vn="Thorne lunged for the scroll, diving forward to reach it before it could fall into the pit.">lunged</span> for the <span class="vocab" id="w-scroll-3" data-word-en="scroll" data-word-vn="cuộn giấy / bản đồ cuộn" data-pos="danh từ / noun" data-def-en="A roll of parchment or paper, often containing writing or a map." data-def-vn="Một cuộn giấy da hoặc giấy, thường chứa chữ viết hoặc bản đồ." data-context-en="Thorne lunged for the scroll as it rolled toward the edge, desperate to recover it." data-context-vn="Thorne lunged for the scroll as it rolled toward the edge, desperate to recover it.">scroll</span>.</p>
+
+  <p>Maya and Jack <span class="vocab" id="w-ran-1" data-word-en="ran" data-word-vn="chạy" data-pos="động từ / verb" data-def-en="Moved quickly on foot; past tense of 'run'." data-def-vn="Di chuyển nhanh bằng chân; quá khứ của động từ 'run'." data-context-en="Maya and Jack ran for the exit while Thorne was preoccupied with the scroll." data-context-vn="Maya and Jack ran for the exit while Thorne was preoccupied with the scroll.">ran</span> for the <span class="vocab" id="w-exit-1" data-word-en="exit" data-word-vn="lối ra" data-pos="danh từ / noun" data-def-en="The way out of a place, especially a building." data-def-vn="Lối ra khỏi một nơi, đặc biệt là một tòa nhà." data-context-en="Maya and Jack ran for the exit to escape the collapsing temple." data-context-vn="Maya and Jack ran for the exit to escape the collapsing temple.">exit</span> as the <span class="vocab" id="w-floor-1" data-word-en="floor" data-word-vn="sàn nhà" data-pos="danh từ / noun" data-def-en="The lower surface of a room or building." data-def-vn="Bề mặt dưới của một phòng hoặc tòa nhà." data-context-en="The floor of the temple began to crack under the pressure of the collapse." data-context-vn="The floor of the temple began to crack under the pressure of the collapse.">floor</span> <span class="vocab" id="w-began-1" data-word-en="began" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Started; past tense of 'begin'." data-def-vn="Bắt đầu; quá khứ của động từ 'begin'." data-context-en="The floor began to crack just as Maya and Jack were running for the exit." data-context-vn="The floor began to crack just as Maya and Jack were running for the exit.">began</span> to <span class="vocab" id="w-crack-1" data-word-en="crack" data-word-vn="nứt ra" data-pos="động từ / verb" data-def-en="To break or split, forming lines or fractures." data-def-vn="Vỡ hoặc tách ra, tạo thành các vết nứt hoặc khe hở." data-context-en="The floor began to crack under the weight of the collapsing temple, adding danger to the escape." data-context-vn="The floor began to crack under the weight of the collapsing temple, adding danger to the escape.">crack</span>. They <span class="vocab" id="w-dived-1" data-word-en="dived" data-word-vn="lao mình / nhào về phía trước" data-pos="động từ / verb" data-def-en="Threw oneself forward or headlong, especially to escape or reach something." data-def-vn="Lao người về phía trước hoặc đầu xuống, đặc biệt để thoát khỏi hoặc với tới thứ gì đó." data-context-en="Maya and Jack dived through the stone gate just as the roof fell, narrowly escaping death." data-context-vn="Maya and Jack dived through the stone gate just as the roof fell, narrowly escaping death.">dived</span> through the <span class="vocab" id="w-stone-1" data-word-en="stone" data-word-vn="đá" data-pos="tính từ / adjective" data-def-en="Made of stone; relating to the hard natural material." data-def-vn="Làm bằng đá; liên quan đến vật liệu tự nhiên cứng." data-context-en="The stone gate was the exit of the ancient temple through which Maya and Jack escaped." data-context-vn="The stone gate was the exit of the ancient temple through which Maya and Jack escaped.">stone</span> <span class="vocab" id="w-gate-1" data-word-en="gate" data-word-vn="cổng" data-pos="danh từ / noun" data-def-en="A door or opening in a wall or structure, often used as an entrance or exit." data-def-vn="Một cánh cửa hoặc cổng trong tường hoặc công trình, thường dùng làm lối vào hoặc lối ra." data-context-en="They dived through the stone gate just as the roof of the temple collapsed behind them." data-context-vn="They dived through the stone gate just as the roof of the temple collapsed behind them.">gate</span> just as the <span class="vocab" id="w-roof-1" data-word-en="roof" data-word-vn="mái / trần" data-pos="danh từ / noun" data-def-en="The top covering of a building." data-def-vn="Phần che phủ phía trên của một tòa nhà." data-context-en="The roof of the temple fell just after Maya and Jack escaped through the gate." data-context-vn="The roof of the temple fell just after Maya and Jack escaped through the gate.">roof</span> of the <span class="vocab" id="w-temple-2" data-word-en="temple" data-word-vn="ngôi đền" data-pos="danh từ / noun" data-def-en="A building used for religious worship or as a place of historical significance." data-def-vn="Một tòa nhà dùng cho việc thờ cúng tôn giáo hoặc có ý nghĩa lịch sử." data-context-en="The roof of the temple fell with a thunderous roar during the collapse." data-context-vn="The roof of the temple fell with a thunderous roar during the collapse.">temple</span> fell with a <span class="vocab" id="w-thunderous-1" data-word-en="thunderous" data-word-vn="như sấm sét / vang như sấm" data-pos="tính từ / adjective" data-def-en="Extremely loud, like the sound of thunder." data-def-vn="Cực kỳ to, như tiếng sấm." data-context-en="The collapse of the temple roof produced a thunderous roar that shook the forest." data-context-vn="The collapse of the temple roof produced a thunderous roar that shook the forest.">thunderous</span> <span class="vocab" id="w-roar-1" data-word-en="roar" data-word-vn="tiếng gầm / tiếng ầm" data-pos="danh từ / noun" data-def-en="A loud, deep sound, like an explosion or a large animal." data-def-vn="Một âm thanh to, trầm, như tiếng nổ hoặc tiếng thú lớn." data-context-en="The temple roof fell with a thunderous roar, signaling the complete destruction of the structure." data-context-vn="The temple roof fell with a thunderous roar, signaling the complete destruction of the structure.">roar</span>. A cloud of <span class="vocab" id="w-dust-1" data-word-en="dust" data-word-vn="bụi" data-pos="danh từ / noun" data-def-en="Fine particles of dirt or debris suspended in the air." data-def-vn="Các hạt bụi bẩn hoặc mảnh vụn nhỏ lơ lửng trong không khí." data-context-en="A cloud of dust exploded into the forest after the temple collapsed." data-context-vn="A cloud of dust exploded into the forest after the temple collapsed.">dust</span> <span class="vocab" id="w-exploded-1" data-word-en="exploded" data-word-vn="bùng ra / tung ra" data-pos="động từ / verb" data-def-en="Burst outward suddenly and violently; here, a cloud of dust spreading rapidly." data-def-vn="Nổ tung hoặc bùng ra đột ngột; ở đây mô tả đám bụi lan ra nhanh chóng." data-context-en="A cloud of dust exploded into the forest when the temple collapsed, showing the force of the destruction." data-context-vn="A cloud of dust exploded into the forest when the temple collapsed, showing the force of the destruction.">exploded</span> into the <span class="vocab" id="w-forest-1" data-word-en="forest" data-word-vn="khu rừng" data-pos="danh từ / noun" data-def-en="A large area covered densely with trees and undergrowth." data-def-vn="Một khu vực rộng lớn được bao phủ dày đặc bởi cây cối và thực vật." data-context-en="The temple was surrounded by a forest, and the dust cloud expanded outward into the trees." data-context-vn="The temple was surrounded by a forest, and the dust cloud expanded outward into the trees.">forest</span>.</p>
+
+  <p>When the <span class="vocab" id="w-dust-2" data-word-en="dust" data-word-vn="bụi" data-pos="danh từ / noun" data-def-en="Fine particles of dirt or debris suspended in the air." data-def-vn="Các hạt bụi bẩn hoặc mảnh vụn nhỏ lơ lửng trong không khí." data-context-en="When the dust cleared, the characters could see the aftermath of the temple's collapse." data-context-vn="When the dust cleared, the characters could see the aftermath of the temple's collapse.">dust</span> <span class="vocab" id="w-cleared-1" data-word-en="cleared" data-word-vn="tan đi / lắng xuống" data-pos="động từ / verb" data-def-en="Dissipated or settled, becoming less dense so visibility improved." data-def-vn="Tan đi hoặc lắng xuống, trở nên ít dày đặc hơn để tầm nhìn tốt hơn." data-context-en="When the dust cleared, the characters saw that the entrance was blocked and Thorne was gone." data-context-vn="When the dust cleared, the characters saw that the entrance was blocked and Thorne was gone.">cleared</span>, the <span class="vocab" id="w-temple-3" data-word-en="temple" data-word-vn="ngôi đền" data-pos="danh từ / noun" data-def-en="A building used for religious worship or as a place of historical significance." data-def-vn="Một tòa nhà dùng cho việc thờ cúng tôn giáo hoặc có ý nghĩa lịch sử." data-context-en="The temple entrance was completely blocked by tons of rock after the collapse." data-context-vn="The temple entrance was completely blocked by tons of rock after the collapse.">temple</span> <span class="vocab" id="w-entrance-1" data-word-en="entrance" data-word-vn="lối vào" data-pos="danh từ / noun" data-def-en="The opening or doorway through which you enter a place." data-def-vn="Lối mở hoặc cửa mà bạn đi vào một nơi." data-context-en="The temple entrance was sealed by tons of fallen rock, trapping Thorne inside." data-context-vn="The temple entrance was sealed by tons of fallen rock, trapping Thorne inside.">entrance</span> was <span class="vocab" id="w-completely-1" data-word-en="completely" data-word-vn="hoàn toàn" data-pos="trạng từ / adverb" data-def-en="Totally; with nothing left out; to the fullest extent." data-def-vn="Hoàn toàn; không bỏ sót gì; đến mức tối đa." data-context-en="The entrance was completely blocked, meaning there was no way in or out." data-context-vn="The entrance was completely blocked, meaning there was no way in or out.">completely</span> <span class="vocab" id="w-blocked-1" data-word-en="blocked" data-word-vn="bị chặn lại" data-pos="động từ / verb (past participle)" data-def-en="Obstructed so that nothing can pass through." data-def-vn="Bị cản lại để không có gì có thể đi qua." data-context-en="The entrance was completely blocked by tons of fallen rock, trapping anyone inside." data-context-vn="The entrance was completely blocked by tons of fallen rock, trapping anyone inside.">blocked</span> by <span class="vocab" id="w-tons-1" data-word-en="tons" data-word-vn="hàng tấn" data-pos="danh từ / noun (plural)" data-def-en="A very large and heavy amount; used here to emphasize an enormous weight of rock." data-def-vn="Một lượng rất lớn và nặng; dùng ở đây để nhấn mạnh khối lượng đá khổng lồ." data-context-en="Tons of rock had fallen and blocked the entrance, making rescue impossible." data-context-vn="Tons of rock had fallen and blocked the entrance, making rescue impossible.">tons</span> of rock. Thorne was <span class="vocab" id="w-gone-1" data-word-en="gone" data-word-vn="biến mất / mất tích" data-pos="tính từ / adjective" data-def-en="No longer present; disappeared or lost." data-def-vn="Không còn ở đây nữa; đã biến mất hoặc mất tích." data-context-en="After the collapse, Thorne was gone — presumed dead or trapped inside." data-context-vn="After the collapse, Thorne was gone — presumed dead or trapped inside.">gone</span>. The <span class="vocab" id="w-map-2" data-word-en="map" data-word-vn="bản đồ" data-pos="danh từ / noun" data-def-en="A diagram representing an area or route, here one leading to something valuable." data-def-vn="Một sơ đồ biểu thị một khu vực hoặc tuyến đường, ở đây dẫn đến thứ gì đó có giá trị." data-context-en="The map (scroll) was gone along with Thorne, seemingly lost in the collapse." data-context-vn="The map (scroll) was gone along with Thorne, seemingly lost in the collapse.">map</span> was <span class="vocab" id="w-gone-2" data-word-en="gone" data-word-vn="biến mất / mất tích" data-pos="tính từ / adjective" data-def-en="No longer present; disappeared or lost." data-def-vn="Không còn ở đây nữa; đã biến mất hoặc mất tích." data-context-en="The map was gone along with Thorne, buried under the rubble of the temple." data-context-vn="The map was gone along with Thorne, buried under the rubble of the temple.">gone</span>.</p>
+
+  <p>Maya <span class="vocab" id="w-sat-1" data-word-en="sat" data-word-vn="ngồi xuống" data-pos="động từ / verb" data-def-en="Rested in a seated position; past tense of 'sit'." data-def-vn="Ở tư thế ngồi; quá khứ của động từ 'sit'." data-context-en="Exhausted after the escape, Maya sat on the grass to rest and process what had happened." data-context-vn="Exhausted after the escape, Maya sat on the grass to rest and process what had happened.">sat</span> on the <span class="vocab" id="w-grass-1" data-word-en="grass" data-word-vn="cỏ" data-pos="danh từ / noun" data-def-en="The short green plants that cover the ground in many natural areas." data-def-vn="Những cây thấp màu xanh phủ mặt đất ở nhiều khu vực tự nhiên." data-context-en="Maya sat on the grass outside the collapsed temple, feeling defeated." data-context-vn="Maya sat on the grass outside the collapsed temple, feeling defeated.">grass</span>, <span class="vocab" id="w-clutching-1" data-word-en="clutching" data-word-vn="ôm chặt / nắm chặt" data-pos="động từ / verb" data-def-en="Holding tightly, often with anxiety or care." data-def-vn="Nắm chặt, thường là do lo lắng hoặc cẩn thận." data-context-en="Maya was clutching the jade dragon tightly, the only thing she managed to save from the temple." data-context-vn="Maya was clutching the jade dragon tightly, the only thing she managed to save from the temple.">clutching</span> the <span class="vocab" id="w-small-1" data-word-en="small" data-word-vn="nhỏ" data-pos="tính từ / adjective" data-def-en="Little in size; not large." data-def-vn="Nhỏ về kích thước; không lớn." data-context-en="Maya clutched the small jade dragon — a tiny figurine that turns out to be the key to everything." data-context-vn="Maya clutched the small jade dragon — a tiny figurine that turns out to be the key to everything.">small</span> <span class="vocab" id="w-jade-2" data-word-en="jade" data-word-vn="ngọc bích" data-pos="tính từ / adjective" data-def-en="A hard, typically green precious stone used in ornaments and jewelry." data-def-vn="Một loại đá quý cứng, thường có màu xanh lá, dùng để làm đồ trang trí và trang sức." data-context-en="Maya clutched the small jade dragon, not yet knowing it held a hidden microchip." data-context-vn="Maya clutched the small jade dragon, not yet knowing it held a hidden microchip.">jade</span> <span class="vocab" id="w-dragon-2" data-word-en="dragon" data-word-vn="con rồng" data-pos="danh từ / noun" data-def-en="A mythical fire-breathing creature; here, a figurine shaped like one." data-def-vn="Một sinh vật huyền thoại phun lửa; ở đây là một bức tượng nhỏ có hình dạng của nó." data-context-en="Maya clutched the jade dragon statue, unaware it secretly contained a digital legacy." data-context-vn="Maya clutched the jade dragon statue, unaware it secretly contained a digital legacy.">dragon</span>. "We <span class="vocab" id="w-lost-1" data-word-en="lost" data-word-vn="đã mất" data-pos="động từ / verb" data-def-en="Failed to keep or maintain something; no longer have it." data-def-vn="Không giữ được hoặc không duy trì được thứ gì đó; không còn có nó nữa." data-context-en="Maya said 'We lost the map,' meaning they had failed to recover it from the collapsing temple." data-context-vn="Maya said 'We lost the map,' meaning they had failed to recover it from the collapsing temple.">lost</span> the <span class="vocab" id="w-map-3" data-word-en="map" data-word-vn="bản đồ" data-pos="danh từ / noun" data-def-en="A diagram representing an area or route, here one leading to something valuable." data-def-vn="Một sơ đồ biểu thị một khu vực hoặc tuyến đường, ở đây dẫn đến thứ gì đó có giá trị." data-context-en="Maya lamented that they had lost the map, their primary objective throughout the season." data-context-vn="Maya lamented that they had lost the map, their primary objective throughout the season.">map</span>, Jack. Thorne <span class="vocab" id="w-won-1" data-word-en="won" data-word-vn="đã thắng" data-pos="động từ / verb" data-def-en="Achieved victory or came out ahead in a competition or conflict." data-def-vn="Đạt được chiến thắng hoặc vượt trội trong một cuộc cạnh tranh hoặc xung đột." data-context-en="Maya believed Thorne had won because he ended up with the map scroll." data-context-vn="Maya believed Thorne had won because he ended up with the map scroll.">won</span>".</p>
+
+  <p>Jack <span class="vocab" id="w-sat-2" data-word-en="sat" data-word-vn="ngồi xuống" data-pos="động từ / verb" data-def-en="Rested in a seated position; past tense of 'sit'." data-def-vn="Ở tư thế ngồi; quá khứ của động từ 'sit'." data-context-en="Jack sat down next to Maya to comfort her after their narrow escape." data-context-vn="Jack sat down next to Maya to comfort her after their narrow escape.">sat</span> down next to her, <span class="vocab" id="w-bleeding-1" data-word-en="bleeding" data-word-vn="đang chảy máu" data-pos="động từ / verb" data-def-en="Losing blood from a wound." data-def-vn="Mất máu từ một vết thương." data-context-en="Jack was bleeding from a cut on his forehead, showing he had been injured during the escape." data-context-vn="Jack was bleeding from a cut on his forehead, showing he had been injured during the escape.">bleeding</span> from a <span class="vocab" id="w-small-2" data-word-en="small" data-word-vn="nhỏ" data-pos="tính từ / adjective" data-def-en="Little in size; not large." data-def-vn="Nhỏ về kích thước; không lớn." data-context-en="Jack had a small cut on his forehead — minor, but a sign of the danger they had survived." data-context-vn="Jack had a small cut on his forehead — minor, but a sign of the danger they had survived.">small</span> <span class="vocab" id="w-cut-1" data-word-en="cut" data-word-vn="vết cắt / vết thương" data-pos="danh từ / noun" data-def-en="A wound made by a sharp object breaking the skin." data-def-vn="Một vết thương do vật sắc làm rách da." data-context-en="Jack had a small cut on his forehead from debris during the temple collapse." data-context-vn="Jack had a small cut on his forehead from debris during the temple collapse.">cut</span> on his <span class="vocab" id="w-forehead-1" data-word-en="forehead" data-word-vn="trán" data-pos="danh từ / noun" data-def-en="The part of the face above the eyebrows and below the hairline." data-def-vn="Phần mặt phía trên lông mày và phía dưới đường chân tóc." data-context-en="Jack had a cut on his forehead, a minor injury from the falling debris inside the temple." data-context-vn="Jack had a cut on his forehead, a minor injury from the falling debris inside the temple.">forehead</span>. He <span class="vocab" id="w-smiled-1" data-word-en="smiled" data-word-vn="mỉm cười" data-pos="động từ / verb" data-def-en="Made a facial expression of happiness or reassurance by turning up the corners of the mouth." data-def-vn="Biểu lộ nét mặt vui vẻ hoặc trấn an bằng cách nhếch khóe miệng lên." data-context-en="Despite the defeat, Jack smiled weakly at Maya, hinting that he knew something she didn't." data-context-vn="Despite the defeat, Jack smiled weakly at Maya, hinting that he knew something she didn't.">smiled</span> <span class="vocab" id="w-weakly-1" data-word-en="weakly" data-word-vn="yếu ớt" data-pos="trạng từ / adverb" data-def-en="Without strength or energy; in a faint or feeble manner." data-def-vn="Không có sức mạnh hoặc năng lượng; một cách yếu ớt hoặc mờ nhạt." data-context-en="Jack smiled weakly, suggesting he was physically exhausted but still had a reason for hope." data-context-vn="Jack smiled weakly, suggesting he was physically exhausted but still had a reason for hope.">weakly</span> and <span class="vocab" id="w-pointed-1" data-word-en="pointed" data-word-vn="chỉ vào / trỏ vào" data-pos="động từ / verb" data-def-en="Directed attention to something by extending a finger toward it." data-def-vn="Hướng sự chú ý vào thứ gì đó bằng cách chỉ ngón tay về phía nó." data-context-en="Jack pointed to the jade dragon, drawing Maya's attention to something significant about it." data-context-vn="Jack pointed to the jade dragon, drawing Maya's attention to something significant about it.">pointed</span> to the <span class="vocab" id="w-jade-3" data-word-en="jade" data-word-vn="ngọc bích" data-pos="tính từ / adjective" data-def-en="Made of jade; the green precious stone." data-def-vn="Làm bằng ngọc bích; đá quý màu xanh." data-context-en="Jack pointed to the jade dragon, signaling to Maya to look at the bottom of it." data-context-vn="Jack pointed to the jade dragon, signaling to Maya to look at the bottom of it.">jade</span> <span class="vocab" id="w-dragon-3" data-word-en="dragon" data-word-vn="con rồng" data-pos="danh từ / noun" data-def-en="A mythical fire-breathing creature; here, a figurine shaped like one." data-def-vn="Một sinh vật huyền thoại phun lửa; ở đây là một bức tượng nhỏ có hình dạng của nó." data-context-en="Jack pointed to the jade dragon to get Maya to examine its base." data-context-vn="Jack pointed to the jade dragon to get Maya to examine its base.">dragon</span>. "Look at the <span class="vocab" id="w-bottom-1" data-word-en="bottom" data-word-vn="đáy / mặt dưới" data-pos="danh từ / noun" data-def-en="The lowest part of something; the underside." data-def-vn="Phần thấp nhất của thứ gì đó; mặt dưới." data-context-en="Jack told Maya to look at the bottom of the jade dragon, where a secret was hidden." data-context-vn="Jack told Maya to look at the bottom of the jade dragon, where a secret was hidden.">bottom</span>, Maya".</p>
+
+  <p>Maya <span class="vocab" id="w-turned-1" data-word-en="turned" data-word-vn="lật / xoay" data-pos="động từ / verb" data-def-en="Rotated or flipped an object to see a different side." data-def-vn="Xoay hoặc lật một vật để xem mặt khác." data-context-en="Maya turned the statue over to look at its base, discovering the hidden microchip." data-context-vn="Maya turned the statue over to look at its base, discovering the hidden microchip.">turned</span> the <span class="vocab" id="w-statue-1" data-word-en="statue" data-word-vn="bức tượng" data-pos="danh từ / noun" data-def-en="A carved or sculpted figure, often of a person or creature." data-def-vn="Một hình được khắc hoặc đúc, thường là người hoặc sinh vật." data-context-en="Maya turned the jade dragon statue over and discovered something carved into its base." data-context-vn="Maya turned the jade dragon statue over and discovered something carved into its base.">statue</span> over. <span class="vocab" id="w-carved-1" data-word-en="Carved" data-word-vn="được khắc" data-pos="động từ / verb (past participle)" data-def-en="Cut or shaped into a surface by a sharp tool." data-def-vn="Được cắt hoặc tạo hình vào bề mặt bằng dụng cụ sắc bén." data-context-en="Something had been carved into the base of the jade dragon, revealing its hidden purpose." data-context-vn="Something had been carved into the base of the jade dragon, revealing its hidden purpose.">Carved</span> into the <span class="vocab" id="w-base-1" data-word-en="base" data-word-vn="đế / đáy" data-pos="danh từ / noun" data-def-en="The bottom part of an object on which it stands or rests." data-def-vn="Phần đáy của vật thể mà nó đứng hoặc dựa vào." data-context-en="The microchip was hidden in the base of the jade dragon statue, beneath a layer of wax." data-context-vn="The microchip was hidden in the base of the jade dragon statue, beneath a layer of wax.">base</span> was a <span class="vocab" id="w-tiny-1" data-word-en="tiny" data-word-vn="rất nhỏ / cực nhỏ" data-pos="tính từ / adjective" data-def-en="Extremely small." data-def-vn="Cực kỳ nhỏ." data-context-en="A tiny microchip was hidden in the base of the jade dragon — too small to notice at a glance." data-context-vn="A tiny microchip was hidden in the base of the jade dragon — too small to notice at a glance.">tiny</span>, <span class="vocab" id="w-modern-1" data-word-en="modern" data-word-vn="hiện đại" data-pos="tính từ / adjective" data-def-en="Relating to the present time; not ancient or historical." data-def-vn="Liên quan đến thời hiện tại; không cổ xưa hoặc lịch sử." data-context-en="The modern microchip was unexpected inside an ancient artifact, creating a shocking contrast." data-context-vn="The modern microchip was unexpected inside an ancient artifact, creating a shocking contrast.">modern</span> <span class="vocab" id="w-microchip-1" data-word-en="microchip" data-word-vn="vi mạch / chip" data-pos="danh từ / noun" data-def-en="A tiny electronic circuit on a semiconductor, used to store or process data." data-def-vn="Một mạch điện tử nhỏ trên chất bán dẫn, dùng để lưu trữ hoặc xử lý dữ liệu." data-context-en="A modern microchip was hidden inside the jade dragon, containing digital information from Maya's grandfather." data-context-vn="A modern microchip was hidden inside the jade dragon, containing digital information from Maya's grandfather.">microchip</span> <span class="vocab" id="w-hidden-1" data-word-en="hidden" data-word-vn="được giấu / ẩn" data-pos="tính từ / adjective" data-def-en="Concealed from view; kept secret." data-def-vn="Được che giấu khỏi tầm nhìn; được giữ bí mật." data-context-en="The microchip was hidden under a layer of wax on the base of the dragon statue." data-context-vn="The microchip was hidden under a layer of wax on the base of the dragon statue.">hidden</span> under a <span class="vocab" id="w-layer-1" data-word-en="layer" data-word-vn="lớp" data-pos="danh từ / noun" data-def-en="A single thickness of a material covering a surface." data-def-vn="Một lớp đơn của vật liệu phủ lên bề mặt." data-context-en="The microchip was concealed under a layer of wax, making it invisible to a casual observer." data-context-vn="The microchip was concealed under a layer of wax, making it invisible to a casual observer.">layer</span> of <span class="vocab" id="w-wax-1" data-word-en="wax" data-word-vn="sáp" data-pos="danh từ / noun" data-def-en="A soft, moldable substance used here to conceal the microchip." data-def-vn="Một chất mềm, có thể nặn được, dùng ở đây để che giấu con chip." data-context-en="A layer of wax covered the microchip, hiding it from anyone who might inspect the dragon." data-context-vn="A layer of wax covered the microchip, hiding it from anyone who might inspect the dragon.">wax</span>. Her <span class="vocab" id="w-grandfather-1" data-word-en="grandfather" data-word-vn="ông nội / ông ngoại" data-pos="danh từ / noun" data-def-en="The father of one's parent." data-def-vn="Cha của cha hoặc mẹ của một người." data-context-en="Maya's grandfather had hidden the microchip in the jade dragon, leaving her a secret digital legacy." data-context-vn="Maya's grandfather had hidden the microchip in the jade dragon, leaving her a secret digital legacy.">grandfather</span> hadn't just left a <span class="vocab" id="w-map-4" data-word-en="map" data-word-vn="bản đồ" data-pos="danh từ / noun" data-def-en="A diagram representing an area or route, here one leading to something valuable." data-def-vn="Một sơ đồ biểu thị một khu vực hoặc tuyến đường, ở đây dẫn đến thứ gì đó có giá trị." data-context-en="Maya realized her grandfather's plan went beyond just leaving a map — there was digital information too." data-context-vn="Maya realized her grandfather's plan went beyond just leaving a map — there was digital information too.">map</span>; he had left a <span class="vocab" id="w-digital-1" data-word-en="digital" data-word-vn="kỹ thuật số" data-pos="tính từ / adjective" data-def-en="Relating to electronic technology that stores and processes data as numbers." data-def-vn="Liên quan đến công nghệ điện tử lưu trữ và xử lý dữ liệu dưới dạng số." data-context-en="The grandfather left a digital legacy on the microchip, a modern form of storing information." data-context-vn="The grandfather left a digital legacy on the microchip, a modern form of storing information.">digital</span> <span class="vocab" id="w-legacy-1" data-word-en="legacy" data-word-vn="di sản" data-pos="danh từ / noun" data-def-en="Something handed down from a predecessor, often of lasting significance." data-def-vn="Thứ được truyền lại từ người đi trước, thường có ý nghĩa lâu dài." data-context-en="The grandfather's digital legacy on the microchip becomes the new focus of the adventure in season two." data-context-vn="The grandfather's digital legacy on the microchip becomes the new focus of the adventure in season two.">legacy</span>.</p>
+
+  <p>"This is just the <span class="vocab" id="w-beginning-1" data-word-en="beginning" data-word-vn="khởi đầu / bắt đầu" data-pos="danh từ / noun" data-def-en="The start or first part of something." data-def-vn="Sự bắt đầu hoặc phần đầu tiên của thứ gì đó." data-context-en="Jack whispered 'This is just the beginning,' signaling the adventure would continue into season two." data-context-vn="Jack whispered 'This is just the beginning,' signaling the adventure would continue into season two.">beginning</span>," Jack <span class="vocab" id="w-whispered-1" data-word-en="whispered" data-word-vn="thì thầm" data-pos="động từ / verb" data-def-en="Spoke very softly, often so as not to be overheard." data-def-vn="Nói rất khẽ, thường là để không bị nghe thấy." data-context-en="Jack whispered his words, conveying a quiet but intense sense of anticipation." data-context-vn="Jack whispered his words, conveying a quiet but intense sense of anticipation.">whispered</span>.</p>
+
+  <p><span class="vocab" id="w-suddenly-1" data-word-en="Suddenly" data-word-vn="Đột nhiên" data-pos="trạng từ / adverb" data-def-en="Quickly and unexpectedly, without warning." data-def-vn="Nhanh chóng và bất ngờ, không có cảnh báo." data-context-en="Suddenly the sound of a helicopter filled the air, creating a dramatic new threat." data-context-vn="Suddenly the sound of a helicopter filled the air, creating a dramatic new threat.">Suddenly</span>, the <span class="vocab" id="w-sound-1" data-word-en="sound" data-word-vn="âm thanh / tiếng động" data-pos="danh từ / noun" data-def-en="Vibrations that travel through air and are heard by the ear." data-def-vn="Các rung động truyền qua không khí và được tai nghe thấy." data-context-en="The sound of a helicopter suddenly broke the silence, warning of a new danger." data-context-vn="The sound of a helicopter suddenly broke the silence, warning of a new danger.">sound</span> of a <span class="vocab" id="w-helicopter-1" data-word-en="helicopter" data-word-vn="máy bay trực thăng" data-pos="danh từ / noun" data-def-en="An aircraft that lifts and moves using rotating blades on top." data-def-vn="Một loại máy bay nâng lên và di chuyển bằng cánh quạt quay ở trên đỉnh." data-context-en="A helicopter arrived carrying Thorne's armed men, revealing he had survived and was planning his next move." data-context-vn="A helicopter arrived carrying Thorne's armed men, revealing he had survived and was planning his next move.">helicopter</span> <span class="vocab" id="w-filled-1" data-word-en="filled" data-word-vn="lấp đầy / vang đầy" data-pos="động từ / verb" data-def-en="Occupied or spread throughout a space completely." data-def-vn="Chiếm đầy hoặc lan ra khắp một không gian hoàn toàn." data-context-en="The sound of the helicopter filled the air, overwhelming the quiet forest setting." data-context-vn="The sound of the helicopter filled the air, overwhelming the quiet forest setting.">filled</span> the air. A <span class="vocab" id="w-black-1" data-word-en="black" data-word-vn="đen" data-pos="tính từ / adjective" data-def-en="The darkest color; having no light. Here used to describe the threatening helicopter." data-def-vn="Màu tối nhất; không có ánh sáng. Dùng ở đây để mô tả chiếc trực thăng đe dọa." data-context-en="The black chopper was Thorne's vehicle, its color signaling danger and menace." data-context-vn="The black chopper was Thorne's vehicle, its color signaling danger and menace.">black</span> <span class="vocab" id="w-chopper-1" data-word-en="chopper" data-word-vn="trực thăng" data-pos="danh từ / noun" data-def-en="Informal term for a helicopter." data-def-vn="Từ thông thường chỉ máy bay trực thăng." data-context-en="A black chopper rose from behind the trees, revealing that Thorne had escaped the temple." data-context-vn="A black chopper rose from behind the trees, revealing that Thorne had escaped the temple.">chopper</span> <span class="vocab" id="w-rose-1" data-word-en="rose" data-word-vn="bay lên / trỗi dậy" data-pos="động từ / verb" data-def-en="Moved upward; past tense of 'rise'." data-def-vn="Di chuyển lên trên; quá khứ của động từ 'rise'." data-context-en="The chopper rose from behind the trees, appearing suddenly to threaten Maya and Jack." data-context-vn="The chopper rose from behind the trees, appearing suddenly to threaten Maya and Jack.">rose</span> from <span class="vocab" id="w-behind-1" data-word-en="behind" data-word-vn="phía sau" data-pos="giới từ / preposition" data-def-en="At or to the back of something; concealed on the other side." data-def-vn="Ở phía sau của thứ gì đó; ẩn ở mặt kia." data-context-en="The chopper rose from behind the trees, meaning it had been waiting out of sight." data-context-vn="The chopper rose from behind the trees, meaning it had been waiting out of sight.">behind</span> the <span class="vocab" id="w-trees-1" data-word-en="trees" data-word-vn="những cái cây" data-pos="danh từ / noun (plural)" data-def-en="Large plants with trunks and branches, forming the forest." data-def-vn="Những cây lớn có thân và cành, tạo thành khu rừng." data-context-en="The helicopter had been hiding behind the trees, concealing Thorne's escape plan." data-context-vn="The helicopter had been hiding behind the trees, concealing Thorne's escape plan.">trees</span>, with a <span class="vocab" id="w-large-1" data-word-en="large" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Of great size; bigger than average." data-def-vn="Có kích thước lớn; to hơn mức trung bình." data-context-en="A large 'T' was painted on the side of the chopper, identifying it as Thorne's." data-context-vn="A large 'T' was painted on the side of the chopper, identifying it as Thorne's.">large</span> "T" <span class="vocab" id="w-painted-1" data-word-en="painted" data-word-vn="được sơn / được vẽ" data-pos="động từ / verb (past participle)" data-def-en="Marked or decorated with paint." data-def-vn="Được đánh dấu hoặc trang trí bằng sơn." data-context-en="The 'T' painted on the side of the helicopter marked it as belonging to Thorne." data-context-vn="The 'T' painted on the side of the helicopter marked it as belonging to Thorne.">painted</span> on the side. Thorne had <span class="vocab" id="w-survived-1" data-word-en="survived" data-word-vn="đã sống sót" data-pos="động từ / verb" data-def-en="Continued to live despite a dangerous or life-threatening event." data-def-vn="Tiếp tục sống mặc dù trải qua sự kiện nguy hiểm hoặc đe dọa tính mạng." data-context-en="Thorne had survived the temple collapse, revealing he was not trapped but had escaped another way." data-context-vn="Thorne had survived the temple collapse, revealing he was not trapped but had escaped another way.">survived</span>, and he <span class="vocab" id="w-wasnt-1" data-word-en="wasn't alone" data-word-vn="không phải một mình" data-pos="cụm tính từ / adjective phrase" data-def-en="Had others with him; was accompanied by other people." data-def-vn="Có người khác cùng với anh ta; được đi kèm bởi người khác." data-context-en="Thorne wasn't alone — he had a dozen armed men with him, escalating the threat." data-context-vn="Thorne wasn't alone — he had a dozen armed men with him, escalating the threat.">wasn't alone</span>. A <span class="vocab" id="w-dozen-1" data-word-en="dozen" data-word-vn="một tá / mười hai" data-pos="danh từ / noun" data-def-en="A group of twelve; often used loosely to mean 'many'." data-def-vn="Một nhóm mười hai người hoặc thứ gì đó; thường dùng để chỉ 'nhiều'." data-context-en="A dozen armed men descended from the helicopter, vastly outnumbering Maya and Jack." data-context-vn="A dozen armed men descended from the helicopter, vastly outnumbering Maya and Jack.">dozen</span> <span class="vocab" id="w-armed-1" data-word-en="armed" data-word-vn="được vũ trang" data-pos="tính từ / adjective" data-def-en="Carrying weapons; equipped for combat." data-def-vn="Mang vũ khí; được trang bị để chiến đấu." data-context-en="A dozen armed men began to descend from the helicopter, posing a serious threat." data-context-vn="A dozen armed men began to descend from the helicopter, posing a serious threat.">armed</span> men <span class="vocab" id="w-began-2" data-word-en="began" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Started; past tense of 'begin'." data-def-vn="Bắt đầu; quá khứ của động từ 'begin'." data-context-en="The armed men began to descend on ropes from the helicopter, initiating the confrontation." data-context-vn="The armed men began to descend on ropes from the helicopter, initiating the confrontation.">began</span> to <span class="vocab" id="w-descend-1" data-word-en="descend" data-word-vn="hạ xuống / xuống dưới" data-pos="động từ / verb" data-def-en="To move downward from a higher position." data-def-vn="Di chuyển xuống từ vị trí cao hơn." data-context-en="The armed men began to descend on ropes from the helicopter, surrounding Maya and Jack." data-context-vn="The armed men began to descend on ropes from the helicopter, surrounding Maya and Jack.">descend</span> on <span class="vocab" id="w-ropes-1" data-word-en="ropes" data-word-vn="dây thừng" data-pos="danh từ / noun (plural)" data-def-en="Thick cords used for climbing, pulling, or lowering people." data-def-vn="Những sợi dây dày dùng để leo, kéo, hoặc thả người xuống." data-context-en="The men descended on ropes from the helicopter, a tactical military-style approach." data-context-vn="The men descended on ropes from the helicopter, a tactical military-style approach.">ropes</span>.</p>
+
+  <p>Maya <span class="vocab" id="w-looked-1" data-word-en="looked" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="Directed one's gaze toward something." data-def-vn="Hướng ánh mắt về phía thứ gì đó." data-context-en="Maya looked at Jack and then at the forest, processing the danger they now faced." data-context-vn="Maya looked at Jack and then at the forest, processing the danger they now faced.">looked</span> at Jack, then at the <span class="vocab" id="w-forest-2" data-word-en="forest" data-word-vn="khu rừng" data-pos="danh từ / noun" data-def-en="A large area covered densely with trees and undergrowth." data-def-vn="Một khu vực rộng lớn được bao phủ dày đặc bởi cây cối và thực vật." data-context-en="Maya looked at the forest as a possible escape route from the descending armed men." data-context-vn="Maya looked at the forest as a possible escape route from the descending armed men.">forest</span>….<br>[ to be continued in season 2! ]</p>
+
+  <!-- Test Your Memory -->
+  <h2>Test Your Memory</h2>
+  <p style="font-size:0.95rem; color:#5a3a10; margin-bottom:10px;">After each pass through the content, try to remember the meaning and where in the story each word appeared.</p>
+  <div id="memory-grid"></div>
+
+  <!-- Back button -->
+  <div style="margin-top:24px;">
+    <a class="back-btn" href="../" onclick="history.back(); return false;">← Back</a>
+  </div>
+
+  <!-- Transcription Notes -->
+  
+
+  
+
+</div><!-- end .page -->
+
+<!-- Popup overlay and card -->
+<div id="popup-overlay"></div>
+<div id="popup-card">
+  <div class="popup-word-en" id="pc-word-en"></div>
+  <div class="popup-word-vn" id="pc-word-vn"></div>
+  <div class="popup-pos" id="pc-pos"></div>
+  <div class="popup-def" id="pc-def-en"></div>
+  <div class="popup-def-vn" id="pc-def-vn"></div>
+  <div class="popup-context-label">In context:</div>
+  <div class="popup-context" id="pc-context"></div>
+</div>
+
+<script>
+// ── Popup logic ──
+let activeWord = null;
+const card = document.getElementById('popup-card');
+const overlay = document.getElementById('popup-overlay');
+
+function showPopup(el) {
+  document.getElementById('pc-word-en').textContent = el.dataset.wordEn || '';
+  document.getElementById('pc-word-vn').textContent = el.dataset.wordVn || '';
+  document.getElementById('pc-pos').textContent = el.dataset.pos || '';
+  document.getElementById('pc-def-en').textContent = el.dataset.defEn || '';
+  document.getElementById('pc-def-vn').textContent = el.dataset.defVn || '';
+  document.getElementById('pc-context').textContent = el.dataset.contextEn || '';
+  card.classList.add('active');
+  overlay.classList.add('active');
+  activeWord = el;
+}
+
+function hidePopup() {
+  card.classList.remove('active');
+  overlay.classList.remove('active');
+  activeWord = null;
+}
+
+document.querySelectorAll('.vocab').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (activeWord === el) {
+      hidePopup();
+    } else {
+      showPopup(el);
+    }
+  });
+});
+
+card.addEventListener('click', hidePopup);
+overlay.addEventListener('click', hidePopup);
+
+// ── Memory Grid ──
+const vocabWords = [];
+const seen = new Set();
+document.querySelectorAll('.vocab').forEach(function(el) {
+  const word = el.dataset.wordEn;
+  const id = el.id;
+  if (word && !seen.has(word)) {
+    seen.add(word);
+    vocabWords.push({ word: word, id: id });
+  }
+});
+
+const grid = document.getElementById('memory-grid');
+vocabWords.forEach(function(item) {
+  const span = document.createElement('span');
+  span.className = 'memory-word';
+  span.textContent = item.word;
+  span.addEventListener('click', function() {
+    const target = document.getElementById(item.id);
+    if (!target) return;
+    target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    target.classList.add('highlight-scroll');
+    setTimeout(function() {
+      target.classList.remove('highlight-scroll');
+    }, 1500);
+  });
+  grid.appendChild(span);
+});
+
+// ── Download content only version ──
+function downloadContentOnly() {
+  const clone = document.documentElement.cloneNode(true);
+
+  // Remove skip-notes and transcription-notes sections
+  clone.querySelectorAll('.skip-notes, .transcription-notes').forEach(function(el) {
+    el.parentNode.removeChild(el);
+  });
+
+  // Remove download button
+  const dlBtn = clone.querySelector('#download-btn');
+  if (dlBtn) dlBtn.parentNode.removeChild(dlBtn);
+
+  // Clear memory grid so it rebuilds via JS
+  const mg = clone.querySelector('#memory-grid');
+  if (mg) mg.innerHTML = '';
+
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'ep10_cliffhanger_content.html';
+  a.click();
+}
+</script>
+
+
+</body></html>
