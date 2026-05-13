@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biết Nhường Nhịn Em Nhỏ</title>
+<style>
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    margin: 0;
+    padding: 30px 15px;
+    user-select: none;
+  }
+  .page {
+    background: #f0e6c8;
+    max-width: 820px;
+    margin: 0 auto;
+    padding: 36px 44px 44px 44px;
+    border: 2px solid #a0845a;
+    border-radius: 4px;
+    position: relative;
+  }
+  h1 {
+    color: #3a1f00;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    margin-bottom: 6px;
+    font-size: 1.5rem;
+  }
+  h2 {
+    color: #3a1f00;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 6px;
+    margin-top: 36px;
+    font-size: 1.15rem;
+  }
+  p {
+    line-height: 1.8;
+    margin: 8px 0;
+  }
+  .speaker {
+    font-weight: bold;
+    color: #5a2d00;
+  }
+  /* Clickable vocab words */
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+  }
+  .vocab:hover {
+    background: rgba(26,92,32,0.08);
+  }
+  /* Popup card */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0e6c8;
+    border: 2px solid #a0845a;
+    border-radius: 6px;
+    padding: 22px 26px;
+    max-width: 360px;
+    width: 90%;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+    z-index: 1000;
+    cursor: pointer;
+  }
+  #popup-card .pw-en {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #2a1500;
+    margin-bottom: 2px;
+  }
+  #popup-card .pw-vn {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #7a4e1a;
+    margin-bottom: 6px;
+  }
+  #popup-card .pw-pos {
+    font-size: 0.95rem;
+    color: #5a3a10;
+    margin-bottom: 8px;
+  }
+  #popup-card .pw-def {
+    font-size: 1rem;
+    color: #2a1500;
+    margin-bottom: 8px;
+  }
+  #popup-card .pw-context-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #5a2d00;
+    margin-bottom: 2px;
+  }
+  #popup-card .pw-context {
+    font-size: 0.95rem;
+    color: #3a1f00;
+    font-style: italic;
+  }
+  /* Overlay */
+  #overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    z-index: 999;
+  }
+  /* Download button */
+  #download-btn {
+    position: absolute;
+    top: 14px;
+    right: 16px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 6px 12px;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  #download-btn:hover { background: #3d2b10; }
+  /* Audio section */
+  .audio-section {
+    margin-bottom: 28px;
+  }
+  .audio-label {
+    font-size: 0.95rem;
+    color: #7a4e1a;
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+  audio#audio-player {
+    width: 100%;
+    accent-color: #c8a060;
+    margin-bottom: 8px;
+    display: block;
+  }
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 4px;
+  }
+  .rewind-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 5px 11px;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .rewind-btn:hover { background: #3d2b10; }
+  /* Back button */
+  .back-btn {
+    display: inline-block;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    margin: 24px 0 8px 0;
+    text-decoration: none;
+  }
+  .back-btn:hover { background: #3d2b10; }
+  /* Memory grid */
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 14px;
+    margin-top: 14px;
+  }
+  #memory-grid span {
+    border-bottom: 1.5px dotted #7a4e1a;
+    cursor: pointer;
+    padding: 2px 0;
+    font-size: 0.97rem;
+    color: #2a1500;
+  }
+  #memory-grid span:hover { background: rgba(122,78,26,0.1); }
+  /* Highlight on scroll */
+  .highlight-scroll {
+    background: #ffe082 !important;
+    transition: background 0.3s;
+  }
+  /* Skip notes */
+  .skip-notes, .transcription-notes {
+    margin-top: 32px;
+    border-top: 1px solid #7a4e1a;
+    padding-top: 14px;
+    font-size: 0.93rem;
+    color: #5a3a10;
+  }
+  .transcription-notes table {
+    border-collapse: collapse;
+    width: 100%;
+    font-size: 0.9rem;
+  }
+  .transcription-notes th, .transcription-notes td {
+    border: 1px solid #a0845a;
+    padding: 5px 9px;
+    text-align: left;
+  }
+  .transcription-notes th {
+    background: #e8d8b0;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+  
+
+  <h1><span class="vocab" data-word-en="Knowing How to Yield to Younger Siblings" data-word-vn="Biết Nhường Nhịn Em Nhỏ" data-pos="noun phrase / cụm danh từ" data-def-en="The act of being considerate and giving way to younger or smaller siblings" data-def-vn="Hành động biết quan tâm và nhường nhịn em nhỏ hơn" data-context-en="This is the title of the story — it describes the lesson Trúc learns about yielding to her younger sister." data-context-vn="Đây là tiêu đề câu chuyện — mô tả bài học Trúc học về việc nhường nhịn em gái.">Biết Nhường Nhịn Em Nhỏ</span></h1>
+
+  <!-- AUDIO SECTION -->
+  <div class="audio-section">
+    <div class="audio-label">🎧 Listen to the text</div>
+    <audio id="audio-player" controls="">
+      <source src="nhuong.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 10 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 15 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+  <!-- END AUDIO SECTION -->
+
+  <!-- STORY CONTENT -->
+  <p>
+    <span class="vocab" id="w-homnay-1" data-word-en="today" data-word-vn="hôm nay" data-pos="adverb / trạng từ" data-def-en="on this day; referring to the current day" data-def-vn="vào ngày này; chỉ ngày hiện tại" data-context-en="Used to set the scene — the events of the story happen today." data-context-vn="Dùng để mở đầu câu chuyện — các sự kiện xảy ra vào ngày hôm nay.">Hôm nay</span>, 
+    <span class="vocab" id="w-me-1" data-word-en="mother / mom" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="one's mother; used as a respectful family term" data-def-vn="người mẹ; dùng như một danh xưng trong gia đình" data-context-en="Trúc's mother goes to the airport to pick up the father." data-context-vn="Mẹ của Trúc đi ra sân bay để đón ba.">mẹ</span> 
+    <span class="vocab" id="w-truc-go" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister's name in the story" data-def-vn="Tên của chị gái trong câu chuyện" data-context-en="Mẹ Trúc — Trúc's mother — goes to the airport." data-context-vn="Mẹ Trúc đi ra sân bay.">Trúc</span> 
+    <span class="vocab" id="w-di-1" data-word-en="go / leave" data-word-vn="đi" data-pos="verb / động từ" data-def-en="to go, to travel to a place" data-def-vn="di chuyển đến một nơi nào đó" data-context-en="The mother goes to the airport." data-context-vn="Mẹ đi ra sân bay.">đi</span> 
+    <span class="vocab" id="w-rasanbay" data-word-en="to the airport" data-word-vn="ra sân bay" data-pos="verb phrase / cụm động từ" data-def-en="to go out to the airport" data-def-vn="đi đến sân bay" data-context-en="The mother travels to the airport to pick up the father." data-context-vn="Mẹ đi ra sân bay để đón ba.">ra sân bay</span> 
+    <span class="vocab" id="w-don-1" data-word-en="pick up / receive / welcome" data-word-vn="đón" data-pos="verb / động từ" data-def-en="to go and meet someone who is arriving; to pick someone up" data-def-vn="đi gặp và đón người đang đến nơi" data-context-en="The mother goes to the airport to pick up the father." data-context-vn="Mẹ đi ra sân bay để đón ba.">đón</span> 
+    <span class="vocab" id="w-ba-1" data-word-en="father / dad" data-word-vn="ba" data-pos="noun / danh từ" data-def-en="father; a familiar, informal word for father used in southern Vietnam" data-def-vn="cha; từ thân mật dùng ở miền Nam Việt Nam" data-context-en="The mother goes to the airport to pick up the father." data-context-vn="Mẹ đi ra sân bay để đón ba.">ba</span>.
+  </p>
+
+  <p>
+    <span class="speaker">Mẹ:</span> 
+    <span class="vocab" id="w-truc-1" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister being addressed by the mother" data-def-vn="Tên chị gái đang được mẹ gọi" data-context-en="The mother calls Trúc to give her instructions before leaving." data-context-vn="Mẹ gọi Trúc để dặn dò trước khi đi.">Trúc</span> à, 
+    <span class="vocab" id="w-me-2" data-word-en="mother / mom" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="one's mother; used in first person by the mother when speaking to children" data-def-vn="người mẹ; dùng ngôi thứ nhất khi mẹ nói chuyện với con" data-context-en="The mother refers to herself as 'mẹ' when speaking to Trúc." data-context-vn="Mẹ tự xưng là 'mẹ' khi nói chuyện với Trúc.">mẹ</span> 
+    <span class="vocab" id="w-di-2" data-word-en="go / leave" data-word-vn="đi" data-pos="verb / động từ" data-def-en="to go, to leave for a place" data-def-vn="đi, rời đi đến một nơi" data-context-en="The mother says she is leaving to pick up the father." data-context-vn="Mẹ nói mẹ đi đón ba.">đi</span> 
+    <span class="vocab" id="w-don-2" data-word-en="pick up / receive" data-word-vn="đón" data-pos="verb / động từ" data-def-en="to go meet and collect someone who is arriving" data-def-vn="đi gặp và đón người đang đến" data-context-en="The mother is going to pick up the father." data-context-vn="Mẹ đi đón ba.">đón</span> 
+    <span class="vocab" id="w-ba-2" data-word-en="father / dad" data-word-vn="ba" data-pos="noun / danh từ" data-def-en="father; familiar term used in southern Vietnam" data-def-vn="cha; từ thân mật dùng ở miền Nam" data-context-en="The mother is going to the airport to pick up the father." data-context-vn="Mẹ đi đón ba về.">ba</span>. 
+    <span class="vocab" id="w-con-1" data-word-en="child / you (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="a term used by parents to refer to their child, or by children to refer to themselves when speaking to parents" data-def-vn="từ cha mẹ dùng để gọi con, hoặc con dùng để tự xưng với cha mẹ" data-context-en="The mother tells Trúc (her child) to stay home and play with her younger sister." data-context-vn="Mẹ dặn con Trúc ở nhà chơi với em.">Con</span> 
+    <span class="vocab" id="w-o-1" data-word-en="stay / remain at" data-word-vn="ở" data-pos="verb / động từ" data-def-en="to stay, to remain in a place" data-def-vn="ở lại, không rời đi" data-context-en="Trúc is told to stay at home." data-context-vn="Con ở nhà chơi với em.">ở</span> 
+    <span class="vocab" id="w-nha-1" data-word-en="home / house" data-word-vn="nhà" data-pos="noun / danh từ" data-def-en="house; home" data-def-vn="ngôi nhà; nơi ở" data-context-en="Trúc is told to stay at home with her younger sister." data-context-vn="Con ở nhà chơi với em giúp mẹ.">nhà</span> 
+    <span class="vocab" id="w-choi-1" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play; to engage in recreational activity" data-def-vn="tham gia hoạt động vui chơi, giải trí" data-context-en="Trúc is told to stay home and play with her younger sister." data-context-vn="Con ở nhà chơi với em giúp mẹ.">chơi</span> 
+    <span class="vocab" id="w-voi-1" data-word-en="with / together with" data-word-vn="với" data-pos="preposition / giới từ" data-def-en="together with; in the company of someone" data-def-vn="cùng với; ở cạnh ai đó" data-context-en="Trúc is told to play with her younger sister." data-context-vn="Con ở nhà chơi với em giúp mẹ.">với</span> 
+    <span class="vocab" id="w-em-1" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling; younger brother or sister" data-def-vn="em trai hoặc em gái nhỏ hơn" data-context-en="Trúc is asked to play with her younger sister (Hạ My)." data-context-vn="Con ở nhà chơi với em giúp mẹ.">em</span> 
+    <span class="vocab" id="w-giup-1" data-word-en="help / do a favor for" data-word-vn="giúp" data-pos="verb / động từ" data-def-en="to help, to do something for someone as a favor" data-def-vn="hỗ trợ, làm gì đó giúp người khác" data-context-en="Trúc is asked to look after her sister as a favor to the mother." data-context-vn="Con ở nhà chơi với em giúp mẹ.">giúp</span> 
+    <span class="vocab" id="w-me-3" data-word-en="mom / mother" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="mother; the favor is done for the mother" data-def-vn="mẹ; người nhận sự giúp đỡ" data-context-en="Trúc is helping mom by watching her younger sister." data-context-vn="Con ở nhà chơi với em giúp mẹ.">mẹ</span> nha.
+  </p>
+
+  <p>
+    <span class="speaker">Trúc:</span> Dạ, 
+    <span class="vocab" id="w-con-2" data-word-en="I / me (child speaking to parent)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="first-person pronoun used by a child when speaking respectfully to a parent" data-def-vn="đại từ ngôi thứ nhất dùng khi con nói chuyện lễ phép với cha mẹ" data-context-en="Trúc uses 'con' to refer to herself when responding to her mother." data-context-vn="Trúc dùng 'con' để tự xưng khi trả lời mẹ.">con</span> 
+    <span class="vocab" id="w-biet-1" data-word-en="know / understand" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know, to be aware of something" data-def-vn="biết, hiểu, nhận thức được điều gì đó" data-context-en="Trúc says she already knows (she understands the instruction)." data-context-vn="Trúc nói con biết rồi, nghĩa là đã hiểu lời mẹ dặn.">biết</span> rồi ạ.
+  </p>
+
+  <p>
+    <span class="speaker">Mẹ:</span> 
+    <span class="vocab" id="w-hamy-1" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister's name" data-def-vn="Tên của em gái nhỏ" data-context-en="The mother speaks directly to Hạ My, the younger daughter." data-context-vn="Mẹ nói chuyện trực tiếp với Hạ My, cô con gái nhỏ hơn.">Hạ My</span> 
+    <span class="vocab" id="w-nho-1" data-word-en="remember / keep in mind" data-word-vn="nhớ" data-pos="verb / động từ" data-def-en="to remember; here used as an instruction to keep something in mind" data-def-vn="ghi nhớ; ở đây dùng như lời nhắc nhở" data-context-en="The mother tells Hạ My to remember to listen to her older sister." data-context-vn="Mẹ dặn Hạ My nhớ nghe lời chị.">nhớ</span> 
+    <span class="vocab" id="w-ngheloi-1" data-word-en="listen to / obey" data-word-vn="nghe lời" data-pos="verb phrase / cụm động từ" data-def-en="to listen to and obey someone; to follow instructions" data-def-vn="vâng lời, làm theo lời người khác" data-context-en="Hạ My is told to obey her older sister while the mother is away." data-context-vn="Hạ My được dặn phải nghe lời chị khi mẹ vắng nhà.">nghe lời</span> 
+    <span class="vocab" id="w-chi-1" data-word-en="older sister" data-word-vn="chị" data-pos="noun / danh từ" data-def-en="older sister; a term of address for an older female sibling" data-def-vn="chị gái lớn hơn; cách gọi người chị" data-context-en="Hạ My is told to obey her older sister Trúc." data-context-vn="Hạ My phải nghe lời chị Trúc.">chị</span> nha 
+    <span class="vocab" id="w-con-3" data-word-en="child / you (addressing child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="term used by a parent to address their child" data-def-vn="từ cha mẹ dùng để gọi con cái" data-context-en="The mother uses 'con' to address Hạ My affectionately." data-context-vn="Mẹ dùng 'con' để gọi Hạ My một cách trìu mến.">con</span>.
+  </p>
+
+  <p><span class="speaker">Hạ My:</span> Dạ!</p>
+
+  <p>
+    <span class="speaker">Trúc và Hạ My:</span> 
+    <span class="vocab" id="w-me-4" data-word-en="mom / mother" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="mother; called out as the mother is leaving" data-def-vn="mẹ; gọi khi mẹ sắp đi" data-context-en="Both girls call out to their mother as she leaves." data-context-vn="Cả hai chị em gọi mẹ khi mẹ ra đi.">Mẹ</span> 
+    <span class="vocab" id="w-di-3" data-word-en="go / leave" data-word-vn="đi" data-pos="verb / động từ" data-def-en="to go; used here as a farewell — 'as you go'" data-def-vn="đi; dùng ở đây như lời chào tiễn" data-context-en="The girls say goodbye as the mother leaves." data-context-vn="Hai chị em nói lời tiễn mẹ đi.">đi</span> 
+    <span class="vocab" id="w-canthan-1" data-word-en="carefully / safely" data-word-vn="cẩn thận" data-pos="adverb / trạng từ" data-def-en="carefully; with caution; take care" data-def-vn="cẩn thận, thận trọng, giữ gìn an toàn" data-context-en="The children tell their mother to travel safely." data-context-vn="Hai chị em dặn mẹ đi cẩn thận.">cẩn thận</span> nha!
+  </p>
+
+  <p>
+    <span class="vocab" id="w-saukhi-1" data-word-en="after" data-word-vn="sau khi" data-pos="conjunction / liên từ" data-def-en="after; following the time when something happens" data-def-vn="sau khi; tiếp theo sau khi sự việc xảy ra" data-context-en="After the mother leaves, Trúc invites her sister to play." data-context-vn="Sau khi mẹ đi, Trúc rủ em chơi.">Sau khi</span> 
+    <span class="vocab" id="w-me-5" data-word-en="mother / mom" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="mother" data-def-vn="mẹ" data-context-en="After the mother leaves, Trúc suggests a game." data-context-vn="Sau khi mẹ đi, Trúc rủ em chơi.">mẹ</span> 
+    <span class="vocab" id="w-di-4" data-word-en="go / leave" data-word-vn="đi" data-pos="verb / động từ" data-def-en="to go; to have left" data-def-vn="đi; đã rời đi" data-context-en="After the mother has left, Trúc proposes a game." data-context-vn="Sau khi mẹ đi, Trúc rủ em chơi.">đi</span>, 
+    <span class="vocab" id="w-truc-2" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister" data-def-vn="Chị gái" data-context-en="Trúc invites her sister to play doctor." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">Trúc</span> 
+    <span class="vocab" id="w-ru-1" data-word-en="invite / suggest / coax" data-word-vn="rủ" data-pos="verb / động từ" data-def-en="to invite someone to do something together; to coax or suggest" data-def-vn="mời, gợi ý ai cùng làm gì đó" data-context-en="Trúc invites her younger sister to play a game." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">rủ</span> 
+    <span class="vocab" id="w-em-2" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ hơn" data-context-en="Trúc invites her younger sister to play." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">em</span> 
+    <span class="vocab" id="w-choi-2" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play" data-def-vn="chơi, tham gia vui chơi" data-context-en="Trúc suggests they play a game together." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">chơi</span> 
+    <span class="vocab" id="w-trovoi-1" data-word-en="game of / play pretend" data-word-vn="trò" data-pos="noun / danh từ" data-def-en="game; a make-believe or pretend game" data-def-vn="trò chơi; trò giả vờ" data-context-en="Trúc suggests the game of playing doctor." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">trò</span> 
+    <span class="vocab" id="w-khambacsi-1" data-word-en="playing doctor / doctor examination" data-word-vn="khám bác sĩ" data-pos="verb phrase / cụm động từ" data-def-en="pretending to be a doctor and examining a patient; a children's game" data-def-vn="giả vờ làm bác sĩ khám bệnh; trò chơi của trẻ em" data-context-en="Trúc suggests they play the doctor game where one is the doctor and the other is the patient." data-context-vn="Trúc gợi ý chơi trò khám bác sĩ, một người làm bác sĩ, một người làm bệnh nhân.">khám bác sĩ</span>.
+  </p>
+
+  <p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-hamy-2" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister's name" data-def-vn="Tên em gái" data-context-en="Trúc addresses Hạ My to propose the game." data-context-vn="Trúc gọi Hạ My để đề xuất trò chơi.">Hạ My</span> nè, 
+    <span class="vocab" id="w-chiem-1" data-word-en="older sister and younger sibling / us two sisters" data-word-vn="chị em mình" data-pos="noun phrase / cụm danh từ" data-def-en="us two sisters; the older and younger sister together" data-def-vn="hai chị em chúng mình; chị và em cùng nhau" data-context-en="Trúc uses 'chị em mình' to mean the two of them together." data-context-vn="Trúc dùng 'chị em mình' để nói về hai chị em cùng nhau.">chị em mình</span> 
+    <span class="vocab" id="w-choi-3" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play" data-def-vn="chơi" data-context-en="Trúc proposes that the two of them play the doctor game." data-context-vn="Trúc đề nghị hai chị em cùng chơi trò khám bác sĩ.">chơi</span> 
+    <span class="vocab" id="w-khambacsi-2" data-word-en="playing doctor" data-word-vn="khám bác sĩ" data-pos="verb phrase / cụm động từ" data-def-en="to play doctor; pretend medical examination game" data-def-vn="trò giả vờ làm bác sĩ khám bệnh" data-context-en="Trúc suggests the doctor game to Hạ My." data-context-vn="Trúc gợi ý Hạ My chơi trò khám bác sĩ.">khám bác sĩ</span> nha! 
+    <span class="vocab" id="w-chi-2" data-word-en="older sister / I (older sister)" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="older sister; used by Trúc to refer to herself" data-def-vn="chị; Trúc tự xưng là chị khi nói với em" data-context-en="Trúc says she will be the doctor." data-context-vn="Chị làm bác sĩ, còn em làm bệnh nhân.">Chị</span> 
+    <span class="vocab" id="w-lam-1" data-word-en="do / act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to do; to act as; to take on a role" data-def-vn="làm, đảm nhận vai trò nào đó" data-context-en="Trúc says she will act as the doctor in the game." data-context-vn="Chị làm bác sĩ trong trò chơi.">làm</span> 
+    <span class="vocab" id="w-bacsi-1" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="doctor; a medical professional" data-def-vn="bác sĩ; người hành nghề y" data-context-en="Trúc wants to be the doctor in the pretend game." data-context-vn="Trúc muốn làm bác sĩ trong trò chơi.">bác sĩ</span>, 
+    <span class="vocab" id="w-con-4" data-word-en="still / and / as for" data-word-vn="còn" data-pos="conjunction / liên từ" data-def-en="and; as for; on the other hand — used to introduce the contrasting role" data-def-vn="còn; về phần; dùng để giới thiệu vai trò đối lập" data-context-en="Trúc says she is the doctor and Hạ My will be the patient." data-context-vn="Chị làm bác sĩ, còn em làm bệnh nhân.">còn</span> 
+    <span class="vocab" id="w-em-3" data-word-en="younger sibling / you (younger)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="younger sibling; used here to address Hạ My" data-def-vn="em; dùng để gọi Hạ My" data-context-en="Trúc assigns Hạ My the role of patient." data-context-vn="Còn em làm bệnh nhân.">em</span> 
+    <span class="vocab" id="w-lam-2" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; to take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Hạ My will act as the patient." data-context-vn="Em làm bệnh nhân.">làm</span> 
+    <span class="vocab" id="w-benhnhan-1" data-word-en="patient (sick person)" data-word-vn="bệnh nhân" data-pos="noun / danh từ" data-def-en="patient; a sick person being examined by a doctor" data-def-vn="người bệnh đang được bác sĩ khám" data-context-en="Trúc assigns the role of patient to Hạ My." data-context-vn="Trúc muốn em làm bệnh nhân trong trò chơi.">bệnh nhân</span> 
+    <span class="vocab" id="w-duockhong-1" data-word-en="is that okay? / can we?" data-word-vn="được không?" data-pos="question particle / tiểu từ hỏi" data-def-en="is that alright? used to ask for agreement or permission" data-def-vn="được không? dùng để hỏi sự đồng ý" data-context-en="Trúc asks Hạ My if it's okay for her to be the patient." data-context-vn="Trúc hỏi em có đồng ý làm bệnh nhân không.">được không</span>?
+  </p>
+
+  <p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-khong-1" data-word-en="no / not" data-word-vn="không" data-pos="adverb / trạng từ" data-def-en="no; not; a refusal or negation" data-def-vn="không; từ phủ định hoặc từ chối" data-context-en="Hạ My refuses the arrangement — she wants to be the doctor." data-context-vn="Hạ My từ chối — em muốn làm bác sĩ.">Không</span> đâu, 
+    <span class="vocab" id="w-homnay-2" data-word-en="today" data-word-vn="hôm nay" data-pos="adverb / trạng từ" data-def-en="today; on this particular day" data-def-vn="hôm nay; ngày hôm nay" data-context-en="Hạ My says that today she wants to be the doctor." data-context-vn="Hạ My nói hôm nay em muốn làm bác sĩ.">hôm nay</span> 
+    <span class="vocab" id="w-em-4" data-word-en="I / me (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me — the younger sibling referring to herself" data-def-vn="em tự xưng khi nói chuyện với chị" data-context-en="Hạ My refers to herself as 'em' when telling Trúc what she wants." data-context-vn="Hạ My tự xưng là 'em' khi nói với chị Trúc.">em</span> 
+    <span class="vocab" id="w-muon-1" data-word-en="want / wish" data-word-vn="muốn" data-pos="verb / động từ" data-def-en="to want; to desire something" data-def-vn="mong muốn, có nguyện vọng" data-context-en="Hạ My wants to be the doctor today." data-context-vn="Em muốn làm bác sĩ hôm nay.">muốn</span> 
+    <span class="vocab" id="w-lam-3" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; to take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Hạ My wants to be the doctor in the game." data-context-vn="Em muốn làm bác sĩ.">làm</span> 
+    <span class="vocab" id="w-bacsi-2" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="doctor; medical professional" data-def-vn="bác sĩ; người chữa bệnh" data-context-en="Hạ My wants to play the role of doctor." data-context-vn="Em muốn làm bác sĩ trong trò chơi.">bác sĩ</span> cơ.
+  </p>
+
+  <p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-nhung-1" data-word-en="but / however" data-word-vn="nhưng" data-pos="conjunction / liên từ" data-def-en="but; however; introduces a contrasting statement" data-def-vn="nhưng; tuy nhiên; dùng để nêu sự tương phản" data-context-en="Trúc says 'but' to justify why Hạ My shouldn't be the doctor." data-context-vn="Trúc nói 'nhưng' để biện hộ tại sao em không nên làm bác sĩ.">Nhưng</span> 
+    <span class="vocab" id="w-em-5" data-word-en="you (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="you — referring to the younger sibling" data-def-vn="em — chỉ người em nhỏ hơn" data-context-en="Trúc points out that Hạ My is younger." data-context-vn="Trúc nói em nhỏ hơn.">em</span> 
+    <span class="vocab" id="w-nho-2" data-word-en="small / young / little" data-word-vn="nhỏ" data-pos="adjective / tính từ" data-def-en="small; young; little — referring to age or size" data-def-vn="nhỏ bé; còn ít tuổi" data-context-en="Trúc argues that Hạ My is too little to be the doctor." data-context-vn="Trúc cho rằng em nhỏ hơn nên không làm bác sĩ được.">nhỏ</span> 
+    <span class="vocab" id="w-hon-1" data-word-en="more / -er (comparative)" data-word-vn="hơn" data-pos="particle / tiểu từ so sánh" data-def-en="more; -er; used to form comparative adjectives" data-def-vn="hơn; dùng để so sánh hơn" data-context-en="Trúc says Hạ My is smaller/younger — using the comparative." data-context-vn="Trúc nói em nhỏ hơn — dùng cấu trúc so sánh.">hơn</span> mà!
+  </p>
+
+  <p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-em-6" data-word-en="I / me (younger)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me — younger sibling self-reference" data-def-vn="em tự xưng" data-context-en="Hạ My insists she is big now." data-context-vn="Hạ My khẳng định em lớn rồi.">Em</span> 
+    <span class="vocab" id="w-lon-1" data-word-en="big / grown up" data-word-vn="lớn" data-pos="adjective / tính từ" data-def-en="big; grown up; no longer small" data-def-vn="lớn; đã trưởng thành; không còn nhỏ" data-context-en="Hạ My claims she is already big." data-context-vn="Hạ My nói em lớn rồi.">lớn</span> rồi. 
+    <span class="vocab" id="w-em-7" data-word-en="I / me (younger)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me — used by the younger sibling" data-def-vn="em tự xưng" data-context-en="Hạ My proves she is grown up by brushing her teeth alone." data-context-vn="Hạ My chứng minh bằng cách đánh răng một mình.">Em</span> 
+    <span class="vocab" id="w-biet-2" data-word-en="know how to / can" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know how to do something; to be capable" data-def-vn="biết cách làm gì đó; có khả năng" data-context-en="Hạ My says she knows how to brush her teeth by herself." data-context-vn="Em biết đánh răng một mình.">biết</span> 
+    <span class="vocab" id="w-danhrăng-1" data-word-en="brush teeth" data-word-vn="đánh răng" data-pos="verb phrase / cụm động từ" data-def-en="to brush one's teeth" data-def-vn="chải răng, đánh răng" data-context-en="Hạ My says she can brush her own teeth as proof she is grown up." data-context-vn="Em biết đánh răng một mình để chứng minh mình đã lớn.">đánh răng</span> 
+    <span class="vocab" id="w-motminh-1" data-word-en="alone / by oneself" data-word-vn="một mình" data-pos="adverb / trạng từ" data-def-en="alone; by oneself; without help" data-def-vn="một mình; tự làm không cần ai giúp" data-context-en="Hạ My says she can brush her teeth all by herself." data-context-vn="Em biết đánh răng một mình, không cần ai giúp.">một mình</span> nữa đó!
+  </p>
+
+  <p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-khong-2" data-word-en="no / not allowed" data-word-vn="không được" data-pos="phrase / cụm từ" data-def-en="not allowed; cannot; no" data-def-vn="không được phép; từ chối" data-context-en="Trúc refuses to let Hạ My be the doctor." data-context-vn="Trúc không đồng ý để Hạ My làm bác sĩ.">Không được</span> đâu, 
+    <span class="vocab" id="w-chi-3" data-word-en="older sister / I" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="I — the older sister referring to herself" data-def-vn="chị tự xưng" data-context-en="Trúc insists that she (the older sister) must be the doctor." data-context-vn="Trúc khẳng định chị phải làm bác sĩ.">chị</span> 
+    <span class="vocab" id="w-phai-1" data-word-en="must / have to" data-word-vn="phải" data-pos="modal verb / động từ tình thái" data-def-en="must; have to; obliged to" data-def-vn="phải; bắt buộc phải làm" data-context-en="Trúc insists she must be the doctor." data-context-vn="Chị phải làm bác sĩ.">phải</span> 
+    <span class="vocab" id="w-lam-4" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Trúc insists she must be the doctor in the game." data-context-vn="Chị phải làm bác sĩ trong trò chơi.">làm</span> 
+    <span class="vocab" id="w-bacsi-3" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="doctor; physician" data-def-vn="bác sĩ" data-context-en="Trúc insists on being the doctor." data-context-vn="Trúc khăng khăng mình phải làm bác sĩ.">bác sĩ</span>.
+  </p>
+
+  <p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-vay-1" data-word-en="then / in that case" data-word-vn="vậy" data-pos="conjunction / liên từ" data-def-en="then; in that case — used to draw a conclusion from what was just said" data-def-vn="vậy thì; trong trường hợp đó — rút ra kết luận" data-context-en="Hạ My uses 'vậy' to mean 'in that case' — if Trúc won't give in, she won't play." data-context-vn="Hạ My dùng 'vậy' để nói nếu chị không nhường thì em không chơi.">Vậy</span> 
+    <span class="vocab" id="w-em-8" data-word-en="I / me (younger)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me — younger sibling self-reference" data-def-vn="em tự xưng" data-context-en="Hạ My says she won't play with Trúc anymore." data-context-vn="Em không chơi với chị nữa.">em</span> 
+    <span class="vocab" id="w-khongchoi-1" data-word-en="won't play" data-word-vn="không chơi" data-pos="verb phrase / cụm động từ" data-def-en="to not play; to refuse to participate" data-def-vn="không tham gia chơi; từ chối chơi" data-context-en="Hạ My threatens to stop playing with Trúc." data-context-vn="Hạ My nói sẽ không chơi với chị nữa.">không chơi</span> 
+    <span class="vocab" id="w-voi-2" data-word-en="with" data-word-vn="với" data-pos="preposition / giới từ" data-def-en="with; together with" data-def-vn="cùng với" data-context-en="Hạ My says she won't play with her older sister." data-context-vn="Em không chơi với chị nữa.">với</span> 
+    <span class="vocab" id="w-chi-4" data-word-en="older sister / you (older)" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="older sister — Hạ My addressing Trúc" data-def-vn="chị — Hạ My gọi Trúc" data-context-en="Hạ My says she won't play with her sister Trúc." data-context-vn="Em không chơi với chị Trúc nữa.">chị</span> nữa!
+  </p>
+
+  <p>
+    <span class="vocab" id="w-noi-1" data-word-en="say / speak" data-word-vn="nói" data-pos="verb / động từ" data-def-en="to say; to speak" data-def-vn="nói, phát biểu" data-context-en="After saying that, Hạ My sat down and cried." data-context-vn="Nói xong, Hạ My ngồi khóc.">Nói</span> xong, 
+    <span class="vocab" id="w-hamy-3" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister" data-def-vn="Em gái nhỏ" data-context-en="After the argument, Hạ My sat down and cried." data-context-vn="Hạ My ngồi khóc sau khi tranh cãi.">Hạ My</span> 
+    <span class="vocab" id="w-ngoi-1" data-word-en="sit / sit down" data-word-vn="ngồi" data-pos="verb / động từ" data-def-en="to sit; to sit down" data-def-vn="ngồi, ngồi xuống" data-context-en="Hạ My sat down and cried." data-context-vn="Hạ My ngồi khóc.">ngồi</span> 
+    <span class="vocab" id="w-khoc-1" data-word-en="cry / weep" data-word-vn="khóc" data-pos="verb / động từ" data-def-en="to cry; to weep" data-def-vn="khóc, rơi nước mắt" data-context-en="Hạ My sat down and started crying." data-context-vn="Hạ My ngồi xuống và khóc.">khóc</span>.
+  </p>
+
+  <p>
+    <span class="vocab" id="w-lucdó-1" data-word-en="at that moment / just then" data-word-vn="lúc đó" data-pos="adverb / trạng từ" data-def-en="at that moment; just then; at that time" data-def-vn="vào lúc đó; ngay lúc ấy" data-context-en="Just at that moment, Aunt Oanh came over." data-context-vn="Lúc đó, cô Oanh đi sang.">Lúc đó</span>, 
+    <span class="vocab" id="w-coanh-1" data-word-en="Aunt Oanh" data-word-vn="cô Oanh" data-pos="proper noun / danh từ riêng" data-def-en="Aunt Oanh — a neighbor or family friend who comes over" data-def-vn="Cô Oanh — hàng xóm hoặc người quen đến thăm" data-context-en="Aunt Oanh comes over just as Hạ My starts crying." data-context-vn="Cô Oanh đến đúng lúc Hạ My khóc.">cô Oanh</span> 
+    <span class="vocab" id="w-disang-1" data-word-en="came over / walked over" data-word-vn="đi sang" data-pos="verb phrase / cụm động từ" data-def-en="to come over; to walk over to someone's side or house" data-def-vn="đi sang; bước sang nhà hoặc chỗ của người khác" data-context-en="Aunt Oanh walked over to where the children were." data-context-vn="Cô Oanh đi sang chỗ của hai chị em.">đi sang</span>.
+  </p>
+
+  <p>
+    <span class="speaker">Cô Oanh:</span> 
+    <span class="vocab" id="w-truc-3" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister being addressed" data-def-vn="Tên chị gái đang được gọi" data-context-en="Aunt Oanh calls out Trúc's name to question her." data-context-vn="Cô Oanh gọi tên Trúc để hỏi.">Trúc</span>, 
+    <span class="vocab" id="w-sao-1" data-word-en="why / how come" data-word-vn="sao" data-pos="adverb / trạng từ" data-def-en="why; how come; used to ask the reason for something" data-def-vn="sao; tại sao; hỏi lý do" data-context-en="Aunt Oanh asks why Trúc let her sister cry." data-context-vn="Cô Oanh hỏi tại sao Trúc để em khóc.">sao</span> 
+    <span class="vocab" id="w-con-5" data-word-en="you (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="you — used by an adult to address a child" data-def-vn="con — người lớn gọi trẻ em" data-context-en="Aunt Oanh addresses Trúc as 'con' in a scolding tone." data-context-vn="Cô Oanh gọi Trúc là 'con' khi hỏi han.">con</span> 
+    <span class="vocab" id="w-de-1" data-word-en="let / allow / cause" data-word-vn="để" data-pos="verb / động từ" data-def-en="to let; to allow; to cause something to happen" data-def-vn="để, cho phép, để xảy ra" data-context-en="Aunt Oanh asks why Trúc let her sister cry." data-context-vn="Sao con để em khóc vậy?">để</span> 
+    <span class="vocab" id="w-em-9" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ" data-context-en="Aunt Oanh asks why Trúc let the younger sister cry." data-context-vn="Sao con để em khóc vậy?">em</span> 
+    <span class="vocab" id="w-khoc-2" data-word-en="cry" data-word-vn="khóc" data-pos="verb / động từ" data-def-en="to cry" data-def-vn="khóc" data-context-en="Hạ My is crying, and Aunt Oanh questions Trúc about it." data-context-vn="Hạ My đang khóc, cô Oanh hỏi Trúc về điều đó.">khóc</span> vậy?
+  </p>
+
+  <p>
+    <span class="speaker">Trúc:</span> Dạ, vì 
+    <span class="vocab" id="w-em-10" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ" data-context-en="Trúc says that her younger sister Hạ My did not listen." data-context-vn="Trúc nói vì em Hạ My không nghe lời.">em</span> 
+    <span class="vocab" id="w-hamy-4" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister's name" data-def-vn="Tên em gái" data-context-en="Trúc blames Hạ My for not listening." data-context-vn="Trúc nói em Hạ My không nghe lời.">Hạ My</span> 
+    <span class="vocab" id="w-khongnghe-1" data-word-en="did not listen / disobey" data-word-vn="không nghe lời" data-pos="verb phrase / cụm động từ" data-def-en="to not listen; to disobey" data-def-vn="không nghe lời, không vâng lời" data-context-en="Trúc complains that Hạ My didn't obey her." data-context-vn="Trúc phàn nàn Hạ My không nghe lời mình.">không nghe lời</span> 
+    <span class="vocab" id="w-con-6" data-word-en="I / me (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="I; me — used by Trúc when speaking to the adult Aunt Oanh" data-def-vn="con — Trúc tự xưng khi nói với người lớn" data-context-en="Trúc refers to herself as 'con' when speaking to Aunt Oanh." data-context-vn="Trúc tự xưng là 'con' khi nói với cô Oanh.">con</span> ạ.
+  </p>
+
+  <p>
+    <span class="speaker">Cô Oanh:</span> 
+    <span class="vocab" id="w-con-7" data-word-en="you (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="you — an adult addressing a child" data-def-vn="con — người lớn gọi trẻ" data-context-en="Aunt Oanh addresses Trúc directly." data-context-vn="Cô Oanh nói thẳng với Trúc.">Con</span> 
+    <span class="vocab" id="w-lachi-1" data-word-en="is the older sister" data-word-vn="là chị" data-pos="verb phrase / cụm động từ" data-def-en="to be the older sister; to hold the role of older sibling" data-def-vn="là người chị; đóng vai trò người chị lớn" data-context-en="Aunt Oanh reminds Trúc that as the older sister, she should know better." data-context-vn="Cô Oanh nhắc Trúc rằng vì là chị nên phải biết nhường nhịn.">là chị</span> thì 
+    <span class="vocab" id="w-phai-2" data-word-en="must / have to" data-word-vn="phải" data-pos="modal verb / động từ tình thái" data-def-en="must; have to; obligated to" data-def-vn="phải, bắt buộc" data-context-en="As the older sister, Trúc must know how to yield to her younger sibling." data-context-vn="Là chị thì phải biết nhường nhịn em.">phải</span> 
+    <span class="vocab" id="w-biet-3" data-word-en="know how to" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know how to; to be wise enough to" data-def-vn="biết, hiểu cách làm" data-context-en="As the older sister, Trúc should know how to yield." data-context-vn="Là chị thì phải biết nhường nhịn em.">biết</span> 
+    <span class="vocab" id="w-nhuongnhin-1" data-word-en="yield / give way / be accommodating" data-word-vn="nhường nhịn" data-pos="verb / động từ" data-def-en="to yield; to give way; to be patient and let the other person have their way" data-def-vn="nhường nhịn; chịu thua; để người kia được như ý" data-context-en="Aunt Oanh tells Trúc she must learn to yield to her younger sister." data-context-vn="Cô Oanh nói Trúc phải biết nhường nhịn em.">nhường nhịn</span> 
+    <span class="vocab" id="w-em-11" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ" data-context-en="As the older sister, Trúc should yield to the younger sister." data-context-vn="Là chị thì phải biết nhường nhịn em.">em</span> chứ. 
+    <span class="vocab" id="w-me-6" data-word-en="mother / mom" data-word-vn="Mẹ" data-pos="noun / danh từ" data-def-en="mother" data-def-vn="mẹ" data-context-en="Aunt Oanh says that Trúc's mother has surely already taught her this lesson." data-context-vn="Cô Oanh nói mẹ Trúc chắc đã dạy rồi.">Mẹ</span> 
+    <span class="vocab" id="w-con-8" data-word-en="of yours / your" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="you; your — referring to Trúc's mother" data-def-vn="của con; mẹ của Trúc" data-context-en="Aunt Oanh refers to 'mẹ con' meaning Trúc's mother." data-context-vn="Cô Oanh nói mẹ con tức là mẹ của Trúc.">con</span> 
+    <span class="vocab" id="w-chacung-1" data-word-en="surely / certainly" data-word-vn="chắc" data-pos="adverb / trạng từ" data-def-en="surely; certainly; I'm sure that" data-def-vn="chắc chắn; hẳn là" data-context-en="Aunt Oanh says Trúc's mother has surely already taught her this." data-context-vn="Cô Oanh nói mẹ chắc đã dạy Trúc rồi.">chắc</span> 
+    <span class="vocab" id="w-cungda-1" data-word-en="also / already" data-word-vn="cũng đã" data-pos="adverb / trạng từ" data-def-en="also; already — emphasizing that something has already happened" data-def-vn="cũng đã; nhấn mạnh điều gì đó đã xảy ra" data-context-en="Aunt Oanh implies the mother has already taught Trúc this lesson before." data-context-vn="Cô Oanh ngụ ý mẹ đã dạy Trúc bài học này rồi.">cũng đã</span> 
+    <span class="vocab" id="w-day-1" data-word-en="teach / instruct" data-word-vn="dạy" data-pos="verb / động từ" data-def-en="to teach; to instruct" data-def-vn="dạy, hướng dẫn" data-context-en="Aunt Oanh says the mother has already taught Trúc to yield." data-context-vn="Cô Oanh nói mẹ đã dạy Trúc phải nhường nhịn em.">dạy</span> như vậy rồi mà.
+  </p>
+
+  <p>
+    <span class="vocab" id="w-nghe-1" data-word-en="hear / listen to" data-word-vn="nghe" data-pos="verb / động từ" data-def-en="to hear; to listen to something said" data-def-vn="nghe, lắng nghe" data-context-en="Hearing Aunt Oanh's words, Trúc felt sad." data-context-vn="Nghe cô Oanh nói, Trúc cảm thấy buồn.">Nghe</span> 
+    <span class="vocab" id="w-coanh-2" data-word-en="Aunt Oanh" data-word-vn="cô Oanh" data-pos="proper noun / danh từ riêng" data-def-en="Aunt Oanh — the neighbor who came over" data-def-vn="Cô Oanh — người hàng xóm" data-context-en="After hearing Aunt Oanh's words, Trúc felt sad." data-context-vn="Nghe cô Oanh nói, Trúc cảm thấy buồn.">cô Oanh</span> nói, 
+    <span class="vocab" id="w-truc-4" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister" data-def-vn="Chị gái" data-context-en="Trúc feels sad after being scolded." data-context-vn="Trúc cảm thấy buồn sau khi bị nhắc nhở.">Trúc</span> 
+    <span class="vocab" id="w-camthay-1" data-word-en="feel / sense" data-word-vn="cảm thấy" data-pos="verb phrase / cụm động từ" data-def-en="to feel; to have an emotional sensation" data-def-vn="cảm thấy, có cảm xúc" data-context-en="Trúc feels sad after Aunt Oanh's rebuke." data-context-vn="Trúc cảm thấy buồn sau lời nhắc nhở.">cảm thấy</span> 
+    <span class="vocab" id="w-buon-1" data-word-en="sad / unhappy" data-word-vn="buồn" data-pos="adjective / tính từ" data-def-en="sad; unhappy; feeling down" data-def-vn="buồn, không vui, cảm thấy không tốt" data-context-en="Trúc feels sad and regretful after the scolding." data-context-vn="Trúc cảm thấy buồn và hối hận.">buồn</span>.
+  </p>
+
+  <p>
+    <span class="vocab" id="w-truc-5" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister" data-def-vn="Chị gái" data-context-en="Trúc thinks to herself." data-context-vn="Trúc nghĩ thầm.">Trúc</span> 
+    <span class="vocab" id="w-nghitham-1" data-word-en="think to oneself / think privately" data-word-vn="nghĩ thầm" data-pos="verb phrase / cụm động từ" data-def-en="to think quietly to oneself; an internal thought not spoken aloud" data-def-vn="suy nghĩ trong lòng, không nói ra tiếng" data-context-en="Trúc has a private thought about her behavior." data-context-vn="Trúc nghĩ thầm về hành động của mình.">nghĩ thầm</span>: "<span class="vocab" id="w-minh-1" data-word-en="I / myself" data-word-vn="mình" data-pos="pronoun / đại từ" data-def-en="I; myself — a self-reflective pronoun" data-def-vn="mình; tôi — đại từ tự nhìn nhận bản thân" data-context-en="Trúc reflects on her own behavior using 'mình'." data-context-vn="Trúc dùng 'mình' để tự suy ngẫm về bản thân.">Mình</span> 
+    <span class="vocab" id="w-khongnên-1" data-word-en="should not / ought not" data-word-vn="không nên" data-pos="modal phrase / cụm tình thái" data-def-en="should not; ought not to do something" data-def-vn="không nên làm; không phù hợp khi làm" data-context-en="Trúc realizes she should not have made her sister cry." data-context-vn="Trúc nhận ra mình không nên làm em khóc.">không nên</span> 
+    <span class="vocab" id="w-lam-5" data-word-en="make / cause" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to make; to cause something to happen" data-def-vn="làm, gây ra" data-context-en="Trúc should not have made her sister cry." data-context-vn="Mình không nên làm em khóc.">làm</span> 
+    <span class="vocab" id="w-em-12" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em" data-context-en="Trúc thinks she shouldn't have made her sister cry." data-context-vn="Trúc nghĩ mình không nên làm em khóc.">em</span> 
+    <span class="vocab" id="w-khoc-3" data-word-en="cry" data-word-vn="khóc" data-pos="verb / động từ" data-def-en="to cry" data-def-vn="khóc" data-context-en="Trúc regrets making her sister cry." data-context-vn="Trúc hối hận vì đã làm em khóc.">khóc</span>. 
+    <span class="vocab" id="w-minh-2" data-word-en="I / myself" data-word-vn="mình" data-pos="pronoun / đại từ" data-def-en="I; myself" data-def-vn="mình" data-context-en="Trúc tells herself she must be loving and yielding." data-context-vn="Trúc tự nhủ mình phải yêu thương và nhường nhịn em.">Mình</span> 
+    <span class="vocab" id="w-phai-3" data-word-en="must / have to" data-word-vn="phải" data-pos="modal verb / động từ tình thái" data-def-en="must; have to" data-def-vn="phải, bắt buộc" data-context-en="Trúc resolves that she must be loving and yielding." data-context-vn="Mình phải yêu thương và nhường nhịn em mới đúng.">phải</span> 
+    <span class="vocab" id="w-biet-4" data-word-en="know how to" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know how to; to understand that one should" data-def-vn="biết cách; hiểu rằng nên làm" data-context-en="Trúc must know how to love and yield." data-context-vn="Mình phải biết yêu thương và nhường nhịn em.">biết</span> 
+    <span class="vocab" id="w-yeuthuong-1" data-word-en="love / care for" data-word-vn="yêu thương" data-pos="verb / động từ" data-def-en="to love; to care for someone warmly" data-def-vn="yêu thương; quan tâm chân thành" data-context-en="Trúc resolves to love and be patient with her sister." data-context-vn="Trúc tự nhủ phải biết yêu thương và nhường nhịn em.">yêu thương</span> và 
+    <span class="vocab" id="w-nhuongnhin-2" data-word-en="yield / give way" data-word-vn="nhường nhịn" data-pos="verb / động từ" data-def-en="to yield; to be patient and let the other person have their way" data-def-vn="nhường nhịn; chịu đựng và để người kia được ý" data-context-en="Trúc resolves to yield to her sister." data-context-vn="Trúc tự nhủ phải nhường nhịn em mới đúng.">nhường nhịn</span> 
+    <span class="vocab" id="w-em-13" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ" data-context-en="Trúc must love and yield to her younger sister." data-context-vn="Trúc phải yêu thương và nhường nhịn em.">em</span> 
+    <span class="vocab" id="w-moidung-1" data-word-en="only then is it right / that's the right thing" data-word-vn="mới đúng" data-pos="phrase / cụm từ" data-def-en="only then is it correct; that is the right way" data-def-vn="như vậy mới đúng; đó mới là cách đúng đắn" data-context-en="Trúc thinks that only by loving and yielding is she doing the right thing." data-context-vn="Trúc nghĩ chỉ khi yêu thương và nhường nhịn em mới là đúng.">mới đúng</span>."
+  </p>
+
+  <p>
+    <span class="vocab" id="w-motlucsau-1" data-word-en="a little while later / after a moment" data-word-vn="một lúc sau" data-pos="adverb / trạng từ" data-def-en="a little while later; after some time has passed" data-def-vn="một lúc sau; sau một khoảng thời gian" data-context-en="A little while later, Hạ My runs back home." data-context-vn="Một lúc sau, Hạ My chạy về nhà.">Một lúc sau</span>, 
+    <span class="vocab" id="w-hamy-5" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister" data-def-vn="Em gái" data-context-en="Hạ My runs back home." data-context-vn="Hạ My chạy về nhà.">Hạ My</span> 
+    <span class="vocab" id="w-chay-1" data-word-en="run" data-word-vn="chạy" data-pos="verb / động từ" data-def-en="to run" data-def-vn="chạy, di chuyển nhanh" data-context-en="Hạ My runs back home with candy." data-context-vn="Hạ My chạy về nhà.">chạy</span> về 
+    <span class="vocab" id="w-nha-2" data-word-en="home" data-word-vn="nhà" data-pos="noun / danh từ" data-def-en="home; house" data-def-vn="nhà, ngôi nhà" data-context-en="Hạ My runs back to the house." data-context-vn="Hạ My chạy về nhà.">nhà</span>.
+  </p>
+
+  <p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-chitruoc-1" data-word-en="Sister Trúc" data-word-vn="chị Trúc" data-pos="noun phrase / cụm danh từ" data-def-en="Sister Trúc — a way to address the older sister by name" data-def-vn="chị Trúc — cách gọi chị gái bằng tên" data-context-en="Hạ My calls out to her older sister Trúc." data-context-vn="Hạ My gọi chị Trúc ơi.">chị Trúc</span> ơi! 
+    <span class="vocab" id="w-coanh-3" data-word-en="Aunt Oanh" data-word-vn="cô Oanh" data-pos="proper noun / danh từ riêng" data-def-en="Aunt Oanh" data-def-vn="Cô Oanh" data-context-en="Aunt Oanh bought candy for Hạ My." data-context-vn="Cô Oanh mua kẹo cho em.">Cô Oanh</span> 
+    <span class="vocab" id="w-mua-1" data-word-en="buy" data-word-vn="mua" data-pos="verb / động từ" data-def-en="to buy; to purchase" data-def-vn="mua, mua sắm" data-context-en="Aunt Oanh bought candy for Hạ My." data-context-vn="Cô Oanh mua kẹo cho em.">mua</span> 
+    <span class="vocab" id="w-keo-1" data-word-en="candy / sweets" data-word-vn="kẹo" data-pos="noun / danh từ" data-def-en="candy; sweets" data-def-vn="kẹo; đồ ngọt" data-context-en="Aunt Oanh bought candy and Hạ My brings some back for her sister." data-context-vn="Cô Oanh mua kẹo và Hạ My mang về cho chị.">kẹo</span> cho 
+    <span class="vocab" id="w-em-14" data-word-en="me / I (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="me; I — younger sibling self-reference" data-def-vn="em tự xưng" data-context-en="Aunt Oanh bought candy for Hạ My." data-context-vn="Cô Oanh mua kẹo cho em.">em</span> nè. 
+    <span class="vocab" id="w-em-15" data-word-en="I / me (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me" data-def-vn="em" data-context-en="Hạ My brings candy back for her older sister." data-context-vn="Em mang về cho chị nữa.">Em</span> 
+    <span class="vocab" id="w-mang-1" data-word-en="bring / carry" data-word-vn="mang" data-pos="verb / động từ" data-def-en="to bring; to carry something to someone" data-def-vn="mang đến; mang lại cho ai" data-context-en="Hạ My brings candy back home to share with her sister." data-context-vn="Em mang kẹo về cho chị.">mang</span> về cho 
+    <span class="vocab" id="w-chi-5" data-word-en="older sister / you (older)" data-word-vn="chị" data-pos="noun / danh từ" data-def-en="older sister" data-def-vn="chị gái" data-context-en="Hạ My brings candy home for her older sister too." data-context-vn="Em mang về cho chị nữa.">chị</span> nữa đó.
+  </p>
+
+  <p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-hamy-6" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister" data-def-vn="Em gái" data-context-en="Trúc asks Hạ My if she is still angry." data-context-vn="Trúc hỏi Hạ My còn giận không.">Hạ My</span> 
+    <span class="vocab" id="w-khong-3" data-word-en="not / no longer" data-word-vn="không" data-pos="adverb / trạng từ" data-def-en="not; no longer" data-def-vn="không; không còn" data-context-en="Trúc asks if Hạ My is no longer angry at her." data-context-vn="Trúc hỏi Hạ My không còn giận chị nữa hả?">không</span> 
+    <span class="vocab" id="w-gian-1" data-word-en="angry / upset" data-word-vn="giận" data-pos="adjective / tính từ" data-def-en="angry; upset; to hold a grudge" data-def-vn="tức giận, bực bội, hờn dỗi" data-context-en="Trúc asks if Hạ My is no longer angry at her." data-context-vn="Trúc hỏi em Hạ My còn giận chị không.">giận</span> 
+    <span class="vocab" id="w-chi-6" data-word-en="older sister / me" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="older sister — Trúc refers to herself" data-def-vn="chị — Trúc tự xưng" data-context-en="Trúc asks if Hạ My is no longer upset with her (the older sister)." data-context-vn="Trúc hỏi Hạ My còn giận chị không.">chị</span> nữa hả?
+  </p>
+
+  <p><span class="speaker">Hạ My:</span> Dạ không ạ.</p>
+
+  <p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-camơn-1" data-word-en="thank you" data-word-vn="cảm ơn" data-pos="phrase / cụm từ" data-def-en="thank you; expressing gratitude" data-def-vn="cảm ơn; bày tỏ lòng biết ơn" data-context-en="Trúc thanks Hạ My for bringing candy." data-context-vn="Trúc cảm ơn Hạ My đã mang kẹo về.">Cảm ơn</span> 
+    <span class="vocab" id="w-em-16" data-word-en="you (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="you — addressing the younger sibling" data-def-vn="em — gọi người em" data-context-en="Trúc thanks her younger sister." data-context-vn="Trúc cảm ơn em Hạ My.">em</span> nha. 
+    Thôi, 
+    <span class="vocab" id="w-homnay-3" data-word-en="today" data-word-vn="hôm nay" data-pos="adverb / trạng từ" data-def-en="today" data-def-vn="hôm nay" data-context-en="Trúc says that today, Hạ My can be the doctor." data-context-vn="Trúc nói hôm nay em làm bác sĩ đi.">hôm nay</span> 
+    <span class="vocab" id="w-em-17" data-word-en="you (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="you — addressing Hạ My" data-def-vn="em — gọi Hạ My" data-context-en="Trúc tells Hạ My she can be the doctor today." data-context-vn="Hôm nay em làm bác sĩ đi.">em</span> 
+    <span class="vocab" id="w-lam-6" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Trúc lets Hạ My be the doctor this time." data-context-vn="Hôm nay em làm bác sĩ đi.">làm</span> 
+    <span class="vocab" id="w-bacsi-4" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="doctor" data-def-vn="bác sĩ" data-context-en="Trúc lets Hạ My play the role of doctor." data-context-vn="Trúc cho em làm bác sĩ.">bác sĩ</span> đi. 
+    <span class="vocab" id="w-chi-7" data-word-en="I / older sister" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="I; me — Trúc referring to herself as older sister" data-def-vn="chị tự xưng" data-context-en="Trúc says she will be the patient this time." data-context-vn="Chị sẽ làm bệnh nhân.">Chị</span> 
+    <span class="vocab" id="w-se-1" data-word-en="will / shall" data-word-vn="sẽ" data-pos="modal verb / động từ tình thái" data-def-en="will; shall — indicates future intention" data-def-vn="sẽ; chỉ hành động trong tương lai" data-context-en="Trúc says she will be the patient." data-context-vn="Chị sẽ làm bệnh nhân.">sẽ</span> 
+    <span class="vocab" id="w-lam-7" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Trúc will take on the role of patient." data-context-vn="Chị sẽ làm bệnh nhân.">làm</span> 
+    <span class="vocab" id="w-benhnhan-2" data-word-en="patient (sick person)" data-word-vn="bệnh nhân" data-pos="noun / danh từ" data-def-en="patient; sick person" data-def-vn="bệnh nhân; người bệnh" data-context-en="Trúc agrees to be the patient in the game." data-context-vn="Trúc đồng ý làm bệnh nhân trong trò chơi.">bệnh nhân</span>.
+  </p>
+
+  <p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-that-1" data-word-en="really? / truly?" data-word-vn="thật" data-pos="adverb / trạng từ" data-def-en="really; truly — used to express disbelief or pleasant surprise" data-def-vn="thật sao; dùng để bày tỏ sự ngạc nhiên vui" data-context-en="Hạ My asks in surprise if Trúc really means it." data-context-vn="Hạ My hỏi lại vì ngạc nhiên: thật hả chị?">Thật</span> hả 
+    <span class="vocab" id="w-chi-8" data-word-en="older sister" data-word-vn="chị" data-pos="noun / danh từ" data-def-en="older sister — address term" data-def-vn="chị gái" data-context-en="Hạ My asks her older sister if she really means it." data-context-vn="Hạ My hỏi lại chị: thật hả chị?">chị</span>?
+  </p>
+
+  <p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-that-2" data-word-en="truly / really" data-word-vn="thật" data-pos="adverb / trạng từ" data-def-en="truly; really; for real" data-def-vn="thật sự; không đùa" data-context-en="Trúc confirms she really means it." data-context-vn="Trúc xác nhận là thật mà.">Thật</span> mà. 
+    <span class="vocab" id="w-chiem-2" data-word-en="us two sisters" data-word-vn="chị em mình" data-pos="noun phrase / cụm danh từ" data-def-en="the two of us sisters" data-def-vn="hai chị em chúng mình" data-context-en="Trúc invites Hạ My for both of them to go play together." data-context-vn="Trúc rủ Hạ My vào chơi cùng nhau.">Chị em mình</span> 
+    <span class="vocab" id="w-vao-1" data-word-en="go in / come inside" data-word-vn="vào" data-pos="verb / động từ" data-def-en="to go in; to enter" data-def-vn="vào trong; đi vào" data-context-en="Trúc tells Hạ My for them to go in and play." data-context-vn="Chị em mình vào chơi nha.">vào</span> 
+    <span class="vocab" id="w-choi-4" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play" data-def-vn="chơi" data-context-en="Trúc calls Hạ My to go in and play together." data-context-vn="Chị em mình vào chơi nha.">chơi</span> nha!
+  </p>
+
+  <p>
+    <span class="vocab" id="w-haichiem-1" data-word-en="the two sisters" data-word-vn="hai chị em" data-pos="noun phrase / cụm danh từ" data-def-en="the two siblings (sisters); the older and younger sister together" data-def-vn="hai chị em; chị và em cùng nhau" data-context-en="The two sisters play happily together." data-context-vn="Hai chị em vui vẻ chơi cùng nhau.">Hai chị em</span> 
+    <span class="vocab" id="w-vuive-1" data-word-en="happily / cheerfully" data-word-vn="vui vẻ" data-pos="adverb / trạng từ" data-def-en="happily; cheerfully; in a joyful manner" data-def-vn="vui vẻ; hân hoan; phấn khởi" data-context-en="The two sisters play happily together after reconciling." data-context-vn="Hai chị em vui vẻ chơi cùng nhau sau khi hòa giải.">vui vẻ</span> 
+    <span class="vocab" id="w-choi-5" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play" data-def-vn="chơi" data-context-en="The sisters play happily together." data-context-vn="Hai chị em vui vẻ chơi cùng nhau.">chơi</span> 
+    <span class="vocab" id="w-cungvoi-1" data-word-en="together / with each other" data-word-vn="cùng nhau" data-pos="adverb / trạng từ" data-def-en="together; with each other" data-def-vn="cùng với nhau" data-context-en="The two sisters play together happily." data-context-vn="Hai chị em chơi cùng nhau vui vẻ.">cùng nhau</span>.
+  </p>
+
+  <p>
+    <span class="vocab" id="w-motlucsau-2" data-word-en="a little while later" data-word-vn="một lúc sau" data-pos="adverb / trạng từ" data-def-en="a little while later" data-def-vn="một lúc sau" data-context-en="A little while later, the parents return home." data-context-vn="Một lúc sau, ba mẹ về đến nhà.">Một lúc sau</span>, 
+    <span class="vocab" id="w-bame-1" data-word-en="father and mother / parents" data-word-vn="ba mẹ" data-pos="noun phrase / cụm danh từ" data-def-en="father and mother; parents" data-def-vn="ba và mẹ; cha mẹ" data-context-en="The parents return home." data-context-vn="Ba mẹ về đến nhà.">ba mẹ</span> 
+    <span class="vocab" id="w-ve-1" data-word-en="return / come back" data-word-vn="về" data-pos="verb / động từ" data-def-en="to return; to come back home" data-def-vn="về; trở về nhà" data-context-en="The parents come back home." data-context-vn="Ba mẹ về đến nhà.">về</span> đến 
+    <span class="vocab" id="w-nha-3" data-word-en="home" data-word-vn="nhà" data-pos="noun / danh từ" data-def-en="home; house" data-def-vn="nhà, nơi ở" data-context-en="The parents return home." data-context-vn="Ba mẹ về đến nhà.">nhà</span>.
+  </p>
+
+  <p>
+    <span class="speaker">Ba:</span> Ha ha! 
+    <span class="vocab" id="w-hai-1" data-word-en="two" data-word-vn="hai" data-pos="number / số từ" data-def-en="two — referring to both daughters" data-def-vn="hai — chỉ cả hai cô con gái" data-context-en="The father calls both daughters his two princesses." data-context-vn="Ba gọi cả hai con gái là hai cô công chúa.">Hai</span> 
+    <span class="vocab" id="w-cocongchua-1" data-word-en="little princesses" data-word-vn="cô công chúa" data-pos="noun phrase / cụm danh từ" data-def-en="little princess; a term of endearment for a daughter" data-def-vn="công chúa nhỏ; từ âu yếm gọi con gái" data-context-en="The father lovingly calls his two daughters his princesses." data-context-vn="Ba âu yếm gọi hai con gái là hai cô công chúa của ba.">cô công chúa</span> của 
+    <span class="vocab" id="w-ba-3" data-word-en="dad / father" data-word-vn="ba" data-pos="noun / danh từ" data-def-en="dad; father — referring to himself" data-def-vn="ba; cha tự xưng" data-context-en="The father calls the girls his princesses." data-context-vn="Hai cô công chúa của ba ngoan quá.">ba</span> 
+    <span class="vocab" id="w-ngoan-1" data-word-en="good / well-behaved" data-word-vn="ngoan" data-pos="adjective / tính từ" data-def-en="good; well-behaved; obedient (said of children)" data-def-vn="ngoan ngoãn; biết vâng lời; ngoan ngoãn" data-context-en="The father praises both daughters for being well-behaved." data-context-vn="Ba khen hai con gái ngoan quá.">ngoan</span> quá!
+  </p>
+
+  <p><span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-ba-4" data-word-en="dad / father" data-word-vn="ba" data-pos="noun / danh từ" data-def-en="dad; father" data-def-vn="ba, cha" data-context-en="Hạ My exclaims that dad has come home." data-context-vn="Hạ My reo lên ba về rồi!">Ba</span> 
+    <span class="vocab" id="w-ve-2" data-word-en="returned / came back" data-word-vn="về" data-pos="verb / động từ" data-def-en="to return; to come back" data-def-vn="về, trở về" data-context-en="Hạ My is excited that her father has come back." data-context-vn="Ba về rồi — Hạ My reo lên.">về</span> rồi!
+  </p>
+
+  <p>
+    <span class="speaker">Ba:</span> 
+    <span class="vocab" id="w-ba-5" data-word-en="dad / I (father)" data-word-vn="ba" data-pos="pronoun / đại từ" data-def-en="dad; father referring to himself" data-def-vn="ba tự xưng khi nói với con" data-context-en="The father says he heard from the mother about Trúc's good behavior." data-context-vn="Ba nghe mẹ nói hôm nay Trúc biết chăm sóc em.">Ba</span> 
+    <span class="vocab" id="w-nghe-2" data-word-en="hear / was told" data-word-vn="nghe" data-pos="verb / động từ" data-def-en="to hear; to be told" data-def-vn="nghe, được kể" data-context-en="The father heard from the mother about Trúc." data-context-vn="Ba nghe mẹ nói về Trúc.">nghe</span> 
+    <span class="vocab" id="w-me-7" data-word-en="mother / mom" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="mother" data-def-vn="mẹ" data-context-en="The father heard from the mother." data-context-vn="Ba nghe mẹ nói.">mẹ</span> 
+    <span class="vocab" id="w-noi-2" data-word-en="say / tell" data-word-vn="nói" data-pos="verb / động từ" data-def-en="to say; to tell" data-def-vn="nói, kể lại" data-context-en="The mother told the father about Trúc's behavior." data-context-vn="Ba nghe mẹ nói hôm nay Trúc biết chăm sóc em.">nói</span> 
+    <span class="vocab" id="w-homnay-4" data-word-en="today" data-word-vn="hôm nay" data-pos="adverb / trạng từ" data-def-en="today" data-def-vn="hôm nay" data-context-en="The father says Trúc was good today." data-context-vn="Hôm nay Trúc biết chăm sóc em.">hôm nay</span> 
+    <span class="vocab" id="w-truc-6" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister" data-def-vn="Chị gái" data-context-en="Trúc knew how to take care of her younger sister today." data-context-vn="Hôm nay Trúc biết chăm sóc em.">Trúc</span> 
+    <span class="vocab" id="w-biet-5" data-word-en="knew how to / showed" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know how to; showed ability or wisdom" data-def-vn="biết, thể hiện được khả năng hay sự hiểu biết" data-context-en="Trúc showed she knows how to take care of her younger sister." data-context-vn="Trúc biết chăm sóc em.">biết</span> 
+    <span class="vocab" id="w-chamsoc-1" data-word-en="take care of / look after" data-word-vn="chăm sóc" data-pos="verb phrase / cụm động từ" data-def-en="to take care of; to look after someone" data-def-vn="chăm sóc; trông nom ai đó" data-context-en="The father praises Trúc for looking after her younger sister." data-context-vn="Ba khen Trúc biết chăm sóc em.">chăm sóc</span> 
+    <span class="vocab" id="w-em-18" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em" data-context-en="Trúc took care of her younger sister today." data-context-vn="Trúc biết chăm sóc em hôm nay.">em</span>. 
+    <span class="vocab" id="w-gioi-1" data-word-en="well done / clever / capable" data-word-vn="giỏi" data-pos="adjective / tính từ" data-def-en="well done; clever; capable; skillful" data-def-vn="giỏi; thông minh; khéo léo; tài năng" data-context-en="The father praises Trúc with 'giỏi lắm' meaning well done." data-context-vn="Ba khen Trúc: giỏi lắm!">Giỏi</span> lắm!
+  </p>
+
+  <p>
+    <span class="speaker">Trúc:</span> Dạ, 
+    <span class="vocab" id="w-tunay-1" data-word-en="from now on" data-word-vn="từ nay" data-pos="adverb / trạng từ" data-def-en="from now on; starting from today" data-def-vn="từ nay; kể từ bây giờ trở đi" data-context-en="Trúc promises that from now on she will yield more to her younger sister." data-context-vn="Trúc hứa từ nay sẽ nhường nhịn em nhiều hơn.">từ nay</span> 
+    <span class="vocab" id="w-con-9" data-word-en="I / me (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="I; me — child speaking to parent" data-def-vn="con tự xưng với cha mẹ" data-context-en="Trúc says she will yield more from now on." data-context-vn="Con sẽ nhường nhịn em nhiều hơn ạ.">con</span> 
+    <span class="vocab" id="w-se-2" data-word-en="will" data-word-vn="sẽ" data-pos="modal verb / động từ tình thái" data-def-en="will — future intention" data-def-vn="sẽ — ý định trong tương lai" data-context-en="Trúc says she will yield more." data-context-vn="Con sẽ nhường nhịn em nhiều hơn.">sẽ</span> 
+    <span class="vocab" id="w-nhuongnhin-3" data-word-en="yield / give way" data-word-vn="nhường nhịn" data-pos="verb / động từ" data-def-en="to yield; to be patient and accommodating" data-def-vn="nhường nhịn; kiên nhẫn và chiều ý người khác" data-context-en="Trúc promises to yield more to her younger sister." data-context-vn="Con sẽ nhường nhịn em nhiều hơn ạ.">nhường nhịn</span> 
+    <span class="vocab" id="w-em-19" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em" data-context-en="Trúc will yield more to her younger sister." data-context-vn="Con sẽ nhường nhịn em nhiều hơn.">em</span> 
+    <span class="vocab" id="w-nhieu-1" data-word-en="more / a lot" data-word-vn="nhiều" data-pos="adverb / trạng từ" data-def-en="more; a lot — comparative degree" data-def-vn="nhiều hơn; nhiều — mức độ so sánh" data-context-en="Trúc promises to yield to her sister even more from now on." data-context-vn="Con sẽ nhường nhịn em nhiều hơn.">nhiều</span> 
+    <span class="vocab" id="w-hon-2" data-word-en="more / -er (comparative)" data-word-vn="hơn" data-pos="particle / tiểu từ so sánh" data-def-en="more; -er — used to form the comparative" data-def-vn="hơn — từ so sánh hơn" data-context-en="Trúc will yield more than before." data-context-vn="Con sẽ nhường nhịn em nhiều hơn.">hơn</span> ạ.
+  </p>
+
+  <p>
+    <span class="speaker">Mẹ:</span> 
+    <span class="vocab" id="w-neu-1" data-word-en="if" data-word-vn="nếu" data-pos="conjunction / liên từ" data-def-en="if; provided that" data-def-vn="nếu; miễn là" data-context-en="The mother says if both children are good, the whole family will go out tonight." data-context-vn="Mẹ nói nếu hai con ngoan thì tối nay cả nhà đi chơi.">Nếu</span> 
+    <span class="vocab" id="w-haicon-1" data-word-en="both children / you two" data-word-vn="hai con" data-pos="noun phrase / cụm danh từ" data-def-en="both children; referring to both daughters" data-def-vn="hai con — cả hai đứa trẻ" data-context-en="The mother says if both children are good, they'll go out." data-context-vn="Nếu hai con ngoan thì cả nhà đi chơi.">hai con</span> 
+    <span class="vocab" id="w-ngoan-2" data-word-en="good / well-behaved" data-word-vn="ngoan" data-pos="adjective / tính từ" data-def-en="good; well-behaved" data-def-vn="ngoan ngoãn" data-context-en="If both children are well-behaved, the family will go out." data-context-vn="Nếu hai con ngoan, tối nay cả nhà đi chơi.">ngoan</span>, 
+    <span class="vocab" id="w-toinay-1" data-word-en="tonight / this evening" data-word-vn="tối nay" data-pos="adverb / trạng từ" data-def-en="tonight; this evening" data-def-vn="tối nay; buổi tối hôm nay" data-context-en="The mother promises that tonight the whole family will go out." data-context-vn="Tối nay cả nhà mình đi chơi nhé.">tối nay</span> 
+    <span class="vocab" id="w-canha-1" data-word-en="the whole family" data-word-vn="cả nhà" data-pos="noun phrase / cụm danh từ" data-def-en="the whole family; everyone in the house" data-def-vn="cả nhà; tất cả mọi người trong gia đình" data-context-en="The whole family will go out together tonight." data-context-vn="Tối nay cả nhà mình đi chơi.">cả nhà</span> 
+    <span class="vocab" id="w-minh-3" data-word-en="us / our (family)" data-word-vn="mình" data-pos="pronoun / đại từ" data-def-en="us; our — referring to the family collectively" data-def-vn="chúng mình; dùng để chỉ cả gia đình" data-context-en="The mother uses 'mình' to refer to the family going out together." data-context-vn="Cả nhà mình sẽ đi chơi tối nay.">mình</span> 
+    <span class="vocab" id="w-se-3" data-word-en="will" data-word-vn="sẽ" data-pos="modal verb / động từ tình thái" data-def-en="will" data-def-vn="sẽ" data-context-en="The mother says the family will go out." data-context-vn="Cả nhà mình sẽ đi chơi.">sẽ</span> 
+    <span class="vocab" id="w-dichoi-1" data-word-en="go out / go play" data-word-vn="đi chơi" data-pos="verb phrase / cụm động từ" data-def-en="to go out; to go and have fun" data-def-vn="đi chơi; đi ra ngoài vui chơi" data-context-en="The whole family will go out for fun tonight." data-context-vn="Tối nay cả nhà mình sẽ đi chơi.">đi chơi</span> nhé!
+  </p>
+
+  <p>
+    <span class="speaker">Trúc và Hạ My:</span> Dạ 
+    <span class="vocab" id="w-dongý-1" data-word-en="agree / I agree" data-word-vn="đồng ý" data-pos="verb phrase / cụm động từ" data-def-en="to agree; to say yes to something" data-def-vn="đồng ý; tán thành" data-context-en="Both sisters happily agree to go out tonight." data-context-vn="Hai chị em đồng ý đi chơi tối nay.">đồng ý</span>! Hihi!
+  </p>
+  <!-- END STORY CONTENT -->
+
+  <!-- BACK BUTTON -->
+  <div style="margin: 28px 0 8px 0;">
+    <a href="../" class="back-btn">← Back</a>
+  </div>
+
+  <!-- TEST YOUR MEMORY SECTION -->
+  <h2>Test Your Memory</h2>
+  <p style="font-size:0.95rem; color:#5a3a10; margin-top:-6px; margin-bottom:14px;">After each pass through the content, try to remember the meaning and where in the story each word appeared.</p>
+  <div id="memory-grid"></div>
+  <!-- END TEST YOUR MEMORY SECTION -->
+
+  <!-- SKIP NOTES SECTION -->
+  
+
+  <!-- TRANSCRIPTION NOTES SECTION -->
+  
+
+</div><!-- end .page -->
+
+<!-- POPUP OVERLAY & CARD -->
+<div id="overlay" onclick="closePopup()"></div>
+<div id="popup-card" onclick="closePopup()">
+  <div class="pw-en" id="pc-en"></div>
+  <div class="pw-vn" id="pc-vn"></div>
+  <div class="pw-pos" id="pc-pos"></div>
+  <div class="pw-def" id="pc-def"></div>
+  <div class="pw-context-label">In context:</div>
+  <div class="pw-context" id="pc-ctx"></div>
+</div>
+
+<script>
+// Popup logic
+var currentWord = null;
+
+function openPopup(el) {
+  if (currentWord === el) {
+    closePopup();
+    return;
+  }
+  currentWord = el;
+  document.getElementById('pc-en').textContent = el.getAttribute('data-word-en') || '';
+  document.getElementById('pc-vn').textContent = el.getAttribute('data-word-vn') || '';
+  document.getElementById('pc-pos').textContent = el.getAttribute('data-pos') || '';
+  document.getElementById('pc-def').textContent = el.getAttribute('data-def-en') || '';
+  document.getElementById('pc-ctx').textContent = el.getAttribute('data-context-en') || '';
+  document.getElementById('popup-card').style.display = 'block';
+  document.getElementById('overlay').style.display = 'block';
+}
+
+function closePopup() {
+  currentWord = null;
+  document.getElementById('popup-card').style.display = 'none';
+  document.getElementById('overlay').style.display = 'none';
+}
+
+// Attach click handlers to all vocab words
+document.querySelectorAll('.vocab').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    openPopup(el);
+  });
+});
+
+// Build memory grid
+var vocabWords = [];
+var seen = {};
+document.querySelectorAll('.vocab').forEach(function(el) {
+  var w = el.getAttribute('data-word-vn') || el.textContent.trim();
+  if (!seen[w]) {
+    seen[w] = el.id || null;
+    vocabWords.push({ label: el.textContent.trim(), id: el.id, key: w });
+  }
+});
+
+var grid = document.getElementById('memory-grid');
+vocabWords.forEach(function(item) {
+  var span = document.createElement('span');
+  span.textContent = item.label;
+  span.title = 'Click to find in text';
+  span.addEventListener('click', function() {
+    var target = item.id ? document.getElementById(item.id) : null;
+    if (!target) {
+      // find first matching vocab with same vn word
+      var all = document.querySelectorAll('.vocab');
+      for (var i = 0; i < all.length; i++) {
+        if ((all[i].getAttribute('data-word-vn') || '').trim() === item.key) {
+          target = all[i];
+          break;
+        }
+      }
+    }
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('highlight-scroll');
+      setTimeout(function() { target.classList.remove('highlight-scroll'); }, 1500);
+    }
+  });
+  grid.appendChild(span);
+});
+
+// Download content-only version
+function downloadContentOnly() {
+  var clone = document.documentElement.cloneNode(true);
+  // Remove .skip-notes
+  clone.querySelectorAll('.skip-notes').forEach(function(el) { el.remove(); });
+  // Remove .transcription-notes
+  clone.querySelectorAll('.transcription-notes').forEach(function(el) { el.remove(); });
+  // Remove download button
+  var btn = clone.querySelector('#download-btn');
+  if (btn) btn.remove();
+  // Clear memory grid so it rebuilds via JS
+  var mg = clone.querySelector('#memory-grid');
+  if (mg) mg.innerHTML = '';
+  var html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  var blob = new Blob([html], { type: 'text/html' });
+  var a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'biet_nhuong_nhin_em_nho_content.html';
+  a.click();
+}
+</script>
+
+
+</body></html>
