@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chủng Delta – Các Triệu Chứng Mới Của Covid-19 Là Gì?</title>
+<style>
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    margin: 0;
+    padding: 20px;
+    user-select: none;
+  }
+  #page {
+    background: #f0e6c8;
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 36px 44px 44px 44px;
+    border: 2px solid #a0845a;
+    border-radius: 4px;
+    position: relative;
+  }
+  h1 {
+    color: #3a1f00;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 8px;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+  }
+  h2 {
+    color: #3a1f00;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 4px;
+    font-size: 1.2rem;
+    margin-top: 32px;
+  }
+  p { line-height: 1.75; margin-bottom: 14px; }
+  ul { line-height: 2; padding-left: 22px; }
+
+  /* VOCAB WORDS */
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+  }
+
+  /* CORRECTION STYLES */
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+  .corrected.vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+  }
+
+  /* AUDIO PLAYER */
+  .audio-section {
+    margin-bottom: 24px;
+    padding: 14px 16px;
+    border: 1px solid #a0845a;
+    border-radius: 4px;
+    background: #e8d9b4;
+  }
+  .audio-label {
+    color: #7a4e1a;
+    font-size: 0.9rem;
+    margin-bottom: 6px;
+  }
+  audio#audio-player {
+    width: 100%;
+    margin-bottom: 8px;
+  }
+  audio::-webkit-media-controls-panel { background: #2e1f0a; }
+
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 6px;
+  }
+  .rewind-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 4px 11px;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  .rewind-btn:hover { background: #4a3010; }
+
+  /* POPUP CARD */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1.5px solid #7a4e1a;
+    border-radius: 6px;
+    padding: 20px 24px;
+    min-width: 300px;
+    max-width: 420px;
+    z-index: 1000;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.5);
+  }
+  #popup-card .pw-en { font-size: 1.3rem; font-weight: bold; color: #f0d9a0; margin-bottom: 2px; }
+  #popup-card .pw-vn { font-size: 0.95rem; font-style: italic; color: #c8a060; margin-bottom: 8px; }
+  #popup-card .pw-pos { font-size: 0.95rem; color: #b89060; margin-bottom: 8px; }
+  #popup-card .pw-def { font-size: 1rem; color: #f0d9a0; margin-bottom: 10px; }
+  #popup-card .pw-ctx-label { font-size: 0.95rem; color: #b89060; margin-bottom: 2px; }
+  #popup-card .pw-ctx { font-size: 0.95rem; color: #e0c898; font-style: italic; }
+
+  /* DOWNLOAD BUTTON */
+  #download-btn {
+    position: absolute;
+    top: 14px;
+    right: 14px;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 5px 12px;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+  }
+  #download-btn:hover { background: #4a3010; }
+
+  /* MEMORY GRID */
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px 12px;
+    margin-top: 12px;
+  }
+  #memory-grid span {
+    border-bottom: 1.5px dotted #7a4e1a;
+    cursor: pointer;
+    padding: 2px 0;
+    color: #2a1500;
+    font-size: 0.97rem;
+  }
+  .highlight-scroll {
+    background: #ffe082 !important;
+    transition: background 0.3s;
+  }
+
+  /* BACK BUTTON */
+  .back-btn {
+    display: inline-block;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 5px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    text-decoration: none;
+    margin: 18px 0 8px 0;
+  }
+  .back-btn:hover { background: #4a3010; }
+
+  /* TRANSCRIPTION NOTES */
+  .skip-notes, .transcription-notes {
+    margin-top: 28px;
+    padding-top: 12px;
+    border-top: 1px solid #7a4e1a;
+    font-size: 0.92rem;
+    color: #5a3a10;
+  }
+  table { border-collapse: collapse; width: 100%; margin-top: 8px; }
+  th, td { border: 1px solid #a0845a; padding: 5px 9px; text-align: left; font-size: 0.9rem; }
+  th { background: #e0cba0; color: #3a1f00; }
+</style>
+</head>
+<body>
+<div id="page">
+
+  
+
+  <h1><span class="vocab" data-word-en="Delta variant" data-word-vn="Chủng Delta" data-pos="danh từ / noun" data-def-en="A specific variant of the SARS-CoV-2 coronavirus, known for being highly transmissible." data-def-vn="Một biến thể cụ thể của virus corona SARS-CoV-2, được biết đến với khả năng lây lan cao." data-context-en="The article discusses how Delta became the dominant strain in many countries." data-context-vn="Bài viết thảo luận về cách chủng Delta trở thành chủng trội ở nhiều quốc gia.">Chủng Delta</span> –
+    Các <span class="vocab" data-word-en="symptoms" data-word-vn="triệu chứng" data-pos="danh từ / noun" data-def-en="Physical or mental signs that indicate the presence of a disease or condition." data-def-vn="Các dấu hiệu thể chất hoặc tâm thần cho thấy sự hiện diện của một bệnh hoặc tình trạng." data-context-en="The article examines what symptoms are most common with Covid-19." data-context-vn="Bài viết xem xét những triệu chứng nào phổ biến nhất với Covid-19.">triệu chứng</span>
+    <span class="vocab" data-word-en="new" data-word-vn="mới" data-pos="tính từ / adjective" data-def-en="Recently appeared or changed; not previously known or observed." data-def-vn="Mới xuất hiện hoặc thay đổi gần đây; chưa được biết đến hoặc quan sát trước đây." data-context-en="The new symptoms of Covid-19 have changed as variants evolved." data-context-vn="Các triệu chứng mới của Covid-19 đã thay đổi khi các biến thể phát triển.">mới</span>
+    của Covid-19 là gì?</h1>
+
+  <!-- AUDIO PLAYER -->
+  <div class="audio-section">
+    <div class="audio-label">🎧 Listen to the text</div>
+    <audio id="audio-player" controls="">
+      <source src="symptoms.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+  <!-- END AUDIO PLAYER -->
+
+  <!-- PARAGRAPH 1 -->
+  <p>
+    Trong năm 2020,
+    <span class="vocab" id="w-ho-khan" data-word-en="dry cough" data-word-vn="ho khan" data-pos="danh từ / noun" data-def-en="A cough that does not produce mucus or phlegm." data-def-vn="Ho không có đờm hoặc chất nhầy." data-context-en="In 2020, dry cough was clearly one of the main symptoms of Covid-19." data-context-vn="Năm 2020, ho khan rõ ràng là một trong những triệu chứng chính của Covid-19.">ho khan</span>
+    và
+    <span class="vocab" id="w-sot" data-word-en="fever" data-word-vn="sốt" data-pos="danh từ / noun" data-def-en="An abnormally high body temperature, often a sign of infection or illness." data-def-vn="Nhiệt độ cơ thể cao bất thường, thường là dấu hiệu của nhiễm trùng hoặc bệnh tật." data-context-en="Fever was one of the clearest symptoms of Covid-19 in 2020." data-context-vn="Sốt là một trong những triệu chứng rõ ràng nhất của Covid-19 vào năm 2020.">sốt</span>
+    rõ ràng là các
+    <span class="vocab" data-word-en="symptoms" data-word-vn="triệu chứng" data-pos="danh từ / noun" data-def-en="Physical or mental signs indicating the presence of a disease." data-def-vn="Các dấu hiệu thể chất hoặc tâm thần cho thấy sự hiện diện của một bệnh." data-context-en="Dry cough and fever were clearly the symptoms of Covid-19." data-context-vn="Ho khan và sốt rõ ràng là các triệu chứng của Covid-19.">triệu chứng</span>
+    của Covid-19. Nếu bạn
+    <span class="vocab" id="w-dau-dau" data-word-en="headache" data-word-vn="đau đầu" data-pos="danh từ / noun" data-def-en="A pain or ache felt in the head." data-def-vn="Đau hoặc nhức ở đầu." data-context-en="Headache combined with body aches was a clear sign of the disease." data-context-vn="Đau đầu kết hợp với đau nhức toàn thân là dấu hiệu rõ ràng của bệnh.">đau đầu</span>
+    kèm theo
+    <span class="vocab" id="w-chan-tay-nhuc-moi" data-word-en="body aches and fatigue" data-word-vn="chân tay nhức mỏi" data-pos="cụm danh từ / noun phrase" data-def-en="Aching and tiredness felt throughout the limbs and body." data-def-vn="Đau nhức và mệt mỏi cảm thấy khắp tay chân và cơ thể." data-context-en="Headache accompanied by body aches was a certain sign of the disease." data-context-vn="Đau đầu kèm theo chân tay nhức mỏi là dấu hiệu chắc chắn của bệnh.">chân tay nhức mỏi</span>
+    thì đó
+    <span class="vocab" data-word-en="certainly" data-word-vn="chắc chắn" data-pos="trạng từ / adverb" data-def-en="Without doubt; definitely." data-def-vn="Không còn nghi ngờ; chắc chắn." data-context-en="These symptoms were certainly a clear sign of this illness." data-context-vn="Đó chắc chắn là dấu hiệu rõ ràng của bệnh này.">chắc chắn</span>
+    là
+    <span class="vocab" data-word-en="clear sign" data-word-vn="dấu hiệu rõ ràng" data-pos="cụm danh từ / noun phrase" data-def-en="An unmistakable indicator or marker of a condition." data-def-vn="Một chỉ số hoặc dấu hiệu không thể nhầm lẫn của một tình trạng." data-context-en="Headache with body aches was a clear sign of the disease." data-context-vn="Đó là dấu hiệu rõ ràng của bệnh này.">dấu hiệu rõ ràng</span>
+    của bệnh này. Khi bị
+    <span class="vocab" id="w-sut-sit-mui" data-word-en="runny nose" data-word-vn="sụt sịt mũi" data-pos="cụm động từ / verb phrase" data-def-en="Having mucus dripping or running from the nose." data-def-vn="Có chất nhầy chảy ra từ mũi." data-context-en="A runny nose and sore throat could indicate a common cold rather than Covid-19." data-context-vn="Khi bị sụt sịt mũi và đau họng, có thể bạn chỉ bị cảm lạnh.">sụt sịt mũi</span>
+    và
+    <span class="vocab" id="w-dau-hong" data-word-en="sore throat" data-word-vn="đau họng" data-pos="danh từ / noun" data-def-en="Pain or irritation in the throat, often worsened by swallowing." data-def-vn="Đau hoặc kích ứng ở cổ họng, thường nặng hơn khi nuốt." data-context-en="A sore throat combined with a runny nose suggested a possible cold." data-context-vn="Đau họng kết hợp với sụt sịt mũi có thể chỉ là cảm lạnh.">đau họng</span>,
+    có thể bạn
+    <span class="vocab" data-word-en="lucky" data-word-vn="may mắn" data-pos="tính từ / adjective" data-def-en="Having good fortune; fortunate." data-def-vn="Có vận may tốt; thuận lợi." data-context-en="You might be lucky and only have a common cold." data-context-vn="Có thể bạn may mắn và chỉ bị cảm lạnh.">may mắn</span>
+    và chỉ bị
+    <span class="vocab" id="w-cam-lanh" data-word-en="common cold" data-word-vn="cảm lạnh" data-pos="danh từ / noun" data-def-en="A mild viral infection of the nose and throat." data-def-vn="Nhiễm trùng virus nhẹ ở mũi và cổ họng." data-context-en="A runny nose and sore throat might mean you only have a cold." data-context-vn="Sụt sịt mũi và đau họng có thể chỉ là cảm lạnh.">cảm lạnh</span>.
+    Đây là cách
+    <span class="vocab" data-word-en="diagnose" data-word-vn="đoán bệnh" data-pos="cụm động từ / verb phrase" data-def-en="To identify a disease or condition based on symptoms." data-def-vn="Xác định một bệnh hoặc tình trạng dựa trên các triệu chứng." data-context-en="This was the most rudimentary method we could use to diagnose the disease." data-context-vn="Đây là cách đoán bệnh thô sơ nhất mà ta có thể dùng.">đoán bệnh</span>
+    "<span class="vocab" data-word-en="rudimentary / primitive" data-word-vn="thô sơ" data-pos="tính từ / adjective" data-def-en="Basic, crude, or undeveloped; lacking sophistication." data-def-vn="Cơ bản, thô sơ hoặc chưa phát triển; thiếu tinh tế." data-context-en="This was the most rudimentary method of distinguishing Covid-19 symptoms." data-context-vn="Đây là cách đoán bệnh thô sơ nhất mà ta có thể dùng.">thô sơ</span>"
+    nhất mà ta có thể dùng để
+    <span class="vocab" data-word-en="distinguish" data-word-vn="phân biệt" data-pos="động từ / verb" data-def-en="To recognize or identify as different; to tell apart." data-def-vn="Nhận ra hoặc xác định là khác nhau; phân biệt." data-context-en="We used this method to distinguish Covid-19 symptoms from other illnesses." data-context-vn="Ta dùng cách này để phân biệt các triệu chứng của Covid-19 với các bệnh khác.">phân biệt</span>
+    các triệu chứng của Covid-19 với các triệu chứng các bệnh khác trong
+    <span class="vocab" data-word-en="time period / moment" data-word-vn="thời điểm" data-pos="danh từ / noun" data-def-en="A specific point or period in time." data-def-vn="Một thời điểm hoặc giai đoạn cụ thể trong thời gian." data-context-en="This was the situation at the time when the pandemic first broke out." data-context-vn="Đây là cách ta phân biệt trong thời điểm đại dịch mới bùng phát.">thời điểm</span>
+    <span class="vocab" data-word-en="pandemic" data-word-vn="đại dịch" data-pos="danh từ / noun" data-def-en="A disease outbreak that spreads across a large region or globally." data-def-vn="Một đợt bùng phát dịch bệnh lan rộng trên một khu vực lớn hoặc toàn cầu." data-context-en="The article refers to the early period when the pandemic first broke out." data-context-vn="Trong thời điểm đại dịch mới bùng phát.">đại dịch</span>
+    mới
+    <span class="vocab" data-word-en="break out / erupt" data-word-vn="bùng phát" data-pos="động từ / verb" data-def-en="To suddenly begin or spread rapidly, as of a disease or crisis." data-def-vn="Bắt đầu đột ngột hoặc lan rộng nhanh chóng, như của một bệnh hoặc khủng hoảng." data-context-en="The pandemic first broke out and these were the initial symptoms known." data-context-vn="Trong thời điểm đại dịch mới bùng phát.">bùng phát</span>.
+  </p>
+
+  <!-- PARAGRAPH 2 -->
+  <p>
+    Sau đó,
+    <span class="vocab" data-word-en="appear / emerge" data-word-vn="xuất hiện" data-pos="động từ / verb" data-def-en="To come into view or become known; to emerge." data-def-vn="Xuất hiện trong tầm nhìn hoặc trở nên được biết đến; xuất hiện." data-context-en="Additional symptoms appeared, including loss of smell and taste." data-context-vn="Sau đó, xuất hiện thêm triệu chứng mất khứu giác và vị giác.">xuất hiện</span>
+    thêm triệu chứng
+    <span class="vocab" id="w-mat-khuu-giac" data-word-en="loss of smell" data-word-vn="mất khứu giác" data-pos="cụm danh từ / noun phrase" data-def-en="The inability to smell; anosmia." data-def-vn="Mất khả năng ngửi; chứng mất khứu giác." data-context-en="Loss of smell emerged as a new symptom and became a key sign of Covid-19." data-context-vn="Mất khứu giác xuất hiện như một triệu chứng mới và là dấu hiệu chính của Covid-19.">mất khứu giác</span>
+    và
+    <span class="vocab" id="w-vi-giac" data-word-en="sense of taste / taste" data-word-vn="vị giác" data-pos="danh từ / noun" data-def-en="The sense by which the flavor of things is perceived in the mouth." data-def-vn="Giác quan mà qua đó hương vị của thức ăn được cảm nhận trong miệng." data-context-en="Loss of taste joined loss of smell as a key Covid-19 indicator." data-context-vn="Mất vị giác cùng với mất khứu giác là dấu hiệu chính của Covid-19.">vị giác</span>:
+    đây là
+    <span class="vocab" data-word-en="main sign / key indicator" data-word-vn="dấu hiệu chính" data-pos="cụm danh từ / noun phrase" data-def-en="The primary or most important indicator of a condition." data-def-vn="Chỉ số chính hoặc quan trọng nhất của một tình trạng." data-context-en="Loss of smell was the main sign showing you had contracted Covid-19." data-context-vn="Đây là dấu hiệu chính cho thấy bạn đã nhiễm Covid-19.">dấu hiệu chính</span>
+    cho thấy bạn đã
+    <span class="vocab" data-word-en="infected / contracted" data-word-vn="nhiễm" data-pos="động từ / verb" data-def-en="To be affected by a disease-causing organism; to contract a disease." data-def-vn="Bị ảnh hưởng bởi một sinh vật gây bệnh; mắc một căn bệnh." data-context-en="Loss of smell was the main sign showing you had infected with Covid-19." data-context-vn="Đây là dấu hiệu chính cho thấy bạn đã nhiễm Covid-19.">nhiễm</span>
+    Covid-19. Đến hôm nay đây vẫn là
+    <span class="vocab" data-word-en="reliable sign" data-word-vn="dấu hiệu đáng tin cậy" data-pos="cụm danh từ / noun phrase" data-def-en="An indicator that can be trusted to be accurate and consistent." data-def-vn="Một chỉ số có thể được tin tưởng là chính xác và nhất quán." data-context-en="Loss of smell is still considered a reliable sign of Covid-19 today." data-context-vn="Đến hôm nay đây vẫn là dấu hiệu đáng tin cậy.">dấu hiệu đáng tin cậy</span>.
+    Nếu
+    <span class="vocab" data-word-en="notice / recognize" data-word-vn="nhận thấy" data-pos="động từ / verb" data-def-en="To become aware of; to perceive or observe." data-def-vn="Trở nên nhận thức; cảm nhận hoặc quan sát." data-context-en="If you notice a change in your sense of taste or smell, it is a warning sign." data-context-vn="Nếu nhận thấy sự thay đổi về vị giác hoặc khứu giác, đó là hồi chuông cảnh báo.">nhận thấy</span>
+    sự
+    <span class="vocab" data-word-en="change" data-word-vn="thay đổi" data-pos="danh từ / noun" data-def-en="The act or result of becoming different." data-def-vn="Hành động hoặc kết quả của việc trở nên khác biệt." data-context-en="A change in taste or smell is a warning bell for Covid-19." data-context-vn="Sự thay đổi về vị giác hoặc khứu giác là hồi chuông cảnh báo.">thay đổi</span>
+    về
+    <span class="vocab" data-word-en="taste" data-word-vn="vị giác" data-pos="danh từ / noun" data-def-en="The sense by which flavors are perceived." data-def-vn="Giác quan cảm nhận hương vị." data-context-en="A change in taste or smell is a warning sign of Covid-19." data-context-vn="Nếu nhận thấy sự thay đổi về vị giác hoặc khứu giác, đó là hồi chuông cảnh báo.">vị giác</span>
+    hoặc
+    <span class="vocab" data-word-en="sense of smell" data-word-vn="khứu giác" data-pos="danh từ / noun" data-def-en="The sense by which odors are perceived through the nose." data-def-vn="Giác quan cảm nhận mùi qua mũi." data-context-en="A change in taste or smell is a warning sign of Covid-19." data-context-vn="Sự thay đổi về khứu giác là hồi chuông cảnh báo đã nhiễm Covid-19.">khứu giác</span>,
+    thì đó là
+    <span class="vocab" data-word-en="warning bell / alarm" data-word-vn="hồi chuông cảnh báo" data-pos="cụm danh từ / noun phrase" data-def-en="A signal or alert that something dangerous or serious is happening." data-def-vn="Một tín hiệu hoặc cảnh báo rằng điều gì đó nguy hiểm hoặc nghiêm trọng đang xảy ra." data-context-en="A change in smell or taste is a warning bell that you have contracted Covid-19." data-context-vn="Đó là hồi chuông cảnh báo đã nhiễm Covid-19.">hồi chuông cảnh báo</span>
+    đã
+    <span class="vocab" data-word-en="infected" data-word-vn="nhiễm" data-pos="động từ / verb" data-def-en="Affected by a pathogen; having contracted a disease." data-def-vn="Bị ảnh hưởng bởi mầm bệnh; đã mắc một bệnh." data-context-en="A change in smell or taste signals that you have been infected with Covid-19." data-context-vn="Đó là hồi chuông cảnh báo đã nhiễm Covid-19.">nhiễm</span>
+    Covid-19.
+  </p>
+
+  <!-- PARAGRAPH 3 -->
+  <p>
+    Tuy nhiên, theo
+    <span class="vocab" data-word-en="results" data-word-vn="kết quả" data-pos="danh từ / noun" data-def-en="The outcome or finding of an activity, experiment, or study." data-def-vn="Kết quả hoặc phát hiện của một hoạt động, thí nghiệm hoặc nghiên cứu." data-context-en="According to the results of a study in the UK, many symptoms have clearly changed." data-context-vn="Theo kết quả của một nghiên cứu tại Anh, nhiều triệu chứng khác đã thay đổi.">kết quả</span>
+    của một
+    <span class="vocab" data-word-en="study / research" data-word-vn="nghiên cứu" data-pos="danh từ / noun" data-def-en="A systematic investigation into a subject to establish facts." data-def-vn="Một cuộc điều tra có hệ thống về một chủ đề để xác lập sự thật." data-context-en="According to the results of a study in the UK, symptoms have clearly changed." data-context-vn="Theo kết quả của một nghiên cứu tại Anh, nhiều triệu chứng đã thay đổi.">nghiên cứu</span>
+    tại Anh, nhiều
+    <span class="vocab" data-word-en="symptoms" data-word-vn="triệu chứng" data-pos="danh từ / noun" data-def-en="Physical signs indicating the presence of a disease." data-def-vn="Các dấu hiệu thể chất cho thấy sự hiện diện của một bệnh." data-context-en="Many symptoms have clearly changed, possibly related to the Delta variant." data-context-vn="Nhiều triệu chứng khác rõ ràng đã thay đổi có liên quan đến biến thể Delta.">triệu chứng</span>
+    khác rõ ràng đã
+    <span class="vocab" data-word-en="changed" data-word-vn="thay đổi" data-pos="động từ / verb" data-def-en="To become different; to alter." data-def-vn="Trở nên khác biệt; thay đổi." data-context-en="Many other symptoms have clearly changed, possibly linked to the Delta variant." data-context-vn="Nhiều triệu chứng khác rõ ràng đã thay đổi rất có thể có liên quan đến biến thể Delta.">thay đổi</span>
+    rất có thể có
+    <span class="vocab" data-word-en="related to / linked to" data-word-vn="liên quan đến" data-pos="cụm động từ / verb phrase" data-def-en="Connected with or associated with something." data-def-vn="Liên kết hoặc kết hợp với điều gì đó." data-context-en="The symptom changes are likely related to the variant becoming dominant." data-context-vn="Rất có thể có liên quan đến việc biến thể trở thành chủng trội.">liên quan đến</span>
+    việc
+    <span class="vocab" data-word-en="variant" data-word-vn="biến thể" data-pos="danh từ / noun" data-def-en="A form or version of something that differs slightly from the original." data-def-vn="Một dạng hoặc phiên bản của điều gì đó khác một chút so với bản gốc." data-context-en="The changes are likely linked to the variant becoming dominant in many countries." data-context-vn="Có liên quan đến việc biến thể trở thành chủng trội tại nhiều quốc gia.">biến thể</span>
+    trở thành
+    <span class="vocab" data-word-en="dominant strain" data-word-vn="chủng trội" data-pos="cụm danh từ / noun phrase" data-def-en="The variant of a virus that is most prevalent or widespread in a population." data-def-vn="Biến thể của virus phổ biến nhất hoặc lan rộng nhất trong một quần thể." data-context-en="The Delta variant became the dominant strain in many countries around the world." data-context-vn="Biến thể trở thành chủng trội tại nhiều quốc gia trên thế giới.">chủng trội</span>
+    tại nhiều
+    <span class="vocab" data-word-en="countries" data-word-vn="quốc gia" data-pos="danh từ / noun" data-def-en="A nation with its own government and territory." data-def-vn="Một quốc gia với chính phủ và lãnh thổ riêng." data-context-en="The Delta variant became the dominant strain in many countries around the world." data-context-vn="Biến thể trở thành chủng trội tại nhiều quốc gia trên thế giới.">quốc gia</span>
+    trên thế giới. Những triệu chứng
+    <span class="vocab" data-word-en="most common / most prevalent" data-word-vn="phổ biến nhất" data-pos="cụm tính từ / adjective phrase" data-def-en="Occurring most frequently; most widespread." data-def-vn="Xảy ra thường xuyên nhất; phổ biến rộng rãi nhất." data-context-en="What are the most common symptoms in unvaccinated people?" data-context-vn="Những triệu chứng phổ biến nhất ở những người chưa được tiêm chủng là gì?">phổ biến nhất</span>
+    ở những người chưa được
+    <span class="vocab" data-word-en="vaccinated" data-word-vn="tiêm chủng" data-pos="động từ / verb" data-def-en="Administered a vaccine to produce immunity against a disease." data-def-vn="Được tiêm vắc-xin để tạo miễn dịch chống lại một bệnh." data-context-en="The most common symptoms in people who have not been vaccinated are listed." data-context-vn="Những triệu chứng phổ biến nhất ở những người chưa được tiêm chủng là gì?">tiêm chủng</span>
+    là gì? Trong
+    <span class="vocab" data-word-en="study / research" data-word-vn="nghiên cứu" data-pos="danh từ / noun" data-def-en="A systematic investigation to establish facts or test hypotheses." data-def-vn="Một cuộc điều tra có hệ thống để xác lập sự thật hoặc kiểm tra giả thuyết." data-context-en="In the Covid symptom study, infected people reported their symptoms via an app." data-context-vn="Trong nghiên cứu về triệu chứng Covid, người bị nhiễm bệnh báo cáo qua ứng dụng.">nghiên cứu</span>
+    về triệu chứng Covid, những người bị
+    <span class="vocab" data-word-en="infected" data-word-vn="nhiễm bệnh" data-pos="động từ / verb" data-def-en="Having contracted a disease; affected by a pathogen." data-def-vn="Đã mắc một bệnh; bị ảnh hưởng bởi mầm bệnh." data-context-en="Those who were infected reported their symptoms through an app." data-context-vn="Những người bị nhiễm bệnh đã báo cáo các triệu chứng qua ứng dụng.">nhiễm bệnh</span>
+    đã
+    <span class="vocab" data-word-en="reported" data-word-vn="báo cáo" data-pos="động từ / verb" data-def-en="To give an account of something observed or experienced." data-def-vn="Đưa ra một tài khoản về điều gì đó được quan sát hoặc trải nghiệm." data-context-en="Infected people reported their symptoms through an app." data-context-vn="Những người bị nhiễm bệnh đã báo cáo các triệu chứng của họ qua ứng dụng.">báo cáo</span>
+    các triệu chứng của họ thông qua một
+    <span class="vocab" data-word-en="app / application" data-word-vn="ứng dụng" data-pos="danh từ / noun" data-def-en="A software program, especially one designed for mobile devices." data-def-vn="Một chương trình phần mềm, đặc biệt là chương trình được thiết kế cho thiết bị di động." data-context-en="Participants reported their symptoms through a mobile app." data-context-vn="Những người bị nhiễm bệnh đã báo cáo triệu chứng qua một ứng dụng.">ứng dụng</span>.
+    <span class="vocab" data-word-en="current ranking" data-word-vn="xếp hạng hiện tại" data-pos="cụm danh từ / noun phrase" data-def-en="The present ordering of items by importance or frequency." data-def-vn="Thứ tự hiện tại của các mục theo tầm quan trọng hoặc tần suất." data-context-en="The current ranking of Covid-19 symptoms in unvaccinated people is listed." data-context-vn="Xếp hạng hiện tại của các triệu chứng nhiễm Covid-19 ở những người chưa tiêm chủng.">Xếp hạng hiện tại</span>
+    của các triệu chứng
+    <span class="vocab" data-word-en="infected with / contracting" data-word-vn="nhiễm" data-pos="động từ / verb" data-def-en="Affected by a disease-causing organism." data-def-vn="Bị ảnh hưởng bởi sinh vật gây bệnh." data-context-en="The current ranking of Covid-19 symptoms in unvaccinated people." data-context-vn="Xếp hạng hiện tại của các triệu chứng nhiễm Covid-19 ở những người chưa tiêm chủng.">nhiễm</span>
+    Covid-19 ở những người chưa được
+    <span class="vocab" data-word-en="vaccinated" data-word-vn="tiêm chủng" data-pos="động từ / verb" data-def-en="Inoculated against a disease with a vaccine." data-def-vn="Được tiêm vắc-xin để ngăn ngừa bệnh." data-context-en="The current ranking of symptoms in unvaccinated people is given." data-context-vn="Xếp hạng của các triệu chứng ở những người chưa được tiêm chủng.">tiêm chủng</span>
+    là:
+  </p>
+
+  <ul>
+    <li>
+      <span class="vocab" data-word-en="headache" data-word-vn="đau đầu" data-pos="danh từ / noun" data-def-en="A pain felt in the head." data-def-vn="Cơn đau cảm thấy ở đầu." data-context-en="Headache is now the top-ranked symptom for unvaccinated Covid-19 patients." data-context-vn="Đau đầu là triệu chứng xếp hạng đầu tiên ở người chưa tiêm chủng.">đau đầu</span>
+    </li>
+    <li>
+      <span class="vocab" data-word-en="sore throat / throat inflammation" data-word-vn="viêm họng" data-pos="danh từ / noun" data-def-en="Inflammation or infection of the throat causing pain." data-def-vn="Viêm hoặc nhiễm trùng cổ họng gây đau." data-context-en="Throat inflammation is one of the top-ranked symptoms of Covid-19." data-context-vn="Viêm họng là một trong những triệu chứng xếp hạng cao của Covid-19.">viêm họng</span>
+    </li>
+    <li>
+      <span class="vocab" data-word-en="runny nose" data-word-vn="sổ mũi" data-pos="danh từ / noun" data-def-en="A nasal discharge; mucus flowing from the nose." data-def-vn="Chảy nước mũi; chất nhầy chảy ra từ mũi." data-context-en="A runny nose is now a top-ranked symptom of Covid-19." data-context-vn="Sổ mũi là một trong những triệu chứng xếp hạng cao của Covid-19.">sổ mũi</span>
+    </li>
+    <li>
+      <span class="vocab" data-word-en="fever" data-word-vn="sốt" data-pos="danh từ / noun" data-def-en="An abnormally high body temperature indicating infection." data-def-vn="Nhiệt độ cơ thể cao bất thường cho thấy sự nhiễm trùng." data-context-en="Fever remains a common symptom in the current ranking of Covid-19." data-context-vn="Sốt vẫn là một triệu chứng phổ biến trong xếp hạng hiện tại của Covid-19.">sốt</span>
+    </li>
+    <li>
+      <span class="vocab" data-word-en="persistent cough" data-word-vn="ho dai dẳng" data-pos="cụm danh từ / noun phrase" data-def-en="A cough that continues for a prolonged period without resolving." data-def-vn="Ho kéo dài trong một thời gian dài mà không khỏi." data-context-en="A persistent cough remains one of the top-ranked symptoms." data-context-vn="Ho dai dẳng vẫn là một trong những triệu chứng xếp hạng cao.">ho dai dẳng</span>
+    </li>
+  </ul>
+
+  <!-- PARAGRAPH 4 -->
+  <p>
+    <span class="vocab" data-word-en="Loss of smell" data-word-vn="Mất khứu giác" data-pos="cụm danh từ / noun phrase" data-def-en="Inability to detect odors; anosmia." data-def-vn="Mất khả năng ngửi mùi; chứng mất khứu giác." data-context-en="Loss of smell dropped to 9th place on the symptom list." data-context-vn="Mất khứu giác giảm xuống vị trí thứ 9 trong danh sách.">Mất khứu giác</span>
+    <span class="vocab" data-word-en="dropped / fell" data-word-vn="giảm xuống" data-pos="động từ / verb" data-def-en="Moved downward in position or ranking." data-def-vn="Di chuyển xuống vị trí hoặc thứ hạng thấp hơn." data-context-en="Loss of smell dropped to 9th place in the ranking." data-context-vn="Mất khứu giác giảm xuống vị trí thứ 9 trong danh sách.">giảm xuống</span>
+    vị trí thứ 9 trong danh sách và
+    <span class="vocab" data-word-en="shortness of breath / difficulty breathing" data-word-vn="khó thở" data-pos="danh từ / noun" data-def-en="A feeling of not being able to breathe easily or deeply." data-def-vn="Cảm giác không thể thở dễ dàng hoặc sâu." data-context-en="Difficulty breathing dropped even further to 30th place." data-context-vn="Khó thở thậm chí còn tụt xuống vị trí thứ 30.">khó thở</span>
+    thậm chí còn
+    <span class="vocab" data-word-en="fell further / dropped further" data-word-vn="tụt xuống" data-pos="động từ / verb" data-def-en="To slide or drop down to a lower position." data-def-vn="Trượt hoặc rơi xuống vị trí thấp hơn." data-context-en="Difficulty breathing dropped even further to 30th place on the list." data-context-vn="Khó thở thậm chí còn tụt xuống vị trí thứ 30.">tụt xuống</span>
+    vị trí thứ 30. Những
+    <span class="vocab" data-word-en="changes" data-word-vn="thay đổi" data-pos="danh từ / noun" data-def-en="Alterations in the nature or condition of something." data-def-vn="Sự thay đổi trong bản chất hoặc tình trạng của điều gì đó." data-context-en="These changes may indicate that previously known symptoms are shifting." data-context-vn="Những thay đổi này có thể chỉ ra rằng các triệu chứng đã biết trước đây đang thay đổi.">thay đổi</span>
+    này có thể
+    <span class="vocab" data-word-en="indicate / point to" data-word-vn="chỉ ra" data-pos="động từ / verb" data-def-en="To show or suggest; to point to as evidence." data-def-vn="Chỉ ra hoặc gợi ý; trỏ vào như bằng chứng." data-context-en="These changes may indicate that previously known symptoms are evolving." data-context-vn="Những thay đổi này có thể chỉ ra rằng các triệu chứng đã biết trước đây thay đổi.">chỉ ra</span>
+    rằng các triệu chứng đã biết trước đây
+    <span class="vocab" data-word-en="change" data-word-vn="thay đổi" data-pos="động từ / verb" data-def-en="To become different over time." data-def-vn="Trở nên khác biệt theo thời gian." data-context-en="Previously known symptoms change as the virus variants develop." data-context-vn="Các triệu chứng đã biết trước đây thay đổi khi các biến thể của virus phát triển.">thay đổi</span>
+    khi các biến thể của
+    <span class="vocab" data-word-en="virus" data-word-vn="virús" data-pos="danh từ / noun" data-def-en="A microscopic infectious agent that replicates inside living cells." data-def-vn="Tác nhân lây nhiễm vi mô nhân lên bên trong tế bào sống." data-context-en="Symptoms change as the variants of the virus develop." data-context-vn="Các triệu chứng thay đổi khi các biến thể của virús phát triển.">virús</span>
+    <span class="vocab" data-word-en="develop / evolve" data-word-vn="phát triển" data-pos="động từ / verb" data-def-en="To grow or evolve over time; to change gradually." data-def-vn="Phát triển hoặc tiến hóa theo thời gian; thay đổi dần dần." data-context-en="As the virus variants develop, symptoms change." data-context-vn="Khi các biến thể của virús phát triển, các triệu chứng đã biết thay đổi.">phát triển</span>.
+  </p>
+
+  <!-- PARAGRAPH 5 -->
+  <p>
+    Những triệu chứng
+    <span class="vocab" data-word-en="most common" data-word-vn="phổ biến nhất" data-pos="cụm tính từ / adjective phrase" data-def-en="Occurring most frequently; most widespread." data-def-vn="Xảy ra thường xuyên nhất; phổ biến rộng rãi nhất." data-context-en="What are the most common symptoms in fully vaccinated people?" data-context-vn="Những triệu chứng phổ biến nhất ở những người được tiêm chủng đầy đủ là gì?">phổ biến nhất</span>
+    ở những người được
+    <span class="vocab" data-word-en="fully vaccinated" data-word-vn="tiêm chủng đầy đủ" data-pos="cụm động từ / verb phrase" data-def-en="Having received all required doses of a vaccine." data-def-vn="Đã nhận đủ tất cả các liều vắc-xin cần thiết." data-context-en="Even fully vaccinated people can still contract the virus." data-context-vn="Ngay cả những người đã được tiêm chủng đầy đủ cũng có thể bị nhiễm virus.">tiêm chủng đầy đủ</span>
+    là gì? Ngay cả những người đã được
+    <span class="vocab" data-word-en="vaccinated" data-word-vn="tiêm phòng" data-pos="động từ / verb" data-def-en="Inoculated with a vaccine to build immunity." data-def-vn="Được tiêm vắc-xin để xây dựng miễn dịch." data-context-en="Even vaccinated people can still get infected with the virus." data-context-vn="Ngay cả những người đã được tiêm phòng cũng có thể bị nhiễm virus.">tiêm phòng</span>
+    cũng có thể bị
+    <span class="vocab" data-word-en="infected / contract the virus" data-word-vn="nhiễm virus" data-pos="cụm động từ / verb phrase" data-def-en="To become infected with a virus." data-def-vn="Bị lây nhiễm virus." data-context-en="Even vaccinated people can still get infected with the virus." data-context-vn="Ngay cả những người đã được tiêm phòng cũng có thể bị nhiễm virus.">nhiễm virus</span>.
+    Nhưng
+    <span class="vocab" data-word-en="data" data-word-vn="dữ liệu" data-pos="danh từ / noun" data-def-en="Facts and statistics collected for analysis or reference." data-def-vn="Sự kiện và số liệu được thu thập để phân tích hoặc tham khảo." data-context-en="Data confirms that vaccinated people typically have mild symptoms." data-context-vn="Dữ liệu xác nhận rằng những người này thường có các triệu chứng nhẹ.">dữ liệu</span>
+    <span class="vocab" data-word-en="confirms" data-word-vn="xác nhận" data-pos="động từ / verb" data-def-en="To establish the truth or correctness of something." data-def-vn="Thiết lập sự thật hoặc tính đúng đắn của điều gì đó." data-context-en="Data confirms that vaccinated people usually have mild symptoms." data-context-vn="Dữ liệu xác nhận rằng những người này thường có các triệu chứng nhẹ.">xác nhận</span>
+    rằng những người này thường có các triệu chứng
+    <span class="vocab" data-word-en="mild" data-word-vn="nhẹ" data-pos="tính từ / adjective" data-def-en="Not severe or serious; moderate in degree." data-def-vn="Không nghiêm trọng; ở mức độ vừa phải." data-context-en="Vaccinated people tend to have mild symptoms." data-context-vn="Dữ liệu xác nhận rằng những người này thường có các triệu chứng nhẹ.">nhẹ</span>
+    và việc
+    <span class="vocab" data-word-en="vaccination" data-word-vn="tiêm chủng" data-pos="danh từ / noun" data-def-en="The act of administering a vaccine to produce immunity." data-def-vn="Hành động tiêm vắc-xin để tạo miễn dịch." data-context-en="Vaccination prevents serious illness or even life-threatening disease." data-context-vn="Tiêm chủng ngăn ngừa bệnh nghiêm trọng hoặc đe dọa tính mạng.">tiêm chủng</span>
+    <span class="vocab" data-word-en="prevents" data-word-vn="ngăn ngừa" data-pos="động từ / verb" data-def-en="To stop something from happening; to keep from occurring." data-def-vn="Ngăn chặn điều gì đó xảy ra; giữ cho không xảy ra." data-context-en="Vaccination prevents serious or life-threatening illness." data-context-vn="Tiêm chủng ngăn ngừa bệnh nghiêm trọng hoặc đe dọa tính mạng.">ngăn ngừa</span>
+    bệnh
+    <span class="vocab" data-word-en="serious / severe" data-word-vn="nghiêm trọng" data-pos="tính từ / adjective" data-def-en="Grave in nature; requiring careful attention; dangerous." data-def-vn="Nghiêm trọng về bản chất; đòi hỏi sự chú ý cẩn thận; nguy hiểm." data-context-en="Vaccination prevents serious or even life-threatening illness." data-context-vn="Tiêm chủng ngăn ngừa bệnh nghiêm trọng hoặc thậm chí đe dọa tính mạng.">nghiêm trọng</span>
+    hoặc thậm chí
+    <span class="vocab" data-word-en="life-threatening" data-word-vn="đe dọa tính mạng" data-pos="cụm động từ / verb phrase" data-def-en="Posing a risk of death; potentially fatal." data-def-vn="Gây nguy hiểm đến tính mạng; có thể gây tử vong." data-context-en="Vaccination prevents serious illness or even life-threatening disease." data-context-vn="Tiêm chủng ngăn ngừa bệnh nghiêm trọng hoặc thậm chí đe dọa tính mạng.">đe dọa tính mạng</span>.
+  </p>
+
+  <!-- PARAGRAPH 6 -->
+  <p>
+    <span class="vocab" data-word-en="current ranking" data-word-vn="Xếp hạng hiện tại" data-pos="cụm danh từ / noun phrase" data-def-en="The present ordering of items by frequency or importance." data-def-vn="Thứ tự hiện tại của các mục theo tần suất hoặc tầm quan trọng." data-context-en="The current ranking of Covid-19 symptoms after two vaccinations is listed." data-context-vn="Xếp hạng hiện tại của các triệu chứng Covid-19 sau hai lần tiêm chủng.">Xếp hạng hiện tại</span>
+    của các triệu chứng Covid-19 sau hai lần
+    <span class="vocab" data-word-en="vaccination" data-word-vn="tiêm chủng" data-pos="danh từ / noun" data-def-en="The administration of a vaccine to stimulate immunity." data-def-vn="Việc tiêm vắc-xin để kích thích miễn dịch." data-context-en="The article lists the ranking of symptoms after two vaccinations." data-context-vn="Xếp hạng hiện tại của các triệu chứng Covid-19 sau hai lần tiêm chủng.">tiêm chủng</span>
+    là:
+  </p>
+
+  <ul>
+    <li>
+      <span class="vocab" data-word-en="headache" data-word-vn="đau đầu" data-pos="danh từ / noun" data-def-en="A pain felt in the head." data-def-vn="Đau ở đầu." data-context-en="Headache is the top-ranked symptom in vaccinated Covid-19 patients." data-context-vn="Đau đầu là triệu chứng xếp hạng đầu ở người đã tiêm chủng bị Covid-19.">Đau đầu</span>
+    </li>
+    <li>
+      <span class="vocab" data-word-en="runny nose" data-word-vn="sổ mũi" data-pos="danh từ / noun" data-def-en="Nasal discharge; excess mucus flowing from the nose." data-def-vn="Chảy nước mũi; chất nhầy dư thừa chảy ra từ mũi." data-context-en="Runny nose is one of the top symptoms in vaccinated Covid patients." data-context-vn="Sổ mũi là một trong những triệu chứng hàng đầu ở người đã tiêm chủng.">sổ mũi</span>
+    </li>
+    <li>
+      <span class="vocab" data-word-en="sneezing" data-word-vn="hắt xì" data-pos="danh từ / noun" data-def-en="A sudden involuntary expulsion of air from the nose and mouth." data-def-vn="Một sự trục xuất không chủ ý đột ngột của không khí từ mũi và miệng." data-context-en="Sneezing is listed as a top symptom in fully vaccinated Covid patients." data-context-vn="Hắt xì được liệt kê là triệu chứng hàng đầu ở người đã tiêm chủng đầy đủ.">hắt xì</span>
+    </li>
+    <li>
+      <span class="vocab" data-word-en="sore throat" data-word-vn="đau họng" data-pos="danh từ / noun" data-def-en="Pain or irritation in the throat." data-def-vn="Đau hoặc kích ứng ở cổ họng." data-context-en="Sore throat is one of the top symptoms in vaccinated Covid patients." data-context-vn="Đau họng là một trong những triệu chứng hàng đầu ở người đã tiêm chủng.">đau họng</span>
+    </li>
+    <li>
+      <span class="vocab" data-word-en="loss of smell / loss of taste" data-word-vn="mất khứu giác/vị giác" data-pos="cụm danh từ / noun phrase" data-def-en="Loss of the ability to smell and/or taste." data-def-vn="Mất khả năng ngửi và/hoặc nếm." data-context-en="Loss of smell and taste is now the 5th ranked symptom in vaccinated patients." data-context-vn="Mất khứu giác/vị giác là triệu chứng xếp thứ 5 ở người đã tiêm chủng.">mất khứu giác/vị giác</span>
+    </li>
+  </ul>
+
+  <!-- PARAGRAPH 7 -->
+  <p>
+    Một vài
+    <span class="vocab" data-word-en="symptoms" data-word-vn="triệu chứng" data-pos="danh từ / noun" data-def-en="Signs that indicate the presence of a disease." data-def-vn="Các dấu hiệu cho thấy sự hiện diện của một bệnh." data-context-en="Some of these symptoms are ones we commonly see with a cold." data-context-vn="Một vài triệu chứng trong số này là những triệu chứng ta thường thấy ở cảm lạnh.">triệu chứng</span>
+    trong số này là những triệu chứng mà chúng ta thường thấy ở
+    <span class="vocab" data-word-en="cold / common cold" data-word-vn="cảm lạnh" data-pos="danh từ / noun" data-def-en="A common viral infection of the upper respiratory tract." data-def-vn="Một bệnh nhiễm virus phổ biến của đường hô hấp trên." data-context-en="Some of these symptoms are typical of the common cold." data-context-vn="Một vài triệu chứng là những triệu chứng ta thường thấy ở cảm lạnh.">cảm lạnh</span>.
+    <span class="vocab" data-word-en="the ability / possibility" data-word-vn="khả năng" data-pos="danh từ / noun" data-def-en="The potential or likelihood of something happening." data-def-vn="Khả năng hoặc xác suất xảy ra của điều gì đó." data-context-en="The possibility of confusing the two illnesses is very dangerous." data-context-vn="Khả năng nhầm lẫn giữa hai căn bệnh này là rất nguy hiểm.">Khả năng</span>
+    <span class="vocab" data-word-en="confuse / mix up" data-word-vn="nhầm lẫn" data-pos="động từ / verb" data-def-en="To fail to distinguish between two things; to mistake one for another." data-def-vn="Không phân biệt được hai thứ; nhầm cái này với cái kia." data-context-en="The possibility of confusing the two diseases is very dangerous." data-context-vn="Khả năng nhầm lẫn giữa hai căn bệnh này là rất nguy hiểm.">nhầm lẫn</span>
+    giữa hai
+    <span class="vocab" data-word-en="diseases / illnesses" data-word-vn="căn bệnh" data-pos="danh từ / noun" data-def-en="A disorder of structure or function in a human, animal, or plant." data-def-vn="Rối loạn cấu trúc hoặc chức năng ở người, động vật hoặc thực vật." data-context-en="Confusing the two diseases could contribute to the spread of Delta." data-context-vn="Khả năng nhầm lẫn giữa hai căn bệnh này là rất nguy hiểm.">căn bệnh</span>
+    này là rất
+    <span class="vocab" data-word-en="dangerous" data-word-vn="nguy hiểm" data-pos="tính từ / adjective" data-def-en="Likely to cause harm or injury; hazardous." data-def-vn="Có khả năng gây hại hoặc tổn thương; nguy hiểm." data-context-en="The ability to confuse the two diseases is very dangerous." data-context-vn="Khả năng nhầm lẫn giữa hai căn bệnh này là rất nguy hiểm.">nguy hiểm</span>
+    và có thể đã
+    <span class="vocab" data-word-en="played a role" data-word-vn="đóng một vai trò" data-pos="cụm động từ / verb phrase" data-def-en="To contribute to or be involved in a process or outcome." data-def-vn="Đóng góp vào hoặc tham gia vào một quá trình hoặc kết quả." data-context-en="Confusion between the two diseases may have played a role in Delta's spread." data-context-vn="Điều này có thể đã đóng một vai trò trong sự lây lan của biến thể Delta.">đóng một vai trò</span>
+    trong
+    <span class="vocab" data-word-en="spread / transmission" data-word-vn="sự lây lan" data-pos="danh từ / noun" data-def-en="The process by which a disease passes from one person to another." data-def-vn="Quá trình lây bệnh từ người này sang người khác." data-context-en="Confusion between the two illnesses may have played a role in the spread of Delta." data-context-vn="Có thể đã đóng vai trò trong sự lây lan của biến thể Delta ở Anh.">sự lây lan</span>
+    của
+    <span class="vocab" data-word-en="Delta variant" data-word-vn="biến thể Delta" data-pos="danh từ / noun" data-def-en="The Delta form of the Covid-19 virus, known for high transmissibility." data-def-vn="Biến thể Delta của virus Covid-19, được biết đến với khả năng lây lan cao." data-context-en="This confusion may have contributed to the spread of the Delta variant in the UK." data-context-vn="Có thể đã đóng một vai trò trong sự lây lan của biến thể Delta ở Anh.">biến thể Delta</span>
+    ở Anh. Chính vì các triệu chứng có thể sẽ
+    <span class="vocab" data-word-en="continue" data-word-vn="tiếp tục" data-pos="động từ / verb" data-def-en="To go on without stopping; to carry on." data-def-vn="Tiếp tục mà không dừng lại; tiếp tục thực hiện." data-context-en="Symptoms will likely continue to change, so vigilance is always necessary." data-context-vn="Chính vì các triệu chứng có thể sẽ tiếp tục thay đổi, luôn cảnh giác là không thừa.">tiếp tục</span>
+    <span class="vocab" data-word-en="change" data-word-vn="thay đổi" data-pos="động từ / verb" data-def-en="To become different; to alter." data-def-vn="Trở nên khác biệt; thay đổi." data-context-en="Because symptoms may continue to change, always being alert is not excessive." data-context-vn="Các triệu chứng có thể sẽ tiếp tục thay đổi, luôn cảnh giác không phải là thừa.">thay đổi</span>,
+    luôn
+    <span class="vocab" data-word-en="vigilant" data-word-vn="cảnh giác" data-pos="tính từ / adjective" data-def-en="Watchful and alert, especially to danger or problems." data-def-vn="Cảnh giác và chú ý, đặc biệt là với nguy hiểm hoặc vấn đề." data-context-en="Always being vigilant and careful is not excessive." data-context-vn="Luôn cảnh giác và thận trọng không phải là thừa.">cảnh giác</span>
+    và
+    <span class="vocab" data-word-en="cautious" data-word-vn="thận trọng" data-pos="tính từ / adjective" data-def-en="Careful to avoid potential problems or dangers." data-def-vn="Cẩn thận để tránh các vấn đề hoặc nguy hiểm tiềm ẩn." data-context-en="Always being vigilant and cautious is not too much." data-context-vn="Luôn cảnh giác và thận trọng không phải là thừa.">thận trọng</span>
+    không phải là
+    <span class="vocab" data-word-en="excessive / unnecessary" data-word-vn="thừa" data-pos="tính từ / adjective" data-def-en="More than necessary; superfluous." data-def-vn="Nhiều hơn cần thiết; dư thừa." data-context-en="Always being vigilant and cautious is not excessive." data-context-vn="Luôn cảnh giác và thận trọng không phải là thừa.">thừa</span>.
+    Và các
+    <span class="vocab" data-word-en="measures / methods" data-word-vn="biện pháp" data-pos="danh từ / noun" data-def-en="Actions taken to achieve a particular result or prevent a problem." data-def-vn="Hành động được thực hiện để đạt được kết quả cụ thể hoặc ngăn ngừa vấn đề." data-context-en="Measures like handwashing, masks, and distancing remain key prevention principles." data-context-vn="Các biện pháp như rửa tay, đeo khẩu trang và giữ khoảng cách vẫn là nguyên tắc phòng bệnh.">biện pháp</span>
+    như
+    <span class="vocab" data-word-en="wash hands thoroughly" data-word-vn="rửa tay kỹ lưỡng" data-pos="cụm động từ / verb phrase" data-def-en="To clean one's hands carefully and completely with soap and water." data-def-vn="Rửa tay cẩn thận và hoàn toàn bằng xà phòng và nước." data-context-en="Washing hands thoroughly remains a key measure to prevent the spread of disease." data-context-vn="Rửa tay kỹ lưỡng vẫn là một trong những nguyên tắc ngăn ngừa sự lây lan của bệnh.">rửa tay kỹ lưỡng</span>,
+    <span class="vocab" data-word-en="wear a mask" data-word-vn="đeo khẩu trang" data-pos="cụm động từ / verb phrase" data-def-en="To put on and wear a face covering for protection against infection." data-def-vn="Đeo và mang khẩu trang để bảo vệ chống lây nhiễm." data-context-en="Wearing a mask remains one of the principles to prevent spread of disease." data-context-vn="Đeo khẩu trang vẫn là một trong những nguyên tắc ngăn ngừa sự lây lan của bệnh.">đeo khẩu trang</span>
+    và
+    <span class="vocab" data-word-en="maintain distance" data-word-vn="giữ khoảng cách" data-pos="cụm động từ / verb phrase" data-def-en="To keep a specified space between oneself and others." data-def-vn="Giữ một khoảng cách nhất định giữa bản thân và người khác." data-context-en="Maintaining a distance of 1.5 metres from others remains a key prevention measure." data-context-vn="Giữ khoảng cách 1,5 mét với người khác vẫn là nguyên tắc ngăn ngừa lây lan của bệnh.">giữ khoảng cách</span>
+    1,5 mét với người khác vẫn là những
+    <span class="vocab" data-word-en="principles" data-word-vn="nguyên tắc" data-pos="danh từ / noun" data-def-en="A fundamental rule or belief guiding behavior or policy." data-def-vn="Một quy tắc hoặc niềm tin cơ bản hướng dẫn hành vi hoặc chính sách." data-context-en="Handwashing, masks, and distancing remain the principles that help prevent spread." data-context-vn="Đây vẫn là những nguyên tắc giúp ngăn ngừa sự lây lan của bệnh.">nguyên tắc</span>
+    giúp
+    <span class="vocab" data-word-en="prevent" data-word-vn="ngăn ngừa" data-pos="động từ / verb" data-def-en="To stop something from happening; to avert." data-def-vn="Ngăn chặn điều gì đó xảy ra; ngăn cản." data-context-en="These measures help prevent the spread of the disease." data-context-vn="Đây là những nguyên tắc giúp ngăn ngừa sự lây lan của bệnh.">ngăn ngừa</span>
+    sự
+    <span class="vocab" data-word-en="spread" data-word-vn="lây lan" data-pos="danh từ / noun" data-def-en="The transmission or spreading of a disease." data-def-vn="Sự truyền hoặc lây lan của một bệnh." data-context-en="These are the principles that help prevent the spread of disease." data-context-vn="Đây là những nguyên tắc giúp ngăn ngừa sự lây lan của bệnh.">lây lan</span>
+    của bệnh.
+  </p>
+
+  <!-- BACK BUTTON -->
+  <a class="back-btn" href="../" onclick="history.back(); return false;">⬅ Back</a>
+
+  <!-- TEST YOUR MEMORY -->
+  <h2>Test Your Memory</h2>
+  <p style="color:#5a3a10; font-size:0.95rem; margin-top:-6px;">After each pass through the content, try to remember the meaning and where in the story each word appeared.</p>
+  <div id="memory-grid"></div>
+
+  <!-- TRANSCRIPTION NOTES -->
+  
+
+  
+
+</div><!-- end #page -->
+
+<!-- POPUP CARD -->
+<div id="popup-card">
+  <div class="pw-en" id="pc-en"></div>
+  <div class="pw-vn" id="pc-vn"></div>
+  <div class="pw-pos" id="pc-pos"></div>
+  <div class="pw-def" id="pc-def"></div>
+  <div class="pw-ctx-label">In context:</div>
+  <div class="pw-ctx" id="pc-ctx"></div>
+</div>
+
+<script>
+// ---- POPUP LOGIC ----
+// Input is Vietnamese, so:
+// Large heading = English, secondary = Vietnamese, def = English, context = English
+
+const popup = document.getElementById('popup-card');
+let currentWord = null;
+
+function showPopup(el) {
+  document.getElementById('pc-en').textContent = el.getAttribute('data-word-en') || '';
+  document.getElementById('pc-vn').textContent = el.getAttribute('data-word-vn') || '';
+  document.getElementById('pc-pos').textContent = el.getAttribute('data-pos') || '';
+  document.getElementById('pc-def').textContent = el.getAttribute('data-def-en') || '';
+  document.getElementById('pc-ctx').textContent = el.getAttribute('data-context-en') || '';
+  popup.style.display = 'block';
+  currentWord = el;
+}
+
+function hidePopup() {
+  popup.style.display = 'none';
+  currentWord = null;
+}
+
+document.querySelectorAll('.vocab').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (currentWord === el) {
+      hidePopup();
+    } else {
+      showPopup(el);
+    }
+  });
+});
+
+document.addEventListener('click', function(e) {
+  if (popup.style.display === 'block' && !popup.contains(e.target)) {
+    hidePopup();
+  }
+});
+
+popup.addEventListener('click', function(e) {
+  e.stopPropagation();
+});
+
+// ---- MEMORY GRID ----
+const vocabWords = [];
+const seen = new Set();
+document.querySelectorAll('.vocab').forEach(function(el) {
+  const vn = el.getAttribute('data-word-vn');
+  if (vn && !seen.has(vn)) {
+    seen.add(vn);
+    vocabWords.push({ vn: vn, el: el });
+  }
+});
+
+const grid = document.getElementById('memory-grid');
+vocabWords.forEach(function(item) {
+  const span = document.createElement('span');
+  span.textContent = item.vn;
+  span.addEventListener('click', function() {
+    // scroll to first occurrence
+    item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    item.el.classList.add('highlight-scroll');
+    setTimeout(function() {
+      item.el.classList.remove('highlight-scroll');
+    }, 1500);
+  });
+  grid.appendChild(span);
+});
+
+// ---- DOWNLOAD CONTENT-ONLY VERSION ----
+document.getElementById('download-btn').addEventListener('click', function() {
+  const clone = document.documentElement.cloneNode(true);
+  // Remove skip-notes
+  clone.querySelectorAll('.skip-notes').forEach(function(el) { el.remove(); });
+  // Remove transcription-notes
+  clone.querySelectorAll('.transcription-notes').forEach(function(el) { el.remove(); });
+  // Remove download button
+  const btn = clone.querySelector('#download-btn');
+  if (btn) btn.remove();
+  // Clear memory grid so it rebuilds via JS
+  const mg = clone.querySelector('#memory-grid');
+  if (mg) mg.innerHTML = '';
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'symptoms_content_only.html';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+
+
+</body></html>
