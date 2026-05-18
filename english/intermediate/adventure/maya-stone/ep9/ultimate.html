@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode 9: The Ultimate Choice</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    user-select: none;
+    min-height: 100vh;
+    padding: 30px 16px;
+  }
+  .page {
+    background: #f0e6c8;
+    color: #2a1500;
+    max-width: 820px;
+    margin: 0 auto;
+    border: 2px solid #a0845a;
+    border-radius: 6px;
+    padding: 36px 40px 44px;
+  }
+  h1 {
+    font-family: Arial, sans-serif;
+    color: #3a1f00;
+    font-size: 1.5rem;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 10px;
+    margin-bottom: 22px;
+  }
+  h2 {
+    font-family: Arial, sans-serif;
+    color: #3a1f00;
+    font-size: 1.15rem;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 6px;
+    margin: 28px 0 14px;
+  }
+  p { margin-bottom: 14px; line-height: 1.75; }
+
+  /* Audio player */
+  .audio-label {
+    font-size: 0.9rem;
+    color: #7a4e1a;
+    margin-bottom: 6px;
+    font-style: italic;
+  }
+  .audio-wrapper {
+    background: #2e1f0a;
+    border: 1px solid #7a4e1a;
+    border-radius: 6px;
+    padding: 12px 14px 10px;
+    margin-bottom: 10px;
+  }
+  audio#audio-player {
+    width: 100%;
+    accent-color: #c8a060;
+    display: block;
+  }
+  .audio-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 8px;
+  }
+  .rewind-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 5px 11px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    transition: background 0.15s;
+  }
+  .rewind-btn:hover { background: #4a3010; }
+
+  /* Clickable vocab words */
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+  }
+  .vocab:hover { background: rgba(26,92,32,0.08); border-radius: 2px; }
+
+  /* Corrected VTT words */
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+
+  /* Popup card */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #f0e6c8;
+    border: 2px solid #a0845a;
+    border-radius: 8px;
+    padding: 20px 24px;
+    max-width: 380px;
+    width: 90vw;
+    z-index: 1000;
+    box-shadow: 0 8px 32px rgba(0,0,0,0.45);
+  }
+  #popup-card .pop-word-main {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #3a1f00;
+    margin-bottom: 2px;
+  }
+  #popup-card .pop-word-secondary {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #7a4e1a;
+    margin-bottom: 6px;
+  }
+  #popup-card .pop-pos {
+    font-size: 0.95rem;
+    color: #5a3a10;
+    margin-bottom: 8px;
+  }
+  #popup-card .pop-def {
+    font-size: 1rem;
+    color: #2a1500;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  #popup-card .pop-def-vn {
+    font-size: 1rem;
+    color: #2a1500;
+    margin-bottom: 8px;
+    line-height: 1.5;
+  }
+  #popup-card .pop-context-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #7a4e1a;
+    margin-bottom: 3px;
+  }
+  #popup-card .pop-context {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #4a2e00;
+    line-height: 1.5;
+  }
+  #popup-overlay {
+    display: none;
+    position: fixed;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 999;
+  }
+
+  /* Download button */
+  .download-btn-wrap {
+    text-align: right;
+    margin-bottom: 18px;
+  }
+  .download-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .download-btn:hover { background: #4a3010; }
+
+  /* Back button */
+  .back-btn-wrap { margin: 28px 0 10px; }
+  .back-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    padding: 6px 14px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .back-btn:hover { background: #4a3010; }
+
+  /* Memory grid */
+  #memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px 10px;
+    margin-top: 14px;
+  }
+  #memory-grid span {
+    border-bottom: 1.5px dotted #7a4e1a;
+    cursor: pointer;
+    font-size: 0.95rem;
+    padding: 2px 0;
+    color: #2a1500;
+  }
+  #memory-grid span:hover { background: rgba(122,78,26,0.1); border-radius: 2px; }
+
+  .highlight-flash {
+    background: #ffe082 !important;
+    transition: background 0.3s;
+  }
+
+  /* Transcription notes */
+  .transcription-notes {
+    margin-top: 30px;
+    font-size: 0.9rem;
+  }
+  .transcription-notes table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+  }
+  .transcription-notes th, .transcription-notes td {
+    border: 1px solid #a0845a;
+    padding: 6px 10px;
+    text-align: left;
+    color: #2a1500;
+  }
+  .transcription-notes th {
+    background: #e0ceaa;
+    font-weight: bold;
+  }
+
+  .skip-notes {
+    margin-top: 24px;
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    border-top: 1px solid #c8a878;
+    padding-top: 12px;
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- Download button -->
+  
+
+  <h1><span class="vocab" data-word-en="ultimate" data-word-vn="tột cùng" data-pos="tính từ / adjective" data-def-en="Final and most extreme; the last and most important." data-def-vn="Cuối cùng và quan trọng nhất; mang tính quyết định." data-context-en="In this episode, the 'ultimate choice' refers to Maya's life-or-death decision about the scroll and statue." data-context-vn="Trong tập này, 'lựa chọn tột cùng' nói đến quyết định sống còn của Maya về cuộn giấy và bức tượng.">ultimate</span> Choice</h1>
+
+  <!-- Audio player -->
+  <div class="audio-label">🎧 Listen to the text</div>
+  <div class="audio-wrapper">
+    <audio id="audio-player" controls="">
+      <source src="ep9.mp3" type="audio/mpeg">
+      Your browser does not support the audio element.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+
+  <!-- Main text -->
+  <div id="main-text">
+
+    <p>
+      Thorne <span class="vocab" id="w-stepped" data-word-en="stepped" data-word-vn="bước vào" data-pos="động từ / verb" data-def-en="Moved by lifting and placing one foot at a time; entered." data-def-vn="Di chuyển bằng cách bước từng bước; bước vào." data-context-en="Thorne stepped into the light, signaling his dramatic entrance." data-context-vn="Thorne bước vào ánh sáng, báo hiệu sự xuất hiện kịch tính của hắn.">stepped</span>
+      into the <span class="vocab" id="w-light" data-word-en="light" data-word-vn="ánh sáng" data-pos="danh từ / noun" data-def-en="The natural brightness that comes from the sun or other sources; here, a visible illuminated area." data-def-vn="Ánh sáng tự nhiên từ mặt trời hoặc nguồn khác; ở đây là vùng được chiếu sáng." data-context-en="Thorne stepped into the light, revealing himself fully to Maya." data-context-vn="Thorne bước vào ánh sáng, hiện ra hoàn toàn trước mắt Maya.">light</span>.
+      He <span class="vocab" id="w-looked" data-word-en="looked" data-word-vn="trông có vẻ" data-pos="động từ / verb" data-def-en="Had a particular appearance; seemed a certain way." data-def-vn="Có vẻ ngoài nhất định; trông như thế nào đó." data-context-en="He looked tired but triumphant, showing his emotional state after the ordeal." data-context-vn="Trông hắn mệt mỏi nhưng đắc thắng, thể hiện trạng thái cảm xúc sau mọi chuyện.">looked</span>
+      <span class="vocab" id="w-tired" data-word-en="tired" data-word-vn="mệt mỏi" data-pos="tính từ / adjective" data-def-en="In need of rest or sleep; physically or mentally exhausted." data-def-vn="Cần nghỉ ngơi hoặc ngủ; kiệt sức về thể chất hoặc tinh thần." data-context-en="Thorne looked tired, suggesting the effort it took to reach this point." data-context-vn="Thorne trông mệt mỏi, cho thấy công sức hắn bỏ ra để đến được đây.">tired</span>
+      but
+      <span class="vocab" id="w-triumphant" data-word-en="triumphant" data-word-vn="đắc thắng" data-pos="tính từ / adjective" data-def-en="Feeling or showing great happiness due to success or victory." data-def-vn="Cảm thấy hoặc thể hiện niềm hạnh phúc lớn lao do thành công hoặc chiến thắng." data-context-en="Thorne looked triumphant, believing he was about to claim the treasure." data-context-vn="Thorne trông đắc thắng, tin rằng hắn sắp chiếm được kho báu.">triumphant</span>.
+      "The <span class="vocab" id="w-scroll" data-word-en="scroll" data-word-vn="cuộn giấy" data-pos="danh từ / noun" data-def-en="A roll of parchment or paper with writing on it; an ancient document." data-def-vn="Một cuộn giấy da hoặc giấy có chữ viết; tài liệu cổ xưa." data-context-en="The scroll is the map to the Grand Hoard that Thorne desperately wants." data-context-vn="Cuộn giấy là bản đồ dẫn đến Kho Báu Lớn mà Thorne tham lam muốn chiếm.">scroll</span>,
+      <span class="vocab" id="w-map" data-word-en="map" data-word-vn="bản đồ" data-pos="danh từ / noun" data-def-en="A diagrammatic representation showing the layout of an area or route to something." data-def-vn="Biểu đồ thể hiện bố cục của một khu vực hoặc tuyến đường dẫn đến điều gì đó." data-context-en="The scroll is described as the map to the Grand Hoard of the Nguyen Kings." data-context-vn="Cuộn giấy được mô tả là bản đồ dẫn đến Kho Báu Lớn của các vua Nguyễn.">map</span>
+      to the
+      <span class="vocab" id="w-grand" data-word-en="Grand Hoard" data-word-vn="Kho Báu Lớn" data-pos="danh từ / noun phrase" data-def-en="A great collection of hidden or stored treasure; here the legendary treasure of the Nguyen Kings." data-def-vn="Một kho tàng bí ẩn khổng lồ; ở đây là kho báu huyền thoại của các vua Nguyễn." data-context-en="The Grand Hoard of the Nguyen Kings is the treasure both sides are fighting over." data-context-vn="Kho Báu Lớn của các vua Nguyễn là kho tàng mà cả hai phía đang tranh giành.">Grand Hoard</span>.
+      <span class="vocab" id="w-give" data-word-en="Give" data-word-vn="đưa cho" data-pos="động từ / verb" data-def-en="To hand over or deliver something to someone." data-def-vn="Trao hoặc giao điều gì đó cho ai đó." data-context-en="Thorne demands Maya give him the scroll in exchange for Jack's life." data-context-vn="Thorne yêu cầu Maya đưa cuộn giấy cho hắn để đổi lấy mạng sống của Jack.">Give</span>
+      it to me, and I'll
+      <span class="vocab" id="w-let" data-word-en="let" data-word-vn="để cho" data-pos="động từ / verb" data-def-en="To allow or permit someone to do something." data-def-vn="Cho phép ai đó làm điều gì đó." data-context-en="Thorne promises to let Jack live if Maya hands over the scroll." data-context-vn="Thorne hứa sẽ để Jack sống nếu Maya giao cuộn giấy.">let</span>
+      your <span class="vocab" id="w-friend" data-word-en="friend" data-word-vn="bạn bè" data-pos="danh từ / noun" data-def-en="A person with whom one has a bond of mutual affection." data-def-vn="Người mà mình có mối quan hệ thân thiết, yêu mến lẫn nhau." data-context-en="Thorne refers to Jack as Maya's friend, using him as a bargaining chip." data-context-vn="Thorne gọi Jack là bạn của Maya, dùng anh ta làm con tin để mặc cả.">friend</span>
+      <span class="vocab" id="w-live" data-word-en="live" data-word-vn="sống" data-pos="động từ / verb" data-def-en="To remain alive; to not die." data-def-vn="Tiếp tục sống; không chết." data-context-en="Thorne threatens Jack's life and promises to let him live if Maya complies." data-context-vn="Thorne đe dọa tính mạng Jack và hứa để anh ta sống nếu Maya tuân theo.">live</span>."
+    </p>
+
+    <p>
+      Maya <span class="vocab" id="w-looked2" data-word-en="looked" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="Directed one's gaze toward something or someone." data-def-vn="Hướng ánh mắt về phía ai đó hoặc điều gì đó." data-context-en="Maya looked at Jack to assess the danger he was in." data-context-vn="Maya nhìn Jack để đánh giá mức độ nguy hiểm mà anh ta đang đối mặt.">looked</span>
+      at Jack. He was <span class="vocab" id="w-held" data-word-en="held" data-word-vn="bị giữ chặt" data-pos="động từ / verb (past passive)" data-def-en="Kept in a position by force; restrained." data-def-vn="Bị giữ tại chỗ bằng vũ lực; bị khống chế." data-context-en="Jack was held tightly by the mercenary, unable to escape." data-context-vn="Jack bị tên lính đánh thuê giữ chặt, không thể thoát ra.">held</span>
+      <span class="vocab" id="w-tightly" data-word-en="tightly" data-word-vn="chặt chẽ" data-pos="trạng từ / adverb" data-def-en="With a firm, strong grip; not loosely." data-def-vn="Với lực kẹp chắc chắn, mạnh mẽ; không lỏng lẻo." data-context-en="Jack was held tightly by the mercenary, emphasizing his helplessness." data-context-vn="Jack bị giữ chặt bởi tên lính đánh thuê, nhấn mạnh sự bất lực của anh ta.">tightly</span>
+      by the <span class="vocab" id="w-mercenary" data-word-en="mercenary" data-word-vn="lính đánh thuê" data-pos="danh từ / noun" data-def-en="A professional soldier hired to serve in a foreign army or for money, with no loyalty to a cause." data-def-vn="Người lính chuyên nghiệp được thuê để chiến đấu vì tiền, không trung thành với bất kỳ lý tưởng nào." data-context-en="The mercenary is Thorne's hired muscle holding Jack captive." data-context-vn="Tên lính đánh thuê là tay sai của Thorne đang giữ Jack làm con tin.">mercenary</span>.
+      She <span class="vocab" id="w-looked3" data-word-en="looked" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="Directed one's gaze toward something." data-def-vn="Hướng ánh mắt về phía điều gì đó." data-context-en="Maya looked at the jade statue in her hand, weighing her options." data-context-vn="Maya nhìn vào bức tượng ngọc trong tay, cân nhắc các lựa chọn của mình.">looked</span>
+      at the <span class="vocab" id="w-jade" data-word-en="jade" data-word-vn="ngọc bích" data-pos="tính từ / adjective" data-def-en="Made of or relating to jade, a precious green stone valued in many Asian cultures." data-def-vn="Làm từ hoặc liên quan đến ngọc bích, một loại đá quý màu xanh được trân trọng trong nhiều nền văn hóa châu Á." data-context-en="The jade statue is one of the two precious items Maya holds over the pit." data-context-vn="Bức tượng ngọc bích là một trong hai vật quý mà Maya cầm trên tay.">jade</span>
+      <span class="vocab" id="w-statue" data-word-en="statue" data-word-vn="bức tượng" data-pos="danh từ / noun" data-def-en="A carved or cast figure of a person, animal, or thing, especially one that is life-size or larger." data-def-vn="Hình tượng được chạm khắc hoặc đúc của người, động vật hoặc vật thể, thường có kích thước thật hoặc lớn hơn." data-context-en="The jade statue is a key artifact Maya uses as leverage against Thorne." data-context-vn="Bức tượng ngọc bích là một hiện vật quan trọng mà Maya dùng để gây áp lực với Thorne.">statue</span>
+      in her hand. It <span class="vocab" id="w-felt" data-word-en="felt" data-word-vn="cảm thấy" data-pos="động từ / verb" data-def-en="Had a particular physical sensation or quality when touched." data-def-vn="Có cảm giác vật lý hoặc đặc tính nhất định khi chạm vào." data-context-en="The statue felt warm to Maya's touch, as if alive with energy." data-context-vn="Bức tượng cảm thấy ấm khi Maya chạm vào, như thể đang sống với năng lượng.">felt</span>
+      <span class="vocab" id="w-warm" data-word-en="warm" data-word-vn="ấm" data-pos="tính từ / adjective" data-def-en="Having a moderately high temperature; giving a feeling of comfort and heat." data-def-vn="Có nhiệt độ tương đối cao; mang lại cảm giác thoải mái và ấm áp." data-context-en="The statue felt warm in Maya's hand, hinting at something supernatural about it." data-context-vn="Bức tượng cảm thấy ấm trong tay Maya, gợi ý điều gì đó siêu nhiên về nó.">warm</span>,
+      as if it were <span class="vocab" id="w-vibrant" data-word-en="vibrant" data-word-vn="tràn đầy sức sống" data-pos="tính từ / adjective" data-def-en="Full of life, energy, and vitality." data-def-vn="Tràn đầy sức sống, năng lượng và sinh lực." data-context-en="The statue felt as if it were vibrant with energy, suggesting it held great power." data-context-vn="Bức tượng như thể tràn đầy năng lượng, gợi ý nó chứa đựng sức mạnh lớn.">vibrant</span>
+      with <span class="vocab" id="w-energy" data-word-en="energy" data-word-vn="năng lượng" data-pos="danh từ / noun" data-def-en="Power or force that is present in something; a quality of being active and alive." data-def-vn="Năng lực hoặc sức mạnh tồn tại trong điều gì đó; phẩm chất năng động và sinh động." data-context-en="The statue seemed vibrant with energy, as if it were alive." data-context-vn="Bức tượng như tràn đầy năng lượng, như thể nó đang sống.">energy</span>.
+    </p>
+
+    <p>
+      "My <span class="vocab" id="w-grandfather" data-word-en="grandfather" data-word-vn="ông nội / ông ngoại" data-pos="danh từ / noun" data-def-en="The father of one's father or mother." data-def-vn="Cha của cha hoặc mẹ của mình." data-context-en="Maya's grandfather died protecting the secret of the scroll and statue." data-context-vn="Ông nội của Maya đã chết để bảo vệ bí mật của cuộn giấy và bức tượng.">grandfather</span>
+      <span class="vocab" id="w-died" data-word-en="died" data-word-vn="đã chết" data-pos="động từ / verb" data-def-en="Stopped living; lost one's life." data-def-vn="Ngừng sống; mất đi mạng sống." data-context-en="Maya's grandfather died to keep the secret of the artifacts safe." data-context-vn="Ông nội của Maya đã chết để giữ bí mật về các vật phẩm cổ.">died</span>
+      to <span class="vocab" id="w-keep" data-word-en="keep" data-word-vn="giữ gìn" data-pos="động từ / verb" data-def-en="To maintain or preserve something in a particular state or condition." data-def-vn="Duy trì hoặc bảo tồn điều gì đó trong trạng thái hoặc điều kiện nhất định." data-context-en="Maya's grandfather died to keep this secret hidden from people like Thorne." data-context-vn="Ông nội của Maya đã chết để giữ bí mật này không lọt vào tay những kẻ như Thorne.">keep</span>
+      this <span class="vocab" id="w-secret" data-word-en="secret" data-word-vn="bí mật" data-pos="danh từ / noun" data-def-en="Something kept hidden or unknown to others; private information." data-def-vn="Điều được giữ bí ẩn hoặc không được người khác biết; thông tin riêng tư." data-context-en="The secret is the location of the Grand Hoard, which Maya's grandfather guarded with his life." data-context-vn="Bí mật là vị trí của Kho Báu Lớn mà ông nội của Maya đã bảo vệ bằng mạng sống.">secret</span>,
+      <span class="vocab" id="w-voice" data-word-en="voice" data-word-vn="giọng nói" data-pos="danh từ / noun" data-def-en="The sound produced by a person when speaking or singing." data-def-vn="Âm thanh do một người tạo ra khi nói hoặc hát." data-context-en="Maya's voice was shaking with anger as she confronted Thorne." data-context-vn="Giọng nói của Maya run rẩy vì tức giận khi đối đầu với Thorne.">voice</span>
+      <span class="vocab" id="w-shaking" data-word-en="shaking" data-word-vn="run rẩy" data-pos="động từ (dạng phân từ) / verb (participle)" data-def-en="Trembling or quivering, often from strong emotion." data-def-vn="Run lên hoặc rung động, thường do cảm xúc mạnh mẽ." data-context-en="Maya's voice was shaking with anger, showing how upset she was." data-context-vn="Giọng của Maya run rẩy vì tức giận, cho thấy cô ấy đang bị xúc động mạnh.">shaking</span>
+      with <span class="vocab" id="w-anger" data-word-en="anger" data-word-vn="tức giận" data-pos="danh từ / noun" data-def-en="A strong feeling of displeasure and hostility." data-def-vn="Cảm giác mạnh mẽ của sự không hài lòng và thù địch." data-context-en="Maya's anger is directed at Thorne for threatening Jack and disrespecting her grandfather." data-context-vn="Cơn giận của Maya hướng vào Thorne vì đã đe dọa Jack và xúc phạm ông nội cô.">anger</span>."
+    </p>
+
+    <p>
+      "Your grandfather was a <span class="vocab" id="w-fool" data-word-en="fool" data-word-vn="kẻ ngốc" data-pos="danh từ / noun" data-def-en="A person who lacks good sense or judgment; someone who acts stupidly." data-def-vn="Người thiếu sự hiểu biết hoặc phán đoán; người hành động ngốc nghếch." data-context-en="Thorne calls Maya's grandfather a fool for sacrificing himself to protect the secret." data-context-vn="Thorne gọi ông nội của Maya là kẻ ngốc vì đã hi sinh bản thân để bảo vệ bí mật.">fool</span>,"
+      Thorne <span class="vocab" id="w-snapped" data-word-en="snapped" data-word-vn="nói cộc lốc" data-pos="động từ / verb" data-def-en="Spoke in a sharp, irritated way; said something rudely and quickly." data-def-vn="Nói theo cách gay gắt, khó chịu; nói điều gì đó thô lỗ và nhanh chóng." data-context-en="Thorne snapped at Maya, showing his contempt and impatience." data-context-vn="Thorne nói cộc lốc với Maya, thể hiện sự khinh thường và thiếu kiên nhẫn của hắn.">snapped</span>.
+      "<span class="vocab" id="w-history" data-word-en="History" data-word-vn="lịch sử" data-pos="danh từ / noun" data-def-en="The study of past events; the record of what has happened." data-def-vn="Nghiên cứu về các sự kiện trong quá khứ; hồ sơ về những gì đã xảy ra." data-context-en="Thorne uses 'History is for the winners' to justify his ruthless pursuit of the treasure." data-context-vn="Thorne dùng câu 'Lịch sử là của kẻ chiến thắng' để biện minh cho sự truy đuổi tàn nhẫn của hắn.">History</span>
+      is for the <span class="vocab" id="w-winners" data-word-en="winners" data-word-vn="kẻ chiến thắng" data-pos="danh từ / noun" data-def-en="Those who have succeeded or prevailed in a contest or conflict." data-def-vn="Những người đã thành công hoặc chiến thắng trong cuộc thi hoặc xung đột." data-context-en="Thorne believes history belongs to winners, justifying his ruthless actions." data-context-vn="Thorne tin rằng lịch sử thuộc về kẻ chiến thắng, biện minh cho hành động tàn nhẫn của hắn.">winners</span>.
+      Now, <span class="vocab" id="w-hand" data-word-en="hand it over" data-word-vn="đưa nó ra" data-pos="cụm động từ / phrasal verb" data-def-en="To give something to someone, especially under compulsion." data-def-vn="Giao điều gì đó cho ai đó, đặc biệt là dưới sự ép buộc." data-context-en="Thorne demands Maya hand over the scroll immediately." data-context-vn="Thorne yêu cầu Maya đưa ngay cuộn giấy ra.">hand it over</span>!"
+    </p>
+
+    <p>
+      Maya <span class="vocab" id="w-looked4" data-word-en="looked" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="Directed one's gaze; cast one's eyes." data-def-vn="Hướng ánh nhìn của mình; nhìn về phía." data-context-en="Maya looked at the scroll, then at the pit, assessing her options." data-context-vn="Maya nhìn cuộn giấy, rồi nhìn hố sâu, cân nhắc các lựa chọn của mình.">looked</span>
+      at the <span class="vocab" id="w-scroll2" data-word-en="scroll" data-word-vn="cuộn giấy" data-pos="danh từ / noun" data-def-en="A roll of parchment or paper with writing on it; an ancient document." data-def-vn="Một cuộn giấy da hoặc giấy có chữ viết; tài liệu cổ xưa." data-context-en="Maya looked at the scroll, deciding what to do with it." data-context-vn="Maya nhìn cuộn giấy, quyết định phải làm gì với nó.">scroll</span>,
+      then at a <span class="vocab" id="w-large" data-word-en="large" data-word-vn="rộng lớn" data-pos="tính từ / adjective" data-def-en="Of considerable size or extent; big." data-def-vn="Có kích thước hoặc phạm vi đáng kể; to lớn." data-context-en="Maya noticed a large, bottomless pit at the back of the temple." data-context-vn="Maya nhận thấy một hố sâu rộng lớn, không đáy ở phía sau ngôi đền.">large</span>,
+      <span class="vocab" id="w-bottomless" data-word-en="bottomless" data-word-vn="không đáy" data-pos="tính từ / adjective" data-def-en="So deep as to appear to have no bottom; extremely deep." data-def-vn="Sâu đến mức dường như không có đáy; cực kỳ sâu." data-context-en="The bottomless pit represents the ultimate danger Maya uses as a threat." data-context-vn="Hố không đáy đại diện cho mối nguy hiểm tột cùng mà Maya dùng làm đòn đe dọa.">bottomless</span>
+      <span class="vocab" id="w-pit" data-word-en="pit" data-word-vn="hố sâu" data-pos="danh từ / noun" data-def-en="A large hole in the ground; a deep cavity." data-def-vn="Một hố lớn trên mặt đất; một khoang sâu." data-context-en="The pit at the back of the temple is where Maya threatens to drop the items." data-context-vn="Hố sâu ở phía sau ngôi đền là nơi Maya đe dọa sẽ ném các vật phẩm xuống.">pit</span>
+      at the back of the <span class="vocab" id="w-temple" data-word-en="temple" data-word-vn="ngôi đền" data-pos="danh từ / noun" data-def-en="A building used for religious worship or ceremonies." data-def-vn="Một tòa nhà được dùng cho việc thờ cúng hoặc các nghi lễ tôn giáo." data-context-en="The confrontation takes place inside an ancient temple." data-context-vn="Cuộc đối đầu diễn ra bên trong một ngôi đền cổ.">temple</span>.
+      She <span class="vocab" id="w-realized" data-word-en="realized" data-word-vn="nhận ra" data-pos="động từ / verb" data-def-en="Became fully aware of something; understood clearly." data-def-vn="Nhận thức đầy đủ về điều gì đó; hiểu rõ ràng." data-context-en="Maya realized Thorne didn't know which item was more important, giving her an advantage." data-context-vn="Maya nhận ra Thorne không biết vật nào quan trọng hơn, điều này mang lại cho cô lợi thế.">realized</span>
+      Thorne didn't <span class="vocab" id="w-know" data-word-en="know" data-word-vn="biết" data-pos="động từ / verb" data-def-en="To have information or awareness of something." data-def-vn="Có thông tin hoặc nhận thức về điều gì đó." data-context-en="Thorne didn't know which item was more important, giving Maya leverage." data-context-vn="Thorne không biết vật nào quan trọng hơn, trao cho Maya đòn bẩy.">know</span>
+      which <span class="vocab" id="w-item" data-word-en="item" data-word-vn="vật phẩm" data-pos="danh từ / noun" data-def-en="An individual object or article, especially one of a number in a collection." data-def-vn="Một đồ vật hoặc bài viết riêng lẻ, đặc biệt là một trong nhiều món trong bộ sưu tập." data-context-en="Thorne was unsure which item — the statue or the scroll — was more important." data-context-vn="Thorne không chắc vật phẩm nào — bức tượng hay cuộn giấy — quan trọng hơn.">item</span>
+      was more <span class="vocab" id="w-important" data-word-en="important" data-word-vn="quan trọng" data-pos="tính từ / adjective" data-def-en="Of great significance or value; having a major effect." data-def-vn="Có ý nghĩa hoặc giá trị lớn; có tác động lớn." data-context-en="Maya used Thorne's uncertainty about which item was more important as her advantage." data-context-vn="Maya tận dụng sự không chắc chắn của Thorne về vật phẩm nào quan trọng hơn làm lợi thế.">important</span>—the
+      <span class="vocab" id="w-statue2" data-word-en="statue" data-word-vn="bức tượng" data-pos="danh từ / noun" data-def-en="A carved or cast figure of a person, animal, or thing." data-def-vn="Hình tượng được chạm khắc hoặc đúc của người, động vật hoặc vật thể." data-context-en="The statue was one of the two items Thorne could not distinguish in value." data-context-vn="Bức tượng là một trong hai vật phẩm mà Thorne không thể phân biệt giá trị.">statue</span>
+      or the <span class="vocab" id="w-scroll3" data-word-en="scroll" data-word-vn="cuộn giấy" data-pos="danh từ / noun" data-def-en="A roll of parchment with writing; an ancient document." data-def-vn="Một cuộn giấy da có chữ viết; tài liệu cổ xưa." data-context-en="Thorne couldn't tell if the scroll or the statue was more important." data-context-vn="Thorne không thể biết cuộn giấy hay bức tượng quan trọng hơn.">scroll</span>.
+    </p>
+
+    <p>
+      "If you <span class="vocab" id="w-take" data-word-en="take" data-word-vn="bước" data-pos="động từ / verb" data-def-en="To move or go; here used with 'step' to mean advance toward someone." data-def-vn="Di chuyển hoặc đi; ở đây dùng với 'step' có nghĩa là tiến về phía ai đó." data-context-en="Maya warns Thorne not to take one step closer or she will drop the items." data-context-vn="Maya cảnh báo Thorne không được bước thêm một bước nếu không cô sẽ thả các vật phẩm xuống.">take</span>
+      one <span class="vocab" id="w-step" data-word-en="step" data-word-vn="bước chân" data-pos="danh từ / noun" data-def-en="A movement made by lifting one foot and putting it down in a new position." data-def-vn="Động tác thực hiện bằng cách nhấc một chân và đặt xuống ở vị trí mới." data-context-en="Maya threatens to drop the items if Thorne takes one step closer." data-context-vn="Maya đe dọa sẽ thả các vật phẩm nếu Thorne bước thêm một bước.">step</span>
+      <span class="vocab" id="w-closer" data-word-en="closer" data-word-vn="gần hơn" data-pos="trạng từ / adverb" data-def-en="At a shorter distance; nearer." data-def-vn="Ở khoảng cách ngắn hơn; gần hơn." data-context-en="Maya warns Thorne against coming any closer to prevent him from grabbing the items." data-context-vn="Maya cảnh báo Thorne không được lại gần hơn để ngăn hắn cướp lấy các vật phẩm.">closer</span>,
+      I'll <span class="vocab" id="w-drop" data-word-en="drop" data-word-vn="thả rơi" data-pos="động từ / verb" data-def-en="To let something fall; to release something so it falls." data-def-vn="Để điều gì đó rơi xuống; thả điều gì đó để nó rơi." data-context-en="Maya threatens to drop both items into the bottomless pit." data-context-vn="Maya đe dọa sẽ thả cả hai vật phẩm xuống hố sâu không đáy.">drop</span>
+      them both!" Maya <span class="vocab" id="w-shouted" data-word-en="shouted" data-word-vn="hét lên" data-pos="động từ / verb" data-def-en="Called out loudly; spoke in a very loud voice." data-def-vn="Gọi to; nói bằng giọng rất lớn." data-context-en="Maya shouted her threat, showing she was serious and desperate." data-context-vn="Maya hét lên lời đe dọa, cho thấy cô ấy nghiêm túc và tuyệt vọng.">shouted</span>,
+      <span class="vocab" id="w-holding" data-word-en="holding" data-word-vn="cầm" data-pos="động từ / verb" data-def-en="Keeping something in one's hands; gripping." data-def-vn="Giữ điều gì đó trong tay; nắm chặt." data-context-en="Maya held the items over the dark abyss as a threat." data-context-vn="Maya cầm các vật phẩm trên hố sâu tối tăm như một lời đe dọa.">holding</span>
+      the items over the dark <span class="vocab" id="w-abyss" data-word-en="abyss" data-word-vn="vực thẳm" data-pos="danh từ / noun" data-def-en="A deep or seemingly bottomless chasm; a void of great depth." data-def-vn="Một vực sâu hoặc có vẻ không đáy; một khoảng trống rất sâu." data-context-en="Maya held the scroll and statue over the dark abyss as leverage." data-context-vn="Maya cầm cuộn giấy và bức tượng trên vực thẳm tối tăm như đòn bẩy.">abyss</span>.
+    </p>
+
+    <p>
+      Thorne <span class="vocab" id="w-froze" data-word-en="froze" data-word-vn="đứng khựng lại" data-pos="động từ / verb" data-def-en="Became motionless suddenly out of fear or shock." data-def-vn="Đứng yên đột ngột vì sợ hãi hoặc sốc." data-context-en="Thorne froze when Maya threatened to drop the items, showing he was afraid." data-context-vn="Thorne đứng khựng lại khi Maya đe dọa thả các vật phẩm, cho thấy hắn sợ hãi.">froze</span>.
+      For the first time, he <span class="vocab" id="w-looked5" data-word-en="looked" data-word-vn="trông có vẻ" data-pos="động từ / verb" data-def-en="Had a particular appearance; seemed a certain way." data-def-vn="Có vẻ ngoài nhất định; trông như thế nào đó." data-context-en="Thorne looked afraid for the first time, showing Maya had the upper hand." data-context-vn="Lần đầu tiên Thorne trông có vẻ sợ hãi, cho thấy Maya đang chiếm ưu thế.">looked</span>
+      <span class="vocab" id="w-afraid" data-word-en="afraid" data-word-vn="sợ hãi" data-pos="tính từ / adjective" data-def-en="Feeling fear or anxiety; frightened." data-def-vn="Cảm thấy sợ hãi hoặc lo lắng; bị dọa sợ." data-context-en="Thorne looked afraid for the first time, revealing his vulnerability." data-context-vn="Thorne lần đầu tiên trông sợ hãi, bộc lộ điểm yếu của hắn.">afraid</span>.
+      "Don't be <span class="vocab" id="w-reckless" data-word-en="reckless" data-word-vn="liều lĩnh" data-pos="tính từ / adjective" data-def-en="Without thinking or caring about the consequences; dangerously careless." data-def-vn="Không suy nghĩ hoặc quan tâm đến hậu quả; cẩu thả một cách nguy hiểm." data-context-en="Thorne calls Maya reckless, trying to talk her out of dropping the items." data-context-vn="Thorne gọi Maya là liều lĩnh, cố thuyết phục cô không thả các vật phẩm.">reckless</span>,
+      That <span class="vocab" id="w-scroll4" data-word-en="scroll" data-word-vn="cuộn giấy" data-pos="danh từ / noun" data-def-en="A roll of parchment with writing; an ancient document." data-def-vn="Cuộn giấy da có chữ viết; tài liệu cổ xưa." data-context-en="Thorne pleads that the scroll is a masterpiece of history, showing how much he values it." data-context-vn="Thorne van xin rằng cuộn giấy là kiệt tác lịch sử, cho thấy hắn trân trọng nó đến mức nào.">scroll</span>
+      is a <span class="vocab" id="w-masterpiece" data-word-en="masterpiece" data-word-vn="kiệt tác" data-pos="danh từ / noun" data-def-en="A work of outstanding artistry, skill, or workmanship; an extraordinary achievement." data-def-vn="Một tác phẩm nghệ thuật, kỹ năng hoặc tay nghề xuất sắc; một thành tựu phi thường." data-context-en="Thorne calls the scroll a masterpiece of history to persuade Maya not to destroy it." data-context-vn="Thorne gọi cuộn giấy là kiệt tác lịch sử để thuyết phục Maya không phá hủy nó.">masterpiece</span>
+      of <span class="vocab" id="w-history2" data-word-en="history" data-word-vn="lịch sử" data-pos="danh từ / noun" data-def-en="The study of past events; an important record of what has happened." data-def-vn="Nghiên cứu về các sự kiện trong quá khứ; hồ sơ quan trọng về những gì đã xảy ra." data-context-en="Thorne appeals to the historical value of the scroll to stop Maya from dropping it." data-context-vn="Thorne kêu gọi giá trị lịch sử của cuộn giấy để ngăn Maya thả nó.">history</span>!"
+    </p>
+
+    <p>
+      "Then <span class="vocab" id="w-let2" data-word-en="let" data-word-vn="để cho" data-pos="động từ / verb" data-def-en="To allow; to permit someone to do or go." data-def-vn="Cho phép; để ai đó làm hoặc đi." data-context-en="Maya demands Thorne let Jack go as a condition for not dropping the items." data-context-vn="Maya yêu cầu Thorne thả Jack đi như điều kiện để không thả các vật phẩm.">let</span>
+      Jack <span class="vocab" id="w-go" data-word-en="go" data-word-vn="đi" data-pos="động từ / verb" data-def-en="To move away; to be released or freed." data-def-vn="Di chuyển đi; được thả hoặc giải phóng." data-context-en="Maya demands Thorne let Jack go to safety before she complies." data-context-vn="Maya yêu cầu Thorne để Jack đi an toàn trước khi cô tuân theo.">go</span>,"
+      Maya <span class="vocab" id="w-demanded" data-word-en="demanded" data-word-vn="yêu cầu" data-pos="động từ / verb" data-def-en="Required firmly; insisted on something in a forceful way." data-def-vn="Yêu cầu kiên quyết; khăng khăng đòi điều gì đó một cách mạnh mẽ." data-context-en="Maya demanded Jack's freedom, showing she was negotiating firmly." data-context-vn="Maya yêu cầu trả tự do cho Jack, cho thấy cô đang thương lượng kiên quyết.">demanded</span>.
+    </p>
+
+    <p>
+      Thorne <span class="vocab" id="w-signaled" data-word-en="signaled" data-word-vn="ra hiệu" data-pos="động từ / verb" data-def-en="Made a gesture or sign to communicate a message without words." data-def-vn="Thực hiện cử chỉ hoặc dấu hiệu để truyền đạt thông điệp mà không dùng lời." data-context-en="Thorne signaled to the mercenary to release Jack." data-context-vn="Thorne ra hiệu cho tên lính đánh thuê thả Jack ra.">signaled</span>
+      to the <span class="vocab" id="w-mercenary2" data-word-en="mercenary" data-word-vn="lính đánh thuê" data-pos="danh từ / noun" data-def-en="A soldier hired to fight for money, not for loyalty to a cause." data-def-vn="Một người lính được thuê để chiến đấu vì tiền, không vì lòng trung thành." data-context-en="Thorne signaled to the mercenary, who then pushed Jack toward Maya." data-context-vn="Thorne ra hiệu cho tên lính đánh thuê, rồi hắn ta đẩy Jack về phía Maya.">mercenary</span>,
+      who <span class="vocab" id="w-pushed" data-word-en="pushed" data-word-vn="đẩy" data-pos="động từ / verb" data-def-en="Used force to move someone or something in a direction." data-def-vn="Dùng lực để đẩy ai đó hoặc điều gì đó theo một hướng." data-context-en="The mercenary pushed Jack toward Maya when signaled by Thorne." data-context-vn="Tên lính đánh thuê đẩy Jack về phía Maya khi được Thorne ra hiệu.">pushed</span>
+      Jack <span class="vocab" id="w-toward" data-word-en="toward" data-word-vn="về phía" data-pos="giới từ / preposition (directional)" data-def-en="In the direction of; moving in the general direction of something." data-def-vn="Theo hướng của; di chuyển về phía điều gì đó." data-context-en="Jack was pushed toward Maya, meaning he was being released to her side." data-context-vn="Jack bị đẩy về phía Maya, nghĩa là anh ta đang được thả về phía cô.">toward</span>
+      Maya. But as Jack <span class="vocab" id="w-stumbled" data-word-en="stumbled" data-word-vn="vấp ngã" data-pos="động từ / verb" data-def-en="Moved unsteadily; tripped or nearly fell while walking." data-def-vn="Di chuyển không vững vàng; vấp hoặc suýt ngã khi đi." data-context-en="Jack stumbled forward, showing he was weakened from being held captive." data-context-vn="Jack vấp ngã về phía trước, cho thấy anh ta đã bị yếu đi do bị giam giữ.">stumbled</span>
+      <span class="vocab" id="w-forward" data-word-en="forward" data-word-vn="về phía trước" data-pos="trạng từ / adverb" data-def-en="In the direction ahead; onward." data-def-vn="Theo hướng phía trước; tiến lên." data-context-en="Jack stumbled forward toward Maya after being released." data-context-vn="Jack vấp ngã về phía trước tiến về phía Maya sau khi được thả.">forward</span>,
+      Thorne <span class="vocab" id="w-fired" data-word-en="fired" data-word-vn="bắn" data-pos="động từ / verb" data-def-en="Shot a weapon; discharged a firearm." data-def-vn="Bắn một vũ khí; khai hỏa." data-context-en="Thorne fired a shot into the ceiling, triggering the temple's collapse." data-context-vn="Thorne bắn một phát lên trần nhà, gây ra sự sụp đổ của ngôi đền.">fired</span>
+      a <span class="vocab" id="w-shot" data-word-en="shot" data-word-vn="phát súng" data-pos="danh từ / noun" data-def-en="The firing of a gun; a bullet discharged from a firearm." data-def-vn="Việc bắn một khẩu súng; một viên đạn được phóng ra từ súng." data-context-en="Thorne fired a shot into the ceiling, causing the temple to start shuddering." data-context-vn="Thorne bắn một phát vào trần nhà, khiến ngôi đền bắt đầu rung chuyển.">shot</span>
+      into the <span class="vocab" id="w-ceiling" data-word-en="ceiling" data-word-vn="trần nhà" data-pos="danh từ / noun" data-def-en="The upper interior surface of a room or building." data-def-vn="Bề mặt bên trong phía trên của một căn phòng hoặc tòa nhà." data-context-en="Thorne fired into the ceiling to destabilize the temple and change the power dynamic." data-context-vn="Thorne bắn vào trần nhà để làm mất ổn định ngôi đền và thay đổi thế cục.">ceiling</span>.
+      The old <span class="vocab" id="w-temple2" data-word-en="temple" data-word-vn="ngôi đền" data-pos="danh từ / noun" data-def-en="A building used for worship; an ancient sacred structure." data-def-vn="Một tòa nhà dùng cho việc thờ cúng; một công trình thiêng liêng cổ xưa." data-context-en="The old temple began to shudder after Thorne fired his shot." data-context-vn="Ngôi đền cổ bắt đầu rung chuyển sau khi Thorne bắn phát súng.">temple</span>
+      began to <span class="vocab" id="w-shudder" data-word-en="shudder" data-word-vn="rung chuyển" data-pos="động từ / verb" data-def-en="To shake or tremble, especially as a reaction to shock or disturbance." data-def-vn="Rung hoặc run, đặc biệt là phản ứng với cú sốc hoặc sự xáo trộn." data-context-en="The temple began to shudder after the shot, signaling its imminent collapse." data-context-vn="Ngôi đền bắt đầu rung chuyển sau phát súng, báo hiệu sự sụp đổ sắp xảy ra.">shudder</span>.
+      <span class="vocab" id="w-dust" data-word-en="Dust" data-word-vn="bụi" data-pos="danh từ / noun" data-def-en="Fine particles of matter that settle on surfaces or fall when disturbed." data-def-vn="Các hạt vật chất mịn lắng đọng trên bề mặt hoặc rơi xuống khi bị xáo trộn." data-context-en="Dust and stones began to fall from the roof as the temple collapsed." data-context-vn="Bụi và đá bắt đầu rơi từ mái nhà khi ngôi đền sụp đổ.">Dust</span>
+      and <span class="vocab" id="w-stones" data-word-en="stones" data-word-vn="những tảng đá" data-pos="danh từ / noun" data-def-en="Pieces of rock; solid non-metallic mineral matter." data-def-vn="Những mảnh đá; vật liệu khoáng phi kim loại rắn." data-context-en="Stones began to fall from the roof, showing the temple was collapsing." data-context-vn="Những tảng đá bắt đầu rơi từ mái nhà, cho thấy ngôi đền đang sụp đổ.">stones</span>
+      began to <span class="vocab" id="w-fall" data-word-en="fall" data-word-vn="rơi xuống" data-pos="động từ / verb" data-def-en="To drop down due to gravity; to come down from a higher position." data-def-vn="Rơi xuống do trọng lực; đổ xuống từ vị trí cao hơn." data-context-en="Dust and stones began to fall from the roof, signaling the temple's collapse." data-context-vn="Bụi và đá bắt đầu rơi từ mái nhà, báo hiệu sự sụp đổ của ngôi đền.">fall</span>
+      from the <span class="vocab" id="w-roof" data-word-en="roof" data-word-vn="mái nhà" data-pos="danh từ / noun" data-def-en="The structure that covers the top of a building." data-def-vn="Cấu trúc bao phủ phần trên cùng của một tòa nhà." data-context-en="Stones fell from the roof after Thorne's shot destabilized the old temple." data-context-vn="Đá rơi từ mái nhà sau khi phát súng của Thorne làm mất ổn định ngôi đền cổ.">roof</span>.
+    </p>
+
+  </div><!-- end #main-text -->
+
+  <!-- Back button -->
+  <div class="back-btn-wrap">
+    <a class="back-btn" href="../" onclick="history.back(); return false;">← Back</a>
+  </div>
+
+  <!-- Test Your Memory -->
+  <h2>Test Your Memory</h2>
+  <p style="font-size:0.95rem; color:#5a3a10; margin-bottom:12px;">After each pass through the content, try to remember the meaning and where in the story each word appeared.</p>
+  <div id="memory-grid"></div>
+
+  <!-- Transcription Notes -->
+  
+
+  <!-- Skip Notes -->
+  
+
+</div>
+
+<!-- Popup overlay and card -->
+<div id="popup-overlay"></div>
+<div id="popup-card">
+  <div class="pop-word-main" id="pop-word-main"></div>
+  <div class="pop-word-secondary" id="pop-word-secondary"></div>
+  <div class="pop-pos" id="pop-pos"></div>
+  <div class="pop-def" id="pop-def"></div>
+  <div class="pop-def-vn" id="pop-def-vn"></div>
+  <div class="pop-context-label">In context:</div>
+  <div class="pop-context" id="pop-context"></div>
+</div>
+
+<script>
+// Popup logic — English text → show English heading, Vietnamese secondary
+let currentWord = null;
+
+function showPopup(el) {
+  const wordEn = el.getAttribute('data-word-en') || '';
+  const wordVn = el.getAttribute('data-word-vn') || '';
+  const pos    = el.getAttribute('data-pos') || '';
+  const defEn  = el.getAttribute('data-def-en') || '';
+  const defVn  = el.getAttribute('data-def-vn') || '';
+  const ctxEn  = el.getAttribute('data-context-en') || '';
+
+  // Input is English → English is heading, Vietnamese is secondary
+  document.getElementById('pop-word-main').textContent = wordEn;
+  document.getElementById('pop-word-secondary').textContent = wordVn;
+  document.getElementById('pop-pos').textContent = pos;
+  document.getElementById('pop-def').textContent = defEn;
+  document.getElementById('pop-def-vn').textContent = defVn;
+  document.getElementById('pop-context').textContent = ctxEn;
+
+  document.getElementById('popup-card').style.display = 'block';
+  document.getElementById('popup-overlay').style.display = 'block';
+  currentWord = el;
+}
+
+function hidePopup() {
+  document.getElementById('popup-card').style.display = 'none';
+  document.getElementById('popup-overlay').style.display = 'none';
+  currentWord = null;
+}
+
+document.querySelectorAll('.vocab').forEach(function(el) {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    if (currentWord === el) {
+      hidePopup();
+    } else {
+      showPopup(el);
+    }
+  });
+});
+
+document.getElementById('popup-overlay').addEventListener('click', hidePopup);
+document.getElementById('popup-card').addEventListener('click', hidePopup);
+
+// Memory grid
+const vocabWords = [
+  { text: 'ultimate', targetId: 'w-stepped' },
+  { text: 'stepped', targetId: 'w-stepped' },
+  { text: 'light', targetId: 'w-light' },
+  { text: 'looked', targetId: 'w-looked' },
+  { text: 'tired', targetId: 'w-tired' },
+  { text: 'triumphant', targetId: 'w-triumphant' },
+  { text: 'scroll', targetId: 'w-scroll' },
+  { text: 'map', targetId: 'w-map' },
+  { text: 'Grand Hoard', targetId: 'w-grand' },
+  { text: 'give', targetId: 'w-give' },
+  { text: 'let', targetId: 'w-let' },
+  { text: 'friend', targetId: 'w-friend' },
+  { text: 'live', targetId: 'w-live' },
+  { text: 'held', targetId: 'w-held' },
+  { text: 'tightly', targetId: 'w-tightly' },
+  { text: 'mercenary', targetId: 'w-mercenary' },
+  { text: 'jade', targetId: 'w-jade' },
+  { text: 'statue', targetId: 'w-statue' },
+  { text: 'felt', targetId: 'w-felt' },
+  { text: 'warm', targetId: 'w-warm' },
+  { text: 'vibrant', targetId: 'w-vibrant' },
+  { text: 'energy', targetId: 'w-energy' },
+  { text: 'grandfather', targetId: 'w-grandfather' },
+  { text: 'died', targetId: 'w-died' },
+  { text: 'keep', targetId: 'w-keep' },
+  { text: 'secret', targetId: 'w-secret' },
+  { text: 'voice', targetId: 'w-voice' },
+  { text: 'shaking', targetId: 'w-shaking' },
+  { text: 'anger', targetId: 'w-anger' },
+  { text: 'fool', targetId: 'w-fool' },
+  { text: 'snapped', targetId: 'w-snapped' },
+  { text: 'history', targetId: 'w-history' },
+  { text: 'winners', targetId: 'w-winners' },
+  { text: 'hand it over', targetId: 'w-hand' },
+  { text: 'large', targetId: 'w-large' },
+  { text: 'bottomless', targetId: 'w-bottomless' },
+  { text: 'pit', targetId: 'w-pit' },
+  { text: 'temple', targetId: 'w-temple' },
+  { text: 'realized', targetId: 'w-realized' },
+  { text: 'know', targetId: 'w-know' },
+  { text: 'item', targetId: 'w-item' },
+  { text: 'important', targetId: 'w-important' },
+  { text: 'take', targetId: 'w-take' },
+  { text: 'step', targetId: 'w-step' },
+  { text: 'closer', targetId: 'w-closer' },
+  { text: 'drop', targetId: 'w-drop' },
+  { text: 'shouted', targetId: 'w-shouted' },
+  { text: 'holding', targetId: 'w-holding' },
+  { text: 'abyss', targetId: 'w-abyss' },
+  { text: 'froze', targetId: 'w-froze' },
+  { text: 'afraid', targetId: 'w-afraid' },
+  { text: 'reckless', targetId: 'w-reckless' },
+  { text: 'masterpiece', targetId: 'w-masterpiece' },
+  { text: 'demanded', targetId: 'w-demanded' },
+  { text: 'signaled', targetId: 'w-signaled' },
+  { text: 'pushed', targetId: 'w-pushed' },
+  { text: 'toward', targetId: 'w-toward' },
+  { text: 'stumbled', targetId: 'w-stumbled' },
+  { text: 'forward', targetId: 'w-forward' },
+  { text: 'fired', targetId: 'w-fired' },
+  { text: 'shot', targetId: 'w-shot' },
+  { text: 'ceiling', targetId: 'w-ceiling' },
+  { text: 'shudder', targetId: 'w-shudder' },
+  { text: 'dust', targetId: 'w-dust' },
+  { text: 'stones', targetId: 'w-stones' },
+  { text: 'fall', targetId: 'w-fall' },
+  { text: 'roof', targetId: 'w-roof' },
+  { text: 'go', targetId: 'w-go' },
+  { text: 'forward', targetId: 'w-forward' }
+];
+
+// Deduplicate
+const seen = new Set();
+const uniqueWords = vocabWords.filter(w => {
+  if (seen.has(w.text)) return false;
+  seen.add(w.text);
+  return true;
+});
+
+const grid = document.getElementById('memory-grid');
+uniqueWords.forEach(function(w) {
+  const span = document.createElement('span');
+  span.textContent = w.text;
+  span.addEventListener('click', function() {
+    const target = document.getElementById(w.targetId);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      target.classList.add('highlight-flash');
+      setTimeout(() => target.classList.remove('highlight-flash'), 1500);
+    }
+  });
+  grid.appendChild(span);
+});
+
+// Download button: content only version
+document.getElementById('download-btn').addEventListener('click', function() {
+  const clone = document.documentElement.cloneNode(true);
+  // Remove skip-notes
+  clone.querySelectorAll('.skip-notes').forEach(el => el.remove());
+  // Remove transcription-notes
+  clone.querySelectorAll('.transcription-notes').forEach(el => el.remove());
+  // Remove download button
+  clone.querySelectorAll('.download-btn-wrap').forEach(el => el.remove());
+  // Clear memory grid so it rebuilds via JS
+  const mg = clone.querySelector('#memory-grid');
+  if (mg) mg.innerHTML = '';
+
+  const html = '<!DOCTYPE html>\n' + clone.outerHTML;
+  const blob = new Blob([html], { type: 'text/html' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'episode9_content_only.html';
+  a.click();
+  URL.revokeObjectURL(url);
+});
+</script>
+
+
+</body></html>
