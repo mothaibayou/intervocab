@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html lang="vi"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tập 2: Người lạ ở ghế 4B</title>
+  <style>
+    /* Global Elements & Layout */
+    body {
+      background-color: #2b2b2b;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #main-page {
+      background-color: #f0e6c8;
+      color: #2a1500;
+      border: 2px solid #a0845a;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 20px 15px;
+      margin: 0;
+      position: relative;
+    }
+
+    @media (min-width: 768px) {
+      #main-page {
+        max-width: 875px;
+        margin: 40px auto;
+        padding: 40px 50px;
+        border-radius: 4px;
+        box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      }
+    }
+
+    /* Typography */
+    h1 {
+      color: #3a1f00;
+      font-size: 2rem;
+      margin-top: 0;
+      margin-bottom: 10px;
+      padding-bottom: 10px;
+      border-bottom: 2px solid #7a4e1a;
+      text-align: center;
+    }
+
+    p {
+      font-size: 18px;
+      line-height: 1.65;
+      margin-bottom: 1.5rem;
+      text-align: justify;
+    }
+
+    /* Audio Player Setup */
+    .audio-container {
+      width: 100%;
+      margin-bottom: 25px;
+    }
+
+    .audio-label {
+      font-size: 0.9rem;
+      color: #5a4530;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    audio {
+      width: 100%;
+      background: #2e1f0a;
+      border-radius: 4px;
+      border: 1px solid #7a4e1a;
+    }
+
+    /* Media Controls Matrix */
+    .audio-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    @media (min-width: 480px) {
+      .audio-controls {
+        grid-template-columns: repeat(6, 1fr);
+      }
+    }
+
+    .rewind-btn {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 8px 4px;
+      font-size: 0.85rem;
+      border-radius: 4px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      transition: background 0.2s;
+      text-align: center;
+    }
+
+    .rewind-btn:hover {
+      background-color: #422d12;
+    }
+
+    /* Interactive Elements */
+    .vocab {
+      border-bottom: 2.5px dotted #1a5c20;
+      cursor: pointer;
+      display: inline;
+    }
+
+    /* Action Buttons */
+    .download-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 6px 12px;
+      font-size: 0.8rem;
+      border-radius: 4px;
+      cursor: pointer;
+      z-index: 10;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      text-decoration: none;
+      padding: 10px 20px;
+      font-size: 0.95rem;
+      border-radius: 4px;
+      margin: 25px 0;
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: #422d12;
+    }
+
+    /* Layout Sections */
+    .section-heading {
+      color: #3a1f00;
+      font-size: 1.4rem;
+      margin-top: 30px;
+      margin-bottom: 15px;
+      padding-bottom: 5px;
+      border-bottom: 1px solid #7a4e1a;
+    }
+
+    /* Memory Grid Elements */
+    #memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .grid-word {
+      border-bottom: 1px dotted #1a5c20;
+      cursor: pointer;
+      padding: 4px;
+      font-size: 0.95rem;
+      transition: background-color 0.2s;
+    }
+
+    .grid-word:hover {
+      background-color: rgba(26, 92, 32, 0.1);
+    }
+
+    .highlight-flash {
+      background-color: #ffe082 !important;
+      transition: background-color 1.5s ease-out;
+    }
+
+    /* Popup Modal Sizing and Typography */
+    #popup-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      display: none;
+      z-index: 100;
+    }
+
+    #popup-card {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f0e6c8;
+      color: #2a1500;
+      border: 3px solid #7a4e1a;
+      padding: 20px;
+      width: 85%;
+      max-width: 420px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+      border-radius: 6px;
+      box-sizing: border-box;
+      display: none;
+      z-index: 101;
+      font-family: Arial, sans-serif;
+    }
+
+    #pop-heading {
+      font-size: 1.3rem;
+      font-weight: bold;
+      color: #3a1f00;
+      margin: 0 0 4px 0;
+    }
+
+    #pop-subheading {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #5a4530;
+      margin: 0 0 8px 0;
+    }
+
+    #pop-pos {
+      font-size: 0.95rem;
+      color: #7a4e1a;
+      font-weight: bold;
+      margin: 0 0 12px 0;
+    }
+
+    #pop-def {
+      font-size: 1rem;
+      line-height: 1.4;
+      margin: 0 0 14px 0;
+      border-top: 1px solid #a0845a;
+      padding-top: 10px;
+    }
+
+    #pop-context-label {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #3a1f00;
+      margin: 0 0 4px 0;
+    }
+
+    #pop-context {
+      font-size: 0.95rem;
+      line-height: 1.4;
+      font-style: italic;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-page">
+    
+
+    <h1 class="vocab" id="w-headline-1" data-word-en="episode" data-word-vn="Tập" data-pos="danh từ / noun" data-def-en="A part of a dramatic work as a serial story; installment." data-def-vn="Một phần của câu chuyện truyền hình dài tập hoặc truyện dài kỳ; phần." data-context-en="This is episode 2 of the interactive language learning series." data-context-vn="Đây là tập 2 của loạt bài học ngôn ngữ tương tác.">Tập</h1> 2: 
+    <span class="vocab" id="w-headline-2" data-word-en="stranger" data-word-vn="Người lạ" data-pos="danh từ / noun" data-def-en="A person whom one does not know or with whom one is not familiar." data-def-vn="Người mà một người không biết hoặc không quen thuộc." data-context-en="A charming stranger sat next to Maya on the long flight." data-context-vn="Một người lạ quyến rũ đã ngồi cạnh Maya trên chuyến bay dài.">Người lạ</span> ở 
+    <span class="vocab" id="w-headline-3" data-word-en="seat" data-word-vn="ghế" data-pos="danh từ / noun" data-def-en="A thing made or used for sitting on, such as a chair or stool." data-def-vn="Vật được làm hoặc sử dụng để ngồi, chẳng hạn như ghế." data-context-en="Her seat assignment was on row 4B." data-context-vn="Chỗ ngồi được chỉ định của cô ấy là ở hàng 4B.">ghế</span> 4B
+
+    <div class="audio-container">
+      <div class="audio-label">🎧 Listen to the text</div>
+      <audio id="audio-player" controls="" src="stranger.mp3"></audio>
+      
+      <div class="audio-controls">
+        <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+      </div>
+    </div>
+
+    <p>
+      Maya đã không <span class="vocab" id="w1" data-word-en="fall" data-word-vn="ngã" data-pos="động từ / verb" data-def-en="To move downward, typically rapidly and freely without control, from a higher to a lower level." data-def-vn="Di chuyển xuống dưới từ một mức cao hơn xuống mức thấp hơn một cách nhanh chóng." data-context-en="She managed to secure her grip so she wouldn't fall." data-context-vn="Cô ấy đã cố gắng bám chắc để không bị ngã.">ngã</span>.
+    </p>
+
+    <p>
+      Vào <span class="vocab" id="w2" data-word-en="second" data-word-vn="giây" data-pos="danh từ / noun" data-def-en="A fundamental unit of time; a very short draft of time." data-def-vn="Đơn vị thời gian cơ bản; một khoảnh khắc rất ngắn." data-context-en="At the very last second, she found structural support." data-context-vn="Vào đúng giây cuối cùng, cô ấy đã tìm thấy điểm tựa cấu trúc.">giây</span> <span class="vocab" id="w3" data-word-en="last" data-word-vn="cuối cùng" data-pos="tính từ / adjective" data-def-en="Coming after all others in time or order; final." data-def-vn="Đến sau tất cả những thứ khác về thời gian hoặc thứ tự; cuối cùng." data-context-en="She caught the drainage pipe at the last possible moment." data-context-vn="Cô ấy bám được vào ống thoát nước ở khoảnh khắc cuối cùng có thể.">cuối cùng</span>, <span class="vocab" id="w4" data-word-en="hand" data-word-vn="tay" data-pos="danh từ / noun" data-def-en="The end part of a person's arm beyond the wrist." data-def-vn="Phần cuối cùng của cánh tay con người phía sau cổ tay." data-context-en="Her hand grabbed the cold metal pipe tightly." data-context-vn="Tay cô nắm chặt lấy ống kim loại lạnh lẽo.">tay</span> cô <span class="vocab" id="w5" data-word-en="grab/hold onto" data-word-vn="bám được vào" data-pos="động từ / verb" data-def-en="To clutch or hold onto something securely with hands." data-def-vn="Nắm hoặc giữ chặt một thứ gì đó một cách an toàn bằng tay." data-context-en="Her fingers managed to hold onto the secure fixture." data-context-vn="Các ngón tay cô ấy đã bám được vào giá đỡ chắc chắn.">bám được vào</span> <span class="vocab" id="w6" data-word-en="drainpipe" data-word-vn="ống dẫn nước" data-pos="danh từ / noun" data-def-en="A pipe for carrying off rainwater from a building." data-def-vn="Ống dẫn nước mưa từ một tòa nhà ra ngoài." data-context-en="The metallic drainpipe saved her from a dangerous drop." data-context-vn="Ống dẫn nước bằng kim loại đã cứu cô khỏi một cú rơi nguy hiểm.">ống dẫn nước</span> bằng <span class="vocab" id="w7" data-word-en="metal" data-word-vn="kim loại" data-pos="danh từ / noun" data-def-en="A solid material that is typically hard, shiny, malleable, and fusible." data-def-vn="Vật liệu rắn, thường cứng, bóng, có tính dễ uốn và dễ nóng chảy." data-context-en="The old infrastructure was built with heavy metal structures." data-context-vn="Cơ sở hạ tầng cũ được xây dựng bằng kết cấu kim loại nặng.">kim loại</span> <span class="vocab" id="w8" data-word-en="cold" data-word-vn="lạnh lẽo" data-pos="tính từ / adjective" data-def-en="Of or at a low temperature, especially when compared with the human body." data-def-vn="Ở nhiệt độ thấp, đặc biệt là khi so sánh với cơ thể con người." data-context-en="The metal structure felt cold against her panicked skin." data-context-vn="Cấu trúc kim loại cảm thấy lạnh lẽo đối với làn da hoảng loạn của cô.">lạnh lẽo</span>.
+    </p>
+
+    <p>
+      Cô <span class="vocab" id="w9" data-word-en="swing" data-word-vn="đu người" data-pos="động từ / verb" data-def-en="To move or cause to move back and forth or sideways while suspended." data-def-vn="Di chuyển qua lại hoặc sang hai bên trong khi đang được treo lơ lửng." data-context-en="She had to swing her entire body toward the window ledge." data-context-vn="Cô phải đu người toàn bộ cơ thể về phía gờ cửa sổ.">đu người</span> qua một <span class="vocab" id="w10" data-word-en="window" data-word-vn="cửa sổ" data-pos="danh từ / noun" data-def-en="An opening in the wall of a building for admitting light or air." data-def-vn="Một khoảng mở trên tường của tòa nhà để đón ánh sáng hoặc không khí." data-context-en="She spotted an open window just a few feet below." data-context-vn="Cô phát hiện ra một cửa sổ mở chỉ cách đó vài feet bên dưới.">cửa sổ</span> <span class="vocab" id="w11" data-word-en="open" data-word-vn="mở" data-pos="tính từ / adjective" data-def-en="Not closed or fastened; allowing access through an empty space." data-def-vn="Không bị đóng hoặc cài; cho phép đi vào qua một khoảng trống." data-context-en="An open window provided an escape route from the roof." data-context-vn="Một cửa sổ mở cung cấp một lối thoát hiểm từ mái nhà.">mở</span> ở <span class="vocab" id="w12" data-word-en="floor" data-word-vn="tầng" data-pos="danh từ / noun" data-def-en="A distinct level or story in a building." data-def-vn="Một tầng hoặc một cấp độ riêng biệt trong một tòa nhà." data-context-en="She managed to swing safely into the lower floor." data-context-vn="Cô đã xoay xở để đu người an toàn vào tầng phía dưới.">tầng</span> dưới, <span class="vocab" id="w13" data-word-en="land" data-word-vn="hạ cánh" data-pos="động từ / verb" data-def-en="To come down to earth or settle on a surface after a fall or flight." data-def-vn="Đáp xuống mặt đất hoặc đáp xuống một bề mặt sau khi rơi hoặc bay." data-context-en="She managed to land unexpectedly inside an unfamiliar apartment." data-context-vn="Cô đã xoay xở để hạ cánh bất ngờ vào bên trong một căn hộ lạ.">hạ cánh</span> xuống <span class="vocab" id="w14" data-word-en="kitchen" data-word-vn="bếp" data-pos="danh từ / noun" data-def-en="A room or area where food is prepared and cooked." data-def-vn="Căn phòng hoặc khu vực nơi thức ăn được chuẩn bị và nấu chín.">bếp</span> của <span class="vocab" id="w15" data-word-en="neighbor" data-word-vn="nhà hàng xóm" data-pos="danh từ / noun" data-def-en="A person or household living near or next to another." data-def-vn="Một người hoặc một hộ gia đình sống gần hoặc cạnh một người khác.">nhà hàng xóm</span>.
+    </p>
+
+    <p>
+      "Cháu <span class="vocab" id="w16" data-word-en="apologize / sorry" data-word-vn="xin lỗi" data-pos="động từ / verb" data-def-en="To express regret for something that one has done wrong or disrupted." data-def-vn="Bày tỏ sự hối tiếc vì điều gì đó một người đã làm sai hoặc gây gián đoạn.">xin lỗi</span>, bà Higgins!" Maya hét lên khi <span class="vocab" id="w17" data-word-en="dash / rush" data-word-vn="chạy vụt" data-pos="động từ / verb" data-def-en="To run or move somewhere very quickly and suddenly." data-def-vn="Chạy hoặc di chuyển đến một nơi nào đó rất nhanh và đột ngột.">chạy vụt</span> qua một <span class="vocab" id="w18" data-word-en="old lady" data-word-vn="bà cụ" data-pos="danh từ / noun" data-def-en="An elderly woman." data-def-vn="Một người phụ nữ lớn tuổi.">bà cụ</span> đang <span class="vocab" id="w19" data-word-en="extremely" data-word-vn="vô cùng" data-pos="trạng từ / adverb" data-def-en="To a very great degree; exceptionally." data-def-vn="Đến một mức độ rất lớn; đặc biệt.">vô cùng</span> <span class="vocab" id="w20" data-word-en="surprised" data-word-vn="ngạc nhiên" data-pos="tính từ / adjective" data-def-en="Feeling or showing surprise because of something unexpected." data-def-vn="Cảm thấy hoặc thể hiện sự ngạc nhiên vì một điều gì đó bất ngờ.">ngạc nhiên</span> và <span class="vocab" id="w21" data-word-en="dash out" data-word-vn="lao ra" data-pos="động từ / verb" data-def-en="To move forward suddenly and quickly out of a space." data-def-vn="Di chuyển về phía trước một cách đột ngột và nhanh chóng ra khỏi một không gian.">lao ra</span> <span class="vocab" id="w22" data-word-en="front door" data-word-vn="cửa trước" data-pos="danh từ / noun" data-def-en="The main entrance door at the front of a house or building." data-def-vn="Cửa lối vào chính ở phía trước của một ngôi nhà hoặc tòa nhà.">cửa trước</span>.
+    </p>
+
+    <p>
+      Hai mươi tư <span class="vocab" id="w23" data-word-en="hour" data-word-vn="giờ" data-pos="danh từ / noun" data-def-en="A period of time equal to a twenty-fourth part of a day; 60 minutes." data-def-vn="Một khoảng thời gian bằng phần thứ hai mươi tư của một ngày; 60 phút.">giờ</span> <span class="vocab" id="w24" data-word-en="after / later" data-word-vn="sau" data-pos="trạng từ / adverb" data-def-en="At a later time; subsequent to an event." data-def-vn="Tại một thời điểm muộn hơn; sau một sự kiện.">sau</span>, Maya <span class="vocab" id="w25" data-word-en="board" data-word-vn="lên" data-pos="động từ / verb" data-def-en="To get on board a ship, aircraft, or other vehicle." data-def-vn="Bước lên tàu, máy bay hoặc phương tiện khác.">lên</span> chiếc <span class="vocab" id="w26" data-word-en="airplane" data-word-vn="máy bay" data-pos="danh từ / noun" data-def-en="A powered flying vehicle with fixed wings." data-def-vn="Phương tiện bay có động cơ với cánh cố định.">máy bay</span> màu <span class="vocab" id="w27" data-word-en="blue" data-word-vn="xanh" data-pos="tính từ / adjective" data-def-en="Of a color intermediate between green and violet, like a clear sky." data-def-vn="Có màu nằm giữa màu xanh lá cây và màu tím, giống như bầu trời quang đãng.">xanh</span> <span class="vocab" id="w28" data-word-en="gold / yellow" data-word-vn="vàng" data-pos="tính từ / adjective" data-def-en="Having the color of gold or ripe lemons." data-def-vn="Có màu của vàng hoặc chanh chín.">vàng</span> <span class="vocab" id="w29" data-word-en="gorgeous / beautiful" data-word-vn="tuyệt đẹp" data-pos="tính từ / adjective" data-def-en="Beautiful; very attractive or impressive." data-def-vn="Đẹp đẽ; rất hấp dẫn hoặc ấn tượng.">tuyệt đẹp</span> của Vietnam Airlines.
+    </p>
+
+    <p>
+      <span class="vocab" id="w30" data-word-en="soon" data-word-vn="Chẳng mấy chốc" data-pos="trạng từ / adverb" data-def-en="In or after a short time; before long." data-def-vn="Trong hoặc sau một khoảng thời gian ngắn; không lâu sau đó.">Chẳng mấy chốc</span>, cô đã <span class="vocab" id="w31" data-word-en="sit" data-word-vn="ngồi" data-pos="động từ / verb" data-def-en="To adopt or be in a position in which one's weight is supported by one's buttocks." data-def-vn="Ở tư thế mà trọng lượng cơ thể được nâng đỡ bằng mông.">ngồi</span> trên một chiếc <span class="vocab" id="w32" data-word-en="seat" data-word-vn="chiếc ghế" data-pos="danh từ / noun" data-def-en="A structural asset designed for sitting on inside a vehicle column." data-def-vn="Một tài sản cấu trúc được thiết kế để ngồi bên trong một phương tiện di chuyển.">chiếc ghế</span> <span class="vocab" id="w33" data-word-en="comfortable" data-word-vn="thoải mái" data-pos="tính từ / adjective" data-def-en="Providing physical ease and relaxation." data-def-vn="Mang lại sự dễ chịu và thư giãn về mặt thể chất.">thoải mái</span>, <span class="vocab" id="w34" data-word-en="fly" data-word-vn="bay" data-pos="động từ / verb" data-def-en="To move through the air using wings or an aircraft container." data-def-vn="Di chuyển trong không khí bằng cách sử dụng cánh hoặc một phương tiện bay.">bay</span> trên những <span class="vocab" id="w35" data-word-en="layer of clouds" data-word-vn="tầng mây" data-pos="danh từ / noun" data-def-en="An expanse of clouds covering the sky at a certain altitude." data-def-vn="Một dải mây bao phủ bầu trời ở một độ cao nhất định.">tầng mây</span>.
+    </p>
+
+    <p>
+      Cô nhìn <span class="vocab" id="w36" data-word-en="reflection" data-word-vn="hình ảnh phản chiếu" data-pos="danh từ / noun" data-def-en="The throwing back by a surface of light, matching an image." data-def-vn="Sự phản chiếu của ánh sáng bởi một bề mặt, tạo ra hình ảnh tương ứng.">hình ảnh phản chiếu</span> của mình qua <span class="vocab" id="w37" data-word-en="window" data-word-vn="cửa sổ" data-pos="danh từ / noun" data-def-en="A small window pane constructed on an airplane interface." data-def-vn="Một ô cửa sổ nhỏ được xây dựng trên giao diện máy bay.">cửa sổ</span> nhỏ.
+    </p>
+
+    <p>
+      Với mái <span class="vocab" id="w38" data-word-en="hair" data-word-vn="tóc" data-pos="danh từ / noun" data-def-en="Any of the fine threadlike strands that grow from the skin of humans." data-def-vn="Bất kỳ sợi mịn như sợi chỉ nào mọc ra từ da của con người.">tóc</span> <span class="vocab" id="w39" data-word-en="long" data-word-vn="dài" data-pos="tính từ / adjective" data-def-en="Measuring a great distance from end to end." data-def-vn="Đo được một khoảng cách lớn từ đầu này đến đầu kia.">dài</span> <span class="vocab" id="w40" data-word-en="black" data-word-vn="đen" data-pos="tính từ / adjective" data-def-en="Of the very darkest color owing to the absence of light." data-def-vn="Có màu tối nhất do không có ánh sáng.">đen</span> <span class="vocab" id="w41" data-word-en="tied up" data-word-vn="buộc lại" data-pos="động từ / verb" data-def-en="Fastened or secured together with a cord or band." data-def-vn="Được thắt hoặc giữ lại với nhau bằng một sợi dây hoặc dải băng.">buộc lại</span> và đôi <span class="vocab" id="w42" data-word-en="eyes" data-word-vn="mắt" data-pos="danh từ / noun" data-def-en="The organs of sight in humans and animals." data-def-vn="Cơ quan thị giác ở người và động vật.">mắt</span> <span class="vocab" id="w43" data-word-en="sharp / keen" data-word-vn="sắc sảo" data-pos="tính từ / adjective" data-def-en="Having or showing an ability to accurately assess situations." data-def-vn="Có hoặc thể hiện khả năng đánh giá tình huống một cách chính xác.">sắc sảo</span>, <span class="vocab" id="w44" data-word-en="intelligent" data-word-vn="thông minh" data-pos="tính từ / adjective" data-def-en="Having or showing intelligence, especially of a high level." data-def-vn="Có hoặc thể hiện trí thông minh, đặc biệt là ở mức độ cao.">thông minh</span>, cô <span class="vocab" id="w45" data-word-en="look like / resemble" data-word-vn="trông giống" data-pos="động từ / verb" data-def-en="To have a similar appearance to another person or thing." data-def-vn="Có bề ngoài tương tự một người hoặc vật khác.">trông giống</span> một <span class="vocab" id="w46" data-word-en="soldier" data-word-vn="người lính" data-pos="danh từ / noun" data-def-en="A person who serves in an army." data-def-vn="Một người phục vụ trong quân đội.">người lính</span> hơn là một <span class="vocab" id="w47" data-word-en="professor" data-word-vn="giáo giáo sư" data-pos="danh từ / noun" data-def-en="A university academic of the highest rank." data-def-vn="Một học giả đại học có học hàm cao nhất.">giáo sư</span>.
+    </p>
+
+    <p>
+      Cô <span class="vocab" id="w48" data-word-en="exhausted" data-word-vn="kiệt sức" data-pos="tính từ / adjective" data-def-en="Drained of one's physical or mental resources; extremely tired." data-def-vn="Cạn kiệt nguồn lực thể chất hoặc tinh thần; cực kỳ mệt mỏi.">kiệt sức</span> nhưng không thể <span class="vocab" id="w49" data-word-en="take a nap / blink" data-word-vn="chợp mắt" data-pos="động từ / verb" data-def-en="To sleep for a short period of time, especially during the day." data-def-vn="Ngủ trong một khoảng thời gian ngắn, đặc biệt là vào ban ngày.">chợp mắt</span>. <span class="vocab" id="w50" data-word-en="mind" data-word-vn="Tâm trí" data-pos="danh từ / noun" data-def-en="The element of a person that enables them to be aware of the world." data-def-vn="Yếu tố của một con người giúp họ nhận thức được thế giới xung quanh.">Tâm trí</span> cô <span class="vocab" id="w51" data-word-en="keep spinning / wander" data-word-vn="cứ quẩn quanh" data-pos="động từ / verb" data-def-en="To continuously circle or linger around a specific thought or space." data-def-vn="Liên tục xoay quanh hoặc lảng vảng xung quanh một suy nghĩ hoặc không gian cụ thể.">cứ quẩn quanh</span> chiếc <span class="vocab" id="w52" data-word-en="key" data-word-vn="chìa khóa" data-pos="danh từ / noun" data-def-en="A small piece of shaped metal with incisions, used to operate a lock." data-def-vn="Một mảnh kim loại nhỏ có hình dạng với các vết khía, được sử dụng để mở ổ khóa.">chìa khóa</span> <span class="vocab" id="w53" data-word-en="gold" data-word-vn="vàng" data-pos="tính từ / adjective" data-def-en="Made of or colored like gold metal." data-def-vn="Được làm bằng hoặc có màu giống như kim loại vàng.">vàng</span> trong <span class="vocab" id="w54" data-word-en="pocket" data-word-vn="túi" data-pos="danh từ / noun" data-def-en="A small baglike fabric attachment on a garment for carrying small items." data-def-vn="Một mảnh vải nhỏ như chiếc túi được gắn trên quần áo để đựng các vật nhỏ.">túi</span>.
+    </p>
+
+    <p>
+      "Lần đầu về Việt Nam à?" một <span class="vocab" id="w55" data-word-en="voice" data-word-vn="giọng nói" data-pos="danh từ / noun" data-def-en="The sound produced in a person's larynx and uttered through the mouth." data-def-vn="Âm thanh được tạo ra trong thanh quản của một người và phát ra qua miệng.">giọng nói</span> <span class="vocab" id="w56" data-word-en="ask" data-word-vn="hỏi" data-pos="động từ / verb" data-def-en="To say something in order to obtain information or an answer." data-def-vn="Nói điều gì đó để có được thông tin hoặc câu trả lời.">hỏi</span>.
+    </p>
+
+    <p>
+      Maya <span class="vocab" id="w57" data-word-en="turn towards" data-word-vn="quay sang" data-pos="động từ / verb" data-def-en="To change the direction of one's body to face someone or something." data-def-vn="Thay đổi hướng của cơ thể để đối mặt với ai đó hoặc một thứ gì đó.">quay sang</span>.
+    </p>
+
+    <p>
+      <span class="vocab" id="w58" data-word-en="sit" data-word-vn="Ngồi" data-pos="động từ / verb" data-def-en="Occupying a seat next to another individual." data-def-vn="Đang chiếm một chỗ ngồi bên cạnh một cá nhân khác.">Ngồi</span> <span class="vocab" id="w59" data-word-en="next to / beside" data-word-vn="cạnh" data-pos="giới từ / preposition" data-def-en="At the side of; next to someone or something." data-def-vn="Ở bên cạnh; kế bên ai đó hoặc một cái gì đó.">cạnh</span> cô là một <span class="vocab" id="w60" data-word-en="man" data-word-vn="người đàn ông" data-pos="danh từ / noun" data-def-en="An adult human male." data-def-vn="Một người đàn ông đã trưởng thành.">người đàn ông</span> với <span class="vocab" id="w61" data-word-en="smile" data-word-vn="nụ cười" data-pos="danh từ / noun" data-def-en="A pleased, kind, or amused expression of the face." data-def-vn="Biểu cảm hài lòng, tử tế hoặc vui vẻ trên khuôn mặt.">nụ cười</span> <span class="vocab" id="w62" data-word-en="friendly" data-word-vn="thân thiện" data-pos="tính từ / adjective" data-def-en="Kind and pleasant; acting as a friend." data-def-vn="Tử tế và dễ chịu; cư xử như một người bạn.">thân thiện</span> và mái <span class="vocab" id="w63" data-word-en="hair" data-word-vn="tóc" data-pos="danh từ / noun" data-def-en="Fine threadlike strands covering the head surface." data-def-vn="Những sợi mịn như chỉ bao phủ bề mặt đầu.">tóc</span> <span class="vocab" id="w64" data-word-en="gold / blonde" data-word-vn="vàng" data-pos="tính từ / adjective" data-def-en="Of a pale yellow or fair color, typically referring to hair." data-def-vn="Có màu vàng nhạt hoặc hoe, thường dùng để chỉ tóc.">vàng</span> <span class="vocab" id="w65" data-word-en="messy / untidy" data-word-vn="rối bời" data-pos="tính từ / adjective" data-def-en="Disordered; untidy or disheveled." data-def-vn="Bị mất trật tự; không gọn gàng hoặc bù xù.">rối bời</span>.
+    </p>
+
+    <p>
+      Anh ta <span class="vocab" id="w66" data-word-en="wear" data-word-vn="mặc" data-pos="động từ / verb" data-def-en="To have on one's body as clothing, decoration, or protection." data-def-vn="Mang trên cơ thể như quần áo, trang trí hoặc bảo vệ.">mặc</span> một <span class="vocab" id="w67" data-word-en="jacket / coat" data-word-vn="chiếc áo khoác" data-pos="danh từ / noun" data-def-en="An outer garment extending either to the waist or the hips." data-def-vn="Một loại áo khoác ngoài dài đến thắt lưng hoặc hông.">chiếc áo khoác</span> <span class="vocab" id="w68" data-word-en="dusty" data-word-vn="bụi bặm" data-pos="tính từ / adjective" data-def-en="Covered with or full of dust, suggesting travel or age." data-def-vn="Bị bao phủ hoặc có nhiều bụi, gợi ý về việc đi du lịch xa hoặc sự cũ kỹ.">bụi bặm</span> và <span class="vocab" id="w69" data-word-en="carry / wear around neck" data-word-vn="đeo" data-pos="động từ / verb" data-def-en="To suspend or carry an object around the neck or body interface." data-def-vn="Treo hoặc mang một vật quanh cổ hoặc giao diện cơ thể.">đeo</span> một <span class="vocab" id="w70" data-word-en="camera" data-word-vn="chiếc máy ảnh" data-pos="danh từ / noun" data-def-en="A device for recording visual images in the form of photographs." data-def-vn="Thiết bị ghi lại hình ảnh trực quan dưới dạng ảnh chụp.">chiếc máy ảnh</span> trên <span class="vocab" id="w71" data-word-en="neck" data-word-vn="cổ" data-pos="danh từ / noun" data-def-en="The part of a person's body connecting the head to the shoulders." data-def-vn="Phần cơ thể của một người nối đầu với vai.">cổ</span>.
+    </p>
+
+    <p>
+      "Trông <span class="vocab" id="w72" data-word-en="clear / obvious" data-word-vn="rõ" data-pos="tính từ / adjective" data-def-en="Easy to perceive, understand, or interpret; obvious." data-def-vn="Dễ nhận thức, hiểu hoặc diễn giải; hiển nhiên.">rõ</span> thế sao?" Maya <span class="vocab" id="w73" data-word-en="ask" data-word-vn="hỏi" data-pos="động từ / verb" data-def-en="To request info from the seat neighbor." data-def-vn="Yêu cầu thông tin từ người hàng xóm bên ghế ngồi.">hỏi</span>, cố <span class="vocab" id="w74" data-word-en="hide / conceal" data-word-vn="che giấu" data-pos="động từ / verb" data-def-en="To prevent from being seen or discovered; conceal." data-def-vn="Ngăn không cho bị nhìn thấy hoặc phát hiện; che giấu.">che giấu</span> sự <span class="vocab" id="w75" data-word-en="anxiety / worry" data-word-vn="lo lắng" data-pos="danh từ / noun" data-def-en="A feeling of worry, nervousness, or unease about something." data-def-vn="Cảm giác lo lắng, bồn chồn hoặc bất an về một điều gì đó.">lo lắng</span> của mình.
+    </p>
+
+    <p>
+      "Cô <span class="vocab" id="w76" data-word-en="hold" data-word-vn="cầm" data-pos="động từ / verb" data-def-en="To carry or support something with one's hands." data-def-vn="Mang hoặc nâng đỡ một thứ gì đó bằng tay của một người.">cầm</span> <span class="vocab" id="w77" data-word-en="diary / journal" data-word-vn="cuốn nhật ký" data-pos="danh từ / noun" data-def-en="A book in which one keeps a daily record of events and experiences." data-def-vn="Một cuốn sách trong đó một người ghi lại hàng ngày các sự kiện và trải nghiệm.">cuốn nhật ký</span> đó <span class="vocab" id="w78" data-word-en="as if" data-word-vn="như thể" data-pos="liên từ / conjunction" data-def-en="As it would be if; entering a conditional clause." data-def-vn="Như điều đó sẽ xảy ra nếu; bắt đầu một mệnh đề điều kiện.">như thể</span> nó <span class="vocab" id="w79" data-word-en="make from" data-word-vn="làm bằng" data-pos="động từ / verb" data-def-en="Constructed or composed using a specific raw material." data-def-vn="Được xây dựng hoặc cấu thành bằng cách sử dụng một nguyên liệu cụ thể.">làm bằng</span> <span class="vocab" id="w80" data-word-en="gold" data-word-vn="vàng" data-pos="danh từ / noun" data-def-en="A precious yellow metallic element, highly valued." data-def-vn="Một nguyên tố kim loại màu vàng quý giá, có giá trị cao.">vàng</span> vậy," người đàn ông <span class="vocab" id="w81" data-word-en="joke" data-word-vn="đùa" data-pos="động từ / verb" data-def-en="To make jokes; talk humorously or flippantly." data-def-vn="Tạo ra những trò đùa; nói chuyện một cách hài hước hoặc bông đùa.">đùa</span>.
+    </p>
+
+    <p>
+      Anh <span class="vocab" id="w82" data-word-en="extend hand" data-word-vn="đưa tay ra" data-pos="động từ / verb" data-def-en="To extend one's arm forward in order to initiate a greeting or contact." data-def-vn="Mở rộng cánh tay của một người về phía trước để bắt đầu lời chào hoặc tiếp xúc.">đưa tay ra</span>: "Tôi là Jack. Tôi là một <span class="vocab" id="w83" data-word-en="photographer" data-word-vn="nhiếp ảnh gia" data-pos="danh từ / noun" data-def-en="A person who takes photographs, especially as a job." data-def-vn="Một người chụp ảnh, đặc biệt là một công việc.">nhiếp ảnh gia</span> <span class="vocab" id="w84" data-word-en="travel" data-word-vn="du lịch" data-pos="danh từ / noun" data-def-en="The action of traveling, visiting different geographical regions." data-def-vn="Hành động di chuyển, ghé thăm các vùng địa lý khác nhau.">du lịch</span>."
+    </p>
+
+    <p>
+      Maya <span class="vocab" id="w85" data-word-en="hesitate" data-word-vn="do dự" data-pos="động từ / verb" data-def-en="To pause before saying or doing something, especially through uncertainty." data-def-vn="Tạm dừng trước khi nói hoặc làm điều gì đó, đặc biệt là do không chắc chắn.">do dự</span> một chút rồi <span class="vocab" id="w86" data-word-en="shake hands" data-word-vn="bắt tay" data-pos="động từ / verb" data-def-en="To clasp someone's hand as a greeting or an agreement." data-def-vn="Nắm lấy tay ai đó như một lời chào hoặc một sự đồng ý.">bắt tay</span> anh: "Tôi là Maya. Tôi chỉ là... <span class="vocab" id="w87" data-word-en="visit family" data-word-vn="về thăm gia đình" data-pos="động từ / verb" data-def-en="Returning to one's home location to spend time with relatives." data-def-vn="Trở về địa bàn quê hương để dành thời gian cho người thân.">về thăm gia đình</span>."
+    </p>
+
+    <p>
+      Jack rất <span class="vocab" id="w88" data-word-en="handsome" data-word-vn="đẹp trai" data-pos="tính từ / adjective" data-def-en="Good-looking, typically used for a man." data-def-vn="Có vẻ ngoài ưa nhìn, thường được sử dụng cho nam giới.">đẹp trai</span>, với <span class="vocab" id="w89" data-word-en="glance / look" data-word-vn="ánh mắt" data-pos="danh từ / noun" data-def-en="A particular look or expression of the eyes." data-def-vn="Một cái nhìn hoặc biểu cảm cụ thể của đôi mắt.">ánh mắt</span> <span class="vocab" id="w90" data-word-en="playful / mischievous" data-word-vn="tinh nghịch" data-pos="tính từ / adjective" data-def-en="Full of fun and high spirits; playfully malicious." data-def-vn="Đầy niềm vui và tinh thần phấn chấn; tinh quái một cách vui vẻ.">tinh nghịch</span> khiến Maya hơi <span class="vocab" id="w91" data-word-en="blush" data-word-vn="đỏ mặt" data-pos="động từ / verb" data-def-en="To become red in the face from modesty, embarrassment, or shame." data-def-vn="Trở nên đỏ bừng mặt vì khiêm tốn, ngượng ngùng hoặc xấu hổ.">đỏ mặt</span>.
+    </p>
+
+    <p>
+      Họ <span class="vocab" id="w92" data-word-en="chat / converse" data-word-vn="trò chuyện" data-pos="động từ / verb" data-def-en="To talk in a friendly and informal way." data-def-vn="Nói chuyện một cách thân thiện và thân mật.">trò chuyện</span> hàng <span class="vocab" id="w93" data-word-en="hour" data-word-vn="giờ" data-pos="danh từ / noun" data-def-en="A continuous metric of duration inside the plane." data-def-vn="Một số đo liên tục về khoảng thời gian bên trong máy bay.">giờ</span> về những <span class="vocab" id="w94" data-word-en="place" data-word-vn="nơi" data-pos="danh từ / noun" data-def-en="A particular position or location, such as a restaurant or street." data-def-vn="Một vị trí hoặc địa điểm cụ thể, chẳng hạn như nhà hàng hoặc đường phố.">nơi</span> <span class="vocab" id="w95" data-word-en="eat" data-word-vn="ăn" data-pos="động từ / verb" data-def-en="To consume food by putting it into the mouth." data-def-vn="Tiêu thụ thức ăn bằng cách đưa vào miệng.">ăn</span> Phở <span class="vocab" id="w96" data-word-en="best" data-word-vn="ngon nhất" data-pos="tính từ / adjective" data-def-en="Of the highest quality or flavor profile; superlative of good." data-def-vn="Có chất lượng hoặc hồ sơ hương vị cao nhất; cấp cao nhất của ngon.">ngon nhất</span> ở Sài Gòn.
+    </p>
+
+    <p>
+      Trong một <span class="vocab" id="w97" data-word-en="moment" data-word-vn="khoảnh khắc" data-pos="danh từ / noun" data-def-en="A very brief period of time." data-def-vn="Một khoảng thời gian rất ngắn.">khoảnh khắc</span>, Maya <span class="vocab" id="w98" data-word-en="forget" data-word-vn="quên mất" data-pos="động từ / verb" data-def-en="To fail to remember; leave behind an anxious thought." data-def-vn="Không nhớ; để lại phía sau một ý nghĩ lo lắng.">quên mất</span> Marcus Thorne và <span class="vocab" id="w99" data-word-en="secret" data-word-vn="bí mật" data-pos="danh từ / noun" data-def-en="Something that is kept or meant to be kept unknown or unseen." data-def-vn="Điều gì đó được giữ hoặc có ý định được giữ không cho ai biết hoặc nhìn thấy.">bí mật</span> <span class="vocab" id="w100" data-word-en="dangerous" data-word-vn="nguy hiểm" data-pos="tính từ / adjective" data-def-en="Able or likely to cause harm or injury." data-def-vn="Có khả năng gây hại hoặc tổn thương.">nguy hiểm</span> trong <span class="vocab" id="w101" data-word-en="pocket" data-word-vn="túi" data-pos="danh từ / noun" data-def-en="The storage unit attached to her immediate garment." data-def-vn="Đơn vị lưu trữ được gắn vào quần áo ngay bên cạnh cô ấy.">túi</span> mình.
+    </p>
+
+    <p>
+      Nhưng khi <span class="vocab" id="w102" data-word-en="airplane" data-word-vn="máy bay" data-pos="danh từ / noun" data-def-en="The commercial vehicle column carrying out the landing." data-def-vn="Phương tiện thương mại đang thực hiện việc hạ cánh xuống mặt đất.">máy bay</span> bắt đầu <span class="vocab" id="w103" data-word-en="land" data-word-vn="hạ cánh" data-pos="động từ / verb" data-def-en="To touch down to the runway at an airport terminal." data-def-vn="Tiếp đất xuống đường băng tại một nhà ga sân bay.">hạ cánh</span> xuống <span class="vocab" id="w104" data-word-en="airport" data-word-vn="sân bay" data-pos="danh từ / noun" data-def-en="A complex of runways and buildings for the take-off and landing of aircraft." data-def-vn="Một tổ hợp các đường băng và tòa nhà cho việc cất cánh và hạ cánh của máy bay.">sân bay</span> Tân Sơn Nhất, Jack <span class="vocab" id="w105" data-word-en="stand up" data-word-vn="đứng dậy" data-pos="động từ / verb" data-def-en="To rise to an upright position on one's feet." data-def-vn="Đứng thẳng dậy trên đôi chân của mình.">đứng dậy</span> lấy <span class="vocab" id="w106" data-word-en="luggage / baggage" data-word-vn="hành lý" data-pos="danh từ / noun" data-def-en="Suitcases and bags containing a traveler's belongings." data-def-vn="Va li và túi xách chứa đồ đạc của người đi du lịch.">hành lý</span>.
+    </p>
+
+    <p>
+      Khi anh <span class="vocab" id="w107" data-word-en="reach up" data-word-vn="với tay lên" data-pos="động từ / verb" data-def-en="To stretch out one's arm upward toward a higher platform." data-def-vn="Duỗi thẳng cánh tay của mình lên phía trên về phía nền tảng cao hơn.">với tay lên</span> <span class="vocab" id="w108" data-word-en="overhead compartment" data-word-vn="ngăn đựng đồ trên đầu" data-pos="danh từ / noun" data-def-en="A storage locker situated above passenger seats in an aircraft." data-def-vn="Tủ lưu trữ nằm phía trên ghế hành khách trong máy bay.">ngăn đựng đồ trên đầu</span>, <span class="vocab" id="w109" data-word-en="flap of a coat" data-word-vn="vạt áo khoác" data-pos="danh từ / noun" data-def-en="The edge or hanging part of an outer coat garment." data-def-vn="Cạnh hoặc phần rủ xuống của một chiếc áo khoác ngoài.">vạt áo khoác</span> bị <span class="vocab" id="w110" data-word-en="pull up" data-word-vn="kéo lên" data-pos="động từ / verb" data-def-en="To cause to move upward or uncover an underneath space." data-def-vn="Làm cho di chuyển lên trên hoặc để lộ một không gian bên dưới.">kéo lên</span>. <span class="vocab" id="w111" data-word-en="heart" data-word-vn="Tim" data-pos="danh từ / noun" data-def-en="The muscular organ that pumps blood through the circulatory system." data-def-vn="Cơ quan cơ bắp bơm máu qua hệ thống tuần hoàn.">Tim</span> Maya như <span class="vocab" id="w112" data-word-en="stop beating" data-word-vn="ngừng đập" data-pos="động từ / verb" data-def-en="To cease pulsating due to extreme shock or horror." data-def-vn="Ngừng đập do cú sốc hoặc kinh hoàng tột độ.">ngừng đập</span>. <span class="vocab" id="w113" data-word-en="tuck / stick into" data-word-vn="Giắt" data-pos="động từ / verb" data-def-en="To fix or lodge an object firmly into a narrow structural placement." data-def-vn="Cố định hoặc đặt một vật chắc chắn vào một vị trí hẹp cấu trúc.">Giắt</span> ở <span class="vocab" id="w114" data-word-en="waistband / belt" data-word-vn="thắt lưng" data-pos="danh từ / noun" data-def-en="A band of material around the waist of garments." data-def-vn="Một dải vật liệu quanh eo của quần áo.">thắt lưng</span> của anh là một <span class="vocab" id="w115" data-word-en="device" data-word-vn="thiết bị" data-pos="danh từ / noun" data-def-en="A thing made or adapted for a particular purpose, especially a piece of mechanical or electronic equipment." data-def-vn="Một vật được làm hoặc thích ứng cho một mục đích cụ thể, đặc biệt là một phần của thiết bị cơ khí hoặc điện tử.">thiết bị</span> <span class="vocab" id="w116" data-word-en="silver" data-word-vn="bạc" data-pos="tính từ / adjective" data-def-en="A precious shiny grayish-white metal texture." data-def-vn="Kết cấu kim loại màu trắng xám sáng bóng quý giá.">bạc</span>—giống hệt <span class="vocab" id="w117" data-word-en="type / kind" data-word-vn="loại" data-pos="danh từ / noun" data-def-en="A category of people or things having common characteristics." data-def-vn="Một danh mục người hoặc vật có đặc điểm chung.">loại</span> mà <span class="vocab" id="w118" data-word-en="henchmen / lackey" data-word-vn="tay sai" data-pos="danh từ / noun" data-def-en="A faithful follower or political supporter, especially one prepared to engage in crime." data-def-vn="Một người theo dõi trung thành hoặc người hỗ trợ chính trị, đặc biệt là người sẵn sàng tham gia vào tội phạm.">tay sai</span> của Marcus Thorne thường <span class="vocab" id="w119" data-word-en="use" data-word-vn="sử dụng" data-pos="động từ / verb" data-def-en="Take, hold, or deploy as a means of accomplishing something." data-def-vn="Cầm, giữ hoặc triển khai như một phương tiện để hoàn thành một việc gì đó.">sử dụng</span>.
+    </p>
+
+    <p>
+      Jack <span class="vocab" id="w120" data-word-en="really" data-word-vn="thực sự" data-pos="trạng từ / adverb" data-def-en="In actual fact, as opposed to what is said or imagined; truly." data-def-vn="Trong thực tế, ngược lại với những gì được nói hoặc tưởng tượng; thực sự.">thực sự</span> là một <span class="vocab" id="w121" data-word-en="photographer" data-word-vn="nhiếp ảnh gia" data-pos="danh từ / noun" data-def-en="A camera operator inside a geographical travel column." data-def-vn="Một người vận hành máy ảnh bên trong một đoàn du lịch địa lý.">nhiếp ảnh gia</span> hay anh là một <span class="vocab" id="w122" data-word-en="spy / agent" data-word-vn="điệp viên" data-pos="danh từ / noun" data-def-en="A person employed by a government or other organization to secretly obtain information." data-def-vn="Một người được thuê bởi một chính phủ hoặc tổ chức khác để bí mật thu thập thông tin.">điệp viên</span> được <span class="vocab" id="w123" data-word-en="send / dispatch" data-word-vn="cử đến" data-pos="động từ / verb" data-def-en="To send an asset or person with a specific functional directive." data-def-vn="Gửi một tài sản hoặc một người nào đó với một chỉ thị chức năng cụ thể.">cử đến</span> để <span class="vocab" id="w124" data-word-en="track / monitor" data-word-vn="theo dõi" data-pos="động từ / verb" data-def-en="To follow the trail or movements of someone secretly." data-def-vn="Bí mật đi theo dấu vết hoặc chuyển động của ai đó.">theo dõi</span> cô?
+    </p>
+
+    <p>
+      Khi <span class="vocab" id="w125" data-word-en="airplane" data-word-vn="máy bay" data-pos="danh từ / noun" data-def-en="The aircraft hitting the target runway interface." data-def-vn="Máy bay tiếp đất vào giao diện đường băng mục tiêu.">máy bay</span> <span class="vocab" id="w126" data-word-en="land" data-word-vn="hạ cánh" data-pos="động từ / verb" data-def-en="The physical deceleration onto land infrastructure." data-def-vn="Sự giảm tốc độ vật lý xuống cơ sở hạ tầng mặt đất.">hạ cánh</span> với một <span class="vocab" id="w127" data-word-en="sound" data-word-vn="tiếng động" data-pos="danh từ / noun" data-def-en="Vibrations traveling through the air that can be heard." data-def-vn="Các rung động truyền qua không khí có thể nghe thấy được.">tiếng động</span> <span class="vocab" id="w128" data-word-en="strong / heavy" data-word-vn="mạnh" data-pos="tính từ / adjective" data-def-en="Exerting great force; heavy structural landing strike." data-def-vn="Gây ra lực lớn; cú va chạm hạ cánh nặng nề về mặt kết cấu.">mạnh</span>, Jack <span class="vocab" id="w129" data-word-en="turn towards" data-word-vn="quay sang" data-pos="động từ / verb" data-def-en="To shift orientation toward her seating area." data-def-vn="Thay đổi định hướng về phía khu vực chỗ ngồi của cô ấy.">quay sang</span> cô: "Tôi cho cô <span class="vocab" id="w130" data-word-en="give a ride" data-word-vn="đi nhờ" data-pos="động từ / verb" data-def-en="To give someone a lift or transport to a specific location." data-def-vn="Cho ai đó đi cùng phương tiện hoặc vận chuyển đến một vị trí cụ thể.">đi nhờ</span> đến <span class="vocab" id="w131" data-word-en="hotel" data-word-vn="khách sạn" data-pos="danh từ / noun" data-def-en="An establishment providing accommodation, meals, and other services for travelers." data-def-vn="Một cơ sở cung cấp chỗ nghỉ, bữa ăn và các dịch vụ khác cho khách du lịch.">khách sạn</span> nhé, Maya?"
+    </p>
+
+    <p>
+      Maya <span class="vocab" id="w132" data-word-en="look out" data-word-vn="nhìn ra" data-pos="động từ / verb" data-def-en="To direct one's gaze outward toward an area." data-def-vn="Hướng cái nhìn của một người ra bên ngoài về phía một khu vực.">nhìn ra</span> phía <span class="vocab" id="w133" data-word-en="emergency exit" data-word-vn="cửa thoát hiểm" data-pos="danh từ / noun" data-def-en="A special exit used to clear passengers under extreme duress." data-def-vn="Một lối thoát đặc biệt được sử dụng để sơ tán hành khách trong tình trạng khẩn cấp.">cửa thoát hiểm</span>. <span class="vocab" id="w134" data-word-en="light" data-word-vn="Đèn" data-pos="danh từ / noun" data-def-en="An electric lamp source providing visibility inside the aircraft." data-def-vn="Nguồn đèn điện cung cấp tầm nhìn bên trong máy bay.">Đèn</span> trong <span class="vocab" id="w135" data-word-en="cabin" data-word-vn="khoang" data-pos="danh từ / noun" data-def-en="The interior of an aircraft container holding passengers." data-def-vn="Nội thất của một phương tiện máy bay chứa hành khách.">khoang</span> <span class="vocab" id="w136" data-word-en="flicker" data-word-vn="nhấp nháy" data-pos="động từ / verb" data-def-en="Shine unsteadily; vary rapidly in brightness." data-def-vn="Tỏa sáng không ổn định; thay đổi nhanh chóng về độ sáng.">nhấp nháy</span>, và trong một <span class="vocab" id="w137" data-word-en="second" data-word-vn="giây" data-pos="danh từ / noun" data-def-en="A single micro draft of temporal observation." data-def-vn="Một bản nháp vi mô duy nhất của quan sát thời gian.">giây</span>, cô thấy một <span class="vocab" id="w138" data-word-en="man" data-word-vn="người đàn ông" data-pos="danh từ / noun" data-def-en="The adversary figure standing inside the front plane column." data-def-vn="Hình ảnh đối thủ đang đứng bên trong cột phía trước máy bay.">người đàn ông</span> <span class="vocab" id="w139" data-word-en="wear" data-word-vn="mặc" data-pos="động từ / verb" data-def-en="Having on his body a premium tailored uniform." data-def-vn="Mang trên mình một bộ đồng phục được may cao cấp.">mặc</span> bộ <span class="vocab" id="w140" data-word-en="suit" data-word-vn="vest" data-pos="danh từ / noun" data-def-en="A set of outer clothes made of the same fabric, consisting of a jacket and trousers." data-def-vn="Một bộ quần áo khoác ngoài làm bằng cùng một loại vải, gồm áo khoác và quần dài.">vest</span> <span class="vocab" id="w141" data-word-en="custom-tailored" data-word-vn="đặt may" data-pos="động từ / verb" data-def-en="Made to order for a particular customer." data-def-vn="Được làm theo yêu cầu cho một khách hàng cụ thể.">đặt may</span> <span class="vocab" id="w142" data-word-en="expensive" data-word-vn="đắt tiền" data-pos="tính từ / adjective" data-def-en="Costing a lot of money; high-priced premium grade." data-def-vn="Tốn rất nhiều tiền; loại cao cấp có giá cao.">đắt tiền</span> <span class="vocab" id="w143" data-word-en="stand" data-word-vn="đứng" data-pos="động từ / verb" data-def-en="To be in an upright position on feet." data-def-vn="Ở tư thế thẳng đứng trên đôi chân.">đứng</span> ở phía <span class="vocab" id="w144" data-word-en="front" data-word-vn="trước" data-pos="danh từ / noun" data-def-en="The forward part or area of a vehicle container." data-def-vn="Phần hoặc khu vực phía trước của một phương tiện di chuyển.">trước</span> máy bay.
+    </p>
+
+    <p>
+      Đó là <span class="vocab" id="w145" data-word-en="assistant" data-word-vn="trợ lý" data-pos="danh từ / noun" data-def-en="A person who ranks below a senior official and amends logistical operations." data-def-vn="Người xếp dưới một quan chức cấp cao và sửa đổi các hoạt động hậu cần.">trợ lý</span> của Thorne! Cô đang bị <span class="vocab" id="w146" data-word-en="stuck / trapped" data-word-vn="kẹt" data-pos="tính từ / adjective" data-def-en="Trapped or unable to escape from a delicate tactical situation." data-def-vn="Bị mắc bẫy hoặc không thể thoát khỏi một tình huống chiến thuật nhạy cảm.">kẹt</span> giữa một <span class="vocab" id="w147" data-word-en="stranger" data-word-vn="người lạ" data-pos="danh từ / noun" data-def-en="The unknown person assigned to seat 4B." data-def-vn="Người không quen biết được chỉ định ngồi ở ghế 4B.">người lạ</span> <span class="vocab" id="w148" data-word-en="beautiful / handsome" data-word-vn="đẹp trai" data-pos="tính từ / adjective" data-def-en="Physically attractive masculine appearance." data-def-vn="Ngoại hình nam tính hấp dẫn về mặt thể chất.">đẹp trai</span> và một <span class="vocab" id="w149" data-word-en="thief" data-word-vn="tên trộm" data-pos="danh từ / noun" data-def-en="A person who steals another person's property secretly." data-def-vn="Người lấy cắp tài sản của người khác một cách bí mật.">tên trộm</span> <span class="vocab" id="w150" data-word-en="dangerous" data-word-vn="nguy hiểm" data-pos="tính từ / adjective" data-def-en="Posing high risk or threat to structural safety." data-def-vn="Gây ra rủi ro hoặc mối đe dọa cao đối với sự an toàn cấu trúc.">nguy hiểm</span>.
+    </p>
+
+    <a href="../" class="back-btn">← Quay lại danh mục</a>
+
+    <h2 class="section-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div id="memory-grid"></div>
+  </div>
+
+  <div id="popup-overlay" onclick="dismissPopup()"></div>
+  <div id="popup-card">
+    <h3 id="pop-heading">Word</h3>
+    <div id="pop-subheading">Secondary</div>
+    <div id="pop-pos">Part of speech</div>
+    <div id="pop-def">Definition context lines go here.</div>
+    <div id="pop-context-label">In context:</div>
+    <p id="pop-context">Context sentence example text.</p>
+  </div>
+
+  <script>
+    // Global Reference Collections
+    const vocabWords = document.querySelectorAll('#main-page .vocab');
+    const memoryGrid = document.getElementById('memory-grid');
+    const popupOverlay = document.getElementById('popup-overlay');
+    const popupCard = document.getElementById('popup-card');
+
+    // Display Popup Architecture
+    function showPopup(element) {
+      const enWord = element.getAttribute('data-word-en');
+      const vnWord = element.getAttribute('data-word-vn');
+      const pos = element.getAttribute('data-pos');
+      const defEn = element.getAttribute('data-def-en');
+      const defVn = element.getAttribute('data-def-vn');
+      const contextEn = element.getAttribute('data-context-en');
+      const contextVn = element.getAttribute('data-context-vn');
+
+      // Set content using bilingual display format rules
+      document.getElementById('pop-heading').innerText = enWord;
+      document.getElementById('pop-subheading').innerText = vnWord;
+      document.getElementById('pop-pos').innerText = pos;
+      document.getElementById('pop-def').innerHTML = `<strong>${defEn}</strong><br><span style="color: #4a3b2c; font-size: 0.95rem; display: block; margin-top: 6px;">${defVn}</span>`;
+      document.getElementById('pop-context-label').innerText = "In context:";
+      document.getElementById('pop-context').innerText = contextEn;
+
+      popupOverlay.style.display = 'block';
+      popupCard.style.display = 'block';
+    }
+
+    function dismissPopup() {
+      popupOverlay.style.display = 'none';
+      popupCard.style.display = 'none';
+    }
+
+    // Attach Event Listeners to Content Items
+    vocabWords.forEach(word => {
+      word.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showPopup(this);
+      });
+    });
+
+    // Build the Reactive Memory Grid Assets
+    function buildMemoryGrid() {
+      memoryGrid.innerHTML = '';
+      
+      // Filter distinct vocabulary terms by primary attribute identity
+      const uniqueWordsMap = new Map();
+      vocabWords.forEach(word => {
+        const key = word.getAttribute('data-word-en').toLowerCase();
+        if (!uniqueWordsMap.has(key)) {
+          uniqueWordsMap.set(key, {
+            en: word.getAttribute('data-word-en'),
+            targetId: word.id
+          });
+        }
+      });
+
+      // Sort alpha entries for logical presentation grid structure
+      const sortedEntries = Array.from(uniqueWordsMap.values()).sort((a, b) => a.en.localeCompare(b.en));
+
+      sortedEntries.forEach(entry => {
+        const span = document.createElement('span');
+        span.className = 'grid-word';
+        span.innerText = entry.en;
+        
+        span.addEventListener('click', function() {
+          const targetEl = document.getElementById(entry.targetId);
+          if (targetEl) {
+            targetEl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetEl.classList.add('highlight-flash');
+            setTimeout(() => {
+              targetEl.classList.remove('highlight-flash');
+            }, 1500);
+          }
+        });
+        memoryGrid.appendChild(span);
+      });
+    }
+
+    // Run grid initialization phase
+    buildMemoryGrid();
+
+    // Content-Only Serialization Asset Delivery Logic
+    function downloadContentVersion() {
+      // Clear grid to prevent inert HTML tree serialization
+      document.getElementById('memory-grid').innerHTML = '';
+      
+      // Clone root page element node 
+      const pageClone = document.documentElement.cloneNode(true);
+      
+      // Target matching instances inside cloned root node shell
+      const cloneBtn = pageClone.querySelector('#dl-btn');
+      if (cloneBtn) cloneBtn.remove();
+      
+      // Serialize clean markup string array block
+      const serializedHtml = "<!DOCTYPE html>\n" + pageClone.outerHTML;
+      
+      // Re-initialize local runtime layout immediately following execution split
+      buildMemoryGrid();
+
+      // Trigger standard system download pipeline
+      const blob = new Blob([serializedHtml], { type: 'text/html;charset=utf-8' });
+      const link = document.createElement('a');
+      link.href = URL.createObjectURL(blob);
+      link.download = 'content-only-stranger.html';
+      link.click();
+    }
+  </script>
+
+</body></html>
