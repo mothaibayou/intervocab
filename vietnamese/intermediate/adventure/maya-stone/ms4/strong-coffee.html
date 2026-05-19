@@ -1,0 +1,422 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Tập 4: Bí mật và Cà phê đậm</title>
+  <style>
+    body {
+      background-color: #2b2b2b;
+      font-family: Arial, sans-serif;
+      font-size: 17px;
+      margin: 0;
+      padding: 40px 20px;
+      display: flex;
+      justify-content: center;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    #main-page {
+      background-color: #f0e6c8;
+      color: #2a1500;
+      width: 100%;
+      max-width: 650px;
+      padding: 40px;
+      border: 2px solid #a0845a;
+      box-sizing: border-box;
+      position: relative;
+    }
+    h1, h2, h3 {
+      color: #3a1f00;
+      margin-top: 0;
+    }
+    h1 {
+      font-size: 1.8rem;
+      border-bottom: 2px solid #7a4e1a;
+      padding-bottom: 10px;
+      margin-bottom: 20px;
+      padding-right: 180px;
+    }
+    h3 {
+      font-size: 1.2rem;
+      border-bottom: 1px solid #7a4e1a;
+      padding-bottom: 5px;
+      margin-top: 30px;
+    }
+    p {
+      line-height: 1.6;
+      margin: 0 0 15px 0;
+    }
+    .audio-wrapper {
+      margin-bottom: 25px;
+    }
+    .audio-label {
+      font-size: 0.9rem;
+      color: #5a4530;
+      margin-bottom: 5px;
+    }
+    audio {
+      width: 100%;
+      height: 40px;
+    }
+    audio::-webkit-media-controls-panel {
+      background-color: #2e1f0a;
+    }
+    audio::-webkit-media-controls-current-time-display,
+    audio::-webkit-media-controls-time-remaining-display {
+      color: #f0d9a0;
+    }
+    .audio-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .rewind-btn, .top-right-btn, .back-btn {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 6px 12px;
+      cursor: pointer;
+      font-family: Arial, sans-serif;
+      font-size: 14px;
+      border-radius: 3px;
+    }
+    .rewind-btn:hover, .top-right-btn:hover, .back-btn:hover {
+      background-color: #3d2a0e;
+    }
+    .top-right-btn {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+    }
+    .vocab {
+      border-bottom: 2.5px dotted #1a5c20;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .corrected {
+      background: #fff3e0;
+      color: #c04a00;
+      font-weight: bold;
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+    .original-word {
+      text-decoration: line-through;
+      color: #aaa;
+      font-size: 0.82rem;
+      margin-left: 2px;
+      font-style: italic;
+    }
+    #memory-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .memory-item {
+      cursor: pointer;
+      border-bottom: 1px dotted #2a1500;
+      padding: 3px;
+      font-size: 0.95rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+    .back-btn {
+      margin: 20px 0;
+      display: inline-block;
+      text-decoration: none;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid #7a4e1a;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+    }
+    #popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+    #popup-card {
+      display: none;
+      position: fixed;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f0e6c8;
+      color: #2a1500;
+      border: 2px solid #a0845a;
+      padding: 20px;
+      width: 320px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+      z-index: 1000;
+      box-sizing: border-box;
+    }
+    #popup-word { font-size: 1.3rem; font-weight: bold; margin-bottom: 2px; }
+    #popup-subword { font-size: 0.95rem; font-style: italic; color: #5a4530; margin-bottom: 8px; }
+    #popup-pos { font-size: 0.95rem; font-weight: bold; color: #7a4e1a; margin-bottom: 8px; }
+    #popup-def { font-size: 1rem; margin-bottom: 12px; line-height: 1.4; }
+    #popup-context-label { font-size: 0.95rem; font-weight: bold; margin-top: 8px; color: #3a1f00; }
+    #popup-context { font-size: 0.95rem; font-style: italic; margin-top: 2px; line-height: 1.4; }
+    
+    .highlight-flash {
+      background-color: #ffe082 !important;
+      transition: background-color 0.3s ease;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-page">
+    <button class="top-right-btn" id="download-btn" onclick="downloadContentOnly()">⬇ content only version</button>
+
+    <div class="audio-wrapper">
+      <div class="audio-label">🎧 Listen to the text</div>
+      <audio id="audio-player" controls src="strong-coffee.mp3"></audio>
+      <div class="audio-controls">
+        <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 2 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 3 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration||1000,a.currentTime+20);">⇢ 20 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=document.getElementById('audio-player').duration;">⏭ End</button>
+      </div>
+    </div>
+
+    <h1>
+      Tập 4: <span class="vocab" id="v-bi-mat" data-word-en="Secret" data-word-vn="Bí mật" data-pos="Danh từ / Noun" data-def-en="Something that is kept or meant to be kept unknown or unseen by others." data-context-en="They uncovered a dangerous secret left behind by her grandfather.">Bí mật</span> 
+      và <span class="vocab" id="v-ca-phe" data-word-en="Coffee" data-word-vn="Cà phê" data-pos="Danh từ / Noun" data-def-en="A hot drink made from the roasted and ground seeds of a tropical shrub." data-context-en="He brewed traditional Vietnamese coffee in the small kitchen.">Cà phê</span> 
+      <span class="vocab" id="v-dam" data-word-en="Strong / Intense / Thick" data-word-vn="Đậm" data-pos="Tính từ / Adjective" data-def-en="Having a potent, concentrated taste, flavor, or consistency." data-context-en="She took a sip of the strong coffee to wake up.">đậm</span>
+    </h1>
+
+    <p>
+      Maya và Jack đã <span class="vocab" id="v-leo-len" data-word-en="Climb up / Scale" data-word-vn="Leo lên" data-pos="Động từ / Verb" data-def-en="Go upward or ascend a vertical surface or structure." data-context-en="They climbed up the low balcony just in time to escape.">leo lên</span> <span class="vocab" id="v-ban-cong" data-word-en="Balcony" data-word-vn="Ban công" data-pos="Danh từ / Noun" data-def-en="A platform enclosed by a wall on the outside of a building." data-context-en="The low balcony provided a temporary escape route from the alley.">ban công</span> <span class="vocab" id="v-vua-kip-luc" data-word-en="Just in time" data-word-vn="Vừa kịp lúc" data-pos="Trạng từ / Adverb" data-def-en="At the exact critical moment before it is too late." data-context-en="They scaled the wall just in time before the guards turned around.">vừa kịp lúc</span>.
+    </p>
+    <p>
+      Họ <span class="vocab" id="v-treo-qua" data-word-en="Climb over / Vault" data-word-vn="Trèo qua" data-pos="Động từ / Verb" data-def-en="Move over the top of a barrier or railing." data-context-en="They quickly climbed over the railing to hide in the dark.">trèo qua</span> <span class="vocab" id="v-lan-can" data-word-en="Railing / Balustrade" data-word-vn="Lan can" data-pos="Danh từ / Noun" data-def-en="A barrier or series of upright posts supporting a handrail." data-context-en="She held onto the metal railing while looking down below.">lan can</span> và <span class="vocab" id="v-tron" data-word-en="Hide / Escape" data-word-vn="Trốn" data-pos="Động từ / Verb" data-def-en="Put or keep oneself out of sight to avoid detection." data-context-en="They managed to hide in the deep shadows of the balcony.">trốn</span> vào <span class="vocab" id="v-bong-toi" data-word-en="Darkness / Shadows" data-word-vn="Bóng tối" data-pos="Danh từ / Noun" data-def-en="The partial or total absence of light." data-context-en="They dissolved into the absolute darkness of the room.">bóng tối</span> khi người của Thorne <span class="vocab" id="v-luc-soat" data-word-en="Search / Ransack / Scour" data-word-vn="Lục soát" data-pos="Động từ / Verb" data-def-en="Thoroughly search a place or area to find something or someone." data-context-en="Armed operatives began to search the narrow street below.">lục soát</span> con <span class="vocab" id="v-hem" data-word-en="Alley / Lane" data-word-vn="Hẻm" data-pos="Danh từ / Noun" data-def-en="A narrow pathway or backstreet between urban buildings." data-context-en="The narrow alley was packed with old structures and doors.">hẻm</span> bên <span class="vocab" id="v-duoi" data-word-en="Below / Underneath" data-word-vn="Dưới" data-pos="Giới từ / Preposition" data-def-en="At a lower level or layer than something else." data-context-en="The footsteps echoed from the street below their position.">dưới</span>.
+    </p>
+    <p>
+      Sau khi <span class="vocab" id="v-bon-chung" data-word-en="They / The gang / The pack" data-word-vn="Bọn chúng" data-pos="Đại từ / Pronoun" data-def-en="A group of people referred to with a negative or hostile connotation." data-context-en="They finally left the area after searching every corner.">bọn chúng</span> <span class="vocab" id="v-roi-di" data-word-en="Leave / Depart" data-word-vn="Rời đi" data-pos="Động từ / Verb" data-def-en="Go away from a place or situation." data-context-en="After the pursuers decided to leave, it was safe to move.">rời đi</span>, Jack <span class="vocab" id="v-dan" data-word-en="Lead / Guide" data-word-vn="Dẫn" data-pos="Động từ / Verb" data-def-en="Guide someone along a specific route or path." data-context-en="He quietly decided to lead her through a hidden exit.">dẫn</span> Maya qua một <span class="vocab" id="v-canh-cua" data-word-en="Door" data-word-vn="Cánh cửa" data-pos="Danh từ / Noun" data-def-en="A hinged, sliding, or revolving barrier for closing an entrance." data-context-en="He opened a heavy door that was masked by the wallpaper.">cánh cửa</span> <span class="vocab" id="v-bi-mat-2" data-word-en="Secret" data-word-vn="Bí mật" data-pos="Tính từ / Adjective" data-def-en="Kept hidden from general knowledge or view." data-context-en="They walked through a secret passage hidden behind a panel.">bi mật</span> vào một <span class="vocab" id="v-can-ho" data-word-en="Apartment / Flat" data-word-vn="Căn hộ" data-pos="Danh từ / Noun" data-def-en="A set of rooms for living in, usually on one floor of a building." data-context-en="His small apartment served as a temporary safe house.">căn hộ</span> <span class="vocab" id="v-nho" data-word-en="Small / Tiny" data-word-vn="Nhỏ" data-pos="Tính từ / Adjective" data-def-en="Of a size that is less than normal or usual." data-context-en="The safe house was a small apartment filled with papers.">nhỏ</span>.
+    </p>
+    <p>
+      <span class="vocab" id="v-can-phong" data-word-en="Room" data-word-vn="Căn phòng" data-pos="Danh từ / Noun" data-def-en="A space which can be occupied which is broken off by walls." data-context-en="The room was dimly lit by a single desk lamp.">Căn phòng</span> có <span class="vocab" id="v-mui" data-word-en="Scent / Smell" data-word-vn="Mùi" data-pos="Danh từ / Noun" data-def-en="A distinctive odor detected by the olfactory senses." data-context-en="The room carried a pleasant scent of fresh coffee beans.">mùi</span> <span class="vocab" id="v-ca-phe-2" data-word-en="Coffee" data-word-vn="Cà phê" data-pos="Danh từ / Noun" data-def-en="A hot drink made from roasted and ground coffee seeds." data-context-en="The aromatic smell of dark coffee filled the safe house.">cà phê</span> <span class="vocab" id="v-rang" data-word-en="Roasted" data-word-vn="Rang" data-pos="Tính từ / Adjective" data-def-en="Cooked or processed by dry heat, especially in an oven or pan." data-context-en="The distinct smell of roasted beans lingered in the workspace.">rang</span> và <span class="vocab" id="v-giay" data-word-en="Paper" data-word-vn="Giấy" data-pos="Danh từ / Noun" data-def-en="Material manufactured in thin sheets from the pulp of wood." data-context-en="The shelves were filled with stacks of old paper records.">giấy</span> <span class="vocab" id="v-cu" data-word-en="Old / Aged" data-word-vn="Cũ" data-pos="Tính từ / Adjective" data-def-en="Having lived or existed for a long time; not new." data-context-en="The aged books and old files smelled of dust and history.">cũ</span>, <span class="vocab" id="v-ban-do" data-word-en="Maps" data-word-vn="Bản đồ" data-pos="Danh từ / Noun" data-def-en="Visual representations of an area or geographical terrain." data-context-en="Ancient charts and tactical maps were pinned to the display boards.">bản đồ</span> được <span class="vocab" id="v-ghim" data-word-en="Pinned / Fastened" data-word-vn="Ghim" data-pos="Động từ / Verb" data-def-en="Attached or fastened with pins or clips." data-context-en="Several archival maps were carefully pinned across the room.">ghim</span> <span class="vocab" id="v-khap" data-word-en="All over / Throughout" data-word-vn="Khắp" data-pos="Trạng từ / Adverb" data-def-en="In or to every part of a specified place or area." data-context-en="Tactical files were scattered all over his personal desk.">khắp</span> các <span class="vocab" id="v-buc-tuong" data-word-en="Walls" data-word-vn="Bức tường" data-pos="Danh từ / Noun" data-def-en="Vertical structures forming the sides of a room or building." data-context-en="Historical charts covered the brick walls of the apartment.">bức tường</span>.
+    </p>
+    <p>
+      "<span class="vocab" id="v-chao-mung" data-word-en="Welcome" data-word-vn="Chào mừng" data-pos="Động từ / Verb" data-def-en="An expression of cordial greeting to an arriving person." data-context-en="He smiled and offered a warm welcome as she stepped inside.">Chào mừng</span> đến với <span class="vocab" id="v-noi-an-nau" data-word-en="Safe house / Hideout / Refuge" data-word-vn="Nơi ẩn náu" data-pos="Danh từ / Noun" data-def-en="A place providing safety or concealment from pursuers." data-context-en="This secret location is a secure safe house from threats.">nơi ẩn náu</span> của tôi," Jack nói, <span class="vocab" id="v-cuoi-cung" data-word-en="Finally / At last" data-word-vn="Cuối cùng" data-pos="Trạng từ / Adverb" data-def-en="After a long period of waiting or difficulty." data-context-en="He finally locked the main door and let out a sigh.">cuối cùng</span> cũng <span class="vocab" id="v-coi-bo" data-word-en="Take off / Remove" data-word-vn="Cởi bỏ" data-pos="Động từ / Verb" data-def-en="Remove an item of clothing or gear from one's body." data-context-en="He shed his heavy jacket and threw it on the sofa.">cởi bỏ</span> chiếc <span class="vocab" id="v-ao-khoac" data-word-en="Jacket / Coat" data-word-vn="Áo khoác" data-pos="Danh từ / Noun" data-def-en="An outer garment extending either to the waist or the hips." data-context-en="His outer jacket was covered in dust from the escape route.">áo khoác</span>.
+    </p>
+    <p>
+      Anh <span class="vocab" id="v-trong-co-ve" data-word-en="Look / Seem / Appear" data-word-vn="Trông có vẻ" data-pos="Động từ / Verb" data-def-en="Give the impression of being or having a certain quality." data-context-en="He looked completely exhausted after the motorcycle race.">trông có vẻ</span> <span class="vocab" id="v-met-moi" data-word-en="Exhausted / Tired" data-word-vn="Mệt mỏi" data-pos="Tính từ / Adjective" data-def-en="Feeling a need for rest or sleep; weary from exertion." data-context-en="The long chase left him feeling tired and drained.">mệt mỏi</span>, nhưng <span class="vocab" id="v-nu-cuoi" data-word-en="Smile" data-word-vn="Nụ cười" data-pos="Danh từ / Noun" data-def-en="A pleased or kind expression on a person's face." data-context-en="A reassuring smile returned to his face after they escaped.">nụ cười</span> vẫn <span class="vocab" id="v-am-ap" data-word-en="Warm" data-word-vn="Ấm áp" data-pos="Tính từ / Adjective" data-def-en="Displaying or radiating warmth, kindness, or affection." data-context-en="His kind and warm personality made her feel secure.">ấm áp</span>.
+    </p>
+    <p>
+      "Tôi cần <span class="vocab" id="v-cau-tra-loi" data-word-en="Answers" data-word-vn="Câu trả lời" data-pos="Danh từ / Noun" data-def-en="Things said or written to resolve a question or situation." data-context-en="She demanded clear answers regarding her family lineage.">câu trả lời</span>, Jack," Maya nói với <span class="vocab" id="v-giong" data-word-en="Voice / Tone" data-word-vn="Giọng" data-pos="Danh từ / Noun" data-def-en="The sound produced by a person speaking." data-context-en="She spoke up in a very clear and firm tone.">giọng</span> <span class="vocab" id="v-kien-quyet" data-word-en="Firm / Resolute / Determined" data-word-vn="Kiên quyết" data-pos="Tính từ / Adjective" data-def-en="Adhering firmly to a purpose or opinion; unwavering." data-context-en="Her resolute attitude made it clear she would not back down.">kiên quyết</span>.
+    </p>
+    <p>
+      "Anh không chỉ là một <span class="vocab" id="v-nhi-ap-anh-gia" data-word-en="Photographer" data-word-vn="Nhiếp ảnh gia" data-pos="Danh từ / Noun" data-def-en="A person who takes photographs, especially as a job." data-context-en="He claimed to be a travel photographer tracking cultural sights.">nhiếp ảnh gia</span>. Anh có <span class="vocab" id="v-vu-khi" data-word-en="Weapons / Firearms" data-word-vn="Vũ khí" data-pos="Danh từ / Noun" data-def-en="Things designed or used for inflicting bodily harm or defense." data-context-en="The silver tactical equipment was clearly a specialized weapon.">vũ khí</span>, anh <span class="vocab" id="v-biet" data-word-en="Know" data-word-vn="Biết" data-pos="Động từ / Verb" data-def-en="Be aware of through observation, inquiry, or information." data-context-en="He seemed to know private details about her past history.">biết</span> ông nội tôi, và anh đang bị <span class="vocab" id="v-truy-duoi" data-word-en="Pursued / Chased" data-word-vn="Truy đuổi" data-pos="Động từ / Verb (Bị động)" data-def-en="Followed or chased in order to catch or attack." data-context-en="They were actively pursued across the city by corporate guards.">truy đuổi</span> bởi cùng một <span class="vocab" id="v-nhom-nguoi" data-word-en="Group of people" data-word-vn="Nhóm người" data-pos="Danh từ / Noun" data-def-en="A collection of individuals gathered or acting together." data-context-en="A dangerous group of people was monitoring their digital footprints.">nhóm người</span> giống tôi."
+    </p>
+    <p>
+      Jack <span class="vocab" id="v-tho-dai" data-word-en="Sigh" data-word-vn="Thở dài" data-pos="Động từ / Verb" data-def-en="Emit a long, deep, audible breath expressing sadness or relief." data-context-en="He could only sigh before starting his long explanation.">thở dài</span> và đi đến khu <span class="vocab" id="v-bep-nho" data-word-en="Kitchenette / Small kitchen" data-word-vn="Khu bếp nhỏ" data-pos="Danh từ / Noun" data-def-en="A small kitchen or alcove for preparing light meals." data-context-en="He walked over to the compact kitchenette to prepare a drink.">bếp nhỏ</span>, <span class="vocab" id="v-bat-dau" data-word-en="Begin / Start" data-word-vn="Bắt đầu" data-pos="Động từ / Verb" data-def-en="Perform the first part of an action or activity." data-context-en="He decided to begin boiling water for the drip filter.">bắt đầu</span> <span class="vocab" id="v-pha" data-word-en="Brew / Make (drinks)" data-word-vn="Pha" data-pos="Động từ / Verb" data-def-en="Prepare a hot beverage by infusing or mixing ingredients." data-context-en="He loved to brew dark, traditional roasts in the morning.">pha</span> <span class="vocab" id="v-ca-phe-3" data-word-en="Coffee" data-word-vn="Cà phê" data-pos="Danh từ / Noun" data-def-en="A hot beverage prepared from roasted coffee beans." data-context-en="The dark coffee trickled slowly through the metal filter.">cà phê</span> <span class="vocab" id="v-truyen-thong" data-word-en="Traditional" data-word-vn="Truyền thống" data-pos="Tính từ / Adjective" data-def-en="Existing in or as part of a long-established custom or practice." data-context-en="They prepared drinks using a traditional drip method.">truyền thống</span> Việt Nam.
+    </p>
+    <p>
+      "Cô nói <span class="vocab" id="v-dung" data-word-en="Right / Correct" data-word-vn="Đúng" data-pos="Tính từ / Adjective" data-def-en="Morally good, justified, or factually accurate." data-context-en="Your analytical deduction about my role is factually correct.">đúng</span>. Tôi <span class="vocab" id="v-lam-viec" data-word-en="Work" data-word-vn="Làm việc" data-pos="Động từ / Verb" data-def-en="Be engaged in physical or mental activity to achieve a result." data-context-en="He had to work undercover to protect historical sites.">làm việc</span> cho một <span class="vocab" id="v-nhom" data-word-en="Group / Team" data-word-vn="Nhóm" data-pos="Danh từ / Noun" data-def-en="A number of people or things located, gathered, or classed together." data-context-en="He belongs to an elite group operating under complete secrecy.">nhóm</span> <span class="vocab" id="v-bao-ton" data-word-en="Preserve / Conserve" data-word-vn="Bảo tồn" data-pos="Động từ / Verb" data-def-en="Protect something valuable from loss, decay, or theft." data-context-en="Their mission is to preserve rare cultural materials globally.">bảo tồn</span> <span class="vocab" id="v-di-san-van-hoa" data-word-en="Cultural heritage" data-word-vn="Di sản văn hóa" data-pos="Danh từ / Noun" data-def-en="The legacy of physical artifacts and intangible attributes of a group." data-context-en="Ancient seals represent an irreplaceable cultural heritage.">di sản văn hóa</span>. Chúng tôi <span class="vocab" id="v-co-gang" data-word-en="Try / Attempt / Strive" data-word-vn="Cố gắng" data-pos="Động từ / Verb" data-def-en="Make an effort to achieve or complete something." data-context-en="We must try to keep these coordinates safe from adversaries.">cố gắng</span> <span class="vocab" id="v-ngan-chan" data-word-en="Prevent / Stop / Block" data-word-vn="Ngăn chặn" data-pos="Động từ / Verb" data-def-en="Keep an problem or an anticipated event from happening." data-context-en="They must block and prevent the relics from entering the market.">ngăn chặn</span> những kẻ như Marcus Thorne <span class="vocab" id="v-danh-cap" data-word-en="Steal" data-word-vn="Đánh cắp" data-pos="Động từ / Verb" data-def-en="Take another person's property without permission or legal right." data-context-en="Organized syndicates want to steal national treasures for profit.">đánh cắp</span> <span class="vocab" id="v-lich-su" data-word-en="History" data-word-vn="Lịch sử" data-pos="Danh từ / Noun" data-def-en="The whole series of past events connected with a country or item." data-context-en="Stealing this seal means robbing an entire nation's history.">lịch sử</span> của một <span class="vocab" id="v-quoc-gia" data-word-en="Nation / Country" data-word-vn="Quốc gia" data-pos="Danh từ / Noun" data-def-en="A large body of people united by common descent or history." data-context-en="The ancient artifact belongs to the citizens of this country.">quốc gia</span>."
+    </p>
+    <p>
+      Anh <span class="vocab" id="v-dua" data-word-en="Give / Hand over" data-word-vn="Đưa" data-pos="Động từ / Verb" data-def-en="Hand over or pass something to someone else." data-context-en="He wanted to hand over a warm beverage to help her calm down.">đưa</span> cho Maya một <span class="vocab" id="v-ly" data-word-en="Glass / Cup" data-word-vn="Ly" data-pos="Danh từ / Noun" data-def-en="A container used for holding liquids to drink." data-context-en="He placed a small glass filled with sweet liquid on the counter.">ly</span> <span class="vocab" id="v-ca-phe-4" data-word-en="Coffee" data-word-vn="Cà phê" data-pos="Danh từ / Noun" data-def-en="A drink brewed from roasted coffee beans." data-context-en="The hot coffee gave off a robust and concentrated smell.">cà phê</span> <span class="vocab" id="v-dac" data-word-en="Strong / Concentrated / Dense" data-word-vn="Đặc" data-pos="Tính từ / Adjective" data-def-en="Close or compact in substance; highly concentrated." data-context-en="The dense, concentrated brew was very strong.">đặc</span>, <span class="vocab" id="v-den" data-word-en="Black" data-word-vn="Đen" data-pos="Tính từ / Adjective" data-def-en="Of the very darkest color, owing to the absence of light." data-context-en="She preferred black, unmilked infusions for focus.">đen</span> và rất <span class="vocab" id="v-ngot" data-word-en="Sweet" data-word-vn="Ngọt" data-pos="Tính từ / Adjective" data-def-en="Having the pleasant taste characteristic of sugar or honey." data-context-en="The beverage was surprisingly sweet due to condensed milk.">ngọt</span>.
+    </p>
+    <p>
+      "Ông nội cô <span class="vocab" id="v-tung-la" data-word-en="Used to be / Once was" data-word-vn="Từng là" data-pos="Động từ / Verb" data-def-en="Having had a specified role or status in a former time." data-context-en="The old explorer once was a top specialist in our agency.">từng là</span> <span class="vocab" id="v-diep-vien" data-word-en="Spy / Operative / Agent" data-word-vn="Điệp viên" data-pos="Danh từ / Noun" data-def-en="A person employed by an organization to collect secret data." data-context-en="The veteran spy left encrypted notes for his successor.">điệp viên</span> <span class="vocab" id="v-gioi-nhat" data-word-en="Best" data-word-vn="Giỏi nhất" data-pos="Tính từ / Adjective" data-def-en="Of the most excellent, effective, or outstanding quality." data-context-en="He was widely regarded as the best operative in the field.">giỏi nhất</span> của chúng tôi. <span class="vocab" id="v-nhieu-nam-truoc" data-word-en="Many years ago" data-word-vn="Nhiều năm trước" data-pos="Trạng từ / Adverb" data-def-en="A significant period of time in the past." data-context-en="Many years ago, he hid the emerald relic securely.">Nhiều năm trước</span>, ông đã <span class="vocab" id="v-giau" data-word-en="Hide / Conceal" data-word-vn="Giấu" data-pos="Động từ / Verb" data-def-en="Put or keep out of sight; prevent from being discovered." data-context-en="He decided to conceal the golden artifact in an anonymous spot.">giấu</span> Thanh Ngọc Long để <span class="vocab" id="v-bao-ve" data-word-en="Protect / Safeguard" data-word-vn="Bảo vệ" data-pos="Động từ / Verb" data-def-en="Keep safe from harm, injury, damage, or capture." data-context-en="The safe house was chosen to protect their research documents.">bảo vệ</span> nó khỏi <span class="vocab" id="v-bang-nhom" data-word-en="Gang / Syndicate" data-word-vn="Băng nhóm" data-pos="Danh từ / Noun" data-def-en="An organized group of criminals or hostile operators." data-context-en="The criminal syndicate was tracking the legacy ledger.">băng nhóm</span> của Thorne."
+    </p>
+    <p>
+      Maya <span class="vocab" id="v-nhap" data-word-en="Sip / Take a sip" data-word-vn="Nhấp" data-pos="Động từ / Verb" data-def-en="Drink something by taking small mouthfuls." data-context-en="She took a moment to sip the warm drink carefully.">nhấp</span> một <span class="vocab" id="v-ngum" data-word-en="Sip / Mouthful" data-word-vn="Ngụm" data-pos="Danh từ / Noun" data-def-en="An amount of liquid drunk in one swallow." data-context-en="A small mouthful of black coffee restored her attention.">ngụm</span> <span class="vocab" id="v-ca-phe-5" data-word-en="Coffee" data-word-vn="Cà phê" data-pos="Danh từ / Noun" data-def-en="A beverage made from processed coffee beans." data-context-en="The sweet coffee gave her an instant rush of energy.">cà phê</span>. Chất caffeine <span class="vocab" id="v-khien" data-word-en="Make / Cause" data-word-vn="Khiến" data-pos="Động từ / Verb" data-def-en="Cause someone or something to be or act in a certain way." data-context-en="The shock of the attack caused her to jump backward.">khiến</span> cô <span class="vocab" id="v-cam-thay-2" data-word-en="Feel" data-word-vn="Cảm thấy" data-pos="Động từ / Verb" data-def-en="Experience an emotion or physical sensation." data-context-en="The strong dark beverage made her feel sharp and awake.">cảm thấy</span> <span class="vocab" id="v-tinh-tao" data-word-en="Alert / Awake / Clear-headed" data-word-vn="Tỉnh táo" data-pos="Tính từ / Adjective" data-def-en="Awake, alert, and thinking clearly after being tired." data-context-en="She felt fully alert and focused on the tactical maps.">tỉnh táo</span> <span class="vocab" id="v-hon" data-word-en="More" data-word-vn="Hơn" data-pos="Trạng từ / Adverb" data-def-en="Forming the comparative degree of adjectives or adverbs." data-context-en="The dark brew made her feel much more energetic than before.">hơn</span>.
+    </p>
+    <p>
+      Cô <span class="vocab" id="v-nhin" data-word-en="Look at / Glance at" data-word-vn="Nhìn" data-pos="Động từ / Verb" data-def-en="Direct one's gaze toward someone or something." data-context-en="She turned her eyes to look at the golden relic on the table.">nhìn</span> chiếc <span class="vocab" id="v-chia-khoa" data-word-en="Key" data-word-vn="Chìa khóa" data-pos="Danh từ / Noun" data-def-en="A small piece of shaped metal used to open a lock." data-context-en="The heavy brass key rested quietly on the map surface.">chìa khóa</span> <span class="vocab" id="v-vang" data-word-en="Gold / Golden" data-word-vn="Vàng" data-pos="Tính từ / Adjective" data-def-en="Made of or colored like the precious yellow metal." data-context-en="The golden key gleamed under the soft desktop illumination.">vàng</span> trên <span class="vocab" id="v-ban" data-word-en="Table / Desk" data-word-vn="Bàn" data-pos="Danh từ / Noun" data-def-en="A piece of furniture with a flat top and legs." data-context-en="He spread out his operational journals across the large table.">bàn</span>: "Còn chiếc <span class="vocab" id="v-chia-khoa-2" data-word-en="Key" data-word-vn="Chìa khóa" data-pos="Danh từ / Noun" data-def-en="A small metal instrument used to operate a lock mechanism." data-context-en="She picked up the old key to inspect its mechanical notches.">chìa khóa</span> này?"
+    </p>
+    <p>
+      "Nó <span class="vocab" id="v-dung-de" data-word-en="Used for / Used to" data-word-vn="Dùng để" data-pos="Động từ / Verb" data-def-en="Utilized for a specific purpose or function." data-context-en="This specialized device is used to unlock historical archives.">dùng để</span> <span class="vocab" id="v-mo" data-word-en="Open / Unlock" data-word-vn="Mở" data-pos="Động từ / Verb" data-def-en="Unfasten or unlock a container, door, or mechanism." data-context-en="The team needed the sequence to open the reinforced chest.">mở</span> một chiếc <span class="vocab" id="v-hop" data-word-en="Box / Chest" data-word-vn="Hộp" data-pos="Danh từ / Noun" data-def-en="A container with a flat base and sides, typically with a lid." data-context-en="The antique box held hidden files from early operations.">hộp</span> trong một <span class="vocab" id="v-ngoi-den" data-word-en="Temple" data-word-vn="Ngôi đền" data-pos="Danh từ / Noun" data-def-en="A building devoted to worship or a sacred historical site." data-context-en="The relic was hidden deep within an ancient stone temple.">ngôi đền</span> <span class="vocab" id="v-an-2" data-word-en="Hidden / Concealed" data-word-vn="Ẩn" data-pos="Tính từ / Adjective" data-def-en="Kept secret; not clearly visible or known." data-context-en="The ancient ruins remained hidden deep within the mountain forest.">ẩn</span> ở Đà Lạt," anh <span class="vocab" id="v-giai-thich" data-word-en="Explain" data-word-vn="Giải thích" data-pos="Động từ / Verb" data-def-en="Make something clear or easy to understand by describing it." data-context-en="He sat down to explain the context of the cipher.">giải thích</span>.
+    </p>
+    <p>
+      "Nhưng chúng ta có một <span class="vocab" id="v-van-de" data-word-en="Problem / Issue" data-word-vn="Vấn đề" data-pos="Danh từ / Noun" data-def-en="A matter or situation regarded as unwelcome or harmful." data-context-en="They ran into a serious problem when looking at the charts.">vấn đề</span>. <span class="vocab" id="v-ban-do-2" data-word-en="Map" data-word-vn="Bản đồ" data-pos="Danh từ / Noun" data-def-en="A diagrammatic representation of an area of land or sea." data-context-en="The ancient tracking map held details they couldn't decipher.">Bản đồ</span> trong <span class="vocab" id="v-nhat-ky" data-word-en="Diary / Journal" data-word-vn="Nhật ký" data-pos="Danh từ / Noun" data-def-en="A book in which one keeps a daily record of events." data-context-en="Her grandfather recorded structural ciphers in his leather diary.">nhật ký của cô</span> đã bị <span class="vocab" id="v-ma-hoa" data-word-en="Encrypted / Coded" data-word-vn="Mã hóa" data-pos="Động từ / Verb (Bị động)" data-def-en="Converted into a coded form that hides the true meaning." data-context-en="The critical location notes were completely encrypted by the agent.">mã hóa</span>. Chúng ta không thể <span class="vocab" id="v-doc" data-word-en="Read" data-word-vn="Đọc" data-pos="Động từ / Verb" data-def-en="Look at and comprehend the meaning of written characters." data-context-en="Without a key, it is impossible to read these coordinates.">đọc</span> <span class="vocab" id="v-chi-dan" data-word-en="Instructions / Directions" data-word-vn="Chỉ dẫn" data-pos="Danh từ / Noun" data-def-en="Information or directions telling how something should be done." data-context-en="The detailed directions were masked by hidden ink layers.">chỉ dẫn</span> nếu <span class="vocab" id="v-thieu" data-word-en="Lacking / Without" data-word-vn="Thiếu" data-pos="Động từ / Verb" data-def-en="Be without or not have enough of something required." data-context-en="They could not proceed because they were lacking a lens element.">thiếu một</span> <span class="vocab" id="v-thau-kinh" data-word-en="Lens" data-word-vn="Thấu kính" data-pos="Danh từ / Noun" data-def-en="A piece of curved glass or transparent material for focusing light." data-context-en="The symbols on the page became clear under the magnifying lens.">thấu kính</span> <span class="vocab" id="v-dac-biet" data-word-en="Special" data-word-vn="Đặc biệt" data-pos="Tính từ / Adjective" data-def-en="Better, greater, or otherwise different from what is usual." data-context-en="They required a special optical tool to decode the journal.">đặc biệt</span>."
+    </p>
+    <p>
+      Maya <span class="vocab" id="v-mim-cuoi" data-word-en="Smile" data-word-vn="Mỉm cười" data-pos="Động từ / Verb" data-def-en="Form one's features into a pleased or amused expression." data-context-en="She managed to smile despite the immense stress of the pursuit.">mỉm cười</span> với <span class="vocab" id="v-anh-mat" data-word-en="Look / Look in eyes / Expression" data-word-vn="Ánh mắt" data-pos="Danh từ / Noun" data-def-en="The expression or look conveyed through a person's eyes." data-context-en="Her smart look told him that she had anticipated this obstacle.">ánh mắt</span> <span class="vocab" id="v-thong-minh" data-word-en="Intelligent / Clever / Smart" data-word-vn="Thông minh" data-pos="Tính từ / Adjective" data-def-en="Having or showing intelligence; clever or sharp-witted." data-context-en="The clever archaeologist figured out the puzzle immediately.">thông minh</span>. Cô <span class="vocab" id="v-tho-tay-vao" data-word-en="Reach hand into / Put hand in" data-word-vn="Thò tay vào" data-pos="Động từ / Verb" data-def-en="Extend one's hand inside an enclosed space like a pocket." data-context-en="She reached her hand into her small coat pocket carefully.">thò tay vào</span> <span class="vocab" id="v-tui" data-word-en="Pocket / Bag" data-word-vn="Túi" data-pos="Danh từ / Noun" data-def-en="A small pouch sewn into or on a garment for carrying small items." data-context-en="She checked her jacket pocket to ensure the piece was safe.">túi</span> và <span class="vocab" id="v-lay-ra" data-word-en="Take out / Extract" data-word-vn="Lấy ra" data-pos="Động từ / Verb" data-def-en="Remove something from an inside container or pocket." data-context-en="He watched her take out a small glass token from her purse.">lấy ra</span> một <span class="vocab" id="v-mieng" data-word-en="Piece" data-word-vn="Miếng" data-pos="Danh từ / Noun" data-def-en="A small part or individual portion of an object." data-context-en="She held a smooth round piece of polished glass in her palm.">miếng</span> <span class="vocab" id="v-thuy-tinh" data-word-en="Glass" data-word-vn="Thủy tinh" data-pos="Danh từ / Noun" data-def-en="A hard, brittle, translucent substance made by fusing sand." data-context-en="The translucent piece of old glass caught the overhead light.">thủy tinh</span> <span class="vocab" id="v-tron" data-word-en="Round / Circular" data-word-vn="Tròn" data-pos="Tính từ / Adjective" data-def-en="Shaped like a circle or cylinder; circular." data-context-en="She carried a circular glass filter that fit the notebook layout.">tròn</span> <span class="vocab" id="v-nho-2" data-word-en="Small / Tiny" data-word-vn="Nhỏ" data-pos="Tính từ / Adjective" data-def-en="Of small size; tiny." data-context-en="A tiny optical lens was hidden inside her personal locket.">nhỏ</span>.
+    </p>
+    <p>
+      "Anh đang <span class="vocab" id="v-noi-den" data-word-en="Talking about / Referring to" data-word-vn="Nói đến" data-pos="Động từ / Verb" data-def-en="Referring to or speaking about a particular item or subject." data-context-en="The document you are talking about is locked inside the safe.">nói đến</span> <span class="vocab" id="v-thu-nay" data-word-en="This thing" data-word-vn="Thứ này" data-pos="Danh từ / Noun" data-def-en="The specific object being shown or referred to right here." data-context-en="This thing might look like a toy, but it is an optical key.">thứ này</span> sao? Ông nội đã <span class="vocab" id="v-tang" data-word-en="Give as gift / Gift" data-word-vn="Tặng" data-pos="Động từ / Verb" data-def-en="Give something to someone as a gift or token of care." data-context-en="Her grandfather decided to gift it to her when she was a child.">tặng</span> nó cho tôi như một '<span class="vocab" id="v-la-bua-may-man" data-word-en="Lucky charm" data-word-vn="Lá bùa may mắn" data-pos="Danh từ / Noun" data-def-en="An object believed to bring good luck or protection." data-context-en="She kept the tiny glass piece as a special lucky charm.">lá bùa may mắn</span>' khi tôi còn là một <span class="vocab" id="v-co-be" data-word-en="Little girl" data-word-vn="Cô bé" data-pos="Danh từ / Noun" data-def-en="A female child; a young girl." data-context-en="She remembered his stories from back when she was a little girl.">cô bé</span>."
+    </p>
+    <p>
+      Jack <span class="vocab" id="v-nhin-cham-cham" data-word-en="Stare at / Gaze intently" data-word-vn="Nhìn chằm chằm" data-pos="Động từ / Verb" data-def-en="Look fixedly or intently at someone or something with wide eyes." data-context-en="He could only stare at the transparent artifact in disbelief.">nhìn chằm chằm</span> vào miếng thủy tinh, rồi nhìn Maya: "Cô thật <span class="vocab" id="v-dang-kinh-ngac" data-word-en="Incredible / Amazing / Astonishing" data-word-vn="Đáng kinh ngạc" data-pos="Tính từ / Adjective" data-def-en="Extremely surprising, impressive, or beautiful; amazing." data-context-en="Your ability to bypass their checkpoints is absolutely incredible.">đáng kinh ngạc</span>, Maya. Cô đã <span class="vocab" id="v-nam-giu" data-word-en="Hold / Possess / Keep" data-word-vn="Nắm giữ" data-pos="Động từ / Verb" data-def-en="Maintain possession or control over a critical item." data-context-en="She managed to keep and possess the secret key for over a decade.">nắm giữ</span> <span class="vocab" id="v-manh-ghep" data-word-en="Piece / Puzzle piece" data-word-vn="Mảnh ghép" data-pos="Danh từ / Noun" data-def-en="An individual element that forms part of a larger puzzle or system." data-context-en="They finally discovered the missing puzzle piece to solve the map.">mảnh ghép</span> còn <span class="vocab" id="v-thieu-2" data-word-en="Missing / Lacking" data-word-vn="Thiếu" data-pos="Tính từ / Adjective" data-def-en="Absent or unavailable when needed or expected." data-context-en="The missing coordinate code was right there in her pocket.">thiếu</span> <span class="vocab" id="v-suot" data-word-en="Throughout / All along" data-word-vn="Suốt" data-pos="Giới từ / Preposition" data-def-en="During the entire period of time from the beginning." data-context-en="She had carried the critical component all along without knowing.">suốt</span> bấy lâu nay!"
+    </p>
+    <p>
+      Trong một <span class="vocab" id="v-khoang-khac" data-word-en="Moment" data-word-vn="Khoảnh khắc" data-pos="Danh từ / Noun" data-def-en="A very brief period of time." data-context-en="For a brief moment, the constant noise of the city faded away.">khoảnh khắc</span>, họ <span class="vocab" id="v-dung-rat-gan" data-word-en="Stand very close" data-word-vn="Đứng rất gần" data-pos="Động từ / Verb" data-def-en="Position oneself at a minimal distance from another person." data-context-en="The two partners stood very close while studying the floor plans.">đứng rất gần</span> nhau. Sự <span class="vocab" id="v-cang-thang" data-word-en="Tension / Stress" data-word-vn="Căng thẳng" data-pos="Danh từ / Noun" data-def-en="The state of being stretched tight; mental or emotional strain." data-context-en="The emotional tension grew intense as they evaluated their options.">căng thẳng</span> trong phòng giờ đây không chỉ là về bí ẩn nữa.
+    </p>
+    <p>
+      Maya cảm thấy <span class="vocab" id="v-tim" data-word-en="Heart" data-word-vn="Tim" data-pos="Danh từ / Noun" data-def-en="The muscular organ that pumps blood through the circulatory system." data-context-en="She felt her heart race as footsteps approached the corridor.">tim</span> mình <span class="vocab" id="v-dap-nhanh" data-word-en="Beating fast / Racing" data-word-vn="Đập nhanh" data-pos="Động từ / Verb" data-def-en="Pulsing or thumping with elevated speed due to excitement or fear." data-context-en="Her chest tightened as her heart began beating fast from anxiety.">đập nhanh</span> khi Jack <span class="vocab" id="v-dua-tay" data-word-en="Reach out hand" data-word-vn="Đưa tay" data-pos="Động từ / Verb" data-def-en="Extend one's hand or arm toward something." data-context-en="He decided to reach out his hand to inspect the fragile lens.">đưa tay</span> định <span class="vocab" id="v-cham-vao" data-word-en="Touch" data-word-vn="Chạm vào" data-pos="Động từ / Verb" data-def-en="Bring a bodily part into contact with an object or surface." data-context-en="He warned her not to touch the exposed electrical wiring.">chạm vào</span> miếng thủy tinh.
+    </p>
+    <p>
+      Nhưng ngay <span class="vocab" id="v-luc-do" data-word-en="At that moment / Right then" data-word-vn="Lúc đó" data-pos="Trạng từ / Adverb" data-def-en="At that specific instant in time." data-context-en="Right then, a loud alarm shattered the silence of the facility.">lúc đó</span>, một <span class="vocab" id="v-cham-laser" data-word-en="Laser dot" data-word-vn="Chấm laser" data-pos="Danh từ / Noun" data-def-en="A small bright spot produced by a targeted laser pointing beam." data-context-en="A tiny red laser dot danced ominously across the window frame.">chấm laser</span> <span class="vocab" id="v-do" data-word-en="Red" data-word-vn="Đỏ" data-pos="Tính từ / Adjective" data-def-en="Of a color at the end of the spectrum next to orange." data-context-en="The luminous red indicator signaled that the target was locked.">đỏ</span> <span class="vocab" id="v-xuat-hien" data-word-en="Appear / Emerge" data-word-vn="Xuất hiện" data-pos="Động từ / Verb" data-def-en="Come into sight or become visible unexpectedly." data-context-en="A critical error notice appeared on the control interface.">xuất hiện</span> trên bức tường phía sau họ.
+    </p>
+    <p>
+      Nó đang <span class="vocab" id="v-di-chuyen" data-word-en="Moving" data-word-vn="Di chuyển" data-pos="Động từ / Verb" data-def-en="Changing position or going from one place to another." data-context-en="The tracking point was moving rapidly toward his chest profile.">di chuyển</span> rất nhanh về phía <span class="vocab" id="v-nguc" data-word-en="Chest" data-word-vn="Ngực" data-pos="Danh từ / Noun" data-def-en="The front surface of a person's body between the neck and abdomen." data-context-en="He held his hands securely across his chest to protect himself.">ngực</span> của Jack.
+    </p>
+    <p>
+      Có <span class="vocab" id="v-ke-nao-do" data-word-en="Someone / Somebody (hostile)" data-word-vn="Kẻ nào đó" data-pos="Danh từ / Noun" data-def-en="An unspecified person, often used with an adversarial connotation." data-context-en="Someone was monitoring their physical location from outside.">kẻ nào đó</span> đang ở trên <span class="vocab" id="v-san-thuong" data-word-en="Rooftop" data-word-vn="Sân thượng" data-pos="Danh từ / Noun" data-def-en="The outer surface of a building's roof, often flat." data-context-en="An armed lookout climbed onto the flat rooftop across the street.">sân thượng</span> <span class="vocab" id="v-toa-nha" data-word-en="Building" data-word-vn="Tòa nhà" data-pos="Danh từ / Noun" data-def-en="A structure with a roof and walls, such as a house or factory." data-context-en="The corporate building was heavily secured by surveillance nets.">tòa nhà</span> <span class="vocab" id="v-doi-dien" data-word-en="Opposite / Facing" data-word-vn="Đối diện" data-pos="Tính từ / Adjective" data-def-en="Facing or positioned directly across a space or street." data-context-en="The sniper set up his rifle on the terrace facing their window.">đối diện</span> với một <span class="vocab" id="v-khau-sung" data-word-en="Firearm / Gun" data-word-vn="Khẩu súng" data-pos="Danh từ / Noun" data-def-en="A weapon incorporating a metal tube from which bullets are fired." data-context-en="He unholstered a compact firearm to counter the threat.">khẩu súng</span> <span class="vocab" id="v-ban-tia" data-word-en="Sniper / Sharpshooting" data-word-vn="Bắn tỉa" data-pos="Tính từ / Adjective" data-def-en="Relating to long-range precision shooting from a concealed spot." data-context-en="A precision sniper rifle was pointed directly at the living area.">bắn tỉa</span>!
+    </p>
+    <p>
+      "<span class="vocab" id="v-nam-xuong" data-word-en="Get down / Lie down" data-word-vn="Nằm xuống" data-pos="Động từ / Verb" data-def-en="Drop one's body flat to the ground to avoid danger." data-context-en="He shouted to get down as glass shards flew across the room.">Nằm xuống</span>, Jack!" Maya <span class="vocab" id="v-het-len" data-word-en="Shout / Scream" data-word-vn="Hét lên" data-pos="Động từ / Verb" data-def-en="Utter a loud, sharp cry or command in moments of danger." data-context-en="She had to scream a warning over the sound of breaking glass.">hét lên</span>. Một <span class="vocab" id="v-vien-dan" data-word-en="Bullet" data-word-vn="Viên đạn" data-pos="Danh từ / Noun" data-def-en="A projectile fired from a rifle, modern gun, or pistol." data-context-en="A high-velocity bullet pierced through the reinforced frame.">viên đạn</span> làm <span class="vocab" id="v-vo-tan" data-word-en="Shatter / Break to pieces" data-word-vn="Vỡ tan" data-pos="Động từ / Verb" data-def-en="Break suddenly and violently into many small pieces." data-context-en="The impact caused the drinking glass to shatter completely.">vỡ tan</span> ly cà phê trên tay Maya.
+    </p>
+
+    <a href="../" class="back-btn">← Quay lại danh mục</a>
+
+    <h3>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h3>
+    <div id="memory-grid"></div>
+
+    <div class="skip-notes">
+      <h3>Skip List Notes (For Reference)</h3>
+      <p>The following categories of functional or specific words were skipped in accordance with guidelines: Proper names (Sau, Maya, Jack, Thorne, Việt Nam, Marcus Thorne, Thanh Ngọc Long, Đà Lạt), numbers (một, hai, 4), pure grammatical function words, articles, prepositions (tại, từ, ra, vào, qua, trên, bằng, ở, với, cho, khỏi, của), conjunctions (và, nhưng, hay, hoặc, vì, khi, khi... cũng), pronouns (mình, cô, anh, họ, tôi, hắn, ai, gì, điều đó, cả, tôi, chúng tôi, nó, thứ này, bấy lâu nay), and auxiliary verbs (phải, có, không, được, nên, thể, đang, sẽ, đã, đã bị, từng là).</p>
+    </div>
+
+    <div class="transcription-notes">
+      <h3>Transcription Notes</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Original</th>
+            <th>Corrected</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td colspan="4" style="text-align: center; color: #5a4530; font-style: italic;">No voice-to-text transcript errors flagged. Text processed cleanly as editorial content.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div id="popup-overlay"></div>
+  <div id="popup-card">
+    <div id="popup-word"></div>
+    <div id="popup-subword"></div>
+    <div id="popup-pos"></div>
+    <div id="popup-def"></div>
+    <div id="popup-context-label"></div>
+    <div id="popup-context"></div>
+  </div>
+
+  <script>
+    const vocabElements = document.querySelectorAll('.vocab');
+    const popupOverlay = document.getElementById('popup-overlay');
+    const popupCard = document.getElementById('popup-card');
+    
+    vocabElements.forEach(el => {
+      el.addEventListener('click', function(e) {
+        e.stopPropagation();
+        showPopup(this);
+      });
+    });
+
+    function rebuildMemoryGrid() {
+      const grid = document.getElementById('memory-grid');
+      grid.innerHTML = '';
+      
+      const seenWords = new Set();
+      const uniqueElements = [];
+      
+      vocabElements.forEach(el => {
+        const text = el.innerText.trim();
+        const baseId = el.id.replace(/-2|-3|-4|-5/g, ''); 
+        const dictKey = text.toLowerCase() + '_' + baseId;
+        if (!seenWords.has(dictKey)) {
+          seenWords.add(dictKey);
+          uniqueElements.push(el);
+        }
+      });
+
+      uniqueElements.forEach(el => {
+        const span = document.createElement('span');
+        span.className = 'memory-item';
+        span.innerText = el.innerText;
+        span.addEventListener('click', function() {
+          el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          el.classList.add('highlight-flash');
+          setTimeout(() => {
+            el.classList.remove('highlight-flash');
+          }, 1500);
+        });
+        grid.appendChild(span);
+      });
+    }
+
+    rebuildMemoryGrid();
+
+    function showPopup(el) {
+      const wordEn = el.getAttribute('data-word-en');
+      const wordVn = el.getAttribute('data-word-vn');
+      const pos = el.getAttribute('data-pos');
+      const defEn = el.getAttribute('data-def-en');
+      const ctxEn = el.getAttribute('data-context-en');
+
+      document.getElementById('popup-word').innerText = wordEn;
+      document.getElementById('popup-subword').innerText = wordVn;
+      document.getElementById('popup-pos').innerText = pos;
+      document.getElementById('popup-def').innerText = defEn;
+      document.getElementById('popup-context-label').innerText = "In context:";
+      document.getElementById('popup-context').innerText = ctxEn;
+
+      popupOverlay.style.display = 'block';
+      popupCard.style.display = 'block';
+    }
+
+    window.addEventListener('click', function() {
+      popupOverlay.style.display = 'none';
+      popupCard.style.display = 'none';
+    });
+    
+    popupCard.addEventListener('click', function(e) {
+      e.stopPropagation();
+    });
+
+    function downloadContentOnly() {
+      document.getElementById('memory-grid').innerHTML = '';
+      
+      const docClone = document.documentElement.cloneNode(true);
+      
+      const btnInClone = docClone.querySelector('#download-btn');
+      if (btnInClone) btnInClone.remove();
+      
+      const skipInClone = docClone.querySelector('.skip-notes');
+      if (skipInClone) skipInClone.remove();
+      
+      const transInClone = docClone.querySelector('.transcription-notes');
+      if (transInClone) transInClone.remove();
+
+      const serializedHtml = "<!DOCTYPE html>\n" + docClone.outerHTML;
+      
+      const blob = new Blob([serializedHtml], { type: 'text/html;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "content_only_secret_and_strong_coffee.html";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      rebuildMemoryGrid();
+    }
+  </script>
+</body>
+</html>
