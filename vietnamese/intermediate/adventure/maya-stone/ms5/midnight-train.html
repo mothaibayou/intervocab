@@ -1,0 +1,475 @@
+<html lang="vi"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tập 5: Chuyến tàu nửa đêm</title>
+  <style>
+    body {
+      background-color: #2b2b2b;
+      margin: 0;
+      padding: 20px 10px;
+      font-family: Arial, sans-serif;
+      font-size: 19px;
+      line-height: 1.7;
+      color: #2a1500;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    #main-page {
+      background-color: #f0e6c8;
+      max-width: 850px;
+      margin: 0 auto;
+      padding: 30px 20px;
+      border: 2px solid #a0845a;
+      box-sizing: border-box;
+      position: relative;
+    }
+    h1, h2 {
+      color: #3a1f00;
+      margin-top: 0;
+    }
+    h1 {
+      font-size: 1.8rem;
+      border-bottom: 2px solid #7a4e1a;
+      padding-bottom: 10px;
+    }
+    h2 {
+      font-size: 1.4rem;
+      margin-top: 30px;
+      border-bottom: 1px solid #7a4e1a;
+      padding-bottom: 5px;
+    }
+    .download-btn {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 6px 12px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 4px;
+    }
+    .download-btn:hover {
+      background-color: #422d12;
+    }
+    .audio-container {
+      margin-bottom: 25px;
+      padding-bottom: 15px;
+      border-bottom: 1px dashed #7a4e1a;
+    }
+    .audio-label {
+      font-size: 0.9rem;
+      color: #665235;
+      margin-bottom: 5px;
+      display: block;
+    }
+    audio {
+      width: 100%;
+      height: 40px;
+      outline: none;
+    }
+    .audio-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 8px;
+    }
+    .rewind-btn {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      border-radius: 3px;
+      flex: 1;
+      min-width: 70px;
+      text-align: center;
+    }
+    .rewind-btn:hover {
+      background-color: #422d12;
+    }
+    .vocab {
+      border-bottom: 2.5px dotted #1a5c20;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .corrected {
+      background: #fff3e0;
+      color: #c04a00;
+      font-weight: bold;
+      border-radius: 2px;
+      padding: 0 2px;
+    }
+    .original-word {
+      text-decoration: line-through;
+      color: #aaa;
+      font-size: 0.82rem;
+      margin-left: 2px;
+      font-style: italic;
+    }
+    .highlight-flash {
+      background-color: #ffe082 !important;
+      transition: background-color 0.3s ease;
+    }
+    .back-btn {
+      display: inline-block;
+      margin: 20px 0;
+      color: #2e1f0a;
+      text-decoration: none;
+      font-weight: bold;
+      font-size: 0.95rem;
+    }
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+    #memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+      gap: 10px;
+      margin-top: 15px;
+    }
+    .memory-word {
+      border-bottom: 1px dotted #2e1f0a;
+      cursor: pointer;
+      padding: 3px;
+      font-size: 0.95rem;
+    }
+    .memory-word:hover {
+      background-color: #e5dab3;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid #a0845a;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+    }
+    #popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 999;
+    }
+    #popup-card {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f0e6c8;
+      border: 2px solid #a0845a;
+      padding: 20px;
+      width: 85%;
+      max-width: 420px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.5);
+      z-index: 1000;
+      color: #2a1500;
+      box-sizing: border-box;
+    }
+    .popup-heading {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin: 0 0 5px 0;
+    }
+    .popup-subheading {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #555;
+      margin: 0 0 8px 0;
+    }
+    .popup-pos {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #7a4e1a;
+      margin-bottom: 10px;
+    }
+    .popup-definition {
+      font-size: 1rem;
+      margin-bottom: 12px;
+      line-height: 1.4;
+    }
+    .popup-context-label {
+      font-size: 0.95rem;
+      font-weight: bold;
+      margin-top: 10px;
+      display: block;
+    }
+    .popup-context {
+      font-size: 0.95rem;
+      font-style: italic;
+      margin-top: 3px;
+    }
+    @media (max-width: 767px) {
+      body {
+        padding: 0;
+      }
+      #main-page {
+        width: 100%;
+        border: none;
+        padding: 20px 15px;
+      }
+      .download-btn {
+        position: static;
+        display: block;
+        width: 100%;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+    }
+  </style>
+</head>
+<body>
+
+<div id="popup-overlay"></div>
+<div id="popup-card">
+  <div class="popup-heading" id="pop-head"></div>
+  <div class="popup-subheading" id="pop-sub"></div>
+  <div class="popup-pos" id="pop-pos"></div>
+  <div class="popup-definition" id="pop-def"></div>
+  <div class="popup-context-label" id="pop-ctx-lbl"></div>
+  <div class="popup-context" id="pop-ctx"></div>
+</div>
+
+<div id="main-page">
+  
+
+  <h1>
+    <span class="vocab" id="v1" data-word-en="episode" data-word-vn="tập" data-pos="danh từ / noun" data-def-en="A detailed part or segment of a story sequence." data-def-vn="Phần hoặc chương cụ thể của một chuỗi câu chuyện." data-context-en="This is episode 5 of the series." data-context-vn="Đây là tập 5 của bộ truyện.">Tập</span> 5: 
+    <span class="vocab" id="v2" data-word-en="midnight train" data-word-vn="chuyến tàu nửa đêm" data-pos="danh từ / noun" data-def-en="A railway train that operates or travels at the middle of the night." data-def-vn="Đoàn tàu hỏa hoạt động hoặc di chuyển vào giữa đêm." data-context-en="The story takes place on a midnight train." data-context-vn="Câu chuyện diễn ra trên một chuyến tàu nửa đêm.">Chuyến tàu nửa đêm</span>
+  </h1>
+
+  <div class="audio-container">
+    <span class="audio-label">🎧 Listen to the text</span>
+    <audio id="audio-player" controls="">
+      <source src="midnight-train.mp3" type="audio/mpeg">
+      Trình duyệt của bạn không hỗ trợ phát âm thanh.
+    </audio>
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 10 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 15 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+  </div>
+
+  <p>
+    "Nằm sát xuống!"
+  </p>
+  <p>
+    Jack hét lên, kéo Maya về phía <span class="vocab" id="v3" data-word-en="floor" data-word-vn="sàn nhà" data-pos="danh từ / noun" data-def-en="The lower surface of a room on which one walks." data-def-vn="Bề mặt phía dưới của một căn phòng nơi người ta đi lại." data-context-en="Jack pulled Maya down toward the floor." data-context-vn="Jack kéo Maya nằm xuống sàn nhà.">sàn nhà</span>.
+  </p>
+  <p>
+    Căn phòng giờ đây <span class="vocab" id="v4" data-word-en="completely silent" data-word-vn="im phăng phắc" data-pos="tính từ / adjective" data-def-en="Totally quiet with absolutely no sound." data-def-vn="Hoàn toàn yên lặng và không có bất kỳ âm thanh nào." data-context-en="The room was completely silent after the gunshot." data-context-vn="Căn phòng giờ đây im phăng phắc sau tiếng súng.">im phăng phắc</span>, chỉ còn tiếng <span class="vocab" id="v5" data-word-en="breath" data-word-vn="thở" data-pos="danh từ / noun" data-def-en="The air inhaled and exhaled during respiration." data-def-vn="Không khí được hít vào và thở ra trong quá trình hô hấp." data-context-en="Only the rapid sound of Maya's breath remained." data-context-vn="Chỉ còn lại âm thanh dồn dập từ tiếng thở của Maya.">thở</span> <span class="vocab" id="v6" data-word-en="rapid / hurried" data-word-vn="dồn dập" data-pos="tính từ / adjective" data-def-en="Happening very quickly and heavily due to stress or fear." data-def-vn="Diễn ra rất nhanh và dồn vập do căng thẳng hoặc sợ hãi." data-context-en="Her breathing became rapid and shallow." data-context-vn="Tiếng thở dồn dập của cô vang lên trong phòng.">dồn dập</span> của Maya.
+  </p>
+  <p>
+    Những <span class="vocab" id="v7" data-word-en="shards / pieces" data-word-vn="mảnh" data-pos="danh từ / noun" data-def-en="Small, sharp broken pieces of a brittle substance like glass." data-def-vn="Những mẩu nhỏ, sắc nhọn bị vỡ ra từ vật liệu giòn như thủy tinh." data-context-en="The shattered shards of the coffee cup flew everywhere." data-context-vn="Những mảnh vỡ của ly cà phê văng khắp nơi.">mảnh</span> <span class="vocab" id="v8" data-word-en="glass" data-word-vn="kính" data-pos="danh từ / noun" data-def-en="A hard, brittle, transparent substance used for vessels or windows." data-def-vn="Chất liệu cứng, giòn, trong suốt dùng làm cốc chén hoặc cửa sổ." data-context-en="Shards of glass scattered across the entire room." data-context-vn="Những mảnh kính vỡ bay khắp phòng.">kính</span> <span class="vocab" id="v9" data-word-en="broken / shattered" data-word-vn="vỡ" data-pos="tính từ / adjective" data-def-en="Separated into parts or pieces by a sudden impact or force." data-def-vn="Bị tách thành nhiều phần hoặc nhiều mảnh do tác động mạnh bất ngờ." data-context-en="She carefully avoided the broken pieces on the floor." data-context-vn="Cô cẩn thận tránh những mảnh vỡ trên sàn.">vỡ</span> của ly cà phê văng khắp nơi. Maya nhìn xuống <span class="vocab" id="v10" data-word-en="hand" data-word-vn="bàn tay" data-pos="danh từ / noun" data-def-en="The terminal part of the arm used for holding and grasping." data-def-vn="Bộ phận tận cùng của cánh tay dùng để cầm và nắm đồ vật." data-context-en="Maya looked down at her shaking hand." data-context-vn="Maya nhìn xuống bàn tay đang run rẩy của mình.">bàn tay</span> mình; nó đang <span class="vocab" id="v11" data-word-en="shaking / trembling" data-word-vn="run rẩy" data-pos="động từ / verb" data-def-en="Shaking involuntarily as a result of anxiety, fear, or cold." data-def-vn="Rung động một cách không tự chủ do lo lắng, sợ hãi hoặc lạnh." data-context-en="Her fingers were trembling with intense fear." data-context-vn="Bàn tay của cô đang run rẩy vì quá sợ hãi.">run rẩy</span> nhưng <span class="vocab" id="v12" data-word-en="luckily / fortunately" data-word-vn="may mắn" data-pos="phó từ / adverb" data-def-en="By good fortune; in a favorable or lucky manner." data-def-vn="Do có vận may; một cách đầy thuận lợi hoặc có phúc." data-context-en="Luckily, she was not injured by the flying bullet." data-context-vn="Nhưng may mắn là cô không bị thương bởi viên đạn.">may mắn</span> là không bị <span class="vocab" id="v13" data-word-en="injured / hurt" data-word-vn="thương" data-pos="tính từ / adjective" data-def-en="Sustaining physical harm or damage to the body." data-def-vn="Chịu tổn hại hoặc thương tổn vật lý trên cơ thể." data-context-en="She checked her body to ensure she was not injured." data-context-vn="Cô kiểm tra cơ thể xem mình có bị thương không.">thương</span>.
+  </p>
+  <p>
+    "Chúng ta phải đi ngay. Bây giờ," Jack <span class="vocab" id="v14" data-word-en="whispered" data-word-vn="thì thầm" data-pos="động từ / verb" data-def-en="Spoke in a very soft, quiet, and low voice to avoid being heard." data-def-vn="Nói bằng giọng rất khẽ, nhỏ và trầm để tránh bị người khác nghe thấy." data-context-en="Jack whispered quietly so no one could hear them." data-context-vn="Jack thì thầm khẽ để không ai nghe thấy.">thì thầm</span>. "Bọn chúng <span class="vocab" id="v15" data-word-en="found" data-word-vn="tìm thấy" data-pos="động từ / verb" data-def-en="Discovered or located someone or something after a search." data-def-vn="Phát hiện hoặc xác định vị trí của ai đó/vật gì sau khi tìm kiếm." data-context-en="They found our hiding spot much faster than expected." data-context-vn="Bọn chúng tìm thấy chúng ta nhanh hơn tôi tưởng.">tìm thấy</span> chúng ta nhanh hơn tôi tưởng."
+  </p>
+  <p>
+    Họ <span class="vocab" id="v16" data-word-en="crawled" data-word-vn="bò" data-pos="động từ / verb" data-def-en="Moved forward on hands and knees close to the ground." data-def-vn="Di chuyển cơ thể bằng cách tiến lên bằng hai tay và đầu gối sát mặt đất." data-context-en="They crawled under the windows toward the back exit." data-context-vn="Họ bò về phía cửa sau của căn hộ dưới bậu cửa sổ.">bò</span> về phía cửa sau của căn hộ. Jack vớ lấy chiếc túi nặng và máy ảnh; Maya <span class="vocab" id="v17" data-word-en="hugged tightly" data-word-vn="ôm chặt" data-pos="động từ / verb" data-def-en="Held something firmly and securely against one's chest." data-def-vn="Giữ một vật gì đó thật chắc chắn và an toàn sát vào ngực mình." data-context-en="Maya hugged the old journal tightly against her chest." data-context-vn="Maya ôm chặt cuốn nhật ký cũ kỹ vào lồng ngực.">ôm chặt</span> cuốn nhật ký của ông nội vào ngực. Họ không đi lối <span class="vocab" id="v18" data-word-en="staircase" data-word-vn="cầu thang" data-pos="danh từ / noun" data-def-en="A flight of stairs or steps inside a building for moving between floors." data-def-vn="Một loạt các bậc thang bên trong tòa nhà để đi lại giữa các tầng." data-context-en="They avoided the central staircase to escape detection." data-context-vn="Họ tránh đi lối cầu thang để không bị phát hiện.">cầu thang</span>; thay vào đó, họ <span class="vocab" id="v19" data-word-en="moved" data-word-vn="di chuyển" data-pos="động từ / verb" data-def-en="Changed physical positions or went from one location to another." data-def-vn="Thay đổi vị trí vật lý hoặc đi từ địa điểm này sang địa điểm khác." data-context-en="They moved silently across the narrow city rooftops." data-context-vn="Họ di chuyển lặng lẽ qua các mái nhà hẹp của thành phố.">di chuyển</span> qua những <span class="vocab" id="v20" data-word-en="rooftops" data-word-vn="mái nhà" data-pos="danh từ / noun" data-def-en="The outer upper coverings or surfaces of houses or buildings." data-def-vn="Mặt che phủ phía trên cùng bên ngoài của ngôi nhà hoặc tòa nhà." data-context-en="The rooftops were dark and wet from the night air." data-context-vn="Những mái nhà tối tăm và ẩm ướt vì sương đêm.">mái nhà</span> hẹp ở Quận 1, <span class="vocab" id="v21" data-word-en="jumped" data-word-vn="nhảy" data-pos="động từ / verb" data-def-en="Leaped or bounded through the air across a space." data-def-vn="Bật người hoặc lao qua không trung để vượt qua một khoảng trống." data-context-en="They jumped across the dangerous gaps between buildings." data-context-vn="Họ nhảy qua các khoảng hở nguy hiểm giữa các tòa nhà.">nhảy</span> qua các <span class="vocab" id="v22" data-word-en="gaps / openings" data-word-vn="khoảng hở" data-pos="danh từ / noun" data-def-en="An open space or clear interval between two solid structures." data-def-vn="Khoảng trống mở hoặc khoảng cách trống giữa hai cấu trúc kiên cố." data-context-en="The gaps between the old buildings were quite wide." data-context-vn="Khoảng hở giữa các tòa nhà cũ khá rộng.">khoảng hở</span> giữa các tòa nhà như những <span class="vocab" id="v23" data-word-en="circus performers" data-word-vn="nghệ sĩ xiếc" data-pos="danh từ / noun" data-def-en="Entertainers who perform acrobatic feats or stunts publicly." data-def-vn="Những người biểu diễn các kỹ thuật nhào lộn hoặc giữ thăng bằng trước công chúng." data-context-en="They leaped across the roofs like professional circus performers." data-context-vn="Họ nhảy qua các mái nhà như những nghệ sĩ xiếc chuyên nghiệp.">nghệ sĩ xiếc</span>.
+  </p>
+  <p>
+    Ba mươi phút sau, họ đến Ga Sài Gòn. <span class="vocab" id="v24" data-word-en="atmosphere / air" data-word-vn="không khí" data-pos="danh từ / noun" data-def-en="The ambient air or general feeling surrounding a specific location." data-def-vn="Luồng không khí xung quanh hoặc cảm giác chung bao trùm một địa điểm." data-context-en="The atmosphere inside the crowded station felt very heavy." data-context-vn="Không khí bên trong nhà ga đông đúc cảm thấy rất ngột ngạt.">Không khí</span> ở đây thật <span class="vocab" id="v25" data-word-en="stifling / suffocating" data-word-vn="ngột ngạt" data-pos="tính từ / adjective" data-def-en="Oppressive, hot, or restricted, making it quite difficult to breathe comfortably." data-def-vn="Ngột ngạt, nóng bức hoặc bí bách, khiến việc hít thở thoải mái trở nên khó khăn." data-context-en="The summer night felt hot and stifling near the engines." data-context-vn="Đêm mùa hè cảm thấy nóng và ngột ngạt gần các động cơ tàu.">ngột ngạt</span>, ngay cả khi về đêm. Mùi dầu diesel và mùi đồ ăn nướng vỉa hè <span class="vocab" id="v26" data-word-en="spread / permeated" data-word-vn="lan tỏa" data-pos="động từ / verb" data-def-en="Spread out or diffused widely throughout an area or space." data-def-vn="Lan rộng hoặc khuếch tán rộng rãi khắp một khu vực hoặc không gian." data-context-en="The rich smell of grilled street food permeated the station." data-context-vn="Mùi thức ăn nướng vỉa hè thơm phức lan tỏa khắp nhà ga.">lan tỏa</span> khắp nơi.
+  </p>
+  <p>
+    "Chúng ta sẽ đi chuyến tàu đêm lên vùng <span class="vocab" id="v27" data-word-en="highlands" data-word-vn="cao nguyên" data-pos="danh từ / noun" data-def-en="An area of high, elevated, or mountainous land topographically." data-def-vn="Vùng đất có địa hình cao, cao ráo hoặc có núi non." data-context-en="The midnight train travels directly to the scenic highlands." data-context-vn="Chuyến tàu đêm di chuyển trực tiếp lên vùng cao nguyên xinh đẹp.">cao nguyên</span>," Jack nói và nhìn đồng hồ. "Bọn chúng khó có thể <span class="vocab" id="v28" data-word-en="block / intercept" data-word-vn="chặn" data-pos="động từ / verb" data-def-en="Stop, obstruct, or intercept the continuous movement of something." data-def-vn="Ngăn cản, làm tắc nghẽn hoặc chặn đứng sự di chuyển liên tục của vật gì." data-context-en="It is much harder to block a fast-moving train." data-context-vn="Rất khó để có thể chặn đứng một đoàn tàu đang chạy nhanh.">chặn</span> một đoàn tàu đang chạy hơn là một chiếc xe hơi."
+  </p>
+  <p>
+    Họ bước lên <span class="vocab" id="v29" data-word-en="wooden carriage" data-word-vn="toa tàu gỗ" data-pos="danh từ / noun" data-def-en="A train passenger car constructed primarily of wood materials." data-def-vn="Toa hành khách của đoàn tàu được xây dựng chủ yếu bằng vật liệu gỗ." data-context-en="They quickly boarded the vintage wooden carriage of the train." data-context-vn="Họ nhanh chóng bước lên toa tàu gỗ cổ kính của đoàn tàu.">toa tàu gỗ</span> của đoàn tàu "Thống Nhất". <span class="vocab" id="v30" data-word-en="compartment" data-word-vn="khoang tàu" data-pos="danh từ / noun" data-def-en="A small, partitioned room or compartment inside a railway car." data-def-vn="Căn phòng nhỏ được chia vách ngăn bên trong một toa tàu hỏa." data-context-en="The small compartment contained four narrow bunk beds." data-context-vn="Khoang tàu nhỏ chứa bốn chiếc giường tầng chật hẹp.">Khoang tàu</span> <span class="vocab" id="v31" data-word-en="tiny" data-word-vn="nhỏ xíu" data-pos="tính từ / adjective" data-def-en="Extremely small in size, dimension, or capacity." data-def-vn="Có kích thước, kích cỡ hoặc dung tích cực kỳ nhỏ bé." data-context-en="The tiny room left very little space for heavy luggage." data-context-vn="Căn phòng nhỏ xíu để lại rất ít không gian cho hành lý nặng.">nhỏ xíu</span> với bốn chiếc <span class="vocab" id="v32" data-word-en="bunk beds" data-word-vn="giường tầng" data-pos="danh từ / noun" data-def-en="A pair of beds fixed one above the other to save floor space." data-def-vn="Cặp giường được cố định chiếc này trên chiếc kia để tiết kiệm diện tích." data-context-en="The narrow bunk beds were arranged vertically along the wall." data-context-vn="Những chiếc giường tầng hẹp được xếp theo chiều dọc dọc bức tường.">giường tầng</span> hẹp. Maya ngồi bên <span class="vocab" id="v33" data-word-en="window" data-word-vn="cửa sổ" data-pos="danh từ / noun" data-def-en="An opening in a wall or vehicle fitted with glass to let in light." data-def-vn="Khoảng mở trên tường hoặc trên xe lắp kính để đón ánh sáng vào." data-context-en="Maya sat by the train window and looked outside." data-context-vn="Maya ngồi bên cửa sổ toa tàu và nhìn ra bên ngoài.">cửa sổ</span>, nhìn ánh đèn thành phố nhòe đi khi đoàn tàu bắt đầu chuyển bánh rời ga.
+  </p>
+  <p>
+    Jack ngồi đối diện cô. Anh liếc nhìn xuống áo mình để chắc chắn rằng không còn chấm laser đỏ nào nữa.
+  </p>
+  <p>
+    "Jack," Maya khẽ gọi. "Tại sao Thorne lại <span class="vocab" id="v34" data-word-en="obsessed" data-word-vn="ám ảnh" data-pos="tính từ / adjective" data-def-en="Unable to stop thinking about something due to extreme fixation." data-def-vn="Không thể ngừng suy nghĩ về điều gì đó do sự cố chấp cực đoan." data-context-en="Why is Thorne so obsessed with this ancient relic?" data-context-vn="Tại sao Thorne lại bị ám ảnh bởi món cổ vật này đến thế?">ám ảnh</span> với Thanh Ngọc Long này đến vậy? Nó chỉ là một <span class="vocab" id="v35" data-word-en="statue" data-word-vn="bức tượng" data-pos="danh từ / noun" data-def-en="A carved or cast figure of a person, animal, or object." data-def-vn="Hình tượng được chạm khắc hoặc đúc của một người, động vật hoặc vật thể." data-context-en="He treated the dragon statue as a priceless treasure." data-context-vn="Anh ta đối xử với bức tượng rồng như một kho báu vô giá.">bức tượng</span> thôi mà, đúng không?"
+  </p>
+  <p>
+    Jack nhìn quanh để chắc chắn không có ai đang <span class="vocab" id="v36" data-word-en="eavesdropping" data-word-vn="nghe lén" data-pos="động từ / verb" data-def-en="Secretly listening to a private conversation of others." data-def-vn="Bí mật lắng nghe cuộc trò chuyện riêng tư của những người khác." data-context-en="He spoke quietly to ensure nobody was eavesdropping on them." data-context-vn="Anh nói khẽ để đảm bảo không có ai đang nghe lén họ.">nghe lén</span>.
+  </p>
+  <p>
+    "Nó không chỉ là một bức tượng đâu, Maya. <span class="vocab" id="v37" data-word-en="legend" data-word-vn="truyền thuyết" data-pos="danh từ / noun" data-def-en="A traditional historical story popular but unauthenticated widely." data-def-vn="Một câu chuyện lịch sử truyền thống phổ biến nhưng chưa được xác thực rộng rãi." data-context-en="The legend says the dragon contains hidden secrets." data-context-vn="Truyền thuyết kể rằng con rồng chứa đựng những bí mật ẩn giấu.">Truyền thuyết</span> kể rằng nó <span class="vocab" id="v38" data-word-en="contains" data-word-vn="chứa đựng" data-pos="động từ / verb" data-def-en="Holds, includes, or has something specific stored inside." data-def-vn="Nắm giữ, bao gồm hoặc có cái gì đó cụ thể được lưu trữ bên trong." data-context-en="The hollow artifact contains an important secret listing." data-context-vn="Món cổ vật rỗng chứa đựng một danh sách bí mật quan trọng.">chứa đựng</span> danh sách của mọi <span class="vocab" id="v39" data-word-en="treasure" data-word-vn="kho báu" data-pos="danh từ / noun" data-def-en="A quantity of precious metals, gems, or valuable objects collected." data-def-vn="Một số lượng kim loại quý, đá quý hoặc vật phẩm có giá trị được thu thập." data-context-en="The map reveals the location of every hidden treasure." data-context-vn="Bản đồ tiết lộ vị trí của mọi kho báu ẩn giấu.">kho báu</span> ẩn giấu mà ông nội cô đã tìm thấy trong chiến tranh. Nó trị giá hàng tỷ đô la. Và Thorne không phải là kẻ duy nhất muốn có nó đâu."
+  </p>
+  <p>
+    Đột nhiên, đoàn tàu <span class="vocab" id="v40" data-word-en="screeched" data-word-vn="rít lên" data-pos="động từ / verb" data-def-en="Made a loud, high-pitched, piercing cry or sound from brakes." data-def-vn="Tạo ra tiếng kêu hoặc âm thanh lớn, cao, nhức tai phát ra từ phanh xe." data-context-en="The train brakes screeched loudly as it slowed down." data-context-vn="Phanh tàu rít lên chói tai khi đoàn tàu di chuyển chậm lại.">rít lên</span> và bắt đầu chạy chậm lại giữa một khu rừng tối tăm. Đèn trong khoang tàu <span class="vocab" id="v41" data-word-en="flickered" data-word-vn="nhấp nháy" data-pos="động từ / verb" data-def-en="Shone unsteadily or varied rapidly in brightness before going out." data-def-vn="Chiếu sáng không đều hoặc thay đổi nhanh về độ sáng trước khi tắt hẳn." data-context-en="The overhead lights flickered briefly and then died." data-context-vn="Đèn phía trần nhà nhấp nháy một lát rồi tắt ngóm.">nhấp nháy</span> rồi tắt lịm. Từ phía <span class="vocab" id="v42" data-word-en="hallway / corridor" data-word-vn="hành lang" data-pos="danh từ / noun" data-def-en="A long passage or corridor in a building or train with doors." data-def-vn="Lối đi dài hoặc hành lang trong tòa nhà hoặc trên tàu hỏa có các cửa." data-context-en="Heavy footsteps echoed from the narrow hallway outside." data-context-vn="Tiếng bước chân nặng nề vang lên từ lối hành lang hẹp bên ngoài.">hành lang</span>, Maya nghe thấy tiếng những cánh cửa kim loại nặng nề mở ra.
+  </p>
+  <p>
+    Tiếp đó là tiếng bước chân <span class="vocab" id="v43" data-word-en="pounding" data-word-vn="nện" data-pos="động từ / verb" data-def-en="Striking or walking heavily and loudly with force repeatedly." data-def-vn="Nện hoặc đi lại một cách nặng nề và lớn tiếng bằng lực lặp đi lặp lại." data-context-en="She heard heavy boots pounding rhythmic steps along the floor." data-context-vn="Cô nghe thấy tiếng ủng nặng nện bước nhịp nhàng trên sàn nhà.">nện</span> <span class="vocab" id="v44" data-word-en="rhythmically" data-word-vn="nhịp nhàng" data-pos="phó từ / adverb" data-def-en="Having a regular, repeating pattern or steady movement." data-def-vn="Có một mô hình lặp đi lặp lại đều đặn hoặc chuyển động ổn định." data-context-en="The boots marched rhythmically toward their specific door." data-context-vn="Đôi ủng di chuyển nhịp nhàng tiến về phía cửa phòng họ.">nhịp nhàng</span>: thump, thump, thump của những đôi <span class="vocab" id="v45" data-word-en="boots" data-word-vn="ủng" data-pos="danh từ / noun" data-def-en="Sturdy items of footwear covering the foot and the ankle." data-def-vn="Các mặt hàng giày dép chắc chắn che phủ bàn chân và mắt cá chân." data-context-en="The heavy combat boots made a distinctive thumping noise." data-context-vn="Đôi ủng chiến đấu nặng nề tạo ra tiếng nện đặc trưng.">ủng</span>.
+  </p>
+  <p>
+    "Bọn chúng đang ở trên tàu," Maya thì thầm, đôi mắt cô mở to vì <span class="vocab" id="v46" data-word-en="fear / fright" data-word-vn="sợ hãi" data-pos="danh từ / noun" data-def-en="An unpleasant emotion caused by the threat of danger or pain." data-def-vn="Một cảm xúc khó chịu gây ra bởi mối đe dọa từ nguy hiểm hoặc đau đớn." data-context-en="Her eyes widened with intense fear as they approached." data-context-vn="Đôi mắt cô mở to vì sự sợ hãi tột độ khi chúng đến gần.">sợ hãi</span>.
+  </p>
+
+  <a href="../" class="back-btn">← Quay lại danh mục</a>
+
+  <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+  <div id="memory-grid"></div>
+
+</div>
+
+<script>
+  const vocabData = {
+    "v1": {en: "episode", vn: "tập", pos: "danh từ / noun", defEn: "A detailed part or segment of a story sequence.", defVn: "Phần hoặc chương cụ thể của một chuỗi câu chuyện.", ctxEn: "This is episode 5 of the series.", ctxVn: "Đây là tập 5 của bộ truyện."},
+    "v2": {en: "midnight train", vn: "chuyến tàu nửa đêm", pos: "danh từ / noun", defEn: "A railway train that operates or travels at the middle of the night.", defVn: "Đoàn tàu hỏa hoạt động hoặc di chuyển vào giữa đêm.", ctxEn: "The story takes place on a midnight train.", ctxVn: "Câu chuyện diễn ra trên một chuyến tàu nửa đêm."},
+    "v3": {en: "floor", vn: "sàn nhà", pos: "danh từ / noun", defEn: "The lower surface of a room on which one walks.", defVn: "Bề mặt phía dưới của một căn phòng nơi người ta đi lại.", ctxEn: "Jack pulled Maya down toward the floor.", ctxVn: "Jack kéo Maya nằm xuống sàn nhà."},
+    "v4": {en: "completely silent", vn: "im phăng phắc", pos: "tính từ / adjective", defEn: "Totally quiet with absolutely no sound.", defVn: "Hoàn toàn yên lặng và không có bất kỳ âm thanh nào.", ctxEn: "The room was completely silent after the gunshot.", ctxVn: "Căn phòng giờ đây im phăng phắc sau tiếng súng."},
+    "v5": {en: "breath", vn: "thở", pos: "danh từ / noun", defEn: "The air inhaled and exhaled during respiration.", defVn: "Không khí được hít vào và thở ra trong quá trình hô hấp.", ctxEn: "Only the rapid sound of Maya's breath remained.", ctxVn: "Chỉ còn lại âm thanh dồn dập từ tiếng thở của Maya."},
+    "v6": {en: "rapid / hurried", vn: "dồn dập", pos: "tính từ / adjective", defEn: "Happening very quickly and heavily due to stress or fear.", defVn: "Diễn ra rất nhanh và dồn vập do căng thẳng hoặc sợ hãi.", ctxEn: "Her breathing became rapid and shallow.", ctxVn: "Tiếng thở dồn dập của cô vang lên trong phòng."},
+    "v7": {en: "shards / pieces", vn: "mảnh", pos: "danh từ / noun", defEn: "Small, sharp broken pieces of a brittle substance like glass.", defVn: "Những mẩu nhỏ, sắc nhọn bị vỡ ra từ vật liệu giòn như thủy tinh.", ctxEn: "The shattered shards of the coffee cup flew everywhere.", ctxVn: "Những mảnh vỡ của ly cà phê văng khắp nơi."},
+    "v8": {en: "glass", vn: "kính", pos: "danh từ / noun", defEn: "A hard, brittle, transparent substance used for vessels or windows.", defVn: "Chất liệu cứng, giòn, trong suốt dùng làm cốc chén hoặc cửa sổ.", ctxEn: "Shards of glass scattered across the entire room.", ctxVn: "Những mảnh kính vỡ bay khắp phòng."},
+    "v9": {en: "broken / shattered", vn: "vỡ", pos: "tính từ / adjective", defEn: "Separated into parts or pieces by a sudden impact or force.", defVn: "Bị tách thành nhiều phần hoặc nhiều mảnh do tác động mạnh bất ngờ.", ctxEn: "She carefully avoided the broken pieces on the floor.", ctxVn: "Cô cẩn thận tránh những mảnh vỡ trên sàn."},
+    "v10": {en: "hand", vn: "bàn tay", pos: "danh từ / noun", defEn: "The terminal part of the arm used for holding and grasping.", defVn: "Bộ phận tận cùng của cánh tay dùng để cầm và nắm đồ vật.", ctxEn: "Maya looked down at her shaking hand.", ctxVn: "Maya nhìn xuống bàn tay đang run rẩy của mình."},
+    "v11": {en: "shaking / trembling", vn: "run rẩy", pos: "động từ / verb", defEn: "Shaking involuntarily as a result of anxiety, fear, or cold.", defVn: "Rung động một cách không tự chủ do lo lắng, sợ hãi hoặc lạnh.", ctxEn: "Her fingers were trembling with intense fear.", ctxVn: "Bàn tay của cô đang run rẩy vì quá sợ hãi."},
+    "v12": {en: "luckily / fortunately", vn: "may mắn", pos: "phó từ / adverb", defEn: "By good fortune; in a favorable or lucky manner.", defVn: "Do có vận may; một cách đầy thuận lợi hoặc có phúc.", ctxEn: "Luckily, she was not injured by the flying bullet.", ctxVn: "Nhưng may mắn là cô không bị thương bởi viên đạn."},
+    "v13": {en: "injured / hurt", vn: "thương", pos: "tính từ / adjective", defEn: "Sustaining physical harm or damage to the body.", defVn: "Chịu tổn hại hoặc thương tổn vật lý trên cơ thể.", ctxEn: "She checked her body to ensure she was not injured.", ctxVn: "Cô kiểm tra cơ thể xem mình có bị thương không."},
+    "v14": {en: "whispered", vn: "thì thầm", pos: "động từ / verb", defEn: "Spoke in a very soft, quiet, and low voice to avoid being heard.", defVn: "Nói bằng giọng rất khẽ, nhỏ và trầm để tránh bị người khác nghe thấy.", ctxEn: "Jack whispered quietly so no one could hear them.", ctxVn: "Jack thì thầm khẽ để không ai nghe thấy."},
+    "v15": {en: "found", vn: "tìm thấy", pos: "động từ / verb", defEn: "Discovered or located someone or something after a search.", defVn: "Phát hiện hoặc xác định vị trí của ai đó/vật gì sau khi tìm kiếm.", ctxEn: "They found our hiding spot much faster than expected.", ctxVn: "Bọn chúng tìm thấy chúng ta nhanh hơn tôi tưởng."},
+    "v16": {en: "crawled", vn: "bò", pos: "động từ / verb", defEn: "Moved forward on hands and knees close to the ground.", defVn: "Di chuyển cơ thể bằng cách tiến lên bằng hai tay và đầu gối sát mặt đất.", ctxEn: "They crawled under the windows toward the back exit.", ctxVn: "Họ bò về phía cửa sau của căn hộ dưới bậu cửa sổ."},
+    "v17": {en: "hugged tightly", vn: "ôm chặt", pos: "động từ / verb", defEn: "Held something firmly and securely against one's chest.", defVn: "Giữ một vật gì đó thật chắc chắn và an toàn sát vào ngực mình.", ctxEn: "Maya hugged the old journal tightly against her chest.", ctxVn: "Maya ôm chặt cuốn nhật ký cũ kỹ vào lồng ngực."},
+    "v18": {en: "staircase", vn: "cầu thang", pos: "danh từ / noun", defEn: "A flight of stairs or steps inside a building for moving between floors.", defVn: "Một loạt các bậc thang bên trong tòa nhà để đi lại giữa các tầng.", ctxEn: "They avoided the central staircase to escape detection.", ctxVn: "Họ tránh đi lối cầu thang để không bị phát hiện."},
+    "v19": {en: "moved", vn: "di chuyển", pos: "động từ / verb", defEn: "Changed physical positions or went from one location to another.", defVn: "Thay đổi vị trí vật lý hoặc đi từ địa điểm này sang địa điểm khác.", ctxEn: "They moved silently across the narrow city rooftops.", ctxVn: "Họ di chuyển lặng lẽ qua các mái nhà hẹp của thành phố."},
+    "v20": {en: "rooftops", vn: "mái nhà", pos: "danh từ / noun", defEn: "The outer upper coverings or surfaces of houses or buildings.", defVn: "Mặt che phủ phía trên cùng bên ngoài của ngôi nhà hoặc tòa nhà.", ctxEn: "The rooftops were dark and wet from the night air.", ctxVn: "Những mái nhà tối tăm và ẩm ướt vì sương đêm."},
+    "v21": {en: "jumped", vn: "nhảy", pos: "động từ / verb", defEn: "Leaped or bounded through the air across a space.", defVn: "Bật người hoặc lao qua không trung để vượt qua một khoảng trống.", ctxEn: "They jumped across the dangerous gaps between buildings.", ctxVn: "Họ nhảy qua các khoảng hở nguy hiểm giữa các tòa nhà."},
+    "v22": {en: "gaps / openings", vn: "khoảng hở", pos: "danh từ / noun", defEn: "An open space or clear interval between two solid structures.", defVn: "Khoảng trống mở hoặc khoảng cách trống giữa hai cấu trúc kiên cố.", ctxEn: "The gaps between the old buildings were quite wide.", ctxVn: "Khoảng hở giữa các tòa nhà cũ khá rộng."},
+    "v23": {en: "circus performers", vn: "nghệ sĩ xiếc", pos: "danh từ / noun", defEn: "Entertainers who perform acrobatic feats or stunts publicly.", defVn: "Những người biểu diễn các kỹ thuật nhào lộn hoặc giữ thăng bằng trước công chúng.", ctxEn: "They leaped across the roofs like professional circus performers.", ctxVn: "Họ nhảy qua các mái nhà như những nghệ sĩ xiếc chuyên nghiệp."},
+    "v24": {en: "atmosphere / air", vn: "không khí", pos: "danh từ / noun", defEn: "The ambient air or general feeling surrounding a specific location.", defVn: "Luồng không khí xung quanh hoặc cảm giác chung bao trùm một địa điểm.", ctxEn: "The atmosphere inside the crowded station felt very heavy.", ctxVn: "Không khí bên trong nhà ga đông đúc cảm thấy rất ngột ngạt."},
+    "v25": {en: "stifling / suffocating", vn: "ngột ngạt", pos: "tính từ / adjective", defEn: "Oppressive, hot, or restricted, making it quite difficult to breathe comfortably.", defVn: "Ngột ngạt, nóng bức hoặc bí bách, khiến việc hít thở thoải mái trở nên khó khăn.", ctxEn: "The summer night felt hot and stifling near the engines.", ctxVn: "Đêm mùa hè cảm thấy nóng và ngột ngạt gần các động cơ tàu."},
+    "v26": {en: "spread / permeated", vn: "lan tỏa", pos: "động từ / verb", defEn: "Spread out or diffused widely throughout an area or space.", defVn: "Lan rộng hoặc khuếch tán rộng rãi khắp một khu vực hoặc không gian.", ctxEn: "The rich smell of grilled street food permeated the station.", ctxVn: "Mùi thức ăn nướng vỉa hè thơm phức lan tỏa khắp nhà ga."},
+    "v27": {en: "highlands", vn: "cao nguyên", pos: "danh từ / noun", defEn: "An area of high, elevated, or mountainous land topographically.", defVn: "Vùng đất có địa hình cao, cao ráo hoặc có núi non.", ctxEn: "The midnight train travels directly to the scenic highlands.", ctxVn: "Chuyến tàu đêm di chuyển trực tiếp lên vùng cao nguyên xinh đẹp."},
+    "v28": {en: "block / intercept", vn: "chặn", pos: "động từ / verb", defEn: "Stop, obstruct, or intercept the continuous movement of something.", defVn: "Ngăn cản, làm tắc nghẽn hoặc chặn đứng sự di chuyển liên tục của vật gì.", ctxEn: "It is much harder to block a fast-moving train.", ctxVn: "Rất khó để có thể chặn đứng một đoàn tàu đang chạy nhanh."},
+    "v29": {en: "wooden carriage", vn: "toa tàu gỗ", pos: "danh từ / noun", defEn: "A train passenger car constructed primarily of wood materials.", defVn: "Toa hành khách của đoàn tàu được xây dựng chủ yếu bằng vật liệu gỗ.", ctxEn: "They quickly boarded the vintage wooden carriage of the train.", ctxVn: "Họ nhanh chóng bước lên toa tàu gỗ cổ kính của đoàn tàu."},
+    "v30": {en: "compartment", vn: "khoang tàu", pos: "danh từ / noun", defEn: "A small, partitioned room or compartment inside a railway car.", defVn: "Căn phòng nhỏ được chia vách ngăn bên trong một toa tàu hỏa.", ctxEn: "The small compartment contained four narrow bunk beds.", ctxVn: "Khoang tàu nhỏ chứa bốn chiếc giường tầng chật hẹp."},
+    "v31": {en: "tiny", vn: "nhỏ xíu", pos: "tính từ / adjective", defEn: "Extremely small in size, dimension, or capacity.", defVn: "Có kích thước, kích cỡ hoặc dung tích cực kỳ nhỏ bé.", ctxEn: "The tiny room left very little space for heavy luggage.", ctxVn: "Căn phòng nhỏ xíu để lại rất ít không gian cho hành lý nặng."},
+    "v32": {en: "bunk beds", vn: "giường tầng", pos: "danh từ / noun", defEn: "A pair of beds fixed one above the other to save floor space.", defVn: "Cặp giường được cố định chiếc này trên chiếc kia để tiết kiệm diện tích.", ctxEn: "The narrow bunk beds were arranged vertically along the wall.", ctxVn: "Những chiếc giường tầng hẹp được xếp theo chiều dọc dọc bức tường."},
+    "v33": {en: "window", vn: "cửa sổ", pos: "danh từ / noun", defEn: "An opening in a wall or vehicle fitted with glass to let in light.", defVn: "Khoảng mở trên tường hoặc trên xe lắp kính để đón ánh sáng vào.", ctxEn: "Maya sat by the train window and looked outside.", ctxVn: "Maya ngồi bên cửa sổ toa tàu và nhìn ra bên ngoài."},
+    "v34": {en: "obsessed", vn: "ám ảnh", pos: "tính từ / adjective", defEn: "Unable to stop thinking about something due to extreme fixation.", defVn: "Không thể ngừng suy nghĩ về điều gì đó do sự cố chấp cực đoan.", ctxEn: "Why is Thorne so obsessed with this ancient relic?", ctxVn: "Tại sao Thorne lại bị ám ảnh bởi món cổ vật này đến thế?"},
+    "v35": {en: "statue", vn: "bức tượng", pos: "danh từ / noun", defEn: "A carved or cast figure of a person, animal, or object.", defVn: "Hình tượng được chạm khắc hoặc đúc của một người, động vật hoặc vật thể.", ctxEn: "He treated the dragon statue as a priceless treasure.", ctxVn: "Anh ta đối xử với bức tượng rồng như một kho báu vô giá."},
+    "v36": {en: "eavesdropping", vn: "nghe lén", pos: "động từ / verb", defEn: "Secretly listening to a private conversation of others.", defVn: "Bí mật lắng nghe cuộc trò chuyện riêng tư của những người khác.", ctxEn: "He spoke quietly to ensure nobody was eavesdropping on them.", ctxVn: "Anh nói khẽ để đảm bảo không có ai đang nghe lén họ."},
+    "v37": {en: "legend", vn: "truyền thuyết", pos: "danh từ / noun", defEn: "A traditional historical story popular but unauthenticated widely.", defVn: "Một câu chuyện lịch sử truyền thống phổ biến nhưng chưa được xác thực rộng rãi.", ctxEn: "The legend says the dragon contains hidden secrets.", ctxVn: "Truyền thuyết kể rằng con rồng chứa đựng những bí mật ẩn giấu."},
+    "v38": {en: "contains", vn: "chứa đựng", pos: "động từ / verb", defEn: "Holds, includes, or has something specific stored inside.", defVn: "Nắm giữ, bao gồm hoặc có cái gì đó cụ thể được lưu trữ bên trong.", ctxEn: "The hollow artifact contains an important secret listing.", ctxVn: "Món cổ vật rỗng chứa đựng một danh sách bí mật quan trọng."},
+    "v39": {en: "treasure", vn: "kho báu", pos: "danh từ / noun", defEn: "A quantity of precious metals, gems, or valuable objects collected.", defVn: "Một số lượng kim loại quý, đá quý hoặc vật phẩm có giá trị được thu thập.", ctxEn: "The map reveals the location of every hidden treasure.", ctxVn: "Bản đồ tiết lộ vị trí của mọi kho báu ẩn giấu."},
+    "v40": {en: "screeched", vn: "rít lên", pos: "động từ / verb", defEn: "Made a loud, high-pitched, piercing cry or sound from brakes.", defVn: "Tạo ra tiếng kêu hoặc âm thanh lớn, cao, nhức tai phát ra từ phanh xe.", ctxEn: "The train brakes screeched loudly as it slowed down.", ctxVn: "Phanh tàu rít lên chói tai khi đoàn tàu di chuyển chậm lại."},
+    "v41": {en: "flickered", vn: "nhấp nháy", pos: "động từ / verb", defEn: "Shone unsteadily or varied rapidly in brightness before going out.", defVn: "Chiếu sáng không đều hoặc thay đổi nhanh về độ sáng trước khi tắt hẳn.", ctxEn: "The overhead lights flickered briefly and then died.", ctxVn: "Đèn phía trần nhà nhấp nháy một lát rồi tắt ngóm."},
+    "v42": {en: "hallway / corridor", vn: "hành lang", pos: "danh từ / noun", defEn: "A long passage or corridor in a building or train with doors.", defVn: "Lối đi dài hoặc hành lang trong tòa nhà hoặc trên tàu hỏa có các cửa.", ctxEn: "Heavy footsteps echoed from the narrow hallway outside.", ctxVn: "Tiếng bước chân nặng nề vang lên từ lối hành lang hẹp bên ngoài."},
+    "v43": {en: "pounding", vn: "nện", pos: "động từ / verb", defEn: "Striking or walking heavily and loudly with force repeatedly.", defVn: "Nện hoặc đi lại một cách nặng nề và lớn tiếng bằng lực lặp đi lặp lại.", ctxEn: "She heard heavy boots pounding rhythmic steps along the floor.", ctxVn: "Cô nghe thấy tiếng ủng nặng nện bước nhịp nhàng trên sàn nhà."},
+    "v44": {en: "rhythmically", vn: "nhịp nhàng", pos: "phó từ / adverb", defEn: "Having a regular, repeating pattern or steady movement.", defVn: "Có một mô hình lặp đi lặp lại đều đặn hoặc chuyển động ổn định.", ctxEn: "The boots marched rhythmically toward their specific door.", ctxVn: "Đôi ủng di chuyển nhịp nhàng tiến về phía cửa phòng họ."},
+    "v45": {en: "boots", vn: "ủng", pos: "danh từ / noun", defEn: "Sturdy items of footwear covering the foot and the ankle.", defVn: "Các mặt hàng giày dép chắc chắn che phủ bàn chân và mắt cá chân.", ctxEn: "The heavy combat boots made a distinctive thumping noise.", ctxVn: "Đôi ủng chiến đấu nặng nề tạo ra tiếng nện đặc trưng."},
+    "v46": {en: "fear / fright", vn: "sợ hãi", pos: "danh từ / noun", defEn: "An unpleasant emotion caused by the threat of danger or pain.", defVn: "Một cảm xúc khó chịu gây ra bởi mối đe dọa từ nguy hiểm hoặc đau đớn.", ctxEn: "Her eyes widened with intense fear as they approached.", ctxVn: "Đôi mắt cô mở to vì sự sợ hãi tột độ khi chúng đến gần."}
+  };
+
+  const overlay = document.getElementById('popup-overlay');
+  const card = document.getElementById('popup-card');
+
+  // Build the memory grid via JS dynamically
+  function buildMemoryGrid() {
+    const grid = document.getElementById('memory-grid');
+    grid.innerHTML = '';
+    Object.keys(vocabData).forEach(id => {
+      const data = vocabData[id];
+      const span = document.createElement('span');
+      span.className = 'memory-word';
+      span.innerText = data.vn; // Display Vietnamese compound in memory section since main text is Vietnamese
+      span.onclick = function() {
+        const target = document.getElementById(id);
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+          target.classList.add('highlight-flash');
+          setTimeout(() => {
+            target.classList.remove('highlight-flash');
+          }, 1500);
+        }
+      };
+      grid.appendChild(span);
+    });
+  }
+
+  // Set up event listeners for main body vocab terms
+  document.querySelectorAll('.vocab').forEach(el => {
+    el.addEventListener('click', function(e) {
+      e.stopPropagation();
+      const id = this.id;
+      const data = vocabData[id];
+
+      if (!data) return;
+
+      // Input text language is VIETNAMESE logic configuration:
+      // - English word/phrase = large heading (1.3rem, bold)
+      // - Vietnamese word/phrase = smaller secondary line (0.95rem, italic, muted color)
+      // - Part of speech = bilingual, e.g. "động từ / verb" (0.95rem)
+      // - Definition = English only (1rem)
+      // - "In context" label = "In context:" in English
+      // - Context sentence = English only (0.95rem)
+      document.getElementById('pop-head').innerText = data.en;
+      document.getElementById('pop-sub').innerText = data.vn;
+      document.getElementById('pop-pos').innerText = data.pos;
+      document.getElementById('pop-def').innerText = data.defEn;
+      document.getElementById('pop-ctx-lbl').innerText = "In context:";
+      document.getElementById('pop-ctx').innerText = data.ctxEn;
+
+      overlay.style.display = 'block';
+      card.style.display = 'block';
+    });
+  });
+
+  // Global close setup
+  function dismissPopup() {
+    overlay.style.display = 'none';
+    card.style.display = 'none';
+  }
+  overlay.onclick = dismissPopup;
+  card.onclick = dismissPopup;
+  document.body.onclick = dismissPopup;
+
+  // Initial generation call
+  buildMemoryGrid();
+
+  // Content Only Download logic handler
+  function downloadContentOnly() {
+    // Clear live populate state to secure dynamic event bounds injection later
+    document.getElementById('memory-grid').innerHTML = '';
+
+    const currentClone = document.documentElement.cloneNode(true);
+
+    // Resolve structural modifications strictly within download constraints
+    const targetButton = currentClone.querySelector('#dl-btn');
+    if (targetButton) targetButton.remove();
+
+    const textNotes = currentClone.querySelector('.transcription-notes');
+    if (textNotes) textNotes.remove();
+
+    const skipNotes = currentClone.querySelector('.skip-notes');
+    if (skipNotes) skipNotes.remove();
+
+    const dynamicBlobOutput = new Blob([currentClone.outerHTML], { type: 'text/html;charset=utf-8' });
+    const localDownloadAnchor = document.createElement('a');
+    localDownloadAnchor.href = URL.createObjectURL(dynamicBlobOutput);
+    localDownloadAnchor.download = 'content_only_midnight_train.html';
+    document.body.appendChild(localDownloadAnchor);
+    localDownloadAnchor.click();
+    document.body.removeChild(localDownloadAnchor);
+
+    // Rebuild grid elements accurately back into active window context instantly
+    buildMemoryGrid();
+  }
+</script>
+
+
+</body></html>
