@@ -1,0 +1,498 @@
+<!DOCTYPE html>
+<html lang="vi"><head></head><body>Conversation with Gemini
+
+please pay close attention to the attached instructions. Follow them explicitly. This a vocabulary dense project, that is the core purpose.
+HTML
+
+
+
+
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tập 6: Bóng ma trong màn sương</title>
+  <style>
+    /* Reset and Core Layout */
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      background-color: #2b2b2b;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    
+    /* Main Parchment Container */
+    #main-page {
+      width: 100%;
+      max-width: 100%;
+      margin: 0 auto;
+      background-color: #f0e6c8;
+      color: #2a1500;
+      padding: 15px 20px;
+      border: 2px solid #a0845a;
+    }
+    
+    @media (min-width: 768px) {
+      #main-page {
+        max-width: 875px;
+        margin: 30px auto;
+        padding: 40px;
+        border-radius: 4px;
+      }
+    }
+
+    /* Typography */
+    h1 {
+      color: #3a1f00;
+      font-size: 2rem;
+      border-bottom: 2px solid #7a4e1a;
+      padding-bottom: 10px;
+      margin-top: 0;
+    }
+    h2, h3 {
+      color: #3a1f00;
+      margin-top: 30px;
+    }
+    p {
+      font-size: 19px;
+      line-height: 1.7;
+      margin-bottom: 1.5rem;
+    }
+
+    /* Content Only Download Button */
+    .dl-btn-container {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 15px;
+    }
+    .dl-btn {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: bold;
+    }
+    .dl-btn:hover {
+      background-color: #422d12;
+    }
+
+    /* Audio Player Styling */
+    .audio-wrapper {
+      margin-bottom: 25px;
+      background: #3a1f00;
+      padding: 15px;
+      border: 1px solid #7a4e1a;
+      border-radius: 4px;
+    }
+    .audio-label {
+      color: #f0d9a0;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      display: block;
+    }
+    audio {
+      width: 100%;
+      accent-color: #c8a060;
+    }
+    .audio-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 10px;
+    }
+    .rewind-btn {
+      flex: 1 1 auto;
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 6px 10px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      text-align: center;
+    }
+    .rewind-btn:hover {
+      background-color: #4a3314;
+    }
+
+    /* Clickable Vocab Words */
+    .vocab {
+      border-bottom: 2.5px dotted #1a5c20;
+      cursor: pointer;
+      display: inline-block;
+    }
+    
+    /* VTT Highlight Styling */
+    .corrected {
+      background-color: #fff3e0;
+      color: #c04a00;
+      font-weight: bold;
+    }
+    .original-word {
+      font-size: 0.8rem;
+      color: #777;
+      text-decoration: line-through;
+      margin-left: 4px;
+    }
+
+    /* Navigation Buttons */
+    .back-btn {
+      display: inline-block;
+      margin: 20px 0;
+      color: #7a4e1a;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .back-btn:hover {
+      text-decoration: underline;
+    }
+
+    /* Memory Grid Layout */
+    #memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .grid-word {
+      background-color: #e6dac0;
+      border: 1px solid #a0845a;
+      padding: 8px;
+      text-align: center;
+      cursor: pointer;
+      font-size: 0.95rem;
+      border-bottom: 1.5px dotted #1a5c20;
+    }
+    .grid-word:hover {
+      background-color: #ded1b2;
+    }
+
+    /* Temporary Scroll Highlight */
+    .flash-highlight {
+      background-color: #ffe082 !important;
+      transition: background-color 1.5s ease;
+    }
+
+    /* Popup Modal Card */
+    #popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+    #popup-card {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f0e6c8;
+      border: 3px solid #7a4e1a;
+      padding: 20px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: 0px 4px 15px rgba(0,0,0,0.5);
+      z-index: 1000;
+      color: #2a1500;
+    }
+    #popup-card h4 {
+      font-size: 1.3rem;
+      margin: 0 0 5px 0;
+      color: #3a1f00;
+      font-weight: bold;
+    }
+    .popup-sub {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #5a4530;
+      margin-bottom: 8px;
+    }
+    .popup-pos {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #7a4e1a;
+      margin-bottom: 12px;
+    }
+    .popup-def {
+      font-size: 1rem;
+      line-height: 1.4;
+      margin-bottom: 15px;
+      border-left: 3px solid #7a4e1a;
+      padding-left: 8px;
+    }
+    .popup-context-label {
+      font-size: 0.95rem;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #3a1f00;
+    }
+    .popup-context {
+      font-size: 0.95rem;
+      font-style: italic;
+      margin-top: 4px;
+    }
+
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 15px;
+      font-size: 0.9rem;
+    }
+    th, td {
+      border: 1px solid #7a4e1a;
+      padding: 8px;
+      text-align: left;
+    }
+    th {
+      background-color: #e6dac0;
+    }
+  </style>
+
+
+
+  <div id="main-page">
+    
+
+    <header>
+      <h1>
+        Tập 6: <span class="vocab" id="w-bong-ma" data-word-en="ghost / phantom" data-word-vn="bóng ma" data-pos="danh từ / noun" data-def-en="A ghost, phantom, or spooky apparition." data-def-vn="Hình bóng mờ ảo, ma quái của người chết hiện hình." data-context-en="The story features a phantom in the fog." data-context-vn="Câu chuyện kể về một bóng ma xuất hiện trong màn sương.">Bóng ma</span> trong <span class="vocab" id="w-man-suong-1" data-word-en="fog / mist curtain" data-word-vn="màn sương" data-pos="danh từ / noun" data-def-en="A thick layer of fog or mist obscuring visibility." data-def-vn="Lớp sương mù dày đặc bao phủ làm giảm tầm nhìn." data-context-en="The phantom vanished into the fog." data-context-vn="Bóng ma biến mất vào trong màn sương.">màn sương</span>
+      </h1>
+    </header>
+
+    <div class="audio-wrapper">
+      <span class="audio-label">🎧 Listen to the text</span>
+      <audio id="audio-player" controls="" src="ghost-fog.mp3"></audio>
+      <div class="audio-controls">
+        <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 5 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 10 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 15 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+      </div>
+    </div>
+
+    <main>
+      <p>
+        <span class="vocab" id="w-khong-khi" data-word-en="atmosphere / air" data-word-vn="không khí" data-pos="danh từ / noun" data-def-en="The air inhabiting a space; atmosphere." data-def-vn="Chất khí bao quanh trái đất, hoặc bầu không khí ở một nơi." data-context-en="The cold air burned her chest." data-context-vn="Bầu không khí lạnh giá làm lồng ngực cô bỏng rát.">Không khí</span> <span class="vocab" id="w-lanh-gia" data-word-en="freezing / icy cold" data-word-vn="lạnh giá" data-pos="tính từ / adjective" data-def-en="Extremely cold; freezing temperatures." data-def-vn="Rất lạnh, như đóng băng." data-context-en="The freezing air bit through their clothes." data-context-vn="Bầu không khí lạnh giá cắt da cắt thịt.">lạnh giá</span> và <span class="vocab" id="w-day" data-word-en="full of / filled with" data-word-vn="đầy" data-pos="tính từ / adjective" data-def-en="Filled with completely; packed." data-def-vn="Có chứa nhiều, chật kín một không gian." data-context-en="The night was full of thick fog." data-context-vn="Đêm tối đầy sương mù dày đặc.">đầy</span> <span class="vocab" id="w-suong-mu" data-word-en="fog / mist" data-word-vn="sương mù" data-pos="danh từ / noun" data-def-en="Water vapor condensed into fine particles limiting sight." data-def-vn="Hơi nước ngưng tụ thành các hạt nhỏ li ti làm giảm tầm nhìn." data-context-en="The landscape was covered in heavy mist." data-context-vn="Cảnh vật bị bao phủ trong sương mù.">sương mù</span>.
+      </p>
+      
+      <p>
+        Khi <span class="vocab" id="w-doan-tau" data-word-en="train" data-word-vn="đoàn tàu" data-pos="danh từ / noun" data-def-en="A connected series of railway cars." data-def-vn="Một chuỗi các toa tàu nối liền chạy trên đường ray." data-context-en="The train began to move again forward." data-context-vn="Đoàn tàu bắt đầu chuyển bánh chạy tiếp.">đoàn tàu</span> <span class="vocab" id="w-bat-dau" data-word-en="start / begin" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="To commence an action or motion." data-def-vn="Khởi sự hành động, hoạt động hoặc trạng thái." data-context-en="They began their dangerous jump." data-context-vn="Họ bắt đầu thực hiện cú nhảy nguy hiểm.">bắt đầu</span> <span class="vocab" id="w-chuyen-banh" data-word-en="start moving (wheels turn)" data-word-vn="chuyển bánh" data-pos="động từ / verb" data-def-en="To roll wheels forward; start departing." data-def-vn="Bánh xe lăn chuyển động để bắt đầu khởi hành." data-context-en="The heavy train cars started moving." data-context-vn="Toa tàu nặng nề bắt đầu chuyển bánh.">chuyển bánh</span> <span class="vocab" id="w-tro-lai" data-word-en="return / again" data-word-vn="trở lại" data-pos="phó từ / adverb" data-def-en="To resume a previous state or restart moving." data-def-vn="Quay lại trạng thái hoặc hành động trước đó." data-context-en="The train started moving forward again." data-context-vn="Đoàn tàu bắt đầu chạy trở lại.">trở lại</span>, <span class="vocab" id="w-tieng-gio" data-word-en="sound of the wind" data-word-vn="tiếng gió" data-pos="danh từ / noun" data-def-en="The acoustic sound produced by blowing air gusts." data-def-vn="Âm thanh phát ra do các luồng gió thổi mạnh." data-context-en="The wind's sound rushed past her ears." data-context-vn="Tiếng gió rít mạnh qua đôi tai cô.">tiếng gió</span> <span class="vocab" id="w-rit" data-word-en="shriek / howl / whistle" data-word-vn="rít" data-pos="động từ / verb" data-def-en="To make a high-pitched whistling sound." data-def-vn="Phát ra âm thanh cao, nhọn và kéo dài do chuyển động mạnh." data-context-en="The wind shrieked loudly through the gaps." data-context-vn="Gió rít mạnh qua các khoảng trống.">rít</span> <span class="vocab" id="w-tai" data-word-en="ear" data-word-vn="tai" data-pos="danh từ / noun" data-def-en="The organ of hearing." data-def-vn="Cơ quan thính giác trên cơ thể." data-context-en="The loud noise hurt her ears." data-context-vn="Âm thanh lớn làm đau hai tai.">tai</span> Maya. "<span class="vocab" id="w-nhin-kia" data-word-en="look there!" data-word-vn="nhìn kìa" data-pos="thán từ / interjection" data-def-en="An exclamation to direct attention towards something." data-def-vn="Lời gọi để thu hút sự chú ý hướng về một vật." data-context-en="She shouted to direct his eyes there." data-context-vn="Cô hét lên để hướng mắt anh nhìn kìa.">Nhìn kìa</span>!"
+      </p>
+      
+      <p>
+        cô <span class="vocab" id="w-het-len" data-word-en="shout / scream" data-word-vn="hét lên" data-pos="động từ / verb" data-def-en="To cry out loudly due to sudden shock or fear." data-def-vn="Kêu to lên bằng giọng lớn do hốt hoảng hoặc sợ hãi." data-context-en="She screamed in shock at the roof tracker." data-context-vn="Cô hét lên kinh hãi khi thấy bóng người trên nóc.">hét lên</span>, <span class="vocab" id="w-chi-tay" data-word-en="point finger" data-word-vn="chỉ tay" data-pos="động từ / verb" data-def-en="To point one's finger toward a specific target." data-def-vn="Hướng ngón tay về phía mục tiêu cụ thể." data-context-en="She pointed towards the adjacent railway carriage." data-context-vn="Cô chỉ tay về phía toa tàu tiếp theo.">chỉ tay</span> về <span class="vocab" id="w-phia" data-word-en="direction / side" data-word-vn="phía" data-pos="danh từ / noun" data-def-en="A direction or relative spatial side." data-def-vn="Hướng hoặc bên không gian xác định." data-context-en="They looked towards the train's rear side." data-context-vn="Họ nhìn về phía sau của đoàn tàu.">phía</span> <span class="vocab" id="w-toa-tau" data-word-en="train carriage / car" data-word-vn="toa tàu" data-pos="danh từ / noun" data-def-en="A single compartment or passenger car of a train." data-def-vn="Một khoang xe chở khách hoặc hàng trong đoàn tàu." data-context-en="They jumped across the link between cars." data-context-vn="Họ nhảy qua khoảng trống giữa hai toa tàu.">toa tàu</span> <span class="vocab" id="w-tiep-theo" data-word-en="next / subsequent" data-word-vn="tiếp theo" data-pos="tính từ / adjective" data-def-en="Immediately following next in sequence." data-def-vn="Kế tiếp ngay sau trong một chuỗi." data-context-en="He was standing on the next carriage." data-context-vn="Hắn đang đứng trên toa tàu tiếp theo.">tiếp theo</span>.
+      </p>
+      
+      <p>
+        Một <span class="vocab" id="w-nguoi-dan-ong" data-word-en="man" data-word-vn="người đàn ông" data-pos="danh từ / noun" data-def-en="An adult male human." data-def-vn="Một người nam đã trưởng thành." data-context-en="A strange man was climbing the roof." data-context-vn="Một người đàn ông lạ mặt đang trèo trên nóc.">người đàn ông</span> <span class="vocab" id="w-du-minh" data-word-en="swing oneself" data-word-vn="đu mình" data-pos="động từ / verb" data-def-en="To swing or dangle one's body from a height." data-def-vn="Bám tay treo người và đưa qua đưa lại trên cao." data-context-en="He swung himself dangerous from the roof ridge." data-context-vn="Hắn đu mình nguy hiểm từ trên nóc xe.">đang đu mình</span> từ trên <span class="vocab" id="w-noc-xe" data-word-en="vehicle roof" data-word-vn="nóc xe" data-pos="danh từ / noun" data-def-en="The exterior top roof of a train car or vehicle." data-def-vn="Phần mái che phía trên cùng của xe hoặc toa tàu." data-context-en="The hitman moved along the carriage roof." data-context-vn="Tên sát thủ di chuyển dọc theo nóc xe.">nóc xe</span>, <span class="vocab" id="w-tien" data-word-en="advance / approach" data-word-vn="tiến" data-pos="động từ / verb" data-def-en="To move forward or approach closer." data-def-vn="Di chuyển lên phía trước hoặc đến gần hơn." data-context-en="The attacker advanced directly towards them." data-context-vn="Kẻ tấn công tiến thẳng về phía họ.">tiến</span> về <span class="vocab" id="w-phia-2" data-word-en="direction / side" data-word-vn="phía" data-pos="danh từ / noun" data-def-en="A direction or relative spatial side." data-def-vn="Hướng hoặc bên không gian xác định." data-context-en="The threat advanced towards their direction." data-context-vn="Mối đe dọa tiến về phía họ.">phía</span> họ với <span class="vocab" id="w-anh-mat" data-word-en="look / expression in eyes" data-word-vn="ánh mắt" data-pos="danh từ / noun" data-def-en="The expression conveyed through a person's eyes." data-def-vn="Biểu cảm, thái độ thể hiện qua đôi mắt." data-context-en="His look was filled with deadly intent." data-context-vn="Ánh mắt của hắn tràn đầy sát khí.">ánh mắt</span> đầy <span class="vocab" id="w-sat-khi" data-word-en="murderous intent" data-word-vn="sát khí" data-pos="danh từ / noun" data-def-en="A menacing, murderous expression or aura." data-def-vn="Vẻ mặt hừng hực khí thế đe dọa đòi giết người." data-context-en="The mercenary fixed them with murderous intent." data-context-vn="Tên lính đánh thuê nhìn họ với ánh mắt sát khí.">sát khí</span>.
+      </p>
+      
+      <p>
+        "Nhảy đi!" Jack <span class="vocab" id="w-het-lon" data-word-en="shout loudly" data-word-vn="hét lớn" data-pos="động từ / verb" data-def-en="To shout in a booming, loud volume." data-def-vn="Kêu to lên bằng âm lượng lớn hết sức." data-context-en="Jack shouted loudly to urge her to jump." data-context-vn="Jack hét lớn thúc giục cô nhảy qua khoảng trống.">hét lớn</span>.
+      </p>
+      
+      <p>
+        Họ nhảy qua <span class="vocab" id="w-khoang-trong" data-word-en="gap / space" data-word-vn="khoang trống" data-pos="danh từ / noun" data-def-en="An empty space or gap between objects." data-def-vn="Khoảng không gian trống rỗng giữa hai vật." data-context-en="They jumped across the dangerous gap between cars." data-context-vn="Họ nhảy qua khoảng trống nguy hiểm giữa hai toa.">khoảng trống</span> giữa hai <span class="vocab" id="w-toa-tau-2" data-word-en="train carriage / car" data-word-vn="toa tàu" data-pos="danh từ / noun" data-def-en="A single compartment or passenger car of a train." data-def-vn="Một khoang xe chở khách hoặc hàng trong đoàn tàu." data-context-en="The gap separated the two fast moving cars." data-context-vn="Khoảng trống chia cắt hai toa tàu đang chạy nhanh.">toa tàu</span> ngay khi <span class="vocab" id="w-doan-tau-2" data-word-en="train" data-word-vn="đoàn tàu" data-pos="danh từ / noun" data-def-en="A connected series of railway cars." data-def-vn="Một chuỗi các toa tàu nối liền chạy trên đường ray." data-context-en="The train sped straight into the dark ridge." data-context-vn="Đoàn tàu lao thẳng vào đường hầm tối tăm.">đoàn tàu</span> <span class="vocab" id="w-tien-vào" data-word-en="enter / advance into" data-word-vn="tiến vào" data-pos="động từ / verb" data-def-en="To enter into a specific location or structure." data-def-vn="Di chuyển đi vào bên trong một địa điểm." data-context-en="The carriages entered into a long mountain tunnel." data-context-vn="Các toa tàu tiến vào một đường hầm xuyên núi.">tiến vào</span> một <span class="vocab" id="w-duong-ham" data-word-en="tunnel" data-word-vn="đường hầm" data-pos="danh từ / noun" data-def-en="An underground passageway dug through a hill or earth." data-def-vn="Đường đào ngầm xuyên qua lòng đất hoặc lòng núi." data-context-en="The pitch black tunnel swallowed the engine." data-context-vn="Đường hầm tối đen như mực nuốt trọn đoàn tàu.">đường hầm</span> <span class="vocab" id="w-dai" data-word-en="long" data-word-vn="dài" data-pos="tính từ / adjective" data-def-en="Extending a great distance horizontally." data-def-vn="Có chiều dài lớn, kéo dài khoảng cách xa." data-context-en="It was a long and dark tunnel passage." data-context-vn="Đó là một lối đi đường hầm dài và tối tăm.">dài</span> và <span class="vocab" id="w-toi-tam" data-word-en="dark / pitch black" data-word-vn="tối tăm" data-pos="tính từ / adjective" data-def-en="Lacking light; pitch dark." data-def-vn="Không có ánh sáng, mịt mù âm u." data-context-en="The dark interior hid the walls from view." data-context-vn="Không gian tối tăm che khuất các bức tường.">tối tăm</span>.
+      </p>
+      
+      <p>
+        Maya <span class="vocab" id="w-cam-nhan" data-word-en="feel / sense" data-word-vn="cảm nhận" data-pos="động từ / verb" data-def-en="To perceive or sense via physical touch or emotion." data-def-vn="Nhận biết được bằng xúc giác hoặc cảm xúc tâm hồn." data-context-en="She could feel the icy cold of the stone." data-context-vn="Cô có thể cảm nhận được cái lạnh của đá.">cảm nhận</span> được những <span class="vocab" id="w-buc-tuong-da" data-word-en="stone walls" data-word-vn="bức tường đá" data-pos="danh từ / noun" data-def-en="Vertical structures made of rock or masonry." data-def-vn="Vách thẳng đứng được xây bằng đá hoặc đục trong núi đá." data-context-en="The dark stone walls rushed past very close." data-context-vn="Những bức tường đá tối tăm lướt qua rất gần.">bức tường đá</span> <span class="vocab" id="w-lanh-leo" data-word-en="chilly / cold / freezing" data-word-vn="lạnh lẽo" data-pos="tính từ / adjective" data-def-en="Dreadfully cold; lacking any warmth." data-def-vn="Lạnh toát, tạo cảm giác buốt giá trống trải." data-context-en="The chilly tunnel walls felt ominous." data-context-vn="Vách đường hầm lạnh lẽo mang lại cảm giác đáng sợ.">lạnh lẽo</span> của <span class="vocab" id="w-duong-ham-2" data-word-en="tunnel" data-word-vn="đường hầm" data-pos="danh từ / noun" data-def-en="An underground passageway dug through a hill or earth." data-def-vn="Đường đào ngầm xuyên qua lòng đất hoặc lòng núi." data-context-en="The stone flanks of the tunnel were jagged." data-context-vn="Các vách đá của đường hầm rất hiểm trở.">đường hầm</span> <span class="vocab" id="w-luot-qua" data-word-en="flash past / skim past" data-word-vn="lướt qua" data-pos="động từ / verb" data-def-en="To brush or flash past rapidly at high speed." data-def-vn="Chuyển động qua nhanh chóng, loáng qua sát bên." data-context-en="The masonry structures flashed past in a second." data-context-vn="Các khối đá lướt qua chỉ trong một giây.">lướt qua</span> chỉ cách <span class="vocab" id="w-dau" data-word-en="head" data-word-vn="đầu" data-pos="danh từ / noun" data-def-en="The upper part of the body containing the brain." data-def-vn="Phần trên cùng của cơ thể người chứa bộ não." data-context-en="The ceiling was just inches above her head." data-context-vn="Trần đá chỉ cách phía trên đầu cô vài inch.">đầu</span> cô vài <span class="vocab" id="w-inch" data-word-en="inches" data-word-vn="inch" data-pos="danh từ / noun" data-def-en="A unit of linear measurement equal to 2.54 cm." data-def-vn="Đơn vị đo chiều dài bằng hai phẩy năm mươi tư xăng-ti-mét." data-context-en="The stone structure zoomed past within inches." data-context-vn="Khối cấu trúc đá lướt qua sát sạt trong vòng vài inch.">inch</span>.
+      </p>
+      
+      <p>
+        Khi họ <span class="vocab" id="w-ra-khoi" data-word-en="exit / emerge from" data-word-vn="ra khỏi" data-pos="động từ / verb" data-def-en="To emerge out from inside an enclosed area." data-def-vn="Di chuyển thoát khỏi không gian kín ra bên ngoài." data-context-en="They emerged out from the dark passage safely." data-context-vn="Họ thoát ra khỏi lối đi tối tăm an toàn.">ra khỏi</span> đầu bên kia, <span class="vocab" id="w-nguoi-dan-ong-2" data-word-en="man" data-word-vn="người đàn ông" data-pos="danh từ / noun" data-def-en="An adult male human." data-def-vn="Một người nam đã trưởng thành." data-context-en="The terrifying man was no longer visible." data-context-vn="Người đàn ông đáng sợ không còn thấy đâu nữa.">người đàn ông</span> đã <span class="vocab" id="w-bien-mat" data-word-en="disappear / vanish" data-word-vn="biến mất" data-pos="động từ / verb" data-def-en="To vanish completely from sight." data-def-vn="Không còn xuất hiện, tiêu biến mất tăm khỏi tầm nhìn." data-context-en="The hitman vanished entirely into thin air." data-context-vn="Tên sát thủ biến mất hoàn toàn không dấu vết.">biến mất</span>.
+      </p>
+      
+      <p>
+        <span class="vocab" id="w-tan-bien" data-word-en="dissolve / melt away" data-word-vn="tan biến" data-pos="động từ / verb" data-def-en="To dissolve, evaporate, or vanish cleanly away." data-def-vn="Tan ra và mất đi hoàn toàn không để lại dấu vết." data-context-en="He dissolved entirely into the white mist layers." data-context-vn="Hắn tan biến hoàn toàn vào các lớp sương mù.">Hắn ta đã tan biến</span> vào trong <span class="vocab" id="w-man-suong-2" data-word-en="fog / mist curtain" data-word-vn="màn sương" data-pos="danh từ / noun" data-def-en="A thick layer of fog or mist obscuring visibility." data-def-vn="Lớp sương mù dày đặc bao phủ làm giảm tầm nhìn." data-context-en="He faded cleanly into the thick fog blanket." data-context-vn="Hắn lặn mất tăm vào tấm màn sương dày đặc.">màn sương</span>.
+      </p>
+      
+      <p>
+        "Ai vậy?"
+      </p>
+      
+      <p>
+        Maya <span class="vocab" id="w-hon-hen" data-word-en="gasp / pant" data-word-vn="hổn hển" data-pos="động từ / verb" data-def-en="To breathe quickly and heavily due to exertion." data-def-vn="Thở mạnh, gấp gáp thành tiếng do mệt hoặc hết hơi." data-context-en="She was panting hard from intense running fear." data-context-vn="Cô thở hổn hển vì nỗi sợ hãi tột cùng khi chạy trốn.">hổn hển</span>, <span class="vocab" id="w-long-nguc" data-word-en="chest / ribcage" data-word-vn="lồng ngực" data-pos="danh từ / noun" data-def-en="The chest cage containing lungs and heart." data-def-vn="Phần ngực xương xẩu bảo vệ tim phổi bên trong." data-context-en="Her chest was burning from the freezing rush." data-context-vn="Lồng ngực cô đau rát do hít khí lạnh quá nhanh.">lồng ngực</span> <span class="vocab" id="w-bong-rat" data-word-en="burning feeling" data-word-vn="bỏng rát" data-pos="tính từ / adjective" data-def-en="A searing, burning physical sensation." data-def-vn="Cảm giác nóng rát, đau buốt như bị bỏng lửa." data-context-en="Her lungs felt a burning sensation from icy deep air." data-context-vn="Phổi cô có cảm giác bỏng rát vì hít sâu khí lạnh.">bỏng rát</span> vì <span class="vocab" id="w-khong-khi-2" data-word-en="atmosphere / air" data-word-vn="không khí" data-pos="danh từ / noun" data-def-en="The air inhabiting a space; atmosphere." data-def-vn="Chất khí bao quanh trái đất, hoặc bầu không khí ở một nơi." data-context-en="The icy air made breathing difficult." data-context-vn="Bầu không khí băng giá khiến việc hô hấp khó khăn.">không khí</span> <span class="vocab" id="w-lanh" data-word-en="cold / chilly" data-word-vn="lạnh" data-pos="tính từ / adjective" data-def-en="Low temperature; chilly weather state." data-def-vn="Có nhiệt độ thấp, gây cảm giác buốt lạnh." data-context-en="The cold air chilled her throat instantly." data-context-vn="Luồng khí lạnh làm cổ họng cô tê buốt ngay lập tức.">lạnh</span>.
+      </p>
+      
+      <p>
+        "Một tên <span class="vocab" id="w-linh-danh-thue" data-word-en="mercenary" data-word-vn="lính đánh thuê" data-pos="danh từ / noun" data-def-en="A professional soldier hired to fight for foreign money." data-def-vn="Người lính đánh chiến thuê để lấy tiền thù lao." data-context-en="The assassin was a highly ruthless mercenary." data-context-vn="Tên sát thủ là một tên lính đánh thuê vô cùng tàn bạo.">lính đánh thuê</span>," Jack <span class="vocab" id="w-tra-loi" data-word-en="reply / answer" data-word-vn="trả lời" data-pos="động từ / verb" data-def-en="To state an answer back to a query." data-def-vn="Nói lại nhằm giải đáp cho câu hỏi của đối phương." data-context-en="Jack answered with a dark grim grimace." data-context-vn="Jack trả lời với một nét mặt lo lắng, nghiêm nghị.">trả lời</span>, <span class="vocab" id="w-ve-mat" data-word-en="facial expression" data-word-vn="ve mặt" data-pos="danh từ / noun" data-def-en="The outward appearance or look of someone's face." data-def-vn="Biểu hiện nét mặt lộ ra bên ngoài của một người." data-context-en="His worried look showed the extreme danger." data-context-vn="Vẻ mặt lo lắng của anh bộc lộ sự nguy hiểm tột cùng.">vẻ mặt</span> đầy <span class="vocab" id="w-lo-lang" data-word-en="worried / anxious" data-word-vn="lo lắng" data-pos="tính từ / adjective" data-def-en="Anxious, troubled, or deeply concerned." data-def-vn="Tâm trạng bất an, bồn chồn lo sợ điều chẳng lành." data-context-en="He looked highly anxious about Thorne's next hit." data-context-vn="Anh cảm thấy rất lo lắng về đòn ám sát tiếp theo của Thorne.">lo lắng</span>.
+      </p>
+      
+      <p>
+        "Thorne đã <span class="vocab" id="w-het" data-word-en="run out of / exhaust" data-word-vn="hết" data-pos="động từ / verb" data-def-en="Completely depleted; run entirely out of something." data-def-vn="Không còn lại tí gì, đã cạn kiệt hoàn toàn." data-context-en="The boss had completely run out of patience." data-context-vn="Tên trùm sỏ đã hoàn toàn hết kiên nhẫn.">hết</span> <span class="vocab" id="w-kien-nhan" data-word-en="patience" data-word-vn="kiên nhẫn" data-pos="danh từ / noun" data-def-en="The capacity to accept delay or trouble calmly." data-def-vn="Khả năng chịu đựng gian khổ, chờ đợi không nóng vội." data-context-en="His patience had fully evaporated now." data-context-vn="Sự kiên nhẫn của hắn giờ đã hoàn toàn tiêu tan.">kiên nhẫn</span> rồi. Hắn đang <span class="vocab" id="w-cu" data-word-en="send / dispatch" data-word-vn="cử" data-pos="động từ / verb" data-def-en="To send or dispatch agents/personnel on a mission." data-def-vn="Sai, phái người đi thực hiện một nhiệm vụ cụ thể." data-context-en="He is dispatching professional killers to track us." data-context-vn="Hắn đang cử những kẻ giết người chuyên nghiệp săn đuổi chúng ta.">cử</span> những kẻ <span class="vocab" id="w-chuyen-nghiep" data-word-en="professional" data-word-vn="chuyên nghiệp" data-pos="tính từ / adjective" data-def-en="Highly trained, professional specialists at a job." data-def-vn="Thành thạo nghề nghiệp, có kỹ năng chuyên môn cao." data-context-en="They sent professional operatives to execute the hit." data-context-vn="Họ phái các đặc vụ chuyên nghiệp đến thực hiện vụ ám sát.">chuyên nghiệp</span> <span class="vocab" id="w-den" data-word-en="arrive / come" data-word-vn="đến" data-pos="động từ / verb" data-def-en="To arrive at a target place or come near." data-def-vn="Di chuyển đến một vị trí hoặc tới đích." data-context-en="The killers came right to their location." data-context-vn="Những kẻ sát nhân đã tìm đến tận nơi của họ.">đến</span>".
+      </p>
+    </main>
+
+    <a href="../" class="back-btn">← Quay lại danh mục</a>
+
+    <section id="test-memory-section">
+      <h3>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h3>
+      <div id="memory-grid"></div>
+    </section>
+
+    
+
+    
+  </div>
+
+  <div id="popup-overlay"></div>
+  <div id="popup-card">
+    <h4 id="pop-title"></h4>
+    <div class="popup-sub" id="pop-sub"></div>
+    <div class="popup-pos" id="pop-pos"></div>
+    <div class="popup-def" id="pop-def"></div>
+    <div class="popup-context-label" id="pop-context-label">In context:</div>
+    <div class="popup-context" id="pop-context"></div>
+  </div>
+
+  <script>
+    // Global Vocab Interaction Handlers
+    document.addEventListener("DOMContentLoaded", function() {
+      const vocabElements = document.querySelectorAll('.vocab');
+      const overlay = document.getElementById('popup-overlay');
+      const card = document.getElementById('popup-card');
+      
+      const popTitle = document.getElementById('pop-title');
+      const popSub = document.getElementById('pop-sub');
+      const popPos = document.getElementById('pop-pos');
+      const popDef = document.getElementById('pop-def');
+      const popCtxLabel = document.getElementById('pop-context-label');
+      const popCtx = document.getElementById('pop-context');
+
+      // Setup popup trigger on click
+      vocabElements.forEach(elem => {
+        elem.addEventListener('click', function(e) {
+          e.stopPropagation();
+          
+          // Get values from data attributes
+          const wordEn = this.getAttribute('data-word-en');
+          const wordVn = this.getAttribute('data-word-vn');
+          const pos = this.getAttribute('data-pos');
+          const defEn = this.getAttribute('data-def-en');
+          const defVn = this.getAttribute('data-def-vn');
+          const ctxEn = this.getAttribute('data-context-en');
+          const ctxVn = this.getAttribute('data-context-vn');
+
+          // Since the main text is in VIETNAMESE:
+          // Large heading = English word
+          popTitle.innerText = wordEn;
+          // Secondary line = Vietnamese word
+          popSub.innerText = wordVn;
+          // Part of speech = Bilingual
+          popPos.innerText = pos;
+          // Definition = English only
+          popDef.innerText = defEn;
+          // Context label = English only
+          popCtxLabel.innerText = "In context:";
+          // Context sentence = English only
+          popCtx.innerText = ctxEn;
+
+          // Render centered fixed modal
+          overlay.style.display = 'block';
+          card.style.display = 'block';
+        });
+      });
+
+      // Close popups on click out
+      document.addEventListener('click', function() {
+        overlay.style.display = 'none';
+        card.style.display = 'none';
+      });
+      card.addEventListener('click', function(e) {
+        e.stopPropagation(); // Second click on card triggers dismiss via document handler
+        overlay.style.display = 'none';
+        card.style.display = 'none';
+      });
+
+      // Build Interactive Memory Grid Dynamic Data
+      buildMemoryGrid();
+    });
+
+    function buildMemoryGrid() {
+      const grid = document.getElementById('memory-grid');
+      if (!grid) return;
+      grid.innerHTML = '';
+
+      // Collect unique words based on lowercase inner text content
+      const vocabMap = new Map();
+      document.querySelectorAll('main .vocab, header .vocab').forEach(el => {
+        const txt = el.innerText.trim().replace(/[.,\/#!$%\^&\*;:{}=\-_`~()""'']/g,"");
+        if (!vocabMap.has(txt.toLowerCase())) {
+          vocabMap.set(txt.toLowerCase(), el.id);
+        }
+      });
+
+      // Append terms into grid layout column structure
+      vocabMap.forEach((targetId, wordText) => {
+        const box = document.createElement('div');
+        box.className = 'grid-word';
+        box.innerText = wordText.charAt(0).toUpperCase() + wordText.slice(1);
+        
+        box.addEventListener('click', function(e) {
+          e.stopPropagation();
+          const targetNode = document.getElementById(targetId);
+          if (targetNode) {
+            targetNode.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            targetNode.classList.add('flash-highlight');
+            setTimeout(() => {
+              targetNode.classList.remove('flash-highlight');
+            }, 1500);
+          }
+        });
+        grid.appendChild(box);
+      });
+    }
+
+    // Download Content Only Version Serializer Function
+    function downloadContentOnly() {
+      // Clear memory grid array element to prevent inert node states
+      const grid = document.getElementById('memory-grid');
+      if (grid) grid.innerHTML = '';
+
+      // Deep clone dynamic DOM configuration tree
+      const cloneDoc = document.documentElement.cloneNode(true);
+
+      // Extract specific unwanted component arrays
+      const skipNotes = cloneDoc.querySelector('.skip-notes');
+      if (skipNotes) skipNotes.remove();
+
+      const transNotes = cloneDoc.querySelector('.transcription-notes');
+      if (transNotes) transNotes.remove();
+
+      const dlBtn = cloneDoc.querySelector('#dl-content-btn');
+      if (dlBtn) {
+        const btnContainer = dlBtn.parentElement;
+        if (btnContainer) btnContainer.remove();
+      }
+
+      // Serialize absolute inner HTML configuration markup payload
+      const outputHTML = "<!DOCTYPE html>\n" + cloneDoc.outerHTML;
+      
+      const blob = new Blob([outputHTML], { type: 'text/html;charset=utf-8;' });
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = "content-only-ghost-fog.html";
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+
+      // Re-initialize local runtime memory block layout post trigger
+      buildMemoryGrid();
+    }
+  </script>
+
+
+</body></html>
