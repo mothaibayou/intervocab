@@ -1,0 +1,608 @@
+<html lang="vi"><head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tập 9: Lựa chọn tối thượng</title>
+  <style>
+    /* Global Reset & Base Typography */
+    body {
+      background-color: #2b2b2b;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-user-select: none;
+    }
+
+    /* Fully responsive container layout */
+    #main-page {
+      background-color: #f0e6c8;
+      color: #2a1500;
+      border: 2px solid #a0845a;
+      box-sizing: border-box;
+      width: 100%;
+      padding: 15px;
+      margin: 0 auto;
+    }
+
+    @media (min-width: 768px) {
+      #main-page {
+        max-width: 880px;
+        margin: 30px auto;
+        padding: 35px;
+      }
+    }
+
+    /* Paragraph and Reading Height Optimization */
+    p {
+      font-size: 19px;
+      line-height: 1.7;
+      margin-bottom: 22px;
+    }
+
+    /* Headings & Dividers */
+    h1, h2, h3 {
+      color: #3a1f00;
+      border-bottom: 2px solid #7a4e1a;
+      padding-bottom: 8px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-top: 10px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 30px;
+    }
+
+    /* Top Controls and Download Interface */
+    .top-controls {
+      display: flex;
+      justify-content: flex-end;
+      margin-bottom: 15px;
+    }
+
+    .download-btn {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 8px 14px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .download-btn:hover {
+      background-color: #422d12;
+    }
+
+    /* Audio Component Custom Aesthetic */
+    .audio-container {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .audio-label {
+      font-size: 0.95rem;
+      color: #7a4e1a;
+      margin-bottom: 6px;
+      font-weight: bold;
+    }
+
+    audio {
+      width: 100%;
+      accent-color: #c8a060;
+    }
+
+    /* Audio Custom Matrix Buttons */
+    .audio-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-bottom: 25px;
+    }
+
+    .rewind-btn {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 8px 12px;
+      cursor: pointer;
+      font-size: 0.95rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .rewind-btn:hover {
+      background-color: #422d12;
+    }
+
+    /* Navigation Back Button */
+    .back-btn-container {
+      margin: 25px 0;
+    }
+
+    .back-btn {
+      display: inline-block;
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 10px 16px;
+      text-decoration: none;
+      font-size: 0.95rem;
+      border-radius: 4px;
+      transition: background 0.2s;
+    }
+
+    .back-btn:hover {
+      background-color: #422d12;
+    }
+
+    /* Clickable Dense Vocabulary Tokens */
+    .vocab {
+      border-bottom: 2.5px dotted #1a5c20;
+      cursor: pointer;
+      transition: background-color 0.2s ease;
+    }
+
+    .vocab:hover {
+      background-color: rgba(26, 92, 32, 0.12);
+    }
+
+    /* Memory Grid Adaptive System */
+    #memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 12px;
+      margin-top: 20px;
+    }
+
+    .memory-word {
+      border-bottom: 1.5px dotted #2a1500;
+      cursor: pointer;
+      padding: 6px;
+      text-align: center;
+      background: rgba(46, 31, 10, 0.05);
+      border-radius: 4px;
+      font-size: 1rem;
+      transition: background 0.2s;
+    }
+
+    .memory-word:hover {
+      background: rgba(46, 31, 10, 0.12);
+    }
+
+    /* Visual Selection Feedback */
+    .highlight-flash {
+      background-color: #ffe082 !important;
+      transition: background-color 1.5s ease;
+    }
+
+    /* Fixed Center Window Card Popup */
+    #popup-overlay {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(0, 0, 0, 0.4);
+      z-index: 999;
+    }
+
+    #popup-card {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f0e6c8;
+      color: #2a1500;
+      border: 3px solid #7a4e1a;
+      padding: 22px;
+      width: 88%;
+      max-width: 460px;
+      box-shadow: 0 5px 20px rgba(0, 0, 0, 0.6);
+      z-index: 1000;
+      border-radius: 8px;
+      box-sizing: border-box;
+    }
+
+    /* Enforcing the minimum 0.95rem text limitation inside the card layout */
+    #popup-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 4px;
+      color: #3a1f00;
+    }
+
+    #popup-sub {
+      font-size: 0.95rem;
+      font-style: italic;
+      margin-bottom: 8px;
+      color: #614624;
+    }
+
+    #popup-pos {
+      font-size: 0.95rem;
+      font-weight: bold;
+      margin-bottom: 12px;
+      color: #7a4e1a;
+    }
+
+    #popup-def {
+      font-size: 1rem;
+      margin-bottom: 14px;
+      line-height: 1.4;
+      border-left: 3px solid #1a5c20;
+      padding-left: 10px;
+    }
+
+    #popup-context-label {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #3a1f00;
+      margin-top: 12px;
+    }
+
+    #popup-context {
+      font-size: 0.95rem;
+      font-style: italic;
+      margin-top: 4px;
+      color: #2a1500;
+    }
+
+    /* Notes and Supplemental Matrices Styles */
+    .skip-notes, .transcription-notes {
+      margin-top: 35px;
+      padding-top: 15px;
+      border-top: 1px dashed #7a4e1a;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 12px;
+    }
+
+    th, td {
+      border: 1px solid #a0845a;
+      padding: 8px;
+      text-align: left;
+      font-size: 0.95rem;
+    }
+
+    th {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-page">
+    
+    <div class="top-controls">
+      
+    </div>
+
+    <div class="audio-container">
+      <div class="audio-label">🎧 Listen to the text</div>
+      <audio id="audio-player" controls="" src="ultimate.mp3"></audio>
+    </div>
+
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 10 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 15 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+
+    <h1>
+      <span class="vocab" data-word-en="Episode" data-word-vn="Tập" data-pos="danh từ / noun" data-def-en="A section or installment of a serialized story, book, or drama series." data-context-en="This is the ninth episode of the character's journey.">Tập</span> 9: 
+      <span class="vocab" data-word-en="Choice" data-word-vn="Lựa chọn" data-pos="danh từ / noun" data-def-en="An act of selecting or making a decision when faced with possibilities." data-context-en="She has to make a highly critical choice to save her companion.">Lựa chọn</span> 
+      <span class="vocab" data-word-en="Ultimate" data-word-vn="tối thượng" data-pos="tính từ / adjective" data-def-en="Being or happening at the end of a process; highest, most significant, or final." data-context-en="He poses the ultimate challenge to test her limits.">tối thượng</span>
+    </h1>
+
+    <p>
+      Thorne <span class="vocab" data-word-en="Step" data-word-vn="bước" data-pos="động từ / verb" data-def-en="To lift the foot and set it down again in a new position, moving forward or backward." data-context-en="He takes a slow step forward into the visible light.">bước</span> vào 
+      <span class="vocab" data-word-en="Illuminated area" data-word-vn="vùng sáng" data-pos="danh từ / noun" data-def-en="A specific area or zone illuminated by an external light source within darkness." data-context-en="The explorer stands directly in the illuminated area of the room.">vùng sáng</span>.
+    </p>
+
+    <p>
+      Hắn <span class="vocab" data-word-en="Look / Appear" data-word-vn="trông" data-pos="động từ / verb" data-def-en="To have a particular appearance or give a certain visual impression." data-context-en="The villain looks quite exhausted from the trek.">trông</span> 
+      <span class="vocab" data-word-en="Tired / Exhausted" data-word-vn="mệt mỏi" data-pos="tính từ / adjective" data-def-en="Feeling a significant need for rest or sleep; fully weary." data-context-en="They were too tired to continue climbing the steep mountain.">mệt mỏi</span> nhưng 
+      <span class="vocab" data-word-en="Full of" data-word-vn="đầy" data-pos="tính từ / adjective" data-def-en="Containing or holding as much or as many as possible; abundant with something." data-context-en="His mind is completely full of dark schemes.">đầy</span> 
+      <span class="vocab" data-word-en="Triumphant" data-word-vn="đắc thắng" data-pos="tính từ / adjective" data-def-en="Having won a battle or contest; displaying great joy due to victory." data-context-en="He gives a triumphant smile upon discovering the secret map.">đắc thắng</span>. "
+      <span class="vocab" data-word-en="Scroll" data-word-vn="Cuộn giấy" data-pos="danh từ / noun" data-def-en="A roll of parchment, papyrus, or paper containing written historical records." data-context-en="The ancient scroll contains details about hidden treasures.">Cuộn giấy</span> đó, Maya. Đó là 
+      <span class="vocab" data-word-en="Map" data-word-vn="bản đồ" data-pos="danh từ / noun" data-def-en="A visual representation or diagram of an area showing paths, land, or positions." data-context-en="We need a clear map to escape from this ancient maze safely.">bản đồ</span> 
+      <span class="vocab" data-word-en="Lead / Guide" data-word-vn="dẫn" data-pos="động từ / verb" data-def-en="To show the way to a destination by going in front of or guiding someone." data-context-en="This narrow path will lead us straight to the main chamber.">dẫn</span> đến '
+      <span class="vocab" data-word-en="Treasure" data-word-vn="Kho báu" data-pos="danh từ / noun" data-def-en="A collection of precious metals, gems, or other highly valuable ancient objects." data-context-en="Pirates buried their valuable treasure deep beneath the sand.">Kho báu</span> 
+      <span class="vocab" data-word-en="Great / Big" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Of considerable or massive size, extent, magnitude, or intensity." data-context-en="A great storm is brewing above the ancient castle ruins.">lớn</span>' của các vị 
+      <span class="vocab" data-word-en="King" data-word-vn="vua" data-pos="danh từ / noun" data-def-en="The male sovereign ruler of an independent state or historic kingdom." data-context-en="The wise king ruled over his grand territory for four decades.">vua</span> 
+      <span class="vocab" data-word-en="Dynasty / House" data-word-vn="nhà" data-pos="danh từ / noun" data-def-en="A line of hereditary rulers of a nation sharing a common ruling house." data-context-en="Artifacts from that royal dynasty are kept in the state museum.">nhà</span> Nguyễn. 
+      <span class="vocab" data-word-en="Hand over / Give" data-word-vn="Đưa" data-pos="động từ / verb" data-def-en="To pass or transfer something directly to another person using hands." data-context-en="Please hand over the keys before exiting the secure site.">Đưa</span> nó cho ta, và ta sẽ 
+      <span class="vocab" data-word-en="Let / Allow" data-word-vn="để" data-pos="động từ / verb" data-def-en="To allow or permit someone to do something or remain in a state." data-context-en="They will let the hostage go once the demands are fulfilled.">để</span> cho 
+      <span class="vocab" data-word-en="Friend" data-word-vn="bạn" data-pos="danh từ / noun" data-def-en="A person whom one knows well and shares a mutual bond of support with." data-context-en="She risked everything to protect her closest friend from harm.">bạn</span> ngươi, Jack, được 
+      <span class="vocab" data-word-en="Live / Survive" data-word-vn="sống" data-pos="động từ / verb" data-def-en="To remain alive, continue to exist, or survive a critical danger." data-context-en="He wants to live a peaceful life away from dangerous explorations.">sống</span>".
+    </p>
+
+    <p>
+      Maya <span class="vocab" data-word-en="Look at / Observe" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="To direct one's gaze or sight toward someone or something to observe." data-context-en="She turns around to look at the suspicious movement behind her.">nhìn</span> Jack. Anh đang bị tên 
+      <span class="vocab" data-word-en="Mercenary" data-word-vn="lính đánh thuê" data-pos="danh từ / noun" data-def-en="A professional soldier hired to serve in a foreign military or conflict." data-context-en="The wealthy warlord hired an elite mercenary group for protection.">lính đánh thuê</span> 
+      <span class="vocab" data-word-en="Hold / Detain" data-word-vn="giữ" data-pos="động từ / verb" data-def-en="To grasp, retain, or restrain something or someone physically." data-context-en="Two large guards hold the intruder so he cannot flee the area.">giữ</span> 
+      <span class="vocab" data-word-en="Tightly / Firmly" data-word-vn="chặt" data-pos="phó từ / adverb" data-def-en="In a firm, secure, or closely constricted manner preventing escape." data-context-en="The security rope was tied tightly around the ancient stone column.">chặt</span>.
+    </p>
+
+    <p>
+      Cô <span class="vocab" data-word-en="Look at / Observe" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="To direct one's gaze or sight toward someone or something to observe." data-context-en="She looks at the horizon waiting for the rescue team.">nhìn</span> 
+      <span class="vocab" data-word-en="Statue" data-word-vn="bức tượng" data-pos="danh từ / noun" data-def-en="A carved or cast three-dimensional figure of a person, animal, or object." data-context-en="A massive granite statue stands right at the palace entrance.">bức tượng</span> 
+      <span class="vocab" data-word-en="Jade" data-word-vn="ngọc bích" data-pos="danh từ / noun" data-def-en="A hard, typically green gemstone widely used for ancient ornaments." data-context-en="The royal crown was beautifully adorned with fine polished jade.">ngọc bích</span> trong 
+      <span class="vocab" data-word-en="Hand" data-word-vn="tay" data-pos="danh từ / noun" data-def-en="The terminal part of a human arm past the wrist, including fingers." data-context-en="She held the delicate ancient gemstone tightly in her left hand.">tay</span> mình. Nó có 
+      <span class="vocab" data-word-en="Feeling / Sensation" data-word-vn="cảm giác" data-pos="danh từ / noun" data-def-en="A physical sensation or emotional perception resulting from contact or awareness." data-context-en="He had a bad feeling about entering the deep underground cave.">cảm giác</span> 
+      <span class="vocab" data-word-en="Warm" data-word-vn="ấm áp" data-pos="tính từ / adjective" data-def-en="Having or showing a comfortable, moderate, or pleasant degree of heat." data-context-en="The glowing crystal emits a pleasant and warm thermal sensation.">ấm áp</span>, 
+      <span class="vocab" data-word-en="As if" data-word-vn="như thể" data-pos="liên từ / conjunction" data-def-en="Used to project or simulate how a certain situation or object appears." data-context-en="The artifact vibrates slightly as if it possessed its own life force.">như thể</span> đang 
+      <span class="vocab" data-word-en="Overflowing / Filled" data-word-vn="tràn đầy" data-pos="tính từ / adjective" data-def-en="Completely full, bursting, or brimming with a specific quality or force." data-context-en="The chamber was filled with a bright golden light from the ceiling.">tràn đầy</span> 
+      <span class="vocab" data-word-en="Energy" data-word-vn="năng lượng" data-pos="danh từ / noun" data-def-en="The physical power, vital force, or strength required for active operation." data-context-en="Ancient temples are rumored to contain nodes of spiritual energy.">năng lượng</span>.
+    </p>
+
+    <p>
+      "
+      <span class="vocab" data-word-en="Paternal grandfather" data-word-vn="Ông nội" data-pos="danh từ / noun" data-def-en="The father of a person's father." data-context-en="Her paternal grandfather was a famous archeologist in Asia.">Ông nội</span> tôi đã 
+      <span class="vocab" data-word-en="Die / Perish" data-word-vn="chết" data-pos="động từ / verb" data-def-en="To cease living; lose life or expire under difficult circumstances." data-context-en="Many brave guards had to die to defend the holy sanctuary.">chết</span> để 
+      <span class="vocab" data-word-en="Hold / Detain" data-word-vn="giữ" data-pos="động từ / verb" data-def-en="To grasp, retain, or restrain something or someone physically." data-context-en="He managed to hold the heavy dynamic stone gate open for her.">giữ</span> 
+      <span class="vocab" data-word-en="Secret" data-word-vn="bí mật" data-pos="danh từ / noun" data-def-en="Something that is kept hidden, confidential, or completely unknown to others." data-context-en="The exact location of the hidden valley is a closely guarded secret.">bí mật</span> này, Thorne," Maya 
+      <span class="vocab" data-word-en="Say / Speak" data-word-vn="nói" data-pos="động từ / verb" data-def-en="To utter spoken words to convey detailed information, thoughts, or feelings." data-context-en="She stepped closer to say the ritual phrases out loud.">nói</span>, 
+      <span class="vocab" data-word-en="Voice / Tone" data-word-vn="giọng" data-pos="danh từ / noun" data-def-en="The sound produced by a person speaking, or its characteristic tone." data-context-en="Her determined voice echoed clearly through the ancient vault halls.">giọng</span> cô 
+      <span class="vocab" data-word-en="Tremble" data-word-vn="run lên" data-pos="động từ / verb" data-def-en="To shake involuntarily, typically as a result of anxiety, fear, or excitement." data-context-en="Her hands began to tremble as she reached out for the gold.">run lên</span> vì 
+      <span class="vocab" data-word-en="Furious / Angry" data-word-vn="giận dữ" data-pos="tính từ / adjective" data-def-en="Extremely angry; full of intense resentment or aggressive rage." data-context-en="A furious argument broke out over who owned the historical tablets.">giận dữ</span>.
+    </p>
+
+    <p>
+      "
+      <span class="vocab" data-word-en="Paternal grandfather" data-word-vn="Ông nội" data-pos="danh từ / noun" data-def-en="The father of a person's father." data-context-en="My grandfather told me legends about hidden mountains of jade.">Ông nội</span> ngươi là một kẻ 
+      <span class="vocab" data-word-en="Foolish / Silly" data-word-vn="ngốc" data-pos="tính từ / adjective" data-def-en="Lacking good sense, wisdom, or sound judgment; unwise or silly." data-context-en="It would be foolish to step into that booby-trapped room unprotected.">ngốc</span>," Thorne 
+      <span class="vocab" data-word-en="Snap / Shout aggressively" data-word-vn="nạt nộ" data-pos="động từ / verb" data-def-en="To speak to someone sharply, angrily, or aggressively to intimidate." data-context-en="The impatient supervisor snaps at everyone whenever a mistake occurs.">nạt nộ</span>.
+    </p>
+
+    <p>
+      "
+      <span class="vocab" data-word-en="History" data-word-vn="Lịch sử" data-pos="danh từ / noun" data-def-en="The whole series of past events connected with someone or something." data-context-en="Ancient history hides many dark secrets inside abandoned locations.">Lịch sử</span> 
+      <span class="vocab" data-word-en="Belong to" data-word-vn="thuộc về" data-pos="động từ / verb" data-def-en="To be the property of or properly associated with a specific entity." data-context-en="These stolen relics belong to the indigenous people of the island.">thuộc về</span> những kẻ 
+      <span class="vocab" data-word-en="Victory / Winners" data-word-vn="chiến thắng" data-pos="danh từ / noun" data-def-en="An act of defeating an enemy, or those who emerge victorious." data-context-en="They celebrated a great victory after securing the border walls.">chiến thắng</span>. 
+      <span class="vocab" data-word-en="Now" data-word-vn="Bây giờ" data-pos="phó từ / adverb" data-def-en="At the present time, current moment, or immediate juncture." data-context-en="Now we must find a secure hiding spot before night falls.">Bây giờ</span>, 
+      <span class="vocab" data-word-en="Hand over / Deliver" data-word-vn="giao" data-pos="động từ / verb" data-def-en="To officially hand over or transfer responsibility or property." data-context-en="He was forced to hand over his research papers to the state.">giao</span> nó ra đây!"
+    </p>
+
+    <p>
+      Maya <span class="vocab" data-word-en="Look at / Observe" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="To direct one's gaze or sight toward someone or something to observe." data-context-en="She didn't look at him when she gave her final answer.">nhìn</span> 
+      <span class="vocab" data-word-en="Scroll" data-word-vn="cuộn giấy" data-pos="danh từ / noun" data-def-en="A roll of parchment, papyrus, or paper containing written historical records." data-context-en="He unfurled the scroll to scan the map drawn inside.">cuộn giấy</span>, rồi 
+      <span class="vocab" data-word-en="Look at / Observe" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="To direct one's gaze or sight toward someone or something to observe." data-context-en="If you look closely at the wall, you can see faint carvings.">nhìn</span> vào một 
+      <span class="vocab" data-word-en="Pit / Hole" data-word-vn="cái hố" data-pos="danh từ / noun" data-def-en="A large natural or artificial cavity or deep hole in the ground." data-context-en="They dug a deep pit to snare wild animals in the jungle.">cái hố</span> 
+      <span class="vocab" data-word-en="Abyssal / Deep" data-word-vn="sâu hoắm" data-pos="tính từ / adjective" data-def-en="Extremely deep, plunging far down into absolute darkness." data-context-en="He stared down into the deep canyon feeling highly dizzy.">sâu hoắm</span>, không 
+      <span class="vocab" data-word-en="See / Notice" data-word-vn="thấy" data-pos="động từ / verb" data-def-en="To perceive or discern visually with the eyes." data-context-en="We can see the temple entrance from this high mountain ridge.">thấy</span> 
+      <span class="vocab" data-word-en="Bottom" data-word-vn="đáy" data-pos="danh từ / noun" data-def-en="The lowest point, base, or deepest floor of a physical cavity." data-context-en="The iron chest sank all the way to the ocean bottom.">đáy</span> ở 
+      <span class="vocab" data-word-en="Behind" data-word-vn="phía sau" data-pos="danh từ / spatial phrase" data-def-en="At or toward the back part of an object, building, or person." data-context-en="The secret emergency exit is positioned directly behind the massive altar.">phía sau</span> 
+      <span class="vocab" data-word-en="Temple" data-word-vn="ngôi đền" data-pos="danh từ / noun" data-def-en="A building devoted to worship or holding religious significance." data-context-en="Monks have lived inside this mountaintop temple for ages.">ngôi đền</span>.
+    </p>
+
+    <p>
+      Cô <span class="vocab" data-word-en="Realize" data-word-vn="nhận ra" data-pos="động từ / verb" data-def-en="To become fully aware of something as a clear fact; understand." data-context-en="She didn't realize that the temple walls were collapsing.">nhận ra</span> Thorne không 
+      <span class="vocab" data-word-en="Know" data-word-vn="biết" data-pos="động từ / verb" data-def-en="To be aware of through observation, experience, or factual reports." data-context-en="Does anyone know the riddle to solve this stone seal?">biết</span> 
+      <span class="vocab" data-word-en="Object / Item" data-word-vn="vật" data-pos="danh từ / noun" data-def-en="A material thing that can be seen and touched; an artifact." data-context-en="The glowing object on the floor attracted everyone's curiosity.">vật</span> nào 
+      <span class="vocab" data-word-en="Important" data-word-vn="quan trọng" data-pos="tính từ / adjective" data-def-en="Of great significance, high value, or profound consequence." data-context-en="The most important clue was hidden inside the old diary.">quan trọng</span> 
+      <span class="vocab" data-word-en="More" data-word-vn="hơn" data-pos="phó từ / adverb" data-def-en="To a greater degree or extent; forming a comparative level." data-context-en="Finding clean water is more vital than tracking the gold.">hơn</span>—
+      <span class="vocab" data-word-en="Statue" data-word-vn="bức tượng" data-pos="danh từ / noun" data-def-en="A carved or cast three-dimensional figure of a person, animal, or object." data-context-en="The jade statue looks completely pristine despite its age.">bức tượng</span> hay 
+      <span class="vocab" data-word-en="Scroll" data-word-vn="cuộn giấy" data-pos="danh từ / noun" data-def-en="A roll of parchment, papyrus, or paper containing written historical records." data-context-en="She kept the leather scroll inside a waterproof containment bag.">cuộn giấy</span>.
+    </p>
+
+    <p>
+      "Nếu ông <span class="vocab" data-word-en="Step forward" data-word-vn="bước tới" data-pos="động từ / verb" data-def-en="To take steps in a forward direction; advance or approach." data-context-en="Do not step forward or you will activate the floor weight traps.">bước tới</span> một 
+      <span class="vocab" data-word-en="Step" data-word-vn="bước" data-pos="danh từ / noun" data-def-en="To lift the foot and set it down again in a new position, moving forward or backward." data-context-en="He took another quiet step down into the dark cellar.">bước</span> 
+      <span class="vocab" data-word-en="More / Further" data-word-vn="nữa" data-pos="phó từ / adverb" data-def-en="In addition; additionally, further, or continuing an action." data-context-en="I cannot take one more step without resting my feet.">nữa</span>, tôi sẽ 
+      <span class="vocab" data-word-en="Drop / Release" data-word-vn="thả" data-pos="động từ / verb" data-def-en="To let something fall vertically; release from physical grip." data-context-en="If you drop that glass vial, the toxic gas will escape.">thả</span> 
+      <span class="vocab" data-word-en="Both" data-word-vn="cả hai" data-pos="từ chỉ số lượng / quantity expression" data-def-en="Used to refer to two people or things identified together." data-context-en="Both explorers were trapped inside the tomb overnight.">cả hai</span> 
+      <span class="vocab" data-word-en="Down" data-word-vn="xuống" data-pos="phó từ / directional adverb" data-def-en="Moving or directed toward a lower position, level, or floor." data-context-en="The rocks tumbled down the side of the deep ravine.">xuống</span>!"
+    </p>
+
+    <p>
+      Maya <span class="vocab" data-word-en="Shout / Scream" data-word-vn="hét lên" data-pos="động từ / verb" data-def-en="To utter a loud, sharp cry or call out in panic, anger, or urgency." data-context-en="She had to shout over the sound of roaring water.">hét lên</span>, 
+      <span class="vocab" data-word-en="Hold out / Raise" data-word-vn="giơ" data-pos="động từ / verb" data-def-en="To extend a hand or a physical object outward or upward." data-context-en="Hold out your hands so I can hand over the map.">giơ</span> các 
+      <span class="vocab" data-word-en="Item / Object" data-word-vn="món đồ" data-pos="danh từ / noun" data-def-en="An individual article, loose unit, or specific physical object." data-context-en="He packed three vital items into his tactical backpack.">món đồ</span> ra 
+      <span class="vocab" data-word-en="Above / Over" data-word-vn="phía trên" data-pos="danh từ / spatial phrase" data-def-en="At or to a higher place, position, or point than something else." data-context-en="The helicopter hovered directly over the extraction zone.">phía trên</span> 
+      <span class="vocab" data-word-en="Abyss / Chasm" data-word-vn="vực thẳm" data-pos="danh từ / noun" data-def-en="A deep, wide, or seemingly bottomless chasm or massive gulf." data-context-en="Looking into the dark abyss made him lose his footing.">vực thẳm</span> 
+      <span class="vocab" data-word-en="Dark" data-word-vn="tối tăm" data-pos="tính từ / adjective" data-def-en="With little or no light; dim, gloomy, or unilluminated." data-context-en="The dark hallways were filled with thick spider webs.">tối tăm</span>.
+    </p>
+
+    <p>
+      Thorne <span class="vocab" data-word-en="Freeze / Stunned" data-word-vn="sững người" data-pos="động từ / verb" data-def-en="To stop moving suddenly due to extreme surprise, shock, or fear." data-context-en="He freezes completely when he hears the wolf howl nearby.">sững người</span>.
+    </p>
+
+    <p>
+      <span class="vocab" data-word-en="Time / Occurrence" data-word-vn="Lần" data-pos="danh từ / noun" data-def-en="An instance of something happening or occurring; an occasion." data-context-en="Every time she attempts the lock, a new gear turns.">Lần</span> 
+      <span class="vocab" data-word-en="First" data-word-vn="đầu tiên" data-pos="tính từ / adjective" data-def-en="Coming before all others in time, order, series, or importance." data-context-en="This is our first exploration of an underwater temple ruins.">đầu tiên</span>, hắn 
+      <span class="vocab" data-word-en="Reveal / Show" data-word-vn="lộ" data-pos="động từ / verb" data-def-en="To make a hidden feeling or secret visible or known." data-context-en="His expression began to reveal his internal anxiety.">lộ</span> vẻ 
+      <span class="vocab" data-word-en="Fear" data-word-vn="sợ hãi" data-pos="danh từ / noun" data-def-en="An unpleasant emotion caused by threat of danger, pain, or loss." data-context-en="She conquered her fear and entered the cavern alone.">sợ hãi</span>. "Đừng 
+      <span class="vocab" data-word-en="Reckless" data-word-vn="liều lĩnh" data-pos="tính từ / adjective" data-def-en="Acting or done without regard to dangerous or critical consequences." data-context-en="Taking reckless risks inside an old tomb can be lethal.">liều lĩnh</span>, Maya. 
+      <span class="vocab" data-word-en="Scroll" data-word-vn="cuộn giấy" data-pos="danh từ / noun" data-def-en="A roll of parchment, papyrus, or paper containing written historical records." data-context-en="The leather scroll was protected inside a heavy brass tube.">Cuộn giấy</span> đó là một 
+      <span class="vocab" data-word-en="Masterpiece" data-word-vn="kiệt tác" data-pos="danh từ / noun" data-def-en="A work of outstanding artistry, superior skill, or workmanship." data-context-en="The giant stone carving is a true architectural masterpiece.">kiệt tác</span> của 
+      <span class="vocab" data-word-en="History" data-word-vn="lịch sử" data-pos="danh từ / noun" data-def-en="The whole series of past events connected with someone or something." data-context-en="He spent his life studying the history of lost tribes.">lịch sử</span>!"
+    </p>
+
+    <p>
+      "Vậy thì 
+      <span class="vocab" data-word-en="Drop / Release" data-word-vn="thả" data-pos="động từ / verb" data-def-en="To let something fall vertically; release from physical grip." data-context-en="They were forced to release the captured spy due to orders.">thả</span> Jack ra," Maya 
+      <span class="vocab" data-word-en="Demand / Request" data-word-vn="yêu cầu" data-pos="động từ / verb" data-def-en="To ask for authoritatively, firmly, or insistently." data-context-en="We demand immediate access to the ancient archive facility.">yêu cầu</span>.
+    </p>
+
+    <p>
+      Thorne <span class="vocab" data-word-en="Gesture / Signal" data-word-vn="ra hiệu" data-pos="động từ / verb" data-def-en="To make a gesture or physical sign to convey a strict command." data-context-en="The leader gestures to the team to halt immediately.">ra hiệu</span> cho tên 
+      <span class="vocab" data-word-en="Mercenary" data-word-vn="lính đánh thuê" data-pos="danh từ / noun" data-def-en="A professional soldier hired to serve in a foreign military or conflict." data-context-en="The mercenary checked his tracking gear before moving out.">lính đánh thuê</span>, kẻ đã 
+      <span class="vocab" data-word-en="Push" data-word-vn="đẩy" data-pos="động từ / verb" data-def-en="To exert physical force on someone to move them away or forward." data-context-en="Do not push the heavy wooden chest across the floor.">đẩy</span> Jack 
+      <span class="vocab" data-word-en="Towards" data-word-vn="về phía" data-pos="giới từ / prepositional phrase" data-def-en="In the direction of someone or something specific." data-context-en="The guide pointed towards a hidden path behind the shrubs.">về phía</span> Maya.
+    </p>
+
+    <p>
+      Nhưng khi Jack <span class="vocab" data-word-en="Stumble / Stagger" data-word-vn="loạng choạng" data-pos="động từ / verb" data-def-en="To walk, step, or move unsteadily as if about to fall down." data-context-en="He began to stumble after walking for twelve hours straight.">loạng choạng</span> 
+      <span class="vocab" data-word-en="Step forward" data-word-vn="bước tới" data-pos="động từ / verb" data-def-en="To take steps in a forward direction; advance or approach." data-context-en="As you step forward, be mindful of loose floor tiles.">bước tới</span>, Thorne đã 
+      <span class="vocab" data-word-en="Fire / Shoot" data-word-vn="bắn" data-pos="động từ / verb" data-def-en="To discharge a kinetic weapon like a firearm or crossbow." data-context-en="Soldiers were ordered not to shoot unless attacked first.">bắn</span> một 
+      <span class="vocab" data-word-en="Shot / Gunshot" data-word-vn="phát súng" data-pos="danh từ / noun" data-def-en="The sound, blast, or act of a firearm discharging a projectile." data-context-en="A single sudden gunshot shattered the quiet desert air.">phát súng</span> lên 
+      <span class="vocab" data-word-en="Ceiling" data-word-vn="trần nhà" data-pos="danh từ / noun" data-def-en="The upper inside surface of a room, vault, or structure." data-context-en="Water was leaking heavily from the cracked concrete ceiling.">trần nhà</span>.
+    </p>
+
+    <p>
+      <span class="vocab" data-word-en="Temple" data-word-vn="Ngôi đền" data-pos="danh từ / noun" data-def-en="A building devoted to worship or holding religious significance." data-context-en="This stone temple was built on top of a dormant volcano.">Ngôi đền</span> 
+      <span class="vocab" data-word-en="Ancient" data-word-vn="cổ" data-pos="tính từ / adjective" data-def-en="Belonging to a very distant historical past; old or antique." data-context-en="We discovered ancient armor sets deep inside the tomb.">cổ</span> 
+      <span class="vocab" data-word-en="Begin / Start" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="To perform the first part of an action; commence or start." data-context-en="The structural frame will begin to crack under this stress.">bắt đầu</span> 
+      <span class="vocab" data-word-en="Shudder / Tremble" data-word-vn="rùng mình" data-pos="động từ / verb" data-def-en="To shake or vibrate violently due to a heavy shock or seismic impact." data-context-en="The ground started to shudder during the volcanic rumble.">rùng mình</span>. 
+      <span class="vocab" data-word-en="Dust" data-word-vn="Bụi" data-pos="danh từ / noun" data-def-en="Fine, dry powder consisting of tiny loose particles of earth or stone." data-context-en="A thick layer of dust covered the old library books.">Bụi</span> và 
+      <span class="vocab" data-word-en="Debris / Rocks" data-word-vn="đất đá" data-pos="danh từ / noun" data-def-en="Scattered pieces of waste, loose stones, or earth rubble from structures." data-context-en="Falling debris blocked the narrow mountain pass completely.">đất đá</span> 
+      <span class="vocab" data-word-en="Begin / Start" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="To perform the first part of an action; commence or start." data-context-en="Dark clouds begin to gather right above the base camp.">bắt đầu</span> 
+      <span class="vocab" data-word-en="Fall down" data-word-vn="rơi xuống" data-pos="động từ / verb" data-def-en="To drop downward rapidly toward the floor due to gravitational pull." data-context-en="Leaves fall down from trees as autumn arrives.">rơi xuống</span> từ 
+      <span class="vocab" data-word-en="Roof" data-word-vn="mái nhà" data-pos="danh từ / noun" data-def-en="The structure forming the upper covering of a building or shrine." data-context-en="Heavy stone slabs fell straight from the temple roof.">mái nhà</span>.
+    </p>
+
+    <div class="back-btn-container">
+      <a href="../" class="back-btn">← Quay lại danh mục</a>
+    </div>
+
+    <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div id="memory-grid"></div>
+
+    
+
+    
+
+  </div>
+
+  <div id="popup-overlay"></div>
+  <div id="popup-card">
+    <div id="popup-title">English Term</div>
+    <div id="popup-sub">Vietnamese Target</div>
+    <div id="popup-pos">Part of Speech</div>
+    <div id="popup-def">English contextual description of meaning.</div>
+    <div id="popup-context-label">In context:</div>
+    <div id="popup-context">English sentence detailing local contextual application.</div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const overlay = document.getElementById('popup-overlay');
+      const card = document.getElementById('popup-card');
+      const pTitle = document.getElementById('popup-title');
+      const pSub = document.getElementById('popup-sub');
+      const pPos = document.getElementById('popup-pos');
+      const pDef = document.getElementById('popup-def');
+      const pContextLabel = document.getElementById('popup-context-label');
+      const pContext = document.getElementById('popup-context');
+
+      // Attachment of localized viewport coordinate isolated click triggers
+      document.querySelectorAll('.vocab').forEach(element => {
+        element.addEventListener('click', (event) => {
+          event.stopPropagation();
+          
+          // Applying explicit language logic hierarchy rules for Vietnamese inputs
+          pTitle.textContent = element.getAttribute('data-word-en');
+          pSub.textContent = element.getAttribute('data-word-vn');
+          pPos.textContent = element.getAttribute('data-pos');
+          pDef.textContent = element.getAttribute('data-def-en');
+          pContextLabel.textContent = "In context:";
+          pContext.textContent = element.getAttribute('data-context-en');
+          
+          overlay.style.display = 'block';
+          card.style.display = 'block';
+        });
+      });
+
+      // Global dismissal event listeners loop
+      const closeActiveWindow = () => {
+        overlay.style.display = 'none';
+        card.style.display = 'none';
+      };
+
+      overlay.addEventListener('click', closeActiveWindow);
+      card.addEventListener('click', closeActiveWindow);
+      document.addEventListener('click', closeActiveWindow);
+
+      // Automated programmatic compilation of the standalone Memory Grid System
+      const memoryGrid = document.getElementById('memory-grid');
+      const assembledTokens = [];
+      const trackingSet = new Set();
+
+      document.querySelectorAll('.vocab').forEach(element => {
+        const primaryVn = element.getAttribute('data-word-vn');
+        if (!trackingSet.has(primaryVn.toLowerCase())) {
+          trackingSet.add(primaryVn.toLowerCase());
+          assembledTokens.push({
+            vn: primaryVn,
+            en: element.getAttribute('data-word-en')
+          });
+        }
+      });
+
+      // Sort alphabetically for clean presentation layout
+      assembledTokens.sort((a, b) => a.vn.localeCompare(b.vn, 'vi'));
+
+      assembledTokens.forEach(token => {
+        const interactionSpan = document.createElement('span');
+        interactionSpan.className = 'memory-word';
+        interactionSpan.textContent = token.vn;
+        
+        interactionSpan.addEventListener('click', (event) => {
+          event.stopPropagation();
+          // Scroll cleanly straight to first instance matching target attributes
+          const matchTarget = Array.from(document.querySelectorAll('.vocab')).find(el => 
+            el.getAttribute('data-word-vn').toLowerCase() === token.vn.toLowerCase()
+          );
+          
+          if (matchTarget) {
+            matchTarget.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            matchTarget.classList.add('highlight-flash');
+            setTimeout(() => {
+              matchTarget.classList.remove('highlight-flash');
+            }, 1500);
+          }
+        });
+        memoryGrid.appendChild(interactionSpan);
+      });
+    });
+
+    // Content-Only Serialized Compactor Script System Implementation
+    function downloadContentOnly() {
+      // Create duplicate pristine deep node clone of tree
+      const completeClone = document.documentElement.cloneNode(true);
+      
+      // Target and strip away non-editorial assets
+      const skipNotesSegment = completeClone.querySelector('.skip-notes');
+      if (skipNotesSegment) skipNotesSegment.remove();
+      
+      const transNotesSegment = completeClone.querySelector('.transcription-notes');
+      if (transNotesSegment) transNotesSegment.remove();
+      
+      const processingBtn = completeClone.querySelector('.download-btn');
+      if (processingBtn) processingBtn.remove();
+      
+      // Empty out active dynamic memory nodes grid layout for target serialization safe reload
+      const cleanGridNode = completeClone.querySelector('#memory-grid');
+      if (cleanGridNode) cleanGridNode.innerHTML = '';
+      
+      // Package clean string text streams into standard active links for localized execution download
+      const packageString = completeClone.outerHTML;
+      const dataBlob = new Blob([packageString], { type: 'text/html' });
+      const downloadUrl = URL.createObjectURL(dataBlob);
+      
+      const downloadTrigger = document.createElement('a');
+      downloadTrigger.href = downloadUrl;
+      downloadTrigger.download = 'Lua_Chon_Toi_Thuong_Lesson_Content_Only.html';
+      document.body.appendChild(downloadTrigger);
+      downloadTrigger.click();
+      document.body.removeChild(downloadTrigger);
+      URL.revokeObjectURL(downloadUrl);
+    }
+  </script>
+
+</body></html>
