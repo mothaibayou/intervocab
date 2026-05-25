@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Episode 2: Tên Khổng Lồ Một Mắt</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #2b2b2b;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    color: #2a1500;
+    user-select: none;
+    min-height: 100vh;
+    padding: 30px 16px;
+  }
+  .page {
+    background: #f0e6c8;
+    max-width: 820px;
+    margin: 0 auto;
+    border: 2px solid #a0845a;
+    border-radius: 4px;
+    padding: 36px 44px 44px 44px;
+    line-height: 1.8;
+  }
+  h1 {
+    font-family: Arial, sans-serif;
+    color: #3a1f00;
+    font-size: 1.5rem;
+    margin-bottom: 6px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #7a4e1a;
+  }
+  h2.section-heading {
+    font-family: Arial, sans-serif;
+    color: #3a1f00;
+    font-size: 1.15rem;
+    margin: 32px 0 14px 0;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #7a4e1a;
+  }
+  .audio-label {
+    color: #7a4e1a;
+    font-size: 0.95rem;
+    margin-bottom: 6px;
+    margin-top: 20px;
+  }
+  audio#audio-player {
+    width: 100%;
+    margin-bottom: 10px;
+    accent-color: #c8a060;
+  }
+  .audio-controls, .speed-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 8px;
+  }
+  .rewind-btn, .speed-btn {
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 4px 10px;
+    font-family: Arial, sans-serif;
+    font-size: 0.88rem;
+    cursor: pointer;
+  }
+  .rewind-btn:hover, .speed-btn:hover { background: #4a3010; }
+  .speed-btn.active { background: #7a4e1a; }
+  .speed-controls { align-items: center; margin-top: 4px; }
+
+  .story-text { margin-top: 26px; }
+  .story-text p { margin-bottom: 18px; }
+
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+  }
+  .corrected {
+    background: #fff3e0;
+    color: #c04a00;
+    font-weight: bold;
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+  .original-word {
+    text-decoration: line-through;
+    color: #aaa;
+    font-size: 0.82rem;
+    margin-left: 2px;
+    font-style: italic;
+  }
+
+  /* POPUP CARD */
+  #popup-card {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: #fffdf5;
+    border: 2px solid #a0845a;
+    border-radius: 6px;
+    padding: 20px 24px;
+    max-width: 380px;
+    width: 90vw;
+    z-index: 1000;
+    box-shadow: 0 6px 32px rgba(0,0,0,0.35);
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+  }
+  #popup-card .word-en {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #2a1500;
+    margin-bottom: 2px;
+  }
+  #popup-card .word-vn {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #7a4e1a;
+    margin-bottom: 6px;
+  }
+  #popup-card .pos {
+    font-size: 0.95rem;
+    color: #5a3e1b;
+    margin-bottom: 10px;
+  }
+  #popup-card .def-en {
+    font-size: 1rem;
+    color: #2a1500;
+    margin-bottom: 4px;
+  }
+  #popup-card .context-label {
+    font-size: 0.95rem;
+    color: #7a4e1a;
+    font-weight: bold;
+    margin-top: 10px;
+    margin-bottom: 2px;
+  }
+  #popup-card .context-text {
+    font-size: 0.95rem;
+    color: #4a3010;
+    font-style: italic;
+  }
+
+  /* back button */
+  .back-btn {
+    display: inline-block;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 3px;
+    padding: 6px 16px;
+    font-family: Arial, sans-serif;
+    font-size: 0.95rem;
+    cursor: pointer;
+    margin: 24px 0 10px 0;
+    text-decoration: none;
+  }
+  .back-btn:hover { background: #4a3010; }
+
+  /* Memory grid */
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 6px 10px;
+    margin-top: 14px;
+  }
+  .memory-word {
+    font-size: 0.93rem;
+    color: #2a1500;
+    border-bottom: 1.5px dotted #7a4e1a;
+    cursor: pointer;
+    padding: 2px 0;
+  }
+  .memory-word:hover { color: #7a4e1a; }
+  .highlight-scroll {
+    background: #ffe082 !important;
+    transition: background 0.3s;
+  }
+
+  @media (max-width: 600px) {
+    .page { padding: 20px 16px 28px 16px; }
+    .memory-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <h1>Episode 2: <span class="vocab" data-word-en="Giant" data-word-vn="Khổng Lồ" data-pos="danh từ / noun" data-def-en="An enormous creature, much larger than a human" data-def-vn="Một sinh vật khổng lồ, lớn hơn nhiều so với con người" data-context-en="The story features a one-eyed giant called Polyphemus who traps Ulysses and his crew." data-context-vn="Câu chuyện có nhân vật tên khổng lồ một mắt tên Polyphemus, người bẫy Ulysses và thủy thủ đoàn.">Tên Khổng Lồ</span> <span class="vocab" data-word-en="One-Eyed" data-word-vn="Một Mắt" data-pos="tính từ / adjective" data-def-en="Having only a single eye" data-def-vn="Chỉ có một con mắt duy nhất" data-context-en="The Cyclops Polyphemus is described as a one-eyed giant who imprisons the sailors." data-context-vn="Cyclops Polyphemus được mô tả là tên khổng lồ một mắt giam cầm các thủy thủ.">Một Mắt</span></h1>
+
+  <div class="audio-label">🎧 Listen to the text</div>
+  <audio id="audio-player" controls>
+    <source src="cyclops.mp3" type="audio/mpeg">
+  </audio>
+  <div class="audio-controls">
+    <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+    <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+    <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+    <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+    <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+    <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+  </div>
+  <div class="speed-controls">
+    <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+    <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+    <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+    <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+    <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+    <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+  </div>
+
+  <div class="story-text">
+
+    <p>
+      Sau <span class="vocab" data-word-en="temptation" data-word-vn="sự cám dỗ" data-pos="danh từ / noun" data-def-en="The desire or allure to do something attractive but potentially harmful" data-def-vn="Ham muốn hoặc sức hút để làm điều gì đó hấp dẫn nhưng có thể gây hại" data-context-en="After the temptation of the lotus island, Ulysses and his crew sail on." data-context-vn="Sau sự cám dỗ của hòn đảo hoa sen, Ulysses và thủy thủ đoàn tiếp tục ra khơi.">sự cám dỗ</span> của <span class="vocab" data-word-en="island" data-word-vn="hòn đảo" data-pos="danh từ / noun" data-def-en="A piece of land surrounded by water" data-def-vn="Một mảnh đất được bao quanh bởi nước" data-context-en="The lotus island was the first danger Ulysses encountered on his journey." data-context-vn="Hòn đảo hoa sen là mối nguy hiểm đầu tiên Ulysses gặp phải trong cuộc hành trình.">hòn đảo</span> <span class="vocab" data-word-en="lotus" data-word-vn="hoa sen" data-pos="danh từ / noun" data-def-en="A water lily, symbolic of forgetfulness in the Odyssey" data-def-vn="Hoa súng, biểu tượng của sự lãng quên trong Odyssey" data-context-en="The lotus flower caused sailors to forget their homes and desire to stay forever." data-context-vn="Hoa sen khiến các thủy thủ quên đi quê hương và muốn ở lại mãi mãi.">hoa sen</span>, Ulysses và <span class="vocab" data-word-en="crew" data-word-vn="thủy thủ đoàn" data-pos="danh từ / noun" data-def-en="A group of sailors working together on a ship" data-def-vn="Một nhóm thủy thủ cùng làm việc trên một con tàu" data-context-en="Ulysses and his crew continue sailing after escaping the lotus island." data-context-vn="Ulysses và thủy thủ đoàn tiếp tục ra khơi sau khi thoát khỏi hòn đảo hoa sen.">thủy thủ đoàn</span> <span class="vocab" data-word-en="continue" data-word-vn="tiếp tục" data-pos="động từ / verb" data-def-en="To carry on doing something without stopping" data-def-vn="Tiếp tục làm điều gì đó mà không dừng lại" data-context-en="The crew continues sailing toward new lands after the lotus island." data-context-vn="Thủy thủ đoàn tiếp tục ra khơi đến những vùng đất mới sau hòn đảo hoa sen.">tiếp tục</span> <span class="vocab" data-word-en="sail out to sea" data-word-vn="ra khơi" data-pos="động từ / verb" data-def-en="To set sail away from the shore, out onto the open sea" data-def-vn="Giương buồm rời xa bờ, ra biển rộng mở" data-context-en="After leaving the lotus island, they sail out to sea toward new lands." data-context-vn="Sau khi rời khỏi đảo hoa sen, họ ra khơi đến những vùng đất mới.">ra khơi</span> tới những <span class="vocab" data-word-en="new" data-word-vn="mới" data-pos="tính từ / adjective" data-def-en="Not previously visited or experienced; different from before" data-def-vn="Chưa từng đến thăm hoặc trải nghiệm trước đó; khác với trước đây" data-context-en="The crew sailed toward new lands they had never seen before." data-context-vn="Thủy thủ đoàn ra khơi đến những vùng đất mới mà họ chưa từng thấy trước đây.">mới</span> <span class="vocab" data-word-en="lands / regions" data-word-vn="vùng đất" data-pos="danh từ / noun" data-def-en="Areas of territory; regions of a country or world" data-def-vn="Các khu vực lãnh thổ; vùng miền của một đất nước hay thế giới" data-context-en="Ulysses and his crew were exploring new lands far from home." data-context-vn="Ulysses và thủy thủ đoàn đang khám phá những vùng đất mới, xa quê hương.">vùng đất</span>. Họ sớm <span class="vocab" data-word-en="arrive at" data-word-vn="đến" data-pos="động từ / verb" data-def-en="To reach a destination after traveling" data-def-vn="Đến một điểm đến sau khi di chuyển" data-context-en="The sailors soon arrived at a mysterious island full of hills and mountains." data-context-vn="Các thủy thủ sớm đến một hòn đảo bí ẩn đầy đồi núi.">đến</span> một <span class="vocab" data-word-en="island" data-word-vn="hòn đảo" data-pos="danh từ / noun" data-def-en="A piece of land surrounded by water" data-def-vn="Một mảnh đất được bao quanh bởi nước" data-context-en="They arrived at a mysterious island full of hills and mountains." data-context-vn="Họ đến một hòn đảo bí ẩn đầy đồi núi.">hòn đảo</span> <span class="vocab" data-word-en="mysterious" data-word-vn="bí ẩn" data-pos="tính từ / adjective" data-def-en="Strange, unknown, or hard to explain; causing curiosity or wonder" data-def-vn="Kỳ lạ, không biết, hoặc khó giải thích; gây tò mò hoặc ngạc nhiên" data-context-en="The island appeared mysterious, full of hills and unknown dangers." data-context-vn="Hòn đảo trông bí ẩn, đầy đồi núi và những mối nguy hiểm chưa biết.">bí ẩn</span> <span class="vocab" data-word-en="full of" data-word-vn="đầy" data-pos="tính từ / adjective" data-def-en="Containing a large amount of something; filled with" data-def-vn="Chứa một lượng lớn thứ gì đó; đầy ắp" data-context-en="The island was full of hills and mountains, looking wild and forbidding." data-context-vn="Hòn đảo đầy đồi núi, trông hoang dã và đáng sợ.">đầy</span> <span class="vocab" data-word-en="hills and mountains" data-word-vn="đồi núi" data-pos="danh từ / noun" data-def-en="Elevated landforms; hilly and mountainous terrain" data-def-vn="Địa hình cao; địa hình đồi núi" data-context-en="The mysterious island was covered with hills and mountains." data-context-vn="Hòn đảo bí ẩn được bao phủ bởi đồi núi.">đồi núi</span>. <span class="vocab" data-word-en="See / catch sight of" data-word-vn="Nhìn thấy" data-pos="động từ / verb" data-def-en="To perceive with the eyes; to spot something" data-def-vn="Nhận thấy bằng mắt; phát hiện ra điều gì đó" data-context-en="Ulysses caught sight of smoke rising in the distance and decided to investigate." data-context-vn="Ulysses nhìn thấy khói bốc lên từ xa và quyết định đi điều tra.">Nhìn thấy</span> <span class="vocab" data-word-en="smoke" data-word-vn="khói" data-pos="danh từ / noun" data-def-en="The visible gas and particles produced when something burns" data-def-vn="Khí và hạt nhỏ có thể nhìn thấy được tạo ra khi thứ gì đó bốc cháy" data-context-en="Seeing smoke rising in the distance told Ulysses someone was living on the island." data-context-vn="Nhìn thấy khói bốc lên từ xa cho Ulysses biết có người đang sống trên đảo.">khói</span> <span class="vocab" data-word-en="rise / billow up" data-word-vn="bốc lên" data-pos="động từ / verb" data-def-en="To rise upward; to drift or float up into the air" data-def-vn="Dâng lên; trôi hoặc bay lên không trung" data-context-en="Smoke was rising in the distance, signaling the presence of inhabitants." data-context-vn="Khói bốc lên từ xa, báo hiệu sự hiện diện của người ở.">bốc lên</span> từ <span class="vocab" data-word-en="afar / in the distance" data-word-vn="xa" data-pos="trạng từ / adverb" data-def-en="At or from a great distance; far away" data-def-vn="Ở hoặc từ khoảng cách xa; ở xa" data-context-en="Ulysses could see smoke rising from afar and led twelve men to investigate." data-context-vn="Ulysses có thể nhìn thấy khói bốc lên từ xa và dẫn theo mười hai người đi điều tra.">xa</span>, Ulysses <span class="vocab" data-word-en="lead / guide" data-word-vn="dẫn theo" data-pos="động từ / verb" data-def-en="To bring along; to guide someone with you on a journey" data-def-vn="Mang theo; dẫn dắt ai đó cùng đi trên một chuyến hành trình" data-context-en="Ulysses led his twelve best men to investigate the source of the smoke." data-context-vn="Ulysses dẫn theo mười hai người giỏi nhất của mình đi điều tra nguồn gốc của khói.">dẫn theo</span> <span class="vocab" data-word-en="twelve" data-word-vn="mười hai" data-pos="số từ / number" data-def-en="The number 12" data-def-vn="Số 12" data-context-en="Ulysses chose twelve of his best men to accompany him on the investigation." data-context-vn="Ulysses chọn mười hai người giỏi nhất của mình để đi điều tra cùng.">mười hai</span> người <span class="vocab" data-word-en="best / most skilled" data-word-vn="giỏi nhất" data-pos="tính từ / adjective" data-def-en="Having the highest ability or skill; the most capable" data-def-vn="Có khả năng hoặc kỹ năng cao nhất; có năng lực nhất" data-context-en="Ulysses chose his twelve best men to accompany him on the dangerous investigation." data-context-vn="Ulysses chọn mười hai người giỏi nhất để đi cùng trong cuộc điều tra nguy hiểm.">giỏi nhất</span> đi <span class="vocab" data-word-en="investigate" data-word-vn="điều tra" data-pos="động từ / verb" data-def-en="To examine or look into something carefully in order to discover the truth" data-def-vn="Xem xét hoặc tìm hiểu điều gì đó cẩn thận để khám phá sự thật" data-context-en="Ulysses led twelve men to investigate the source of the smoke they spotted." data-context-vn="Ulysses dẫn mười hai người đi điều tra nguồn gốc của khói mà họ phát hiện.">điều tra</span>. Họ <span class="vocab" data-word-en="step / walk into" data-word-vn="bước vào" data-pos="động từ / verb" data-def-en="To enter a place by walking; to step inside" data-def-vn="Đi vào một nơi bằng cách đi bộ; bước vào bên trong" data-context-en="Ulysses and his men walked into a giant cave filled with cheese and sheep pens." data-context-vn="Ulysses và người của mình bước vào một hang động khổng lồ chứa đầy pho mát và chuồng cừu.">bước vào</span> một <span class="vocab" data-word-en="cave" data-word-vn="hang động" data-pos="danh từ / noun" data-def-en="A large natural hollow space underground or in a hillside" data-def-vn="Một khoang rỗng tự nhiên lớn dưới lòng đất hoặc trong sườn đồi" data-context-en="The sailors entered a giant cave filled with barrels of cheese and sheep pens." data-context-vn="Các thủy thủ bước vào một hang động khổng lồ chứa đầy thùng pho mát và chuồng cừu.">hang động</span> <span class="vocab" data-word-en="gigantic / enormous" data-word-vn="khổng lồ" data-pos="tính từ / adjective" data-def-en="Extremely large; of enormous size" data-def-vn="Cực kỳ lớn; kích thước khổng lồ" data-context-en="The cave was gigantic, large enough to hold enormous barrels of cheese and animal pens." data-context-vn="Hang động thì khổng lồ, đủ rộng để chứa những thùng pho mát lớn và chuồng thú.">khổng lồ</span> <span class="vocab" data-word-en="contain / filled with" data-word-vn="chứa đầy" data-pos="động từ / verb" data-def-en="To hold inside; to be full of something" data-def-vn="Giữ bên trong; đầy ắp thứ gì đó" data-context-en="The cave contained barrels full of cheese and pens crowded with sheep and goats." data-context-vn="Hang động chứa đầy những thùng pho mát và các chuồng đầy cừu, dê.">chứa đầy</span> những <span class="vocab" data-word-en="barrel / cask" data-word-vn="thùng" data-pos="danh từ / noun" data-def-en="A large cylindrical container, typically made of wood, used for storing food or liquid" data-def-vn="Một cái thùng hình trụ lớn, thường làm bằng gỗ, dùng để chứa thực phẩm hoặc chất lỏng" data-context-en="The cave was filled with barrels of cheese that belonged to the Cyclops." data-context-vn="Hang động chứa đầy những thùng pho mát thuộc về tên Cyclops.">thùng</span> <span class="vocab" data-word-en="cheese" data-word-vn="pho mát" data-pos="danh từ / noun" data-def-en="A solid food made from milk, often aged or fermented" data-def-vn="Thực phẩm rắn làm từ sữa, thường được ủ hoặc lên men" data-context-en="The cave was full of barrels of cheese stored by the Cyclops." data-context-vn="Hang động đầy những thùng pho mát được tên Cyclops lưu trữ.">pho mát</span> và các <span class="vocab" data-word-en="pen / enclosure" data-word-vn="chuồng" data-pos="danh từ / noun" data-def-en="A fenced enclosure for keeping animals" data-def-vn="Chuồng có hàng rào để nhốt thú vật" data-context-en="The cave had pens crowded with sheep and goats belonging to the Cyclops." data-context-vn="Hang động có các chuồng chật kín cừu và dê thuộc về tên Cyclops.">chuồng</span> <span class="vocab" data-word-en="sheep" data-word-vn="cừu" data-pos="danh từ / noun" data-def-en="A domesticated ruminant animal kept for its wool and meat" data-def-vn="Động vật nhai lại được thuần hóa, nuôi để lấy lông và thịt" data-context-en="The cave pens were packed with sheep and goats, showing the giant was a herder." data-context-vn="Các chuồng trong hang chật kín cừu và dê, cho thấy tên khổng lồ là một người chăn nuôi.">cừu</span>, <span class="vocab" data-word-en="goat" data-word-vn="dê" data-pos="danh từ / noun" data-def-en="A domesticated horned animal known for climbing and producing milk" data-def-vn="Động vật có sừng được thuần hóa, nổi tiếng với khả năng leo trèo và sản xuất sữa" data-context-en="Goats along with sheep were packed into the pens inside the giant's cave." data-context-vn="Dê cùng với cừu được nhốt chật kín trong các chuồng bên trong hang động của tên khổng lồ.">dê</span> <span class="vocab" data-word-en="crammed / packed tight" data-word-vn="chật kín" data-pos="tính từ / adjective" data-def-en="Completely full; packed with no space remaining" data-def-vn="Đầy hoàn toàn; chật ních không còn chỗ trống" data-context-en="The sheep pens were packed tight with animals, filling every corner of the cave." data-context-vn="Các chuồng cừu chật kín thú vật, lấp đầy mọi góc trong hang động.">chật kín</span>. <span class="vocab" data-word-en="clearly / obviously" data-word-vn="Rõ ràng" data-pos="trạng từ / adverb" data-def-en="In a way that is easy to see or understand; evidently" data-def-vn="Theo cách dễ thấy hoặc dễ hiểu; rõ ràng là" data-context-en="It was clearly the home of a wealthy but solitary giant." data-context-vn="Rõ ràng đây là nhà của một gã khổng lồ giàu có nhưng sống cô độc.">Rõ ràng</span> đây là nhà của một gã <span class="vocab" data-word-en="giant" data-word-vn="khổng lồ" data-pos="danh từ / noun" data-def-en="An enormous creature or person of extraordinary size" data-def-vn="Một sinh vật hoặc người có kích thước phi thường" data-context-en="The cave belonged to a wealthy but solitary giant who lived alone." data-context-vn="Hang động thuộc về một gã khổng lồ giàu có nhưng sống cô độc.">khổng lồ</span> <span class="vocab" data-word-en="wealthy / rich" data-word-vn="giàu có" data-pos="tính từ / adjective" data-def-en="Having a lot of possessions or resources; prosperous" data-def-vn="Có nhiều tài sản hoặc nguồn lực; thịnh vượng" data-context-en="The giant was clearly wealthy, with large stores of cheese and many animals." data-context-vn="Tên khổng lồ rõ ràng là giàu có, với nhiều kho pho mát lớn và nhiều thú vật.">giàu có</span> nhưng <span class="vocab" data-word-en="live alone / solitary" data-word-vn="sống cô độc" data-pos="động từ / verb phrase" data-def-en="To live in isolation, without companions" data-def-vn="Sống cô lập, không có bạn đồng hành" data-context-en="Despite his wealth, the giant lived alone in solitude in his cave." data-context-vn="Dù giàu có, tên khổng lồ vẫn sống cô độc một mình trong hang động.">sống cô độc</span>.
+    </p>
+
+    <p>
+      Trong lúc họ <span class="vocab" data-word-en="eat" data-word-vn="ăn" data-pos="động từ / verb" data-def-en="To put food in the mouth, chew, and swallow it" data-def-vn="Đưa thức ăn vào miệng, nhai và nuốt" data-context-en="While the sailors were eating the giant's food, the ground suddenly shook." data-context-vn="Trong lúc các thủy thủ đang ăn thức ăn của gã khổng lồ, mặt đất bỗng rung chuyển.">đang ăn</span> <span class="vocab" data-word-en="food" data-word-vn="thức ăn" data-pos="danh từ / noun" data-def-en="Any substance consumed to provide nutrition and energy" data-def-vn="Bất kỳ chất nào được tiêu thụ để cung cấp dinh dưỡng và năng lượng" data-context-en="The sailors helped themselves to the giant's food while he was away." data-context-vn="Các thủy thủ ăn thức ăn của gã khổng lồ khi hắn không có ở đó.">thức ăn</span> của gã <span class="vocab" data-word-en="giant" data-word-vn="khổng lồ" data-pos="danh từ / noun" data-def-en="An enormous creature or person of extraordinary size" data-def-vn="Một sinh vật hoặc người có kích thước phi thường" data-context-en="The sailors ate the giant's food while he was away from his cave." data-context-vn="Các thủy thủ ăn thức ăn của gã khổng lồ khi hắn vắng mặt trong hang.">khổng lồ</span>, <span class="vocab" data-word-en="ground / earth" data-word-vn="mặt đất" data-pos="danh từ / noun" data-def-en="The solid surface of the earth" data-def-vn="Bề mặt rắn của trái đất" data-context-en="The ground suddenly shook when the giant entered his cave, carrying a huge tree trunk." data-context-vn="Mặt đất bỗng rung chuyển khi tên khổng lồ bước vào hang, vác theo thân cây lớn.">mặt đất</span> bỗng <span class="vocab" data-word-en="shake / tremble" data-word-vn="rung chuyển" data-pos="động từ / verb" data-def-en="To move back and forth rapidly; to vibrate or quake" data-def-vn="Di chuyển qua lại nhanh chóng; rung động hoặc chấn động" data-context-en="The ground shook under the weight of the giant as he stomped into the cave." data-context-vn="Mặt đất rung chuyển dưới sức nặng của tên khổng lồ khi hắn bước vào hang động.">rung chuyển</span>. Một <span class="vocab" data-word-en="gigantic figure / enormous body" data-word-vn="thân hình khổng lồ" data-pos="danh từ / noun" data-def-en="A body or figure of enormous, terrifying size" data-def-vn="Thân hình hoặc dáng vẻ có kích thước khổng lồ, đáng sợ" data-context-en="A gigantic figure entered the cave, carrying a large tree trunk as firewood." data-context-vn="Một thân hình khổng lồ bước vào hang, vác theo thân cây lớn làm củi đốt.">thân hình khổng lồ</span> <span class="vocab" data-word-en="enter / step inside" data-word-vn="bước vào" data-pos="động từ / verb" data-def-en="To walk or step into a place" data-def-vn="Đi bộ hoặc bước vào một nơi" data-context-en="The enormous figure stepped into the cave, making the ground tremble." data-context-vn="Thân hình khổng lồ bước vào hang động, làm mặt đất rung chuyển.">bước vào</span>, <span class="vocab" data-word-en="carry / haul on one's shoulder" data-word-vn="vác theo" data-pos="động từ / verb" data-def-en="To carry something heavy on one's back or shoulder" data-def-vn="Mang vật nặng trên lưng hoặc vai" data-context-en="The Cyclops carried a large tree trunk on his shoulder to use as firewood." data-context-vn="Tên Cyclops vác theo một thân cây lớn trên vai để làm củi đốt.">vác theo</span> <span class="vocab" data-word-en="tree trunk" data-word-vn="thân cây" data-pos="danh từ / noun" data-def-en="The main woody stem of a tree" data-def-vn="Thân gỗ chính của cây" data-context-en="The Cyclops brought in a large tree trunk to use as firewood for his cave." data-context-vn="Tên Cyclops mang theo thân cây lớn để làm củi đốt cho hang động của mình.">thân cây</span> <span class="vocab" data-word-en="large / big" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Of considerable size; big" data-def-vn="Có kích thước đáng kể; to lớn" data-context-en="The Cyclops carried a large tree trunk as if it weighed nothing." data-context-vn="Tên Cyclops vác theo thân cây lớn như thể nó không có trọng lượng.">lớn</span> làm <span class="vocab" data-word-en="firewood" data-word-vn="củi đốt" data-pos="danh từ / noun" data-def-en="Wood cut or gathered to be burned as fuel" data-def-vn="Gỗ được chặt hoặc thu thập để đốt làm nhiên liệu" data-context-en="The Cyclops carried a tree trunk to use as firewood to heat his cave." data-context-vn="Tên Cyclops vác thân cây để làm củi đốt sưởi ấm hang động.">củi đốt</span>. Đó là một Cyclops — <span class="vocab" data-word-en="one-eyed giant" data-word-vn="tên khổng lồ một mắt" data-pos="danh từ / noun" data-def-en="A giant creature with only one eye in the middle of its forehead" data-def-vn="Một sinh vật khổng lồ chỉ có một con mắt ở giữa trán" data-context-en="The creature was a one-eyed giant called a Cyclops, known as Polyphemus." data-context-vn="Sinh vật đó là một tên khổng lồ một mắt được gọi là Cyclops, tên là Polyphemus.">tên khổng lồ một mắt</span> tên Polyphemus. Hắn <span class="vocab" data-word-en="see / catch sight of" data-word-vn="nhìn thấy" data-pos="động từ / verb" data-def-en="To perceive with the eyes; to notice" data-def-vn="Nhận thấy bằng mắt; để ý thấy" data-context-en="Polyphemus saw the men in his cave and his face immediately twisted in rage." data-context-vn="Polyphemus nhìn thấy những người đàn ông trong hang và khuôn mặt hắn lập tức méo mó vì giận dữ.">nhìn thấy</span> những người đàn ông, <span class="vocab" data-word-en="face" data-word-vn="khuôn mặt" data-pos="danh từ / noun" data-def-en="The front part of a person's head, featuring the eyes, nose, and mouth" data-def-vn="Phần trước của đầu người, có mắt, mũi và miệng" data-context-en="The Cyclops' face immediately twisted with rage when he saw the men." data-context-vn="Khuôn mặt của tên Cyclops lập tức méo mó vì giận dữ khi hắn nhìn thấy những người đàn ông.">khuôn mặt</span> <span class="vocab" data-word-en="immediately / at once" data-word-vn="lập tức" data-pos="trạng từ / adverb" data-def-en="Without delay; instantly; right away" data-def-vn="Không chậm trễ; ngay lập tức; ngay lúc đó" data-context-en="The Cyclops' face immediately twisted in rage the moment he saw the intruders." data-context-vn="Khuôn mặt tên Cyclops lập tức méo mó vì giận dữ ngay khi hắn nhìn thấy những kẻ xâm nhập.">lập tức</span> <span class="vocab" data-word-en="twisted / contorted" data-word-vn="méo mó" data-pos="tính từ / adjective" data-def-en="Distorted or twisted out of shape; warped by strong emotion" data-def-vn="Bị bóp méo hoặc xoắn ra khỏi hình dạng; bị bóp méo bởi cảm xúc mạnh" data-context-en="His face became twisted and contorted with rage when he found strangers in his home." data-context-vn="Khuôn mặt hắn méo mó vì giận dữ khi phát hiện ra người lạ trong nhà hắn.">méo mó</span> vì <span class="vocab" data-word-en="anger / rage" data-word-vn="giận dữ" data-pos="danh từ / noun" data-def-en="A strong feeling of displeasure and hostility; fury" data-def-vn="Cảm giác không hài lòng và thù địch mạnh mẽ; cơn thịnh nộ" data-context-en="The Cyclops' rage showed on his face when he discovered the men in his cave." data-context-vn="Cơn giận dữ của tên Cyclops hiện ra trên khuôn mặt khi hắn phát hiện những người đàn ông trong hang.">giận dữ</span>. <span class="vocab" data-word-en="say / utter a word" data-word-vn="Không nói một lời" data-pos="động từ / verb phrase" data-def-en="To say nothing; to remain silent before acting" data-def-vn="Không nói gì; giữ im lặng trước khi hành động" data-context-en="Without saying a word, the Cyclops grabbed two sailors and ate them." data-context-vn="Không nói một lời, tên Cyclops chộp lấy hai thủy thủ và ăn thịt họ.">Không nói một lời</span>, hắn <span class="vocab" data-word-en="grab / snatch" data-word-vn="chộp lấy" data-pos="động từ / verb" data-def-en="To seize suddenly and forcefully; to snatch" data-def-vn="Nắm lấy một cách đột ngột và mạnh mẽ; chộp giật" data-context-en="The Cyclops grabbed two sailors without warning and ate them alive." data-context-vn="Tên Cyclops chộp lấy hai thủy thủ mà không có cảnh báo và ăn thịt họ sống.">chộp lấy</span> hai <span class="vocab" data-word-en="sailor" data-word-vn="thủy thủ" data-pos="danh từ / noun" data-def-en="A person who works on a ship; a seafarer" data-def-vn="Người làm việc trên tàu; người đi biển" data-context-en="Two sailors were grabbed and devoured by the Cyclops without warning." data-context-vn="Hai thủy thủ bị tên Cyclops chộp lấy và ăn thịt mà không có cảnh báo.">thủy thủ</span> và <span class="vocab" data-word-en="eat / devour" data-word-vn="ăn thịt" data-pos="động từ / verb" data-def-en="To eat the flesh of someone; to devour a person" data-def-vn="Ăn thịt của ai đó; ăn sống nuốt tươi một người" data-context-en="The Cyclops devoured two sailors, shocking the rest of the crew with his savagery." data-context-vn="Tên Cyclops ăn thịt hai thủy thủ, khiến phần còn lại của thủy thủ đoàn sốc vì sự tàn bạo của hắn.">ăn thịt</span> họ. Sau đó hắn <span class="vocab" data-word-en="block / seal" data-word-vn="chặn" data-pos="động từ / verb" data-def-en="To stop passage; to seal off an entrance" data-def-vn="Ngăn chặn lối đi; bịt kín một lối vào" data-context-en="The Cyclops sealed the cave entrance with an enormous boulder so no one could escape." data-context-vn="Tên Cyclops chặn cửa hang bằng một tảng đá khổng lồ để không ai có thể trốn thoát.">chặn</span> cửa hang bằng một <span class="vocab" data-word-en="enormous boulder / huge rock" data-word-vn="tảng đá khổng lồ" data-pos="danh từ / noun" data-def-en="A very large rock used to block an entrance" data-def-vn="Một tảng đá rất lớn dùng để chặn lối vào" data-context-en="The Cyclops used an enormous boulder to seal the cave entrance, trapping the sailors inside." data-context-vn="Tên Cyclops dùng một tảng đá khổng lồ để bịt cửa hang, giam cầm các thủy thủ bên trong.">tảng đá khổng lồ</span> mà không người nào có thể <span class="vocab" data-word-en="move / shift" data-word-vn="di chuyển" data-pos="động từ / verb" data-def-en="To change position; to push or shift something from its place" data-def-vn="Thay đổi vị trí; đẩy hoặc dịch chuyển thứ gì đó khỏi vị trí của nó" data-context-en="The boulder was too heavy for any of the sailors to move on their own." data-context-vn="Tảng đá quá nặng để bất kỳ thủy thủ nào có thể di chuyển một mình.">di chuyển</span> <span class="vocab" data-word-en="manage to / succeed in" data-word-vn="nổi" data-pos="động từ / verb" data-def-en="To have the ability or strength to accomplish something" data-def-vn="Có khả năng hoặc sức mạnh để hoàn thành điều gì đó" data-context-en="No one could manage to move the enormous boulder blocking the cave entrance." data-context-vn="Không ai có thể nổi dịch chuyển tảng đá khổng lồ chặn cửa hang.">nổi</span>. Họ bị <span class="vocab" data-word-en="trapped / stuck" data-word-vn="mắc kẹt" data-pos="tính từ / adjective" data-def-en="Unable to escape; caught and unable to get free" data-def-vn="Không thể trốn thoát; bị bắt và không thể tự do" data-context-en="Sealed inside the cave with no way to move the boulder, the sailors were trapped." data-context-vn="Bị nhốt trong hang mà không có cách nào di chuyển tảng đá, các thủy thủ bị mắc kẹt.">mắc kẹt</span>.
+    </p>
+
+    <p>
+      <span class="vocab" data-word-en="the next morning" data-word-vn="Sáng hôm sau" data-pos="danh từ / noun phrase" data-def-en="The morning of the following day" data-def-vn="Buổi sáng của ngày hôm sau" data-context-en="The next morning, the Cyclops ate two more sailors before leaving for the day." data-context-vn="Sáng hôm sau, tên Cyclops ăn thêm hai người nữa trước khi đi ra ngoài cả ngày.">Sáng hôm sau</span>, Cyclops lại <span class="vocab" data-word-en="eat again / eat more" data-word-vn="ăn thêm" data-pos="động từ / verb" data-def-en="To eat an additional amount; to consume more" data-def-vn="Ăn thêm một lượng; tiêu thụ thêm" data-context-en="The Cyclops ate two more sailors the next morning, reducing the crew further." data-context-vn="Tên Cyclops ăn thêm hai người nữa vào sáng hôm sau, làm giảm thêm số lượng thủy thủ.">ăn thêm</span> hai người nữa. Ulysses <span class="vocab" data-word-en="know / realize" data-word-vn="biết" data-pos="động từ / verb" data-def-en="To be aware of or understand a fact or situation" data-def-vn="Nhận thức hoặc hiểu một sự thật hoặc tình huống" data-context-en="Ulysses knew that fighting with swords would lead to everyone's death." data-context-vn="Ulysses biết rằng nếu chiến đấu bằng kiếm, tất cả bọn họ sẽ chết.">biết</span> rằng nếu <span class="vocab" data-word-en="fight" data-word-vn="chiến đấu" data-pos="động từ / verb" data-def-en="To struggle or battle against an opponent" data-def-vn="Đấu tranh hoặc chiến đấu chống lại đối thủ" data-context-en="Ulysses knew that fighting the Cyclops with swords would only get them all killed." data-context-vn="Ulysses biết rằng chiến đấu với tên Cyclops bằng kiếm sẽ chỉ khiến tất cả họ chết.">chiến đấu</span> bằng <span class="vocab" data-word-en="sword" data-word-vn="kiếm" data-pos="danh từ / noun" data-def-en="A weapon with a long metal blade used for cutting and thrusting" data-def-vn="Vũ khí có lưỡi kim loại dài dùng để chém và đâm" data-context-en="Using swords against the Cyclops would be futile because of his enormous size and strength." data-context-vn="Dùng kiếm chống lại tên Cyclops sẽ vô ích vì kích thước và sức mạnh khổng lồ của hắn.">kiếm</span>, tất cả bọn họ sẽ <span class="vocab" data-word-en="die" data-word-vn="chết" data-pos="động từ / verb" data-def-en="To stop living; to lose one's life" data-def-vn="Ngừng sống; mất đi mạng sống" data-context-en="Ulysses knew they would all die if they tried to fight the giant directly." data-context-vn="Ulysses biết tất cả bọn họ sẽ chết nếu cố đánh thẳng vào tên khổng lồ.">chết</span>. Ông cần dùng <span class="vocab" data-word-en="weapon" data-word-vn="vũ khí" data-pos="danh từ / noun" data-def-en="An instrument used to harm or defeat an opponent" data-def-vn="Dụng cụ dùng để gây hại hoặc đánh bại đối thủ" data-context-en="Ulysses needed to use his most powerful weapon — his cunning intellect." data-context-vn="Ulysses cần dùng vũ khí mạnh nhất của mình — sự mưu trí.">vũ khí</span> <span class="vocab" data-word-en="most powerful / strongest" data-word-vn="mạnh nhất" data-pos="tính từ / adjective" data-def-en="Having the greatest strength, force, or effectiveness" data-def-vn="Có sức mạnh, lực lượng hoặc hiệu quả lớn nhất" data-context-en="Ulysses' most powerful weapon was not his sword but his cleverness." data-context-vn="Vũ khí mạnh nhất của Ulysses không phải là kiếm mà là sự khéo léo của ông.">mạnh nhất</span> của mình: <span class="vocab" data-word-en="cunning / ingenuity" data-word-vn="sự mưu trí" data-pos="danh từ / noun" data-def-en="Clever skill in planning and deception; craftiness and intelligence" data-def-vn="Kỹ năng khéo léo trong việc lên kế hoạch và lừa dối; sự tinh ranh và thông minh" data-context-en="Ulysses chose to rely on his cunning rather than brute force to defeat the Cyclops." data-context-vn="Ulysses chọn cách dựa vào sự mưu trí hơn là sức mạnh để đánh bại tên Cyclops.">sự mưu trí</span>.
+    </p>
+
+    <p>
+      Ulysses <span class="vocab" data-word-en="give / hand over" data-word-vn="đưa cho" data-pos="động từ / verb" data-def-en="To pass or hand something to someone" data-def-vn="Đưa hoặc trao thứ gì đó cho ai đó" data-context-en="Ulysses gave the Cyclops a gourd of strong undiluted wine to make him drunk." data-context-vn="Ulysses đưa cho tên Cyclops một bầu rượu mạnh chưa pha nước để làm hắn say.">đưa cho</span> gã <span class="vocab" data-word-en="giant" data-word-vn="khổng lồ" data-pos="danh từ / noun" data-def-en="A creature of enormous size, much bigger than a human" data-def-vn="Sinh vật có kích thước khổng lồ, lớn hơn con người rất nhiều" data-context-en="Ulysses offered the giant undiluted wine as part of his plan to escape." data-context-vn="Ulysses mời gã khổng lồ uống rượu nguyên chất như một phần kế hoạch trốn thoát.">khổng lồ</span> một <span class="vocab" data-word-en="gourd / flask of wine" data-word-vn="bầu rượu" data-pos="danh từ / noun" data-def-en="A vessel or container filled with wine, made from a dried gourd or similar material" data-def-vn="Bình hoặc vật chứa đầy rượu, làm từ bầu khô hoặc vật liệu tương tự" data-context-en="Ulysses offered the Cyclops a gourd of strong undiluted wine." data-context-vn="Ulysses đưa cho tên Cyclops một bầu rượu mạnh chưa pha nước.">bầu rượu</span> <span class="vocab" data-word-en="strong / potent" data-word-vn="mạnh" data-pos="tính từ / adjective" data-def-en="Having great power or intensity; highly alcoholic" data-def-vn="Có sức mạnh hoặc cường độ lớn; có nồng độ cồn cao" data-context-en="The wine was strong and undiluted — powerful enough to make the giant drunk quickly." data-context-vn="Rượu rất mạnh và chưa pha nước — đủ mạnh để làm tên khổng lồ say nhanh chóng.">mạnh</span> <span class="vocab" data-word-en="undiluted / unmixed with water" data-word-vn="chưa pha nước" data-pos="tính từ / adjective" data-def-en="Not mixed or diluted with water; at full strength" data-def-vn="Không pha hoặc không pha loãng với nước; ở nồng độ đầy đủ" data-context-en="The wine was given undiluted, making it far more intoxicating than usual." data-context-vn="Rượu được đưa ra chưa pha nước, làm cho nó say hơn nhiều so với bình thường.">chưa pha nước</span>. Cyclops chưa bao giờ <span class="vocab" data-word-en="taste" data-word-vn="nếm" data-pos="động từ / verb" data-def-en="To perceive the flavor of something by putting it in one's mouth" data-def-vn="Nhận biết hương vị của thứ gì đó bằng cách đưa vào miệng" data-context-en="The Cyclops had never tasted anything as delicious as the strong undiluted wine Ulysses offered." data-context-vn="Tên Cyclops chưa bao giờ nếm thứ gì ngon đến như bầu rượu mạnh mà Ulysses dâng lên.">nếm</span> thứ gì <span class="vocab" data-word-en="delicious" data-word-vn="ngon" data-pos="tính từ / adjective" data-def-en="Having a very pleasant, appealing taste" data-def-vn="Có vị rất dễ chịu và hấp dẫn" data-context-en="The wine was so delicious that the Cyclops immediately demanded more." data-context-vn="Rượu ngon đến mức tên Cyclops lập tức đòi thêm.">ngon</span> đến vậy.
+    </p>
+
+    <p>
+      "Ngươi <span class="vocab" data-word-en="name" data-word-vn="tên" data-pos="danh từ / noun" data-def-en="A word or phrase that identifies a person or thing" data-def-vn="Từ hoặc cụm từ nhận dạng một người hoặc vật" data-context-en="The drunken Cyclops asked Ulysses for his name, expecting an honest answer." data-context-vn="Tên Cyclops say rượu hỏi Ulysses về tên của ông, mong đợi một câu trả lời thật thà.">tên</span> gì?" gã <span class="vocab" data-word-en="giant" data-word-vn="khổng lồ" data-pos="danh từ / noun" data-def-en="A creature of enormous size" data-def-vn="Sinh vật có kích thước khổng lồ" data-context-en="The giant asked Ulysses his name while slurring drunkenly from the wine." data-context-vn="Gã khổng lồ hỏi tên của Ulysses trong khi lè nhè say rượu.">khổng lồ</span> <span class="vocab" data-word-en="slur / mumble drunkenly" data-word-vn="lè nhè" data-pos="trạng từ / adverb" data-def-en="To speak in a slow, thick, and indistinct way due to intoxication" data-def-vn="Nói theo kiểu chậm, nặng nề và không rõ ràng do say rượu" data-context-en="The Cyclops asked the question in a slurring, drunken manner, affected by the wine." data-context-vn="Tên Cyclops hỏi câu hỏi đó theo kiểu lè nhè say rượu, bị ảnh hưởng bởi rượu.">lè nhè</span> hỏi, <span class="vocab" data-word-en="dizzy / dazed from drink" data-word-vn="choáng váng" data-pos="tính từ / adjective" data-def-en="Feeling unsteady, confused, or lightheaded, especially from alcohol" data-def-vn="Cảm thấy loạng choạng, bối rối hoặc chóng mặt, đặc biệt do rượu" data-context-en="The Cyclops was dizzy and dazed from the strong undiluted wine Ulysses had given him." data-context-vn="Tên Cyclops choáng váng vì bầu rượu mạnh chưa pha nước mà Ulysses đã cho hắn uống.">choáng váng</span> vì <span class="vocab" data-word-en="wine / alcohol" data-word-vn="rượu" data-pos="danh từ / noun" data-def-en="An alcoholic drink made from fermented grapes or other fruits" data-def-vn="Đồ uống có cồn làm từ nho lên men hoặc các loại trái cây khác" data-context-en="The strong wine made the Cyclops dizzy and confused, setting up Ulysses' plan." data-context-vn="Rượu mạnh làm cho tên Cyclops choáng váng và bối rối, tạo điều kiện cho kế hoạch của Ulysses.">rượu</span>.
+    </p>
+
+    <p>
+      "Tên ta là Không Ai Cả," Ulysses <span class="vocab" data-word-en="answer / reply" data-word-vn="trả lời" data-pos="động từ / verb" data-def-en="To respond to a question or statement" data-def-vn="Phản hồi một câu hỏi hoặc tuyên bố" data-context-en="Ulysses cleverly answered 'Nobody' when asked his name, planning ahead for his escape." data-context-vn="Ulysses khéo léo trả lời 'Không Ai Cả' khi được hỏi tên, tính toán trước cho cuộc trốn thoát.">trả lời</span>.
+    </p>
+
+    <p>
+      <span class="vocab" data-word-en="not long after / soon" data-word-vn="Chẳng bao lâu sau" data-pos="trạng từ / adverb" data-def-en="In a short time; very soon afterward" data-def-vn="Trong thời gian ngắn; rất sớm sau đó" data-context-en="Not long after drinking the wine, the Cyclops fell into a deep drunken sleep." data-context-vn="Chẳng bao lâu sau khi uống rượu, tên Cyclops chìm vào giấc ngủ say.">Chẳng bao lâu sau</span>, gã <span class="vocab" data-word-en="giant" data-word-vn="khổng lồ" data-pos="danh từ / noun" data-def-en="A creature of enormous size" data-def-vn="Sinh vật có kích thước khổng lồ" data-context-en="The giant sank into a deep drunken sleep after finishing the wine." data-context-vn="Gã khổng lồ chìm vào giấc ngủ say sau khi uống cạn rượu.">khổng lồ</span> <span class="vocab" data-word-en="sink / fall into" data-word-vn="chìm vào" data-pos="động từ / verb" data-def-en="To fall deeply into a state, such as sleep; to become immersed" data-def-vn="Rơi sâu vào một trạng thái, như giấc ngủ; trở nên đắm chìm" data-context-en="The Cyclops sank into a deep sleep from the wine, giving Ulysses his chance." data-context-vn="Tên Cyclops chìm vào giấc ngủ sâu vì rượu, tạo cơ hội cho Ulysses.">chìm vào</span> <span class="vocab" data-word-en="deep drunken sleep" data-word-vn="giấc ngủ say" data-pos="danh từ / noun" data-def-en="A heavy, deep sleep caused by intoxication" data-def-vn="Giấc ngủ sâu, nặng nề do say rượu" data-context-en="The giant fell into a deep drunken sleep, snoring loudly." data-context-vn="Tên khổng lồ chìm vào giấc ngủ say sâu, ngáy to.">giấc ngủ say</span> vì <span class="vocab" data-word-en="wine / alcohol" data-word-vn="rượu" data-pos="danh từ / noun" data-def-en="An alcoholic drink that caused the Cyclops' intoxication" data-def-vn="Đồ uống có cồn đã gây ra sự say sưa của tên Cyclops" data-context-en="The undiluted wine caused the Cyclops to fall into a deep, helpless sleep." data-context-vn="Rượu chưa pha nước khiến tên Cyclops rơi vào giấc ngủ sâu, bất lực.">rượu</span>. Ulysses và người của mình <span class="vocab" data-word-en="sharpen" data-word-vn="mài nhọn" data-pos="động từ / verb" data-def-en="To make something sharp or pointed, especially a tool or weapon" data-def-vn="Làm cho thứ gì đó sắc bén hoặc nhọn, đặc biệt là dụng cụ hay vũ khí" data-context-en="Ulysses and his men sharpened a large wooden stake while the Cyclops slept." data-context-vn="Ulysses và người của mình mài nhọn một cọc gỗ lớn trong khi tên Cyclops ngủ.">mài nhọn</span> một <span class="vocab" data-word-en="wooden stake" data-word-vn="cọc gỗ" data-pos="danh từ / noun" data-def-en="A thick, pointed wooden post used as a weapon" data-def-vn="Một cái cọc gỗ dày, nhọn dùng làm vũ khí" data-context-en="The men sharpened a large wooden stake and heated it in the fire to use against the Cyclops." data-context-vn="Những người đàn ông mài nhọn một cọc gỗ lớn và nung đỏ trong lửa để dùng chống lại tên Cyclops.">cọc gỗ</span> <span class="vocab" data-word-en="large / big" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Of considerable or great size" data-def-vn="Có kích thước đáng kể hoặc lớn" data-context-en="They sharpened a large wooden stake, big enough to blind the Cyclops." data-context-vn="Họ mài nhọn một cọc gỗ lớn, đủ to để làm mù tên Cyclops.">lớn</span>, <span class="vocab" data-word-en="heat until red-hot / fire" data-word-vn="nung đỏ" data-pos="động từ / verb" data-def-en="To heat something until it glows red; to make burning hot" data-def-vn="Nung thứ gì đó cho đến khi đỏ rực; làm nóng bỏng" data-context-en="They heated the wooden stake until it glowed red-hot in the fire before using it." data-context-vn="Họ nung cọc gỗ cho đến khi đỏ rực trong lửa trước khi dùng đến.">nung đỏ</span> trong <span class="vocab" data-word-en="fire" data-word-vn="lửa" data-pos="danh từ / noun" data-def-en="The process of burning; the heat and light produced by combustion" data-def-vn="Quá trình đốt cháy; nhiệt và ánh sáng do sự cháy tạo ra" data-context-en="The wooden stake was heated in the fire to make it burning hot before use." data-context-vn="Cọc gỗ được nung đỏ trong lửa để làm nó bỏng nóng trước khi sử dụng.">lửa</span> rồi <span class="vocab" data-word-en="plunge / thrust straight into" data-word-vn="đâm thẳng vào" data-pos="động từ / verb" data-def-en="To drive or thrust something forcefully and directly into a target" data-def-vn="Đâm hoặc thọc thứ gì đó mạnh mẽ và thẳng vào mục tiêu" data-context-en="The men plunged the burning stake straight into the Cyclops' single eye." data-context-vn="Những người đàn ông đâm thẳng cọc gỗ đang cháy vào con mắt duy nhất của tên Cyclops.">đâm thẳng vào</span> <span class="vocab" data-word-en="the only eye / single eye" data-word-vn="con mắt duy nhất" data-pos="danh từ / noun" data-def-en="The one and only eye; the singular eye of the Cyclops" data-def-vn="Con mắt độc nhất; con mắt duy nhất của tên Cyclops" data-context-en="The burning stake was driven straight into the Cyclops' one and only eye, blinding him." data-context-vn="Cọc gỗ bốc lửa được đâm thẳng vào con mắt duy nhất của tên Cyclops, làm hắn mù.">con mắt duy nhất</span> của hắn. Polyphemus <span class="vocab" data-word-en="roar / shriek in pain" data-word-vn="gào thét đau đớn" data-pos="động từ / verb" data-def-en="To scream or roar loudly in pain and anguish" data-def-vn="La hét hoặc gào to vì đau đớn và thống khổ" data-context-en="Polyphemus roared in pain, his screams shaking the entire island." data-context-vn="Polyphemus gào thét đau đớn, tiếng kêu la của hắn làm rung chuyển cả hòn đảo.">gào thét đau đớn</span> làm <span class="vocab" data-word-en="shake / tremble" data-word-vn="rung chuyển" data-pos="động từ / verb" data-def-en="To cause vibration or trembling in something" data-def-vn="Gây ra rung động hoặc run rẩy trong thứ gì đó" data-context-en="His screams were so loud they shook the entire island." data-context-vn="Tiếng kêu la của hắn to đến mức làm rung chuyển cả hòn đảo.">rung chuyển</span> cả <span class="vocab" data-word-en="island" data-word-vn="hòn đảo" data-pos="danh từ / noun" data-def-en="A piece of land surrounded entirely by water" data-def-vn="Một mảnh đất được bao quanh hoàn toàn bởi nước" data-context-en="Polyphemus' screams of agony shook the entire island, drawing other Cyclops near." data-context-vn="Tiếng gào thét đau đớn của Polyphemus làm rung chuyển cả hòn đảo, thu hút các Cyclops khác lại gần.">hòn đảo</span>. Những Cyclops khác <span class="vocab" data-word-en="run / come running" data-word-vn="chạy đến" data-pos="động từ / verb" data-def-en="To hurry to a place; to arrive quickly at a location" data-def-vn="Vội vàng đến một nơi; đến nhanh chóng tại một địa điểm" data-context-en="The other Cyclops came running to the cave entrance when they heard the screams." data-context-vn="Những tên Cyclops khác chạy đến trước cửa hang khi nghe thấy tiếng gào thét.">chạy đến</span> trước hang và <span class="vocab" data-word-en="shout / yell out" data-word-vn="hét lên" data-pos="động từ / verb" data-def-en="To call out loudly; to shout in alarm or concern" data-def-vn="Gọi to; la hét trong sự báo động hoặc lo lắng" data-context-en="The other Cyclops shouted out to ask who was hurting Polyphemus." data-context-vn="Những tên Cyclops khác hét lên hỏi ai đang làm hại Polyphemus.">hét lên</span>:
+    </p>
+
+    <p>
+      "Ai đang <span class="vocab" data-word-en="harm / hurt" data-word-vn="làm hại" data-pos="động từ / verb" data-def-en="To cause injury or damage to someone" data-def-vn="Gây thương tích hoặc thiệt hại cho ai đó" data-context-en="The other Cyclops shouted asking who was harming Polyphemus." data-context-vn="Những tên Cyclops khác hét lên hỏi ai đang làm hại Polyphemus.">làm hại</span> ngươi?"
+    </p>
+
+    <p>
+      "<span class="vocab" data-word-en="Nobody" data-word-vn="Không Ai Cả" data-pos="đại từ / pronoun" data-def-en="No person; not anyone — used here as a false name by Ulysses" data-def-vn="Không có người nào — được Ulysses dùng ở đây như một cái tên giả" data-context-en="'Nobody is harming me!' — the Cyclops unknowingly used Ulysses' fake name." data-context-vn="'Không Ai Cả đang làm hại ta!' — tên Cyclops vô tình dùng cái tên giả của Ulysses.">Không Ai Cả</span> đang <span class="vocab" data-word-en="harm / hurt" data-word-vn="làm hại" data-pos="động từ / verb" data-def-en="To cause injury or pain to someone" data-def-vn="Gây thương tích hoặc đau đớn cho ai đó" data-context-en="When Polyphemus shouted 'Nobody is harming me,' the other giants thought he was uninjured." data-context-vn="Khi Polyphemus la lên 'Không Ai Cả đang làm hại ta,' những tên khổng lồ khác nghĩ hắn không bị thương.">làm hại</span> ta!" gã <span class="vocab" data-word-en="giant" data-word-vn="khổng lồ" data-pos="danh từ / noun" data-def-en="An enormous creature" data-def-vn="Một sinh vật khổng lồ" data-context-en="The giant Polyphemus shouted 'Nobody is hurting me!' — playing right into Ulysses' trap." data-context-vn="Tên khổng lồ Polyphemus la lên 'Không Ai Cả đang làm hại ta!' — vô tình rơi vào bẫy của Ulysses.">khổng lồ</span> <span class="vocab" data-word-en="shout / cry out" data-word-vn="la lên" data-pos="động từ / verb" data-def-en="To call out or shout loudly" data-def-vn="Gọi hoặc la lớn tiếng" data-context-en="Polyphemus cried out that Nobody was hurting him, confusing the other giants." data-context-vn="Polyphemus la lên rằng Không Ai Cả đang làm hại hắn, làm bối rối những tên khổng lồ khác.">la lên</span>.
+    </p>
+
+    <p>
+      <span class="vocab" data-word-en="think / believe" data-word-vn="Nghĩ" data-pos="động từ / verb" data-def-en="To have a belief or assumption about something" data-def-vn="Có một niềm tin hoặc giả định về điều gì đó" data-context-en="Thinking nobody was attacking Polyphemus, the other Cyclops walked away." data-context-vn="Nghĩ rằng không ai tấn công Polyphemus, những tên Cyclops khác bỏ đi.">Nghĩ</span> rằng hắn không bị ai <span class="vocab" data-word-en="attack" data-word-vn="tấn công" data-pos="động từ / verb" data-def-en="To assault or make an aggressive move against someone" data-def-vn="Tấn công hoặc có hành động tấn công xâm lược ai đó" data-context-en="The other Cyclops believed Polyphemus was not being attacked by anyone and left." data-context-vn="Những tên Cyclops khác tin rằng Polyphemus không bị ai tấn công và bỏ đi.">tấn công</span>, những gã <span class="vocab" data-word-en="giant" data-word-vn="khổng lồ" data-pos="danh từ / noun" data-def-en="Enormous creatures of the Cyclops race" data-def-vn="Những sinh vật khổng lồ thuộc chủng tộc Cyclops" data-context-en="The other giants left when they believed nobody was attacking their fellow Cyclops." data-context-vn="Những tên khổng lồ khác bỏ đi khi họ tin rằng không ai tấn công bạn đồng loại Cyclops của họ.">khổng lồ</span> khác <span class="vocab" data-word-en="leave / walk away" data-word-vn="bỏ đi" data-pos="động từ / verb" data-def-en="To depart; to leave a place and go away" data-def-vn="Rời đi; rời khỏi một nơi và đi" data-context-en="The other Cyclops left, leaving Polyphemus alone and helpless." data-context-vn="Những tên Cyclops khác bỏ đi, để Polyphemus một mình và bất lực.">bỏ đi</span>.
+    </p>
+
+    <p>
+      <span class="vocab" data-word-en="the next morning" data-word-vn="Sáng hôm sau" data-pos="danh từ / noun phrase" data-def-en="The following morning; the next day at dawn" data-def-vn="Buổi sáng tiếp theo; ngày hôm sau khi bình minh" data-context-en="The next morning, the blind Cyclops moved the boulder to let his flock out." data-context-vn="Sáng hôm sau, tên Cyclops mù di chuyển tảng đá để thả đàn cừu ra ngoài.">Sáng hôm sau</span>, Cyclops <span class="vocab" data-word-en="move / shift" data-word-vn="di chuyển" data-pos="động từ / verb" data-def-en="To change the position of something; to push something aside" data-def-vn="Thay đổi vị trí của thứ gì đó; đẩy thứ gì đó sang một bên" data-context-en="The blinded Cyclops moved the boulder to let his flock of sheep out to graze." data-context-vn="Tên Cyclops bị mù di chuyển tảng đá để thả đàn cừu ra ngoài gặm cỏ.">di chuyển</span> <span class="vocab" data-word-en="boulder / rock" data-word-vn="tảng đá" data-pos="danh từ / noun" data-def-en="A very large, heavy rock" data-def-vn="Một tảng đá rất lớn và nặng" data-context-en="The Cyclops moved the enormous boulder just enough to let his sheep pass through." data-context-vn="Tên Cyclops di chuyển tảng đá khổng lồ vừa đủ để đàn cừu đi qua.">tảng đá</span> để <span class="vocab" data-word-en="release / let out" data-word-vn="thả" data-pos="động từ / verb" data-def-en="To free or let something go; to allow to leave" data-def-vn="Giải phóng hoặc để thứ gì đó đi; cho phép rời đi" data-context-en="The Cyclops opened the entrance to release his flock of sheep for grazing." data-context-vn="Tên Cyclops mở cửa hang để thả đàn cừu đi gặm cỏ.">thả</span> <span class="vocab" data-word-en="flock / herd" data-word-vn="đàn cừu" data-pos="danh từ / noun" data-def-en="A group of sheep kept together; a flock" data-def-vn="Một nhóm cừu được nuôi cùng nhau; một đàn" data-context-en="The Cyclops released his flock of sheep, not knowing the men were hidden beneath them." data-context-vn="Tên Cyclops thả đàn cừu của mình, không biết rằng những người đàn ông đang trốn bên dưới chúng.">đàn cừu</span> ra ngoài. Ulysses <span class="vocab" data-word-en="tie / bind" data-word-vn="buộc" data-pos="động từ / verb" data-def-en="To fasten or attach with rope or cord" data-def-vn="Cố định hoặc gắn kết bằng dây hoặc dây thừng" data-context-en="Ulysses tied his men under the bellies of the thick-fleeced sheep to hide them." data-context-vn="Ulysses buộc người của mình dưới bụng những con cừu lông dày để ẩn náu.">buộc</span> người của mình <span class="vocab" data-word-en="under the belly" data-word-vn="dưới bụng" data-pos="danh từ / noun phrase" data-def-en="Beneath the underside of the body; hidden below the stomach area" data-def-vn="Bên dưới mặt dưới của cơ thể; ẩn phía dưới vùng bụng" data-context-en="Each sailor clung under the belly of a sheep to avoid being detected by the Cyclops." data-context-vn="Mỗi thủy thủ bám vào dưới bụng một con cừu để tránh bị tên Cyclops phát hiện.">dưới bụng</span> những con cừu <span class="vocab" data-word-en="thick-fleeced" data-word-vn="lông dày" data-pos="tính từ / adjective" data-def-en="Having a thick, dense coat of wool" data-def-vn="Có lớp lông dày và dày đặc" data-context-en="The sailors hid under the thick-fleeced sheep, making it hard for the Cyclops to detect them." data-context-vn="Các thủy thủ trốn dưới bụng những con cừu lông dày, khiến tên Cyclops khó phát hiện.">lông dày</span>. Khi gã <span class="vocab" data-word-en="giant" data-word-vn="khổng lồ" data-pos="danh từ / noun" data-def-en="The enormous Cyclops creature" data-def-vn="Sinh vật Cyclops khổng lồ" data-context-en="As the giant felt the backs of the sheep, his hands found only wool." data-context-vn="Khi gã khổng lồ sờ lên lưng cừu, tay hắn chỉ thấy lông.">khổng lồ</span> <span class="vocab" data-word-en="feel / grope along the back" data-word-vn="sờ lên lưng" data-pos="động từ / verb" data-def-en="To run one's hand over the back of an animal to check for hidden people" data-def-vn="Chạy tay trên lưng thú vật để kiểm tra người ẩn náu" data-context-en="The blind Cyclops ran his hands over the backs of the sheep, feeling only their wool." data-context-vn="Tên Cyclops mù chạy tay trên lưng cừu, chỉ cảm thấy lông.">sờ lên lưng cừu</span>, hắn chỉ <span class="vocab" data-word-en="feel / sense" data-word-vn="cảm thấy" data-pos="động từ / verb" data-def-en="To perceive through the sense of touch" data-def-vn="Nhận biết qua xúc giác" data-context-en="The Cyclops could only feel wool on the sheep's backs — he did not feel the hidden men." data-context-vn="Tên Cyclops chỉ cảm thấy lông trên lưng cừu — hắn không cảm thấy những người đàn ông đang ẩn náu.">cảm thấy</span> <span class="vocab" data-word-en="wool / fleece" data-word-vn="lông" data-pos="danh từ / noun" data-def-en="The soft, thick coat of hair on a sheep" data-def-vn="Lớp lông mềm, dày của cừu" data-context-en="The Cyclops' hands found only wool when he checked the sheep, missing the men underneath." data-context-vn="Tay tên Cyclops chỉ thấy lông khi kiểm tra cừu, bỏ sót những người đàn ông bên dưới.">lông</span> chứ không <span class="vocab" data-word-en="discover / detect" data-word-vn="phát hiện" data-pos="động từ / verb" data-def-en="To find or notice something that was hidden; to uncover" data-def-vn="Tìm thấy hoặc nhận thấy thứ gì đó đang bị che giấu; khám phá ra" data-context-en="The blind Cyclops failed to detect the men hidden beneath the sheep's bellies." data-context-vn="Tên Cyclops mù không phát hiện ra những người đàn ông đang trốn dưới bụng cừu.">phát hiện</span> những người đàn ông đang <span class="vocab" data-word-en="hide / conceal oneself" data-word-vn="trốn" data-pos="động từ / verb" data-def-en="To conceal oneself; to stay out of sight" data-def-vn="Che giấu bản thân; ở nơi khuất khỏi tầm nhìn" data-context-en="The sailors were hiding under the sheep's bellies as they walked past the blind Cyclops." data-context-vn="Các thủy thủ đang trốn dưới bụng cừu khi đi qua tên Cyclops mù.">trốn</span> bên dưới. Họ <span class="vocab" data-word-en="escape" data-word-vn="trốn thoát" data-pos="động từ / verb" data-def-en="To get away from a dangerous place or situation successfully" data-def-vn="Thoát khỏi nơi hoặc tình huống nguy hiểm thành công" data-context-en="The sailors successfully escaped back to the ship using the sheep as cover." data-context-vn="Các thủy thủ trốn thoát thành công về tàu, dùng cừu làm vật che chắn.">trốn thoát</span> về <span class="vocab" data-word-en="ship / vessel" data-word-vn="tàu" data-pos="danh từ / noun" data-def-en="A large boat used for ocean travel" data-def-vn="Một con thuyền lớn dùng để đi biển" data-context-en="Once free of the cave, the sailors fled back to their ship." data-context-vn="Một khi thoát khỏi hang, các thủy thủ chạy về tàu của họ.">tàu</span>, nhưng khi con tàu <span class="vocab" data-word-en="leave / sail away" data-word-vn="rời xa" data-pos="động từ / verb" data-def-en="To depart from a place; to sail or move away from" data-def-vn="Rời khỏi một nơi; chạy thuyền hoặc di chuyển ra xa" data-context-en="As the ship sailed away from the island, Ulysses could not keep silent." data-context-vn="Khi con tàu rời xa hòn đảo, Ulysses không thể im lặng.">rời xa</span>, Ulysses — vừa <span class="vocab" data-word-en="proud / arrogant" data-word-vn="kiêu hãnh" data-pos="tính từ / adjective" data-def-en="Feeling or showing pride in oneself; proud to the point of arrogance" data-def-vn="Cảm thấy hoặc thể hiện niềm tự hào về bản thân; tự hào đến mức kiêu ngạo" data-context-en="Ulysses was proud of his cunning victory but his pride would soon become his downfall." data-context-vn="Ulysses tự hào về chiến thắng khéo léo của mình nhưng sự kiêu hãnh đó sắp trở thành sự sụp đổ của ông.">kiêu hãnh</span> vừa <span class="vocab" data-word-en="angry / furious" data-word-vn="tức giận" data-pos="tính từ / adjective" data-def-en="Feeling strong displeasure or rage" data-def-vn="Cảm thấy sự không hài lòng hoặc giận dữ mạnh mẽ" data-context-en="Ulysses was both proud and angry as the ship sailed away, unable to resist boasting." data-context-vn="Ulysses vừa kiêu hãnh vừa tức giận khi con tàu rời xa, không thể cưỡng lại việc khoe khoang.">tức giận</span> — không thể <span class="vocab" data-word-en="stay silent / keep quiet" data-word-vn="im lặng" data-pos="động từ / verb" data-def-en="To remain silent; to say nothing" data-def-vn="Giữ im lặng; không nói gì" data-context-en="Ulysses could not stay silent and shouted his true identity back to the Cyclops." data-context-vn="Ulysses không thể im lặng và hét lại danh tính thật của mình với tên Cyclops.">im lặng</span>.
+    </p>
+
+    <p>
+      "Ta là Ulysses, <span class="vocab" data-word-en="King" data-word-vn="Vua" data-pos="danh từ / noun" data-def-en="A male ruler of a kingdom; a monarch" data-def-vn="Người cai trị nam của một vương quốc; một quân vương" data-context-en="Ulysses revealed he was the King of Ithaca, proudly announcing his identity." data-context-vn="Ulysses tiết lộ mình là Vua của Ithaca, tự hào công bố danh tính của mình.">Vua</span> của Ithaca!" ông <span class="vocab" data-word-en="shout loudly" data-word-vn="hét lớn" data-pos="động từ / verb" data-def-en="To yell or cry out at great volume" data-def-vn="La hét hoặc kêu lớn tiếng" data-context-en="Ulysses shouted loudly from the departing ship, revealing his name and kingdom." data-context-vn="Ulysses hét lớn từ con tàu đang rời đi, tiết lộ tên và vương quốc của mình.">hét lớn</span>.
+    </p>
+
+    <p>
+      Đó là <span class="vocab" data-word-en="mistake / error" data-word-vn="sai lầm" data-pos="danh từ / noun" data-def-en="An act or decision that turns out to be wrong or harmful; an error" data-def-vn="Một hành động hoặc quyết định trở nên sai lầm hoặc gây hại; một lỗi lầm" data-context-en="Revealing his name was a terrible mistake that would haunt Ulysses for years." data-context-vn="Tiết lộ tên của mình là một sai lầm khủng khiếp sẽ ám ảnh Ulysses trong nhiều năm.">sai lầm</span> sẽ <span class="vocab" data-word-en="haunt / follow like a curse" data-word-vn="ám ảnh" data-pos="động từ / verb" data-def-en="To persistently disturb or trouble someone; to follow someone like a curse" data-def-vn="Quấy rầy hoặc làm phiền ai đó liên tục; đeo đuổi ai đó như một lời nguyền" data-context-en="The mistake of revealing his name would haunt Ulysses' journey for many years afterward." data-context-vn="Sai lầm tiết lộ tên của mình sẽ ám ảnh cuộc hành trình của Ulysses trong nhiều năm sau đó.">ám ảnh</span> <span class="vocab" data-word-en="journey / voyage" data-word-vn="cuộc hành trình" data-pos="danh từ / noun" data-def-en="A long trip or voyage, often with difficulties or adventures along the way" data-def-vn="Một chuyến đi dài hoặc cuộc hành trình, thường có khó khăn hoặc cuộc phiêu lưu trên đường" data-context-en="His mistake haunted his entire journey home, bringing the wrath of Poseidon upon him." data-context-vn="Sai lầm của ông ám ảnh toàn bộ cuộc hành trình trở về nhà, mang đến cơn thịnh nộ của Poseidon.">cuộc hành trình</span> của ông <span class="vocab" data-word-en="throughout many years after" data-word-vn="suốt nhiều năm sau" data-pos="trạng từ / adverb phrase" data-def-en="Continuously for many years following that moment" data-def-vn="Liên tục trong nhiều năm sau thời điểm đó" data-context-en="The consequences of his boast would trouble Ulysses throughout many years of wandering." data-context-vn="Hậu quả của sự khoe khoang sẽ gây rắc rối cho Ulysses suốt nhiều năm lang thang.">suốt nhiều năm sau</span>.
+    </p>
+
+  </div><!-- end story-text -->
+
+  <a class="back-btn" href="../">← Back</a>
+
+  <h2 class="section-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+  <div class="memory-grid" id="memory-grid">
+    <!-- words inserted by JS -->
+  </div>
+
+</div><!-- end page -->
+
+<!-- POPUP CARD -->
+<div id="popup-card" onclick="closePopup()">
+  <div class="word-en" id="pc-word-en"></div>
+  <div class="word-vn" id="pc-word-vn"></div>
+  <div class="pos" id="pc-pos"></div>
+  <div class="def-en" id="pc-def-en"></div>
+  <div class="context-label">In context:</div>
+  <div class="context-text" id="pc-context"></div>
+</div>
+
+<script>
+function setPlaybackSpeed(speed) {
+  const audio = document.getElementById('audio-player');
+  if (audio) {
+    audio.playbackRate = speed;
+    document.querySelectorAll('.speed-btn').forEach(btn => {
+      btn.classList.remove('active');
+      if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+    });
+  }
+}
+
+let currentOpen = null;
+
+function closePopup() {
+  document.getElementById('popup-card').style.display = 'none';
+  currentOpen = null;
+}
+
+document.querySelectorAll('.vocab').forEach(el => {
+  el.addEventListener('click', function(e) {
+    e.stopPropagation();
+    const popup = document.getElementById('popup-card');
+    if (currentOpen === this) {
+      closePopup();
+      return;
+    }
+    currentOpen = this;
+    // Vietnamese input → English heading large
+    document.getElementById('pc-word-en').textContent = this.dataset.wordEn || '';
+    document.getElementById('pc-word-vn').textContent = this.dataset.wordVn || '';
+    document.getElementById('pc-pos').textContent = this.dataset.pos || '';
+    document.getElementById('pc-def-en').textContent = this.dataset.defEn || '';
+    document.getElementById('pc-context').textContent = this.dataset.contextEn || '';
+    popup.style.display = 'block';
+  });
+});
+
+document.addEventListener('click', function(e) {
+  if (!e.target.closest('#popup-card') && !e.target.closest('.vocab')) {
+    closePopup();
+  }
+});
+
+// Build memory grid
+const vocabEls = document.querySelectorAll('.story-text .vocab');
+const seen = new Set();
+const words = [];
+vocabEls.forEach(el => {
+  const w = el.dataset.wordEn;
+  if (w && !seen.has(w)) {
+    seen.add(w);
+    words.push({ en: w, vn: el.dataset.wordVn, el: el });
+  }
+});
+
+const grid = document.getElementById('memory-grid');
+words.forEach(item => {
+  const span = document.createElement('span');
+  span.className = 'memory-word';
+  span.textContent = item.vn || item.en;
+  span.title = item.en;
+  span.addEventListener('click', () => {
+    item.el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    item.el.classList.add('highlight-scroll');
+    setTimeout(() => item.el.classList.remove('highlight-scroll'), 1500);
+  });
+  grid.appendChild(span);
+});
+</script>
+</body>
+</html>
