@@ -1,0 +1,388 @@
+ Conversation with Gemini
+
+please execute attached instructions, carefully.
+HTML
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ulysses và Nữ Thần Circe - Tập Đọc Ngữ Pháp</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            font-family: 'Georgia', serif;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .page {
+            background-color: #f0e6c8;
+            color: #2a1500;
+            max-width: 800px;
+            width: 100%;
+            padding: 50px;
+            border: 2px solid #7a4e1a;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            border-radius: 2px;
+            line-height: 1.9;
+            font-size: 20px;
+            position: relative;
+            box-sizing: border-box;
+        }
+        h1 {
+            color: #3a1f00;
+            text-align: center;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 20px;
+            margin-top: 0;
+            margin-bottom: 35px;
+            font-size: 32px;
+            font-weight: normal;
+            letter-spacing: 1px;
+        }
+        p {
+            margin-bottom: 25px;
+            text-align: justify;
+            text-indent: 30px;
+        }
+        .vocab {
+            border-bottom: 1px dashed #7a4e1a;
+            cursor: pointer;
+            background-color: rgba(122, 78, 26, 0.04);
+            padding: 0 2px;
+            transition: all 0.2s ease;
+            display: inline-block;
+            text-indent: 0;
+        }
+        .vocab:hover {
+            background-color: #7a4e1a;
+            color: #f0e6c8;
+            border-bottom-style: solid;
+        }
+        /* Tooltip Panel Style */
+        .vocab-panel {
+            display: none;
+            position: absolute;
+            background-color: #3a1f00;
+            color: #f0e6c8;
+            padding: 20px;
+            border-radius: 4px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.4);
+            z-index: 1000;
+            max-width: 320px;
+            font-size: 15px;
+            line-height: 1.5;
+            border: 1px solid #7a4e1a;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+        .vocab-panel h3 {
+            margin: 0 0 10px 0;
+            color: #fff;
+            font-size: 18px;
+            border-bottom: 1px solid #7a4e1a;
+            padding-bottom: 6px;
+            font-family: 'Georgia', serif;
+        }
+        .attribute {
+            margin-bottom: 6px;
+        }
+        .attr-label {
+            font-weight: bold;
+            color: #a88a54;
+            text-transform: uppercase;
+            font-size: 11px;
+            letter-spacing: 0.5px;
+            display: inline-block;
+            width: 110px;
+        }
+        .attr-val {
+            color: #e6dfc3;
+        }
+    </style>
+</head>
+<body>
+
+<div class="page">
+    <h1>Ulysses và Nữ Thần Circe</h1>
+    
+    <p>
+        ... <span class="vocab" data-word="nữ thần" data-meaning="goddess" data-pos="noun" data-ipa="nɯ̃ tʰʌ̀n" data-context="A female deity in ancient mythology" data-morphology="nữ (female) + thần (god/deity)" data-difficulty="Intermediate">nữ thần</span> 
+        <span class="vocab" data-word="Circe" data-meaning="Circe" data-pos="proper noun" data-ipa="sɜːrsi" data-context="The enchantress goddess of Aeaea island" data-morphology="Greek origin" data-difficulty="Beginner">Circe</span> 
+        <span class="vocab" data-word="đang ngồi" data-meaning="is/was sitting" data-pos="verb phrase" data-ipa="ɗaːŋ ŋôi̯" data-context="Continuous aspect of sitting down" data-morphology="đang (in progress) + ngồi (sit)" data-difficulty="Beginner">đang ngồi</span> 
+        <span class="vocab" data-word="bên" data-meaning="beside / by the side of" data-pos="preposition" data-ipa="ɓen" data-context="Spatial proximity marker" data-morphology="bên (side)" data-difficulty="Beginner">bên</span> 
+        <span class="vocab" data-word="khung cửi" data-meaning="loom" data-pos="noun" data-ipa="xuŋ kɯ̄i̯" data-context="Apparatus used for weaving fabric" data-morphology="khung (frame) + cửi (weaving tool)" data-difficulty="Advanced">khung cửi</span> 
+        <span class="vocab" data-word="vàng" data-meaning="golden / made of gold" data-pos="adjective" data-ipa="vaːŋ" data-context="Specifying precious material or radiant color" data-morphology="vàng (gold)" data-difficulty="Beginner">vàng</span>, 
+        <span class="vocab" data-word="cất tiếng hát" data-meaning="to break into song / raise one's voice to sing" data-pos="verb phrase" data-ipa="kə́t tiə́ŋ hát" data-context="Initiation of vocal music" data-morphology="cất (raise) + tiếng (voice) + hát (sing)" data-difficulty="Intermediate">cất tiếng hát</span> 
+        <span class="vocab" data-word="một" data-meaning="a / single" data-pos="article / numeral" data-ipa="môt" data-context="Indefinite singular modifier" data-morphology="một (one)" data-difficulty="Beginner">một</span> 
+        <span class="vocab" data-word="giai điệu" data-meaning="melody / tune" data-pos="noun" data-ipa="zaːi̯ ɗiə̂u̯" data-context="A sequence of pleasing musical notes" data-morphology="giai (fine/excellent) + điệu (tune/manner)" data-difficulty="Intermediate">giai điệu</span> 
+        <span class="vocab" data-word="đẹp" data-meaning="beautiful / exquisite" data-pos="adjective" data-ipa="ɗɛ̂p" data-context="Aesthetically moving or profound sound" data-morphology="đẹp (pretty)" data-difficulty="Beginner">đẹp</span> 
+        <span class="vocab" data-word="đến mức" data-meaning="to such an extent that / so much so" data-pos="conjunction" data-ipa="ɗén mɯ́k" data-context="Degree modifier showing extreme consequence" data-morphology="đến (to) + mức (level/limit)" data-difficulty="Intermediate">đến mức</span> 
+        <span class="vocab" data-word="dường như" data-meaning="seemingly / as if / apparently" data-pos="adverb" data-ipa="zɯəŋ ɲɯ" data-context="Expressing strong speculative impression" data-morphology="dường (seem) + như (like)" data-difficulty="Intermediate">dường như</span> 
+        <span class="vocab" data-word="khiến" data-meaning="to cause / make / compel" data-pos="causative verb" data-ipa="xiə́n" data-context="Bringing about a specific reaction or state" data-morphology="khiến (cause)" data-difficulty="Intermediate">khiến</span> 
+        <span class="vocab" data-word="thời gian" data-meaning="time" data-pos="noun" data-ipa="tʰə̀i zaːn" data-context="The progression of temporal existence" data-morphology="thời (epoch/time) + gian (space/interval)" data-difficulty="Beginner">thời gian</span> 
+        <span class="vocab" data-word="ngừng trôi" data-meaning="stop flowing / freeze / stand still" data-pos="verb phrase" data-ipa="ŋɯ̀ŋ tɾoːi̯" data-context="Poetic stasis of moving time" data-morphology="ngừng (stop) + trôi (drift/flow)" data-difficulty="Intermediate">ngừng trôi</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word="Bà" data-meaning="She" data-pos="pronoun" data-ipa="ɓà" data-context="Respectful/formal female third-person pronoun" data-morphology="bà (grandmother/lady)" data-difficulty="Beginner">Bà</span> 
+        <span class="vocab" data-word="chào đón" data-meaning="to welcome / greet warmly" data-pos="verb" data-ipa="cʰào ɗɔ́n" data-context="Receiving guests with hospitality" data-morphology="chào (greet) + đón (receive)" data-difficulty="Beginner">chào đón</span> 
+        <span class="vocab" data-word="họ" data-meaning="them" data-pos="pronoun" data-ipa="hɔ̂" data-context="Third-person plural target object" data-morphology="họ (they/them/clan)" data-difficulty="Beginner">họ</span> 
+        <span class="vocab" data-word="bằng" data-meaning="with / by means of" data-pos="preposition" data-ipa="ɓàŋ" data-context="Instrumental preposition denoting substance used" data-morphology="bằng (equal/by)" data-difficulty="Beginner">bằng</span> 
+        <span class="vocab" data-word="rượu" data-meaning="wine / liquor" data-pos="noun" data-ipa="zɯ̂u̯" data-context="Intoxicating drink served to travelers" data-morphology="rượu" data-difficulty="Beginner">rượu</span> 
+        <span class="vocab" data-word="và" data-meaning="and" data-pos="conjunction" data-ipa="và" data-context="Coordinating conjunction joining elements" data-morphology="và" data-difficulty="Beginner">và</span> 
+        <span class="vocab" data-word="thức ăn" data-meaning="food / sustenance" data-pos="noun" data-ipa="tʰɯ́k aːn" data-context="Nourishment presented to the crew" data-morphology="thức (matter/item) + ăn (eat)" data-difficulty="Beginner">thức ăn</span> 
+        <span class="vocab" data-word="tẩm" data-meaning="infused / seasoned / marinated" data-pos="verb/adjective" data-ipa="tə̂m" data-context="Steeped or coated with an ingredient" data-morphology="tẩm" data-difficulty="Advanced">tẩm</span> 
+        <span class="vocab" data-word="mật ong" data-meaning="honey" data-pos="noun" data-ipa="mə̂t ɔŋ" data-context="Sweet secretion of bees used for sweetening" data-morphology="mật (nectar/fluid) + ong (bee)" data-difficulty="Beginner">mật ong</span>. 
+        <span class="vocab" data-word="Nhưng" data-meaning="But / However" data-pos="conjunction" data-ipa="ɲɯŋ" data-context="Adversative conjunction introducing an abrupt change" data-morphology="nhưng" data-difficulty="Beginner">Nhưng</span> 
+        <span class="vocab" data-word="ngay khi" data-meaning="as soon as / the moment that" data-pos="conjunction phrase" data-ipa="ŋai̯ xi" data-context="Immediate temporal succession" data-morphology="ngay (immediately) + khi (when)" data-difficulty="Intermediate">ngay khi</span> 
+        <span class="vocab" data-word="những" data-meaning="[plural marker]" data-pos="determiner" data-ipa="ɲɯ̃ŋ" data-context="Pluralizing subsequent count noun phrase" data-morphology="những" data-difficulty="Beginner">những</span> 
+        <span class="vocab" data-word="người đàn ông" data-meaning="men" data-pos="noun" data-ipa="ŋɯ̀i ɗàːn ɔŋ" data-context="Adult male human individuals" data-morphology="người (person) + đàn ông (male)" data-difficulty="Beginner">người đàn ông</span> 
+        <span class="vocab" data-word="uống xong" data-meaning="finished drinking" data-pos="verb phrase" data-ipa="uə́ŋ sɔŋ" data-context="Completion of the consumption process" data-morphology="uống (drink) + xong (finish)" data-difficulty="Beginner">uống xong</span>, 
+        <span class="vocab" data-word="bà" data-meaning="she" data-pos="pronoun" data-ipa="ɓà" data-context="The witch-goddess Circe" data-morphology="bà" data-difficulty="Beginner">bà</span> 
+        <span class="vocab" data-word="vung" data-meaning="brandished / waved / swung" data-pos="verb" data-ipa="vuŋ" data-context="Flourishing an object aggressively through the air" data-morphology="vung" data-difficulty="Advanced">vung</span> 
+        <span class="vocab" data-word="cây đũa phép" data-meaning="magic wand" data-pos="noun" data-ipa="kəi̯ ɗũə̯ fɛ́p" data-context="Sorcerer's tool for channeling enchantments" data-morphology="cây (classifier) + đũa (chopstick/rod) + phép (magic)" data-difficulty="Intermediate">cây đũa phép</span> 
+        <span class="vocab" data-word="về phía" data-meaning="towards / in the direction of" data-pos="prepositional phrase" data-ipa="vè fɪə́" data-context="Directional pointer toward targets" data-morphology="về (return/toward) + phía (side/direction)" data-difficulty="Intermediate">về phía</span> 
+        <span class="vocab" data-word="họ" data-meaning="them" data-pos="pronoun" data-ipa="hɔ̂" data-context="The target sailors" data-morphology="họ" data-difficulty="Beginner">họ</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word="Trong" data-meaning="In / During" data-pos="preposition" data-ipa="tɾɔŋ" data-context="Spatial/situational domain indicator" data-morphology="trong" data-difficulty="Beginner">Trong</span> 
+        <span class="vocab" data-word="một" data-meaning="a" data-pos="article" data-ipa="môt" data-context="Singular event indicator" data-morphology="một" data-difficulty="Beginner">một</span> 
+        <span class="vocab" data-word="sự biến đổi" data-meaning="transformation / alteration" data-pos="noun" data-ipa="sɯ̂ ɓiə́n ɗôi̯" data-context="The process of shifting physical forms" data-morphology="sự (affair/abstract noun marker) + biến (change) + đổi (swap)" data-difficulty="Intermediate">sự biến đổi</span> 
+        <span class="vocab" data-word="kinh hoàng" data-meaning="terrifying / horrifying" data-pos="adjective" data-ipa="kiɲ hwàːŋ" data-context="Eliciting absolute dread or panic" data-morphology="kinh (fright) + hoàng (panic)" data-difficulty="Advanced">kinh hoàng</span>, 
+        <span class="vocab" data-word="giọng nói" data-meaning="voice / spoken sounds" data-pos="noun" data-ipa="zâwŋ mói̯" data-context="Vocal expression of human speech" data-morphology="giọng (tone/voice) + nói (speak)" data-difficulty="Beginner">giọng nói</span> 
+        <span class="vocab" data-word="của họ" data-meaning="their / belonging to them" data-pos="possessive phrase" data-ipa="kủa hɔ̂" data-context="Genitive modifier for the sailors" data-morphology="của (of) + họ (them)" data-difficulty="Beginner">của họ</span> 
+        <span class="vocab" data-word="biến thành" data-meaning="transformed into / turned into" data-pos="verb" data-ipa="ɓiə́n tʰàːɲ" data-context="Complete structural mutation into another thing" data-morphology="biến (change) + thành (become)" data-difficulty="Intermediate">biến thành</span> 
+        <span class="vocab" data-word="tiếng khụt khịt" data-meaning="grunting sounds / snorting" data-pos="noun phrase" data-ipa="tiə́ŋ xût xît" data-context="Onomatopoeic porcine animal noises" data-morphology="tiếng (sound) + khụt khịt (snorting echo)" data-difficulty="Advanced">tiếng khụt khịt</span>, 
+        <span class="vocab" data-word="làn da" data-meaning="skin / epidermis" data-pos="noun" data-ipa="làːn za" data-context="The outer dermal layer of human body" data-morphology="làn (layer/surface classifier) + da (skin)" data-difficulty="Intermediate">làn da</span> 
+        <span class="vocab" data-word="dày lên" data-meaning="thickened up" data-pos="verb phrase" data-ipa="zài̯ len" data-context="Increasing in density and thickness ruggedly" data-morphology="dày (thick) + lên (up/ascend)" data-difficulty="Intermediate">dày lên</span> 
+        <span class="vocab" data-word="thành" data-meaning="into / becoming" data-pos="preposition/verb" data-ipa="tʰàːɲ" data-context="Resultant state modifier" data-morphology="thành" data-difficulty="Beginner">thành</span> 
+        <span class="vocab" data-word="lớp lông cứng" data-meaning="coat of stiff bristles" data-pos="noun phrase" data-ipa="lớp loŋ kɯ́ŋ" data-context="Coarse defensive animal hair" data-morphology="lớp (layer) + lông (fur/hair) + cứng (stiff/rigid)" data-difficulty="Advanced">lớp lông cứng</span>, 
+        <span class="vocab" data-word="và" data-meaning="and" data-pos="conjunction" data-ipa="và" data-context="Connecting coordinate clauses" data-morphology="và" data-difficulty="Beginner">và</span> 
+        <span class="vocab" data-word="họ" data-meaning="they" data-pos="pronoun" data-ipa="hɔ̂" data-context="Subject pronoun for the mutated crew" data-morphology="họ" data-difficulty="Beginner">họ</span> 
+        <span class="vocab" data-word="bị mắc kẹt" data-meaning="were trapped / ensnared" data-pos="passive verb phrase" data-ipa="ɓî mák kɛ̣t" data-context="Adverse containment without escape" data-morphology="bị (adverse passive) + mắc (hooked) + kẹt (stuck)" data-difficulty="Intermediate">bị mắc kẹt</span> 
+        <span class="vocab" data-word="trong" data-meaning="inside" data-pos="preposition" data-ipa="tɾɔŋ" data-context="Inward biological confines" data-morphology="trong" data-difficulty="Beginner">trong</span> 
+        <span class="vocab" data-word="thân xác" data-meaning="physical flesh / carnal body" data-pos="noun" data-ipa="tʰən sák" data-context="The tangible biological form of a creature" data-morphology="thân (body) + xác (corpse/frame)" data-difficulty="Advanced">thân xác</span> 
+        <span class="vocab" data-word="loài heo" data-meaning="swine species / pigs" data-pos="noun" data-ipa="lwài̯ hɛo̯" data-context="Porcine zoological group" data-morphology="loài (species/kind) + heo (pig)" data-difficulty="Beginner">loài heo</span>. 
+        <span class="vocab" data-word="Bên trong" data-meaning="Inside / Internally" data-pos="adverbial noun" data-ipa="ɓen tɾɔŋ" data-context="Inner psychological or hidden realm" data-morphology="bên (side) + trong (inner)" data-difficulty="Beginner">Bên trong</span> 
+        <span class="vocab" data-word="họ" data-meaning="them" data-pos="pronoun" data-ipa="hɔ̂" data-context="The trapped minds of the men" data-morphology="họ" data-difficulty="Beginner">họ</span> 
+        <span class="vocab" data-word="vẫn là" data-meaning="still were / remained" data-pos="verb phrase" data-ipa="və̃n là" data-context="Persistence of original fundamental essence" data-morphology="vẫn (still) + là (be)" data-difficulty="Beginner">vẫn là</span> 
+        <span class="vocab" data-word="con người" data-meaning="human beings" data-pos="noun" data-ipa="kɔn ŋɯ̀i" data-context="Rational mankind with complex feeling" data-morphology="con (classifier for living things) + người (person)" data-difficulty="Beginner">con người</span>, 
+        <span class="vocab" data-word="vẫn" data-meaning="still / continuously" data-pos="adverb" data-ipa="və̃n" data-context="Sustained continuous capability" data-morphology="vẫn" data-difficulty="Beginner">vẫn</span> 
+        <span class="vocab" data-word="có thể" data-meaning="could / were able to" data-pos="modal verb" data-ipa="kɔ́ tʰê" data-context="Inherent psychological capacity to act/feel" data-morphology="có (have) + thể (ability/form)" data-difficulty="Beginner">có thể</span> 
+        <span class="vocab" data-word="khóc" data-meaning="to weep / cry" data-pos="verb" data-ipa="xɔ́k" data-context="Shedding tears out of deep grief" data-morphology="khóc" data-difficulty="Beginner">khóc</span> 
+        <span class="vocab" data-word="và" data-meaning="and" data-pos="conjunction" data-ipa="và" data-context="Clause joiner" data-morphology="và" data-difficulty="Beginner">và</span> 
+        <span class="vocab" data-word="cảm thấy" data-meaning="to sense / feel emotionally" data-pos="verb" data-ipa="kaːm tʰə́i̯" data-context="Experiencing internal emotional states" data-morphology="cảm (perceive/emotion) + thấy (see/perceive)" data-difficulty="Beginner">cảm thấy</span> 
+        <span class="vocab" data-word="sợ hãi" data-meaning="fear / terror" data-pos="noun/adjective" data-ipa="sơ̂ hãi̯" data-context="Deep psychological dread or alarm" data-morphology="sợ (fear) + hãi (frightened)" data-difficulty="Intermediate">sợ hãi</span>, 
+        <span class="vocab" data-word="nhưng" data-meaning="but" data-pos="conjunction" data-ipa="ɲɯŋ" data-context="Contrastive link" data-morphology="nhưng" data-difficulty="Beginner">nhưng</span> 
+        <span class="vocab" data-word="bị khóa chặt" data-meaning="were locked tightly / securely bolted" data-pos="passive verb phrase" data-ipa="ɓî xwá cə̣t" data-context="Imprisoned rigidly without movement" data-morphology="bị (passive) + khóa (lock) + chặt (tightly)" data-difficulty="Intermediate">bị khóa chặt</span> 
+        <span class="vocab" data-word="trong" data-meaning="within" data-pos="preposition" data-ipa="tɾɔŋ" data-context="Confined space of an anatomy" data-morphology="trong" data-difficulty="Beginner">trong</span> 
+        <span class="vocab" data-word="hình dạng" data-meaning="external shape / physical guise" data-pos="noun" data-ipa="hɪ̀ɲ zâːŋ" data-context="The outer visual geometry or form of a thing" data-morphology="hình (form/image) + dạng (appearance)" data-difficulty="Intermediate">hình dạng</span> 
+        <span class="vocab" data-word="động vật" data-meaning="animal / beast" data-pos="noun" data-ipa="ɗôwŋ və̂t" data-context="Non-human biological creature" data-morphology="động (moving) + vật (object/thing)" data-difficulty="Beginner">động vật</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word="Khi" data-meaning="When / As" data-pos="conjunction" data-ipa="xi" data-context="Introducing conditional time frame" data-morphology="khi" data-difficulty="Beginner">Khi</span> 
+        <span class="vocab" data-word="những người do thám" data-meaning="the scouts / advance scouts" data-pos="noun phrase" data-ipa="ɲɯ̃ŋ ŋɯ̀i zɔ tʰám" data-context="Military scouts sent to survey terrain" data-morphology="những (plural) + người (person) + do thám (spy/scout)" data-difficulty="Advanced">những người do thám</span> 
+        <span class="vocab" data-word="không" data-meaning="did not / failed to" data-pos="negative particle" data-ipa="xɔŋ" data-context="Negation of actions" data-morphology="không" data-difficulty="Beginner">không</span> 
+        <span class="vocab" data-word="quay trở lại" data-meaning="return / come back" data-pos="verb" data-ipa="kwaːi̯ tɾở lải̯" data-context="Retracing path back to base camp" data-morphology="quay (turn) + trở lại (back to)" data-difficulty="Beginner">quay trở lại</span>, 
+        <span class="vocab" data-word="Ulysses" data-meaning="Ulysses / Odysseus" data-pos="proper noun" data-ipa="juːˈlɪsiːz" data-context="The hero captain of the ship" data-morphology="Latinized name" data-difficulty="Beginner">Ulysses</span> 
+        <span class="vocab" data-word="một mình" data-meaning="alone / solo" data-pos="adjective/adverb" data-ipa="môt mɪ̀ɲ" data-context="Unaccompanied by any other person" data-morphology="một (one) + mình (self)" data-difficulty="Beginner">một mình</span> 
+        <span class="vocab" data-word="tiến đến" data-meaning="advanced toward / strode towards" data-pos="verb" data-ipa="tiə́n ɗén" data-context="Moving forward purposefully to a destination" data-morphology="tiến (advance) + đến (arrive/to)" data-difficulty="Intermediate">tiến đến</span> 
+        <span class="vocab" data-word="cung điện" data-meaning="palace / grand estate" data-pos="noun" data-ipa="kuŋ ɗiə̂n" data-context="The majestic residence of a royal or deity" data-morphology="cung (palace) + điện (hall/sanctuary)" data-difficulty="Intermediate">cung điện</span>. 
+        <span class="vocab" data-word="Trên đường đi" data-meaning="On the way / en route" data-pos="adverbial phrase" data-ipa="tɾen zɯ̀əŋ ɗi" data-context="While traversing a trajectory" data-morphology="trên (on) + đường (road) + đi (go)" data-difficulty="Beginner">Trên đường đi</span>, 
+        <span class="vocab" data-word="ông" data-meaning="he" data-pos="pronoun" data-ipa="əwŋ" data-context="Respectful male third-person pronoun referencing Ulysses" data-morphology="ông (grandfather/gentleman)" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="bị" data-meaning="was [adversely affected by]" data-pos="passive auxiliary" data-ipa="ɓî" data-context="Passive marker for unexpected interception" data-morphology="bị" data-difficulty="Beginner">bị</span> 
+        <span class="vocab" data-word="Hermes" data-meaning="Hermes" data-pos="proper noun" data-ipa="ˈhɜːrmiːz" data-context="The Olympian messenger god" data-morphology="Greek origin" data-difficulty="Beginner">Hermes</span> — 
+        <span class="vocab" data-word="vị thần đưa tin" data-meaning="the messenger god" data-pos="noun phrase" data-ipa="vî tʰʌ̀n ɗɯə tin" data-context="Divine herald of Olympus" data-morphology="vị (classifier for deities/nobles) + thần (god) + đưa tin (deliver news)" data-difficulty="Intermediate">vị thần đưa tin</span> — 
+        <span class="vocab" data-word="chặn lại" data-meaning="stopped / intercepted / blocked" data-pos="verb phrase" data-ipa="cə̣n lải̯" data-context="Halting someone's advance intentionally" data-morphology="chặn (block) + lại (back/action restriction)" data-difficulty="Intermediate">chặn lại</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word="Hermes" data-meaning="Hermes" data-pos="proper noun" data-ipa="ˈhɜːrmiːz" data-context="The herald deity" data-morphology="Greek origin" data-difficulty="Beginner">Hermes</span> 
+        <span class="vocab" data-word="đưa cho" data-meaning="handed over / gave to" data-pos="verb" data-ipa="ɗɯə cɔ" data-context="Transferring physical custody of an object" data-morphology="đưa (hand/send) + cho (give)" data-difficulty="Beginner">đưa cho</span> 
+        <span class="vocab" data-word="ông" data-meaning="him" data-pos="pronoun" data-ipa="əwŋ" data-context="Ulysses" data-morphology="ông" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="một loại" data-meaning="a type of / a sort of" data-pos="noun phrase" data-ipa="môt lwải̯" data-context="Indefinite categorizer of items" data-morphology="một (one) + loại (type)" data-difficulty="Beginner">một loại</span> 
+        <span class="vocab" data-word="thảo mộc" data-meaning="herb / medicinal flora" data-pos="noun" data-ipa="tʰảo môk" data-context="Botanical specimens with chemical or magic traits" data-morphology="thảo (grass/herb) + mộc (wood/tree)" data-difficulty="Advanced">thảo mộc</span> 
+        <span class="vocab" data-word="thần kỳ" data-meaning="miraculous / magical / divine" data-pos="adjective" data-ipa="tʰʌ̀n kì" data-context="Possessing inexplicable supernatural efficacy" data-morphology="thần (god/spirit) + kỳ (strange/marvelous)" data-difficulty="Intermediate">thần kỳ</span> 
+        <span class="vocab" data-word="để" data-meaning="in order to / so that" data-pos="conjunction" data-ipa="ɗẻ" data-context="Introducing intentional objective or purpose" data-morphology="để" data-difficulty="Beginner">để</span> 
+        <span class="vocab" data-word="bảo vệ" data-meaning="protect / shield / defend" data-pos="verb" data-ipa="ɓảo vê" data-context="Preserving safety against destructive forces" data-morphology="bảo (preserve/guard) + vệ (defend)" data-difficulty="Intermediate">bảo vệ</span> 
+        <span class="vocab" data-word="ông" data-meaning="him" data-pos="pronoun" data-ipa="əwŋ" data-context="Ulysses" data-morphology="ông" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="khỏi" data-meaning="from / safe out of" data-pos="preposition" data-ipa="xɔ̉i" data-context="Preposition denoting escape or immunization from harm" data-morphology="khỏi" data-difficulty="Intermediate">khỏi</span> 
+        <span class="vocab" data-word="phép thuật" data-meaning="magic / wizardry / sorcery" data-pos="noun" data-ipa="fɛ́p tʰuə̂t" data-context="Supernatural manipulation of reality" data-morphology="phép (permission/rule) + thuật (art/craft)" data-difficulty="Intermediate">phép thuật</span> 
+        <span class="vocab" data-word="của" data-meaning="of" data-pos="preposition" data-ipa="kủa" data-context="Genitive possessive marker" data-morphology="của" data-difficulty="Beginner">của</span> 
+        <span class="vocab" data-word="nữ phù thủy" data-meaning="witch / sorceress" data-pos="noun" data-ipa="nɯ̃ fù tʰɯ̉i" data-context="A woman exercising magical crafts" data-morphology="nữ (female) + phù thủy (shaman/sorcerer)" data-difficulty="Intermediate">nữ phù thủy</span>. 
+        <span class="vocab" data-word="Khi" data-meaning="When" data-pos="conjunction" data-ipa="xi" data-context="Temporal trigger clause" data-morphology="khi" data-difficulty="Beginner">Khi</span> 
+        <span class="vocab" data-word="Circe" data-meaning="Circe" data-pos="proper noun" data-ipa="sɜːrsi" data-context="The goddess hostess" data-morphology="Greek origin" data-difficulty="Beginner">Circe</span> 
+        <span class="vocab" data-word="đưa cho" data-meaning="handed over to" data-pos="verb" data-ipa="ɗɯə cɔ" data-context="Presenting an item directly" data-morphology="đưa + cho" data-difficulty="Beginner">đưa cho</span> 
+        <span class="vocab" data-word="ông" data-meaning="him" data-pos="pronoun" data-ipa="əwŋ" data-context="Ulysses" data-morphology="ông" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="ly rượu" data-meaning="goblet of wine / wine glass" data-pos="noun" data-ipa="li zɯ̂u̯" data-context="Drinking vessel containing wine" data-morphology="ly (glass/cup) + rượu (wine)" data-difficulty="Beginner">ly rượu</span> 
+        <span class="vocab" data-word="bị đầu độc" data-meaning="poisoned / laced with toxins" data-pos="passive adjective phrase" data-ipa="ɓî ɗə̀u̯ ɗôk" data-context="Contaminated covertly with lethal compounds" data-morphology="bị (passive) + đầu độc (administer poison)" data-difficulty="Advanced">bị đầu độc</span>, 
+        <span class="vocab" data-word="ông" data-meaning="he" data-pos="pronoun" data-ipa="əwŋ" data-context="The hero" data-morphology="ông" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="uống" data-meaning="drank / consumed liquid" data-pos="verb" data-ipa="uə́ŋ" data-context="Ingesting the fluid contents" data-morphology="uống" data-difficulty="Beginner">uống</span> 
+        <span class="vocab" data-word="nó" data-meaning="it" data-pos="pronoun" data-ipa="nɔ́" data-context="The poisoned wine" data-morphology="nó" data-difficulty="Beginner">nó</span> 
+        <span class="vocab" data-word="nhưng" data-meaning="but" data-pos="conjunction" data-ipa="ɲɯŋ" data-context="Introducing unexpected immunity" data-morphology="nhưng" data-difficulty="Beginner">nhưng</span> 
+        <span class="vocab" data-word="không hề hấn gì" data-meaning="unscathed / entirely unharmed" data-pos="idiomatic adjective" data-ipa="xɔŋ hè hʌ́n zì" data-context="Suffering zero ill effects or injury" data-morphology="không (not) + hề hấn (slight damage) + gì (any)" data-difficulty="Advanced">không hề hấn gì</span>. 
+        <span class="vocab" data-word="Rút kiếm ra" data-meaning="Drawing his sword / unsheathing blade" data-pos="verb phrase" data-ipa="zʊ́t kiə́m ra" data-context="Brandishing a combat weapon dynamically" data-morphology="Rút (pull out) + kiếm (sword) + ra (out)" data-difficulty="Intermediate">Rút kiếm ra</span>, 
+        <span class="vocab" data-word="ông" data-meaning="he" data-pos="pronoun" data-ipa="əwŋ" data-context="Ulysses" data-morphology="ông" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="buộc" data-meaning="forced / compelled / coerced" data-pos="verb" data-ipa="ɓuə̂k" data-context="Using leverage to command obedience" data-morphology="buộc (tie/force)" data-difficulty="Intermediate">buộc</span> 
+        <span class="vocab" data-word="bà" data-meaning="her" data-pos="pronoun" data-ipa="ɓà" data-context="Circe" data-morphology="bà" data-difficulty="Beginner">bà</span> 
+        <span class="vocab" data-word="phải" data-meaning="must / to have to" data-pos="modal verb" data-ipa="fải̯" data-context="Obligation under duress" data-morphology="phải" data-difficulty="Beginner">phải</span> 
+        <span class="vocab" data-word="đảo ngược" data-meaning="reverse / undo / invert" data-pos="verb" data-ipa="ɗảo ŋɯợc" data-context="Overturning a process or spell completely" data-morphology="đảo (turn/flip) + ngược (backward)" data-difficulty="Advanced">đảo ngược</span> 
+        <span class="vocab" data-word="phép biến đổi" data-meaning="the transformation spell" data-pos="noun phrase" data-ipa="fɛ́p ɓiə́n ɗôi̯" data-context="The active transmutation spell" data-morphology="phép (spell) + biến đổi (transformation)" data-difficulty="Intermediate">phép biến đổi</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word="Điều" data-meaning="The thing / What" data-pos="noun / noun classifier" data-ipa="ɗiə̀u̯" data-context="Abstract matter or event reference" data-morphology="điều" data-difficulty="Beginner">Điều</span> 
+        <span class="vocab" data-word="xảy ra" data-meaning="occurred / happened" data-pos="verb" data-ipa="sải̯ ra" data-context="Transpiring in real space and time" data-morphology="xảy (happen) + ra (out)" data-difficulty="Beginner">xảy ra</span> 
+        <span class="vocab" data-word="tiếp theo" data-meaning="next / subsequently" data-pos="adjective / adverb" data-ipa="tiə́p tʰɛo̯" data-context="Following immediately in chronological sequence" data-morphology="tiếp (continue) + theo (follow)" data-difficulty="Beginner">tiếp theo</span> 
+        <span class="vocab" data-word="khiến" data-meaning="caused / made" data-pos="verb" data-ipa="xiə́n" data-context="Evoking a reaction" data-morphology="khiến" data-difficulty="Intermediate">khiến</span> 
+        <span class="vocab" data-word="ông" data-meaning="him" data-pos="pronoun" data-ipa="əwŋ" data-context="Ulysses" data-morphology="ông" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="ngạc nhiên" data-meaning="surprised / astonished" data-pos="adjective" data-ipa="ŋải̯ ɲiən" data-context="Stunned by unexpected turns of events" data-morphology="ngạc (astounded) + nhiên (suffix forming adjs)" data-difficulty="Intermediate">ngạc nhiên</span>. 
+        <span class="vocab" data-word="Circe" data-meaning="Circe" data-pos="proper noun" data-ipa="sɜːrsi" data-context="The complex goddess" data-morphology="Greek origin" data-difficulty="Beginner">Circe</span> 
+        <span class="vocab" data-word="không chỉ là" data-meaning="not only is/was" data-pos="conjunction phrase" data-ipa="xɔŋ cỉ là" data-context="Correlative phrase introducing non-exclusive facts" data-morphology="không (not) + chỉ (only) + là (be)" data-difficulty="Intermediate">không chỉ là</span> 
+        <span class="vocab" data-word="một" data-meaning="a" data-pos="article" data-ipa="môt" data-context="Singular indicator" data-morphology="một" data-difficulty="Beginner">một</span> 
+        <span class="vocab" data-word="quái vật" data-meaning="monster / fiend" data-pos="noun" data-ipa="kwái̯ və̂t" data-context="An unnatural or malicious being" data-morphology="quái (strange/monstrous) + vật (creature/thing)" data-difficulty="Intermediate">quái vật</span>; 
+        <span class="vocab" data-word="bà" data-meaning="she" data-pos="pronoun" data-ipa="ɓà" data-context="The lady" data-morphology="bà" data-difficulty="Beginner">bà</span> 
+        <span class="vocab" data-word="còn" data-meaning="additionally / also" data-pos="adverb" data-ipa="kɔ̀n" data-context="Additive focus marker showing extra traits" data-morphology="còn (remain/also)" data-difficulty="Beginner">còn</span> 
+        <span class="vocab" data-word="cô đơn" data-meaning="lonely / lonesome" data-pos="adjective" data-ipa="ko ɗơn" data-context="Sorrowfully isolated without companionship" data-morphology="cô (isolated/solitary) + đơn (single)" data-difficulty="Intermediate">cô đơn</span> 
+        <span class="vocab" data-word="và" data-meaning="and" data-pos="conjunction" data-ipa="và" data-context="Connector" data-morphology="và" data-difficulty="Beginner">và</span> 
+        <span class="vocab" data-word="vô cùng" data-meaning="immensely / boundlessly / extremely" data-pos="adverb" data-ipa="vo kùŋ" data-context="Intensifier indicating endless degree" data-morphology="vô (without) + cùng (limit/end)" data-difficulty="Intermediate">vô cùng</span> 
+        <span class="vocab" data-word="thông minh" data-meaning="intelligent / clever / astute" data-pos="adjective" data-ipa="tʰəwŋ mɪɲ" data-context="Possessing high cognitive ability and wisdom" data-morphology="thông (clear/penetrate) + minh (bright/wise)" data-difficulty="Beginner">thông minh</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word="Bà" data-meaning="She" data-pos="pronoun" data-ipa="ɓà" data-context="Circe" data-morphology="bà" data-difficulty="Beginner">Bà</span> 
+        <span class="vocab" data-word="đề nghị" data-meaning="offered / proposed" data-pos="verb" data-ipa="ɗè ŋî" data-context="Extending a generous proposition" data-morphology="đề (bring forward) + nghị (discuss/deliberate)" data-difficulty="Intermediate">đề nghị</span> 
+        <span class="vocab" data-word="cho" data-meaning="to give / grant" data-pos="verb / preposition" data-ipa="cɔ" data-context="Benefactive marker for target" data-morphology="cho" data-difficulty="Beginner">cho</span> 
+        <span class="vocab" data-word="ông" data-meaning="him" data-pos="pronoun" data-ipa="əwŋ" data-context="Ulysses" data-morphology="ông" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="một" data-meaning="a" data-pos="article" data-ipa="môt" data-context="Singular item" data-morphology="một" data-difficulty="Beginner">một</span> 
+        <span class="vocab" data-word="cuộc sống" data-meaning="life / existence" data-pos="noun" data-ipa="kuə̂k sɔ́ŋ" data-context="The trajectory or style of living" data-morphology="cuộc (event/classifier) + sống (live)" data-difficulty="Beginner">cuộc sống</span> 
+        <span class="vocab" data-word="đầy" data-meaning="full of / brimming with" data-pos="adjective" data-ipa="ɗə̀i" data-context="Abounding completely with characteristics" data-morphology="đầy" data-difficulty="Beginner">đầy</span> 
+        <span class="vocab" data-word="tiện nghi" data-meaning="comforts / luxuries / amenities" data-pos="noun" data-ipa="tiə̂n ŋi" data-context="Material arrangements easing physical life" data-morphology="tiện (convenient) + nghi (fitting/proper)" data-difficulty="Advanced">tiện nghi</span>, 
+        <span class="vocab" data-word="bất tử" data-meaning="immortal / undying" data-pos="adjective" data-ipa="ɓə́t tɯ̉" data-context="Exempt forever from mortality and aging" data-morphology="bất (not) + tử (die)" data-difficulty="Advanced">bất tử</span> 
+        <span class="vocab" data-word="và" data-meaning="and" data-pos="conjunction" data-ipa="và" data-context="Coordinator" data-morphology="và" data-difficulty="Beginner">và</span> 
+        <span class="vocab" data-word="khoái lạc" data-meaning="sensual pleasure / hedonistic delight" data-pos="noun" data-ipa="xwái̯ lák" data-context="Intense self-indulgent gratification" data-morphology="khoái (pleased/happy) + lạc (joy/enjoyment)" data-difficulty="Advanced">khoái lạc</span>. 
+        <span class="vocab" data-word="Suốt" data-meaning="Throughout / All through" data-pos="preposition / adverb" data-ipa="suə́t" data-context="Unbroken continuous duration of time" data-morphology="suốt" data-difficulty="Intermediate">Suốt</span> 
+        <span class="vocab" data-word="một năm" data-meaning="a single year" data-pos="noun phrase" data-ipa="môt năm" data-context="Twelve-month structural era" data-morphology="một (one) + năm (year)" data-difficulty="Beginner">một năm</span>, 
+        <span class="vocab" data-word="thủy thủ đoàn" data-meaning="ship crew / ship's company" data-pos="noun" data-ipa="tʰủi̯ tʰủ ɗwàːn" data-context="The collective assembly of maritime sailors" data-morphology="thủy (water) + thủ (hand/operator) + đoàn (group/corps)" data-difficulty="Advanced">thủy thủ đoàn</span> 
+        <span class="vocab" data-word="sống" data-meaning="lived / resided" data-pos="verb" data-ipa="sɔ́ŋ" data-context="Carrying out their daily existence" data-morphology="sống" data-difficulty="Beginner">sống</span> 
+        <span class="vocab" data-word="trong" data-meaning="inside / within" data-pos="preposition" data-ipa="tɾɔŋ" data-context="Situational setting environment" data-morphology="trong" data-difficulty="Beginner">trong</span> 
+        <span class="vocab" data-word="sự xa hoa" data-meaning="luxury / opulence / extravagance" data-pos="noun" data-ipa="sɯ̂ sa xwa" data-context="Lavish indulgence beyond necessity" data-morphology="sự (noun marker) + xa (wasteful) + hoa (splendid)" data-difficulty="Advanced">sự xa hoa</span> 
+        <span class="vocab" data-word="của" data-meaning="of" data-pos="preposition" data-ipa="kủa" data-context="Belonging to" data-morphology="của" data-difficulty="Beginner">của</span> 
+        <span class="vocab" data-word="bà" data-meaning="her" data-pos="pronoun" data-ipa="ɓà" data-context="Circe" data-morphology="bà" data-difficulty="Beginner">bà</span>, 
+        <span class="vocab" data-word="ký ức" data-meaning="memories / mental recollections" data-pos="noun" data-ipa="kí ɯ́k" data-context="Mental recordings of historical experiences" data-morphology="ký (record) + ức (remember)" data-difficulty="Advanced">ký ức</span> 
+        <span class="vocab" data-word="về" data-meaning="about / concerning" data-pos="preposition" data-ipa="vè" data-context="Topic direction relative to memories" data-morphology="về" data-difficulty="Beginner">về</span> 
+        <span class="vocab" data-word="quê nhà" data-meaning="homeland / native country" data-pos="noun" data-ipa="kwe ɲà" data-context="The original physical point of origin or home country" data-morphology="quê (countryside/origin) + nhà (home)" data-difficulty="Intermediate">quê nhà</span> 
+        <span class="vocab" data-word="dần trở nên" data-meaning="gradually became / slowly grew into" data-pos="verb phrase" data-ipa="zʌ̀n tɾở nen" data-context="Incremental transformation over temporal progression" data-morphology="dần (gradually) + trở nên (become)" data-difficulty="Intermediate">dần trở nên</span> 
+        <span class="vocab" data-word="mờ nhạt" data-meaning="faded / faint / obscure" data-pos="adjective" data-ipa="mờ ɲải̯" data-context="Losing intensity or clarity within consciousness" data-morphology="mờ (dim/blurry) + nhạt (bland/pale)" data-difficulty="Intermediate">mờ nhạt</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word="Thế nhưng" data-meaning="However / Yet" data-pos="conjunction" data-ipa="tʰé ɲɯŋ" data-context="Adversative focal connector breaking trend" data-morphology="thế (thus) + nhưng (but)" data-difficulty="Intermediate">Thế nhưng</span> 
+        <span class="vocab" data-word="mỗi" data-meaning="every / each" data-pos="determiner" data-ipa="mõi̯" data-context="Distributive temporal descriptor" data-morphology="mỗi" data-difficulty="Beginner">mỗi</span> 
+        <span class="vocab" data-word="buổi tối" data-meaning="evening / nightfall" data-pos="noun" data-ipa="ɓuə̉i̯ tói̯" data-context="The later section of the standard diurnal cycle" data-morphology="buổi (period/session) + tối (dark/evening)" data-difficulty="Beginner">buổi tối</span>, 
+        <span class="vocab" data-word="Ulysses" data-meaning="Ulysses" data-pos="proper noun" data-ipa="juːˈlɪsiːz" data-context="The focal hero protagonist" data-morphology="Latinized name" data-difficulty="Beginner">Ulysses</span> 
+        <span class="vocab" data-word="vẫn" data-meaning="still / continuously" data-pos="adverb" data-ipa="və̃n" data-context="Sustaining custom despite surrounding comforts" data-morphology="vẫn" data-difficulty="Beginner">vẫn</span> 
+        <span class="vocab" data-word="ngồi" data-meaning="sat / remained seated" data-pos="verb" data-ipa="ŋôi̯" data-context="Posturing baseline location physically" data-morphology="ngồi" data-difficulty="Beginner">ngồi</span> 
+        <span class="vocab" data-word="bên bờ biển" data-meaning="by the seashore / beachside" data-pos="noun phrase" data-ipa="ɓen ɓờ ɓiə̉n" data-context="The geographic boundary between marine waters and coast land" data-morphology="bên (side) + bờ (bank/shore) + biển (sea)" data-difficulty="Intermediate">bên bờ biển</span>, 
+        <span class="vocab" data-word="nhìn chằm chằm" data-meaning="staring fixedly / gazing intently" data-pos="verb phrase" data-ipa="ɲɪ̀ɲ cʌ̀m cʌ̀m" data-context="Unblinking visual focus towards something distant" data-morphology="nhìn (look) + chằm chằm (reduplicative intent marker)" data-difficulty="Advanced">nhìn chằm chằm</span> 
+        <span class="vocab" data-word="về phía" data-meaning="toward" data-pos="prepositional phrase" data-ipa="vè fɪə́" data-context="Orientation pointer" data-morphology="về + phía" data-difficulty="Intermediate">về phía</span> 
+        <span class="vocab" data-word="chân trời" data-meaning="the horizon" data-pos="noun" data-ipa="căn tɾời" data-context="The apparent intersecting line between sky and land/water surface" data-morphology="chân (foot) + trời (sky)" data-difficulty="Intermediate">chân trời</span>. 
+        <span class="vocab" data-word="Ông" data-meaning="He" data-pos="pronoun" data-ipa="əwŋ" data-context="Ulysses" data-morphology="ông" data-difficulty="Beginner">Ông</span> 
+        <span class="vocab" data-word="nhận ra" data-meaning="realized / perceived fully" data-pos="verb" data-ipa="ɲə̂n ra" data-context="Sudden intentional epistemic comprehension" data-morphology="nhận (receive/accept) + ra (out)" data-difficulty="Intermediate">nhận ra</span> 
+        <span class="vocab" data-word="rằng" data-meaning="that" data-pos="complementizer" data-ipa="zàŋ" data-context="Introducing statement clauses" data-morphology="rằng" data-difficulty="Beginner">rằng</span> 
+        <span class="vocab" data-word="một" data-meaning="a" data-pos="article" data-ipa="môt" data-context="Singular condition modifier" data-morphology="một" data-difficulty="Beginner">một</span> 
+        <span class="vocab" data-word="cuộc sống" data-meaning="life" data-pos="noun" data-ipa="kuə̂k sɔ́ŋ" data-context="The existential state" data-morphology="cuộc + sống" data-difficulty="Beginner">cuộc sống</span> 
+        <span class="vocab" data-word="chỉ toàn" data-meaning="consisting entirely of / nothing but" data-pos="adverbial phrase" data-ipa="cỉ twàːn" data-context="Limiting criteria exclusively to one element" data-morphology="chỉ (only) + toàn (entirely)" data-difficulty="Intermediate">chỉ toàn</span> 
+        <span class="vocab" data-word="hưởng thụ" data-meaning="pleasurable indulgence / enjoyment" data-pos="verb / noun" data-ipa="hɯ̉əŋ tʰû" data-context="Reaping consumption comforts passive of labor" data-morphology="hưởng (enjoy/receive) + thụ (receive/undergo)" data-difficulty="Advanced">hưởng thụ</span> 
+        <span class="vocab" data-word="dễ dàng" data-meaning="easy / effortless" data-pos="adjective" data-ipa="zẽ zàːŋ" data-context="Lacking arduous friction or challenge" data-morphology="dễ (easy) + dàng (alliterative suffix)" data-difficulty="Beginner">dễ dàng</span> 
+        <span class="vocab" data-word="thường chỉ là" data-meaning="often is merely" data-pos="verb phrase" data-ipa="tʰɯ̀əŋ cỉ là" data-context="Expressing common baseline evaluations" data-morphology="thường (usually) + chỉ (only) + là (be)" data-difficulty="Intermediate">thường chỉ là</span> 
+        <span class="vocab" data-word="một kiểu" data-meaning="a type of / a kind of" data-pos="noun phrase" data-ipa="môt kiə̉u̯" data-context="A variation or specific modality" data-morphology="một (one) + kiểu (pattern/style)" data-difficulty="Beginner">một kiểu</span> 
+        <span class="vocab" data-word="nhà tù" data-meaning="prison / penitentiary" data-pos="noun" data-ipa="ɲà tù" data-context="Place of systematic captivity and structural containment" data-morphology="nhà (house) + tù (prisoner/confinement)" data-difficulty="Intermediate">nhà tù</span> 
+        <span class="vocab" data-word="khác" data-meaning="different / other" data-pos="adjective" data-ipa="xák" data-context="Distinct from standard physical containment" data-morphology="khác" data-difficulty="Beginner">khác</span>. 
+        <span class="vocab" data-word="Ông" data-meaning="He" data-pos="pronoun" data-ipa="əwŋ" data-context="The hero" data-morphology="ông" data-difficulty="Beginner">Ông</span> 
+        <span class="vocab" data-word="nói với" data-meaning="spoke to / told" data-pos="verb phrase" data-ipa="mɔ́i̯ với̯" data-context="Communicating statements verbally to a party" data-morphology="nói (speak) + với (with)" data-difficulty="Beginner">nói với</span> 
+        <span class="vocab" data-word="Circe" data-meaning="Circe" data-pos="proper noun" data-ipa="sɜːrsi" data-context="The listener" data-morphology="Greek origin" data-difficulty="Beginner">Circe</span> 
+        <span class="vocab" data-word="rằng" data-meaning="that" data-pos="complementizer" data-ipa="zàŋ" data-context="Reporting statement content clauses" data-morphology="rằng" data-difficulty="Beginner">rằng</span> 
+        <span class="vocab" data-word="mình" data-meaning="himself / I [reflexive / internal narrator]" data-pos="pronoun" data-ipa="mɪ̀ɲ" data-context="Reflexive core self pronoun" data-morphology="mình (body/self)" data-difficulty="Beginner">mình</span> 
+        <span class="vocab" data-word="phải rời đi" data-meaning="must depart / leave" data-pos="verb phrase" data-ipa="fải̯ zời ɗi" data-context="Inescapable moral obligation to take physical leave" data-morphology="phải (must) + rời (separate) + đi (go)" data-difficulty="Intermediate">phải rời đi</span>; 
+        <span class="vocab" data-word="ông" data-meaning="he" data-pos="pronoun" data-ipa="əwŋ" data-context="Ulysses" data-morphology="ông" data-difficulty="Beginner">ông</span> 
+        <span class="vocab" data-word="thà" data-meaning="would rather / would prefer to" data-pos="adverb" data-ipa="tʰà" data-context="Introducing strong personal choice or preference of hardship over luxury" data-morphology="thà" data-difficulty="Advanced">thà</span>...
+    </p>
+</div>
+
+<div class="vocab-panel" id="vocabPanel">
+    <h3 id="panelWord">Word</h3>
+    <div class="attribute"><span class="attr-label">Meaning:</span><span class="attr-val" id="panelMeaning"></span></div>
+    <div class="attribute"><span class="attr-label">Part of Speech:</span><span class="attr-val" id="panelPos"></span></div>
+    <div class="attribute"><span class="attr-label">IPA Phonetic:</span><span class="attr-val" id="panelIpa"></span></div>
+    <div class="attribute"><span class="attr-label">Contextual Nuance:</span><span class="attr-val" id="panelContext"></span></div>
+    <div class="attribute"><span class="attr-label">Morphology Code:</span><span class="attr-val" id="panelMorphology"></span></div>
+    <div class="attribute"><span class="attr-label">Difficulty:</span><span class="attr-val" id="panelDifficulty"></span></div>
+</div>
+
+<script>
+    const vocabSpans = document.querySelectorAll('.vocab');
+    const panel = document.getElementById('vocabPanel');
+    
+    const pWord = document.getElementById('panelWord');
+    const pMeaning = document.getElementById('panelMeaning');
+    const pPos = document.getElementById('panelPos');
+    const pIpa = document.getElementById('panelIpa');
+    const pContext = document.getElementById('panelContext');
+    const pMorphology = document.getElementById('panelMorphology');
+    const pDifficulty = document.getElementById('panelDifficulty');
+
+    vocabSpans.forEach(span => {
+        span.addEventListener('click', function(e) {
+            e.stopPropagation();
+            
+            // Populate all 7 attributes
+            pWord.textContent = this.getAttribute('data-word');
+            pMeaning.textContent = this.getAttribute('data-meaning');
+            pPos.textContent = this.getAttribute('data-pos');
+            pIpa.textContent = this.getAttribute('data-ipa');
+            pContext.textContent = this.getAttribute('data-context');
+            pMorphology.textContent = this.getAttribute('data-morphology');
+            pDifficulty.textContent = this.getAttribute('data-difficulty');
+            
+            // Calculate coordinates to show near word safely
+            const rect = this.getBoundingClientRect();
+            const pageRect = document.querySelector('.page').getBoundingClientRect();
+            
+            // Absolute position within the relative .page space
+            let topPos = (rect.bottom - pageRect.top) + window.scrollY + 10;
+            let leftPos = (rect.left - pageRect.left) + window.scrollX;
+            
+            // Check boundaries
+            if (leftPos + 340 > pageRect.width) {
+                leftPos = pageRect.width - 350;
+            }
+            
+            panel.style.top = topPos + 'px';
+            panel.style.left = leftPos + 'px';
+            panel.style.display = 'block';
+        });
+    });
+
+    // Hide panel when clicking elsewhere
+    document.addEventListener('click', function() {
+        panel.style.display = 'none';
+    });
+    
+    panel.addEventListener('click', function(e) {
+        e.stopPropagation();
+    });
+</script>
+
+</body>
+</html>
+
+
+Gemini is AI and can make mistakes.
