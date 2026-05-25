@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<title>Episode 5: Vùng Đất Của Người Chết</title>
+<style>
+  html, body {
+    background-color: #2b2b2b;
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    font-size: 17px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    min-height: 100vh;
+    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+  }
+
+  .page-container {
+    background-color: #f0e6c8;
+    color: #2a1500;
+    max-width: 800px;
+    width: 100%;
+    margin: 40px 20px;
+    border: 2px solid #a0845a;
+    padding: 40px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    box-sizing: border-box;
+  }
+
+  h1 {
+    color: #3a1f00;
+    font-size: 2.2rem;
+    border-bottom: 2px solid #7a4e1a;
+    padding-bottom: 12px;
+    margin-top: 0;
+    margin-bottom: 24px;
+  }
+
+  h2 {
+    color: #3a1f00;
+    font-size: 1.6rem;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 8px;
+    margin-top: 30px;
+    margin-bottom: 20px;
+  }
+
+  p {
+    line-height: 1.7;
+    margin-bottom: 20px;
+    text-align: justify;
+  }
+
+  /* Audio Player Styling */
+  .audio-section {
+    margin-bottom: 30px;
+    background: rgba(46, 31, 10, 0.05);
+    padding: 15px;
+    border-radius: 4px;
+    border: 1px solid #a0845a;
+  }
+
+  .audio-label {
+    font-size: 0.95rem;
+    color: #7a4e1a;
+    font-weight: bold;
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  audio {
+    width: 100%;
+    margin-bottom: 12px;
+    outline: none;
+  }
+
+  /* Custom audio accent pseudo-styling */
+  audio::-webkit-media-controls-panel {
+    background-color: #2e1f0a;
+  }
+  audio::-webkit-media-controls-current-time-display,
+  audio::-webkit-media-controls-time-remaining-display {
+    color: #f0d9a0;
+  }
+  audio::-webkit-media-controls-timeline {
+    background-color: #c8a060;
+    border-radius: 2px;
+  }
+
+  .audio-controls, .speed-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+
+  .rewind-btn, .speed-btn {
+    background-color: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 6px 12px;
+    font-size: 0.9rem;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    border-radius: 3px;
+    transition: background-color 0.2s;
+  }
+
+  .rewind-btn:hover, .speed-btn:hover {
+    background-color: #422d12;
+  }
+
+  .speed-btn.active {
+    background-color: #c8a060;
+    color: #2e1f0a;
+    border-color: #c8a060;
+    font-weight: bold;
+  }
+
+  /* Clickable Vocabulary Styling */
+  .vocab {
+    border-bottom: 2.5px dotted #1a5c20;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  .vocab:hover {
+    background-color: rgba(26, 92, 32, 0.12);
+  }
+
+  /* Navigation / Controls Buttons */
+  .back-btn {
+    display: inline-block;
+    background-color: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    padding: 8px 16px;
+    margin: 20px 0;
+    cursor: pointer;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 0.95rem;
+    transition: background-color 0.2s;
+  }
+
+  .back-btn:hover {
+    background-color: #422d12;
+  }
+
+  /* Fixed Centered Popup Card Styling */
+  .popup-card {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #2e1f0a;
+    color: #f0d9a0;
+    border: 2px solid #7a4e1a;
+    padding: 24px;
+    border-radius: 6px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.7);
+    display: none;
+    z-index: 1000;
+    max-width: 450px;
+    width: 90%;
+    box-sizing: border-box;
+  }
+
+  .popup-heading {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: #ffffff;
+    margin-bottom: 4px;
+  }
+
+  .popup-secondary {
+    font-size: 0.95rem;
+    font-style: italic;
+    color: #c8a060;
+    margin-bottom: 8px;
+  }
+
+  .popup-pos {
+    font-size: 0.95rem;
+    color: #a0845a;
+    margin-bottom: 12px;
+    border-bottom: 1px solid #7a4e1a;
+    padding-bottom: 4px;
+  }
+
+  .popup-def {
+    font-size: 1rem;
+    line-height: 1.4;
+    margin-bottom: 14px;
+    color: #f0d9a0;
+  }
+
+  .popup-context-label {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #c8a060;
+    margin-bottom: 4px;
+  }
+
+  .popup-context {
+    font-size: 0.95rem;
+    font-style: italic;
+    line-height: 1.4;
+    color: #e0cd9a;
+  }
+
+  /* Test Your Memory Grid */
+  .memory-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-top: 20px;
+  }
+
+  .memory-word {
+    border-bottom: 1.5px dotted #7a4e1a;
+    cursor: pointer;
+    font-size: 0.95rem;
+    text-align: center;
+    padding: 6px;
+    background: rgba(46, 31, 10, 0.03);
+    border-radius: 3px;
+    transition: background-color 0.2s;
+  }
+
+  .memory-word:hover {
+    background: rgba(46, 31, 10, 0.1);
+  }
+
+  @media (max-width: 600px) {
+    .memory-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="page-container">
+
+  <div class="audio-section">
+    <span class="audio-label">🎧 Listen to the text</span>
+    <audio id="audio-player" src="land-dead.mp3" controls></audio>
+    
+    <div class="audio-controls">
+      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+    </div>
+
+    <div class="speed-controls">
+      <label style="color:#7a4e1a; margin-right:8px; align-self:center; font-weight:bold; font-size:0.9rem;">Speed:</label>
+      <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+      <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+      <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+      <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+      <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+    </div>
+  </div>
+  <h1>
+    <span class="vocab" id="w-episode" data-word-en="Episode" data-word-vn="Tập" data-pos="danh từ / noun" data-def-en="A part of a serialized story or broadcast." data-def-vn="Một phần của câu chuyện được phát hành nhiều kỳ hoặc chương trình phát sóng." data-context-en="This text marks the beginning of Episode 5." data-context-vn="Văn bản này đánh dấu sự bắt đầu của Tập 5.">Episode 5</span>: 
+    <span class="vocab" id="w-land1" data-word-en="The Land" data-word-vn="Vùng Đất" data-pos="danh từ / noun" data-def-en="A literal country, region, or distinct area of ground." data-def-vn="Một quốc gia, khu vực hoặc một vùng đất riêng biệt theo nghĩa đen." data-context-en="Ulysses must journey to the land of the deceased." data-context-vn="Ulysses phải hành trình đến vùng đất của những người đã khuất.">Vùng Đất</span> 
+    <span class="vocab" id="w-dead1" data-word-en="The Dead" data-word-vn="Người Chết" data-pos="danh từ / noun" data-def-en="Those who have died or ceased to live." data-def-vn="Những người đã qua đời hoặc không còn sống." data-context-en="The title refers directly to the spirits of the dead." data-context-vn="Tiêu đề đề cập trực tiếp đến linh hồn của người chết.">Của Người Chết</span>
+  </h1>
+
+  <p>
+    <span class="vocab" id="w-warning" data-word-en="Warning" data-word-vn="Lời cảnh báo" data-pos="danh từ / noun" data-def-en="A statement or event that indicates a possible danger or problem." data-def-vn="Một tuyên bố hoặc một sự kiện chỉ ra mối nguy hiểm hoặc vấn đề có thể xảy ra." data-context-en="Circe left a terrifying final warning for the travelers." data-context-vn="Circe đã để lại một lời cảnh báo cuối cùng đầy đáng sợ cho những người du hành.">Lời cảnh báo</span> 
+    <span class="vocab" id="w-final" data-word-en="Final" data-word-vn="Cuối cùng" data-pos="tính từ / adjective" data-def-en="Coming at the end of a series; ultimate or last." data-def-vn="Đến ở phần cuối của một chuỗi; tối hậu hoặc sau cùng." data-context-en="This was her last and most critical advice before they left." data-context-vn="Đây là lời khuyên cuối cùng và quan trọng nhất của bà trước khi họ rời đi.">cuối cùng</span> của Circe là điều 
+    <span class="vocab" id="w-terrifying" data-word-en="Terrifying" data-word-vn="Đáng sợ" data-pos="tính từ / adjective" data-def-en="Causing extreme fear or horror." data-def-vn="Gây ra nỗi sợ hãi hoặc kinh hoàng tột độ." data-context-en="The path ahead was described as terrifying." data-context-vn="Con đường phía trước được mô tả là vô cùng đáng sợ.">đáng sợ</span> nhất: để 
+    <span class="vocab" id="w-truly" data-word-en="Truly" data-word-vn="Thực sự" data-pos="phó từ / adverb" data-def-en="In a true, genuine, or real manner." data-def-vn="Một cách chân thật, chính xác hoặc đích thực." data-context-en="He needed to find the path if he truly wanted to reach home." data-context-vn="Ông cần tìm ra con đường nếu thực sự muốn về nhà.">thực sự</span> 
+    <span class="vocab" id="w-findway" data-word-en="Find the way" data-word-vn="Tìm được đường" data-pos="động từ / verb" data-def-en="To discover or successfully navigate a path back." data-def-vn="Khám phá ra hoặc điều hướng thành công con đường trở về." data-context-en="Ulysses must find the way back across the vast ocean." data-context-vn="Ulysses phải tìm được đường quay về bên kia đại dương bao la.">tìm được đường</span> 
+    <span class="vocab" id="w-home" data-word-en="Return home" data-word-vn="Về nhà" data-pos="trạng từ / adverb phrase" data-def-en="Heading toward one's native dwelling or homeland." data-def-vn="Hướng về nơi ở hoặc quê hương của mình." data-context-en="The entire motivation of the voyage is to go home." data-context-vn="Toàn bộ động lực của chuyến đi biển này là để về nhà.">về nhà</span>, Ulysses 
+    <span class="vocab" id="w-must1" data-word-en="Must" data-word-vn="Phải" data-pos="động từ khuyết thiếu / modal verb" data-def-en="Be obliged to; necessary to complete an action." data-def-vn="Bắt buộc phải làm; cần thiết để hoàn thành một hành động." data-context-en="Ulysses must travel deep into uncharted territories." data-context-vn="Ulysses phải du hành sâu vào những vùng lãnh thổ chưa được biết đến.">phải</span> 
+    <span class="vocab" id="w-go" data-word-en="Go to" data-word-vn="Đi đến" data-pos="động từ / verb" data-def-en="To travel or move toward a physical location." data-def-vn="Di chuyển hoặc đi tới một địa điểm vật lý." data-context-en="He is forced to go to the perilous underworld." data-context-vn="Ông buộc phải đi đến cõi âm phủ đầy hiểm nguy.">đi đến</span> 
+    <span class="vocab" id="w-alltheway" data-word-en="All the way to" data-word-vn="Tận" data-pos="phó từ / adverb" data-def-en="To the extreme or farthest limit of a place." data-def-vn="Đến giới hạn cực đoan hoặc xa xôi nhất của một địa điểm." data-context-en="He traveled all the way to the rim of existence." data-context-vn="Ông đã đi đến tận rìa của sự tồn tại.">tận</span> 
+    <span class="vocab" id="w-edge" data-word-en="Edge" data-word-vn="Rìa" data-pos="danh từ / noun" data-def-en="The outside limit of an object, area, or surface." data-def-vn="Giới hạn bên ngoài của một vật thể, khu vực hoặc bề mặt." data-context-en="The entrance lies at the absolute edge of the mortal map." data-context-vn="Lối vào nằm ở ngay rìa của bản đồ phàm trần.">rìa</span> 
+    <span class="vocab" id="w-world" data-word-en="World" data-word-vn="Thế giới" data-pos="danh từ / noun" data-def-en="The earth or the known universe of existence." data-def-vn="Trái đất hoặc vũ trụ được biết đến của sự tồn tại." data-context-en="He had to sail to the edge of the known world." data-context-vn="Ông phải căng buồm đến rìa thế giới đã biết.">thế giới</span> — 
+    <span class="vocab" id="w-entrance" data-word-en="Entrance" data-word-vn="Lối vào" data-pos="danh từ / noun" data-def-en="An opening or doorway allowing access to a place." data-def-vn="Một lối mở hoặc ô cửa cho phép đi vào một nơi." data-context-en="They discovered the hidden entrance among the rocks." data-context-vn="Họ đã phát hiện ra lối vào ẩn giấu giữa những tảng đá.">lối vào</span> 
+    <span class="vocab" id="w-land2" data-word-en="The Land of the Dead" data-word-vn="Vùng Đất Của Người Chết" data-pos="danh từ / noun phrase" data-def-en="The spiritual realm where deceased souls reside." data-def-vn="Cõi tâm linh nơi linh hồn những người đã khuất trú ngụ." data-context-en="The dangerous gateway opened into the Land of the Dead." data-context-vn="Cổng hành trình nguy hiểm mở ra Vùng Đất Của Người Chết.">Vùng Đất Của Người Chết</span>.
+  </p>
+
+  <p>
+    Ông <span class="vocab" id="w-must2" data-word-en="Must" data-word-vn="Phải" data-pos="động từ khuyết thiếu / modal verb" data-def-en="Required by duty, law, or necessity." data-def-vn="Được yêu cầu bởi nghĩa vụ, luật pháp hoặc sự cần thiết." data-context-en="He must follow the strict rules of the underworld ritual." data-context-vn="Ông phải tuân theo các quy tắc nghiêm ngặt của nghi lễ âm phủ.">phải</span> 
+    <span class="vocab" id="w-cross" data-word-en="Cross over" data-word-vn="Vượt qua" data-pos="động từ / verb" data-def-en="To pass from one side of a barrier or river to another." data-def-vn="Đi qua từ bên này của một chướng ngại vật hoặc dòng sông sang bên kia." data-context-en="Ulysses needed to cross over the dangerous boundary safely." data-context-vn="Ulysses cần vượt qua ranh giới nguy hiểm một cách an toàn.">vượt qua</span> 
+    <span class="vocab" id="w-river" data-word-en="River" data-word-vn="Dòng sông" data-pos="danh từ / noun" data-def-en="A large natural stream of water or liquid flowing in a channel." data-def-vn="Một dòng nước hoặc chất lỏng tự nhiên lớn chảy thành dòng." data-context-en="The underworld river was filled with violent flames." data-context-vn="Dòng sông dưới âm phủ chứa đầy những ngọn lửa dữ dội.">dòng sông</span> 
+    <span class="vocab" id="w-fire" data-word-en="Fire" data-word-vn="Lửa" data-pos="danh từ / noun" data-def-en="Combustion or flames signifying heat and torment." data-def-vn="Sự đốt cháy hoặc ngọn lửa biểu thị sức nóng và sự giày vò." data-context-en="A roaring river of fire blocked their forward path." data-context-vn="Một dòng sông lửa gầm vang đã chặn con đường tiến về phía trước của họ.">lửa</span> để 
+    <span class="vocab" id="w-talk" data-word-en="Talk to" data-word-vn="Nói chuyện" data-pos="động từ / verb" data-def-en="To speak with someone or engage in conversation." data-def-vn="Nói chuyện với ai đó hoặc tham gia vào cuộc hội thoại." data-context-en="He risked his life to talk to the legendary seer." data-context-vn="Ông đã mạo hiểm mạng sống để nói chuyện với nhà tiên tri huyền thoại.">nói chuyện</span> với 
+    <span class="vocab" id="w-prophet" data-word-en="Prophet" data-word-vn="Nhà tiên tri" data-pos="danh từ / noun" data-def-en="A person who foretells future events by divine inspiration." data-def-vn="Người tiên đoán các sự kiện tương lai nhờ nguồn cảm hứng thần thánh." data-context-en="The ancient prophet held the secrets to his destiny." data-context-vn="Nhà tiên tri cổ đại nắm giữ những bí mật về số phận của ông.">nhà tiên tri</span> 
+    <span class="vocab" id="w-blind" data-word-en="Blind" data-word-vn="Mù" data-pos="tính từ / adjective" data-def-en="Lacking the power of sight." data-def-vn="Thiếu khả năng nhìn, không có thị lực." data-context-en="Tiresias was blind to the world but saw the future clearly." data-context-vn="Tiresias mù với thế giới nhưng lại nhìn rõ tương lai.">mù</span> Tiresias.
+  </p>
+
+  <p>
+    <span class="vocab" id="w-journey" data-word-en="Journey" data-word-vn="Chuyến đi" data-pos="danh từ / noun" data-def-en="An act of traveling from one place to another." data-def-vn="Hành động di chuyển du hành từ nơi này đến nơi khác." data-context-en="Their terrifying journey took them beneath the earth." data-context-vn="Chuyến đi kinh hoàng đã đưa họ xuống dưới lòng đất.">Chuyến đi</span> 
+    <span class="vocab" id="w-down" data-word-en="Down into" data-word-vn="Xuống" data-pos="giới từ / preposition" data-def-en="Moving from a higher level to a lower subterranean location." data-def-vn="Di chuyển từ một cấp độ cao hơn xuống một vị trí thấp hơn dưới lòng đất." data-context-en="They marched down into the darkness of Hades." data-context-vn="Họ di chuyển xuống vùng tối tăm của âm phủ.">xuống</span> 
+    <span class="vocab" id="w-underworld" data-word-en="Underworld" data-word-vn="Âm phủ" data-pos="danh từ / noun" data-def-en="The mythical home of the dead underneath the earth." data-def-vn="Ngôi nhà huyền thoại của những người chết dưới lòng đất." data-context-en="The gateway opened directly into the grim underworld." data-context-vn="Cổng dẫn mở ra trực tiếp vào cõi âm phủ nghiệt ngã.">âm phủ</span> 
+    <span class="vocab" id="w-like" data-word-en="Like" data-word-vn="Giống như" data-pos="giới từ / preposition" data-def-en="Having characteristics in common with; similar to." data-def-vn="Có những đặc điểm chung với; tương tự như." data-context-en="The experience was like stepping into an endless void." data-context-vn="Trải nghiệm đó giống như bước vào một khoảng không vô tận.">giống như</span> 
+    <span class="vocab" id="w-stepinto" data-word-en="Step into" data-word-vn="Bước vào" data-pos="động từ / verb" data-def-en="To enter a space or a psychological state." data-def-vn="Đi vào một không gian hoặc một trạng thái tâm lý." data-context-en="To cross the threshold was to step into absolute quiet." data-context-vn="Vượt qua ngưỡng cửa là bước vào sự tĩnh lặng tuyệt đối.">bước vào</span> 
+    <span class="vocab" id="w-silence" data-word-en="Silence" data-word-vn="Sự im lặng" data-pos="danh từ / noun" data-def-en="The complete absence of sound." data-def-vn="Sự vắng mặt hoàn toàn của âm thanh." data-context-en="A heavy, oppressive silence hung over the caverns." data-context-vn="Một sự im lặng nặng nề, ngột ngạt bao trùm khắp các hang động.">sự im lặng</span> 
+    <span class="vocab" id="w-absolute" data-word-en="Absolute" data-word-vn="Tuyệt đối" data-pos="tính từ / adjective" data-def-en="Total, complete, and unconditioned." data-def-vn="Toàn bộ, trọn vẹn và không có điều kiện." data-context-en="The absence of any natural wind created an absolute silence." data-context-vn="Sự vắng mặt của bất kỳ ngọn gió tự nhiên nào tạo ra sự im lặng tuyệt đối.">tuyệt đối</span>.
+  </p>
+
+  <p>
+    Khi họ <span class="vocab" id="w-arrive" data-word-en="Arrive" data-word-vn="Đến nơi" data-pos="động từ / verb" data-def-en="To reach a destination at the end of a journey." data-def-vn="Đến một đích đến vào cuối chuyến hành trình." data-context-en="When they arrive at the boundary, the air turns ice-cold." data-context-vn="Khi họ đến nơi ranh giới, không khí trở nên lạnh giá như băng.">đến nơi</span>, 
+    <span class="vocab" id="w-sun" data-word-en="The sun" data-word-vn="Mặt trời" data-pos="danh từ / noun" data-def-en="The star that lights up the mortal sky." data-def-vn="Ngôi sao thắp sáng bầu trời của thế giới phàm trần." data-context-en="They felt abandoned when the sun ceased to shine." data-context-vn="Họ cảm thấy bị bỏ rơi khi mặt trời không còn chiếu sáng nữa.">mặt trời</span> 
+    <span class="vocab" id="w-disappear" data-word-en="Disappear" data-word-vn="Biến mất" data-pos="động từ / verb" data-def-en="To cease to be visible; vanish from sight." data-def-vn="Không còn nhìn thấy được nữa; tan biến khỏi tầm mắt." data-context-en="They watched the comforting light disappear behind them." data-context-vn="Họ nhìn ánh sáng dễ chịu biến mất ở phía sau lưng.">biến mất</span>. Những 
+    <span class="vocab" id="w-shadow" data-word-en="Shadows" data-word-vn="Cái bóng" data-pos="danh từ / noun" data-def-en="Dark shapes projected onto a surface by ghosts or shapes." data-def-vn="Những hình khối tối tăm phản chiếu lên một bề mặt do bóng ma hoặc hình dáng tạo ra." data-context-en="Distorted shadows flickered along the underground walls." data-context-vn="Những cái bóng vặn vẹo chập chờn dọc theo những bức tường dưới lòng đất.">cái bóng</span> 
+    <span class="vocab" id="w-move" data-word-en="Move" data-word-vn="Chuyển động" data-pos="động từ / verb" data-def-en="To change position or shift location continuously." data-def-vn="Thay đổi vị trí hoặc dịch chuyển địa điểm liên tục." data-context-en="The unholy shapes began to move with sinister intent." data-context-vn="Những hình thù bất tịnh bắt đầu chuyển động với ý đồ nham hiểm.">chuyển động</span> giữa các 
+    <span class="vocab" id="w-rock" data-word-en="Rocks" data-word-vn="Tảng đá" data-pos="danh từ / noun" data-def-en="Large boulders or stones forming the terrain." data-def-vn="Những khối đá lớn hoặc đá tảng tạo nên địa hình." data-context-en="They walked carefully between the jagged rocks." data-context-vn="Họ bước đi cẩn thận giữa các tảng đá lởm chởm.">tảng đá</span> như 
+    <span class="vocab" id="w-ghosts" data-word-en="Ghosts / Demons" data-word-vn="Ma quỷ" data-pos="danh từ / noun" data-def-en="Spirits of the dead or supernatural entities." data-def-vn="Linh hồn của người chết hoặc các thế lực siêu nhiên." data-context-en="The terrifying shapes resembled ancient ghosts." data-context-vn="Những hình thù đáng sợ trông giống như ma quỷ cổ xưa.">ma quỷ</span>.
+  </p>
+
+  <p>
+    Ulysses <span class="vocab" id="w-dig" data-word-en="Dig" data-word-vn="Đào" data-pos="động từ / verb" data-def-en="To break up and move earth with a tool or hands." data-def-vn="Phá vỡ và di chuyển đất bằng dụng cụ hoặc bằng tay." data-context-en="Ulysses used his bronze blade to dig deep into the soil." data-context-vn="Ulysses đã dùng lưỡi kiếm đồng để đào sâu xuống lòng đất.">đào</span> một 
+    <span class="vocab" id="w-pit" data-word-en="Pit / Hole" data-word-vn="Cái hố" data-pos="danh từ / noun" data-def-en="A wide opening dug into the ground for rituals." data-def-vn="Một khoảng trống rộng được đào dưới đất để phục vụ nghi lễ." data-context-en="He prepared a large pit to hold the sacrificial blood." data-context-vn="Ông đã chuẩn bị một cái hố lớn để chứa máu hiến tế.">cái hố</span> và 
+    <span class="vocab" id="w-offer" data-word-en="Offer / Pour" data-word-vn="Dâng" data-pos="động từ / verb" data-def-en="To present a ceremonial gift to the gods or spirits." data-def-vn="Dâng tặng một lễ vật mang tính nghi thức cho các vị thần hoặc linh hồn." data-context-en="He knelt down to offer a dark gift to the dead." data-context-vn="Ông quỳ xuống để dâng một lễ vật tối tăm cho người chết.">dâng</span> 
+    <span class="vocab" id="w-blood" data-word-en="Blood" data-word-vn="Máu" data-pos="danh từ / noun" data-def-en="The vital red fluid of a sacrificed animal." data-def-vn="Chất lỏng màu đỏ thiết yếu của một con vật bị hiến tế." data-context-en="The dark blood spilled directly into the trench." data-context-vn="Dòng máu sẫm màu đổ thẳng vào cái hố.">máu</span> của 
+    <span class="vocab" id="w-sacrifice" data-word-en="Sacrifice" data-word-vn="Vật hiến tế" data-pos="danh từ / noun" data-def-en="An animal slaughtered as an offering to spirits." data-def-vn="Một con vật bị giết để làm lễ vật dâng lên các linh hồn." data-context-en="The heavy scent of the sacrifice filled the stale underworld air." data-context-vn="Mùi hương đậm đặc của vật hiến tế bao trùm không khí ngột ngạt của âm phủ.">vật hiến tế</span>, 
+    <span class="vocab" id="w-cause" data-word-en="Cause / Make" data-word-vn="Khiến" data-pos="động từ / verb" data-def-en="To bring about an effect or force a reaction." data-def-vn="Mang lại một hiệu ứng hoặc thúc đẩy một phản ứng." data-context-en="The ritual will cause the phantoms to appear instantly." data-context-vn="Nghi lễ sẽ khiến các bóng ma xuất hiện ngay lập tức.">khiến</span> những 
+    <span class="vocab" id="w-soul" data-word-en="Souls / Spirits" data-word-vn="Linh hồn" data-pos="danh từ / noun" data-def-en="The immaterial essences of humans after death." data-def-vn="Bản chất phi vật chất của con người sau khi chết." data-context-en="Countless cold souls flew toward the fresh blood." data-context-vn="Vô số linh hồn lạnh lẽo đã bay về phía dòng máu tươi.">linh hồn</span> 
+    <span class="vocab" id="w-restless" data-word-en="Restless" data-word-vn="Bất an" data-pos="tính từ / adjective" data-def-en="Unable to rest; unsettled, anxious, or wandering." data-def-vn="Không thể yên nghỉ; bất ổn, lo lắng hoặc lang thang." data-context-en="The restless dead could not find internal peace." data-context-vn="Những người chết bất an không thể tìm thấy sự bình yên trong tâm hồn.">bất an</span> 
+    <span class="vocab" id="w-swarm" data-word-en="Flock / Swarm together" data-word-vn="Kéo nhau" data-pos="động từ / verb" data-def-en="To gather or move in large numbers simultaneously." data-def-vn="Tụ tập hoặc di chuyển cùng một lúc với số lượng lớn." data-context-en="They began to flock together in a chaotic wave." data-context-vn="Họ bắt đầu kéo nhau thành một làn sóng hỗn loạn.">kéo nhau</span> 
+    <span class="vocab" id="w-emerge" data-word-en="Rise up / Emerge" data-word-vn="Trồi lên" data-pos="động từ / verb" data-def-en="To ascend or come forth from below." data-def-vn="Đi lên hoặc xuất hiện từ phía dưới." data-context-en="He watched the shadows rise up out of the deep earth." data-context-vn="Ông nhìn những cái bóng trồi lên từ lòng đất sâu thẳm.">trồi lên</span>.
+  </p>
+
+  <p>
+    Ông nhìn thấy chính mẹ mình, người đã 
+    <span class="vocab" id="w-heartbroken" data-word-en="Heartbroken" data-word-vn="Đau lòng" data-pos="tính từ / adjective" data-def-en="Suffering deeply from intense grief or sorrow." data-def-vn="Đau khổ sâu sắc vì nỗi đau buồn hoặc đau thương tột độ." data-context-en="She died heartbroken after years of waiting for news." data-context-vn="Bà qua đời trong sự đau lòng sau nhiều năm chờ đợi tin tức.">đau lòng</span> đến 
+    <span class="vocab" id="w-shattered" data-word-en="Shattered / Broken" data-word-vn="Tan nát" data-pos="tính từ / adjective" data-def-en="Devastated or broken into pieces emotionally." data-def-vn="Bị tàn phá hoặc vỡ vụn về mặt cảm xúc." data-context-en="Her fragile soul was shattered by grief." data-context-vn="Linh hồn mong manh của bà đã tan nát vì đau buồn.">tan nát</span> khi 
+    <span class="vocab" id="w-wait" data-word-en="Wait for" data-word-vn="Chờ đợi" data-pos="động từ / verb" data-def-en="To stay in expectation of someone's arrival." data-def-vn="Ở trong trạng thái mong đợi sự xuất hiện của một ai đó." data-context-en="She had nothing left to do but wait for her son." data-context-vn="Bà không còn việc gì khác ngoài việc chờ đợi con trai mình.">chờ đợi</span> ông 
+    <span class="vocab" id="w-return" data-word-en="Return" data-word-vn="Trở về" data-pos="động từ / verb" data-def-en="To come back to a place or person." data-def-vn="Quay trở lại một địa điểm hoặc với một người." data-context-en="She passed away before she could see him return safely." data-context-vn="Bà đã qua đời trước khi có thể thấy ông trở về an toàn.">trở về</span>, và người 
+    <span class="vocab" id="w-comrade" data-word-en="Comrade / Crewmate" data-word-vn="Đồng đội" data-pos="danh từ / noun" data-def-en="A fellow soldier or close companion in a venture." data-def-vn="Một người lính cùng hàng ngũ hoặc bạn đồng hành thân cận trong một chuyến phiêu lưu." data-context-en="He wept to see his loyal comrade among the ghosts." data-context-vn="Ông đã khóc khi nhìn thấy người đồng đội trung thành của mình giữa những bóng ma.">đồng đội</span> Elpenor, 
+    <span class="vocab" id="w-fellow" data-word-en="The fellow / Individual" data-word-vn="Kẻ" data-pos="danh từ / noun" data-def-en="A person, often used here to indicate an unfortunate soul." data-def-vn="Một người, thường được dùng ở đây để chỉ một linh hồn bất hạnh.">kẻ</span> đã 
+    <span class="vocab" id="w-die" data-word-en="Die" data-word-vn="Chết" data-pos="động từ / verb" data-def-en="To lose life; perish." data-def-vn="Mất đi mạng sống; tử nạn." data-context-en="The poor sailor managed to die in a foolish accident." data-context-vn="Người thủy thủ tội nghiệp đã chết trong một tai nạn ngớ ngẩn.">chết</span> vì 
+    <span class="vocab" id="w-fall" data-word-en="Fall" data-word-vn="Ngã" data-pos="động từ / verb" data-def-en="To drop down from a high place due to loss of balance." data-def-vn="Rơi xuống từ một nơi trên cao do mất thăng bằng." data-context-en="He unluckily managed to fall directly off the roof." data-context-vn="Anh ta không may đã ngã trực tiếp từ trên mái nhà xuống.">ngã</span> trong 
+    <span class="vocab" id="w-drunkenness" data-word-en="Drunkenness / Intoxication" data-word-vn="Cơn say" data-pos="danh từ / noun" data-def-en="The state of being severely intoxicated by alcohol." data-def-vn="Trạng thái bị say rượu nặng do chất cồn." data-context-en="In his deep drunkenness, he forgot where the stairs were." data-context-vn="Trong cơn say khướt, anh ta đã quên mất lối cầu thang ở đâu.">cơn say</span> ở 
+    <span class="vocab" id="w-palace" data-word-en="Palace" data-word-vn="Cung điện" data-pos="danh từ / noun" data-def-en="The official grand residence of a ruler or powerful entity." data-def-vn="Nơi ở chính thức nguy nga của một nhà cai trị hoặc một thế lực quyền năng." data-context-en="They had spent days feasting at Circe's stone palace." data-context-vn="Họ đã dành nhiều ngày tiệc tùng tại cung điện đá của Circe.">cung điện</span> của Circe.
+  </p>
+
+  <p>
+    <span class="vocab" id="w-weight" data-word-en="Weight / Burden" data-word-vn="Sức nặng" data-pos="danh từ / noun" data-def-en="A heavy emotional burden or gravity." data-def-vn="Một gánh nặng cảm xúc lớn lao hoặc tính chất nghiêm trọng." data-context-en="The terrible weight of their deaths rested on his conscience." data-context-vn="Sức nặng khủng khiếp từ cái chết của họ đè nặng lên lương tâm ông.">Sức nặng</span> 
+    <span class="vocab" id="w-emotional" data-word-en="Emotional" data-word-vn="Cảm xúc" data-pos="tính từ / adjective" data-def-en="Relating to psychological feelings or profound sentiments." data-def-vn="Liên quan đến cảm xúc tâm lý hoặc tình cảm sâu sắc." data-context-en="The king faced an intense emotional crisis." data-context-vn="Nhà vua phải đối mặt với một cuộc khủng hoảng cảm xúc dữ dội.">cảm xúc</span> của những 
+    <span class="vocab" id="w-encounter" data-word-en="Encounters / Meetings" data-word-vn="Cuộc gặp gỡ" data-pos="danh từ / noun" data-def-en="Unexpected or highly intense meetings with individuals." data-def-vn="Những cuộc gặp gỡ bất ngờ hoặc vô cùng dữ dội với các cá nhân." data-context-en="These unexpected encounters brought him to his knees." data-context-vn="Những cuộc gặp gỡ bất ngờ này đã khiến ông phải gục ngã.">cuộc gặp gỡ</span> ấy 
+    <span class="vocab" id="w-almost" data-word-en="Almost" data-word-vn="Gần như" data-pos="phó từ / adverb" data-def-en="Not quite; very nearly matching a state." data-def-vn="Không hoàn toàn; rất gần với một trạng thái nào đó." data-context-en="The sheer amount of sorrow almost broke his strong spirit." data-context-vn="Lượng đau thương quá lớn gần như đã đánh gục tinh thần kiên cường của ông.">gần như</span> làm ông 
+    <span class="vocab" id="w-suffocate" data-word-en="Suffocate / Choke" data-word-vn="Nghẹt thở" data-pos="động từ / verb" data-def-en="To struggle for breath or feel crushed by weight." data-def-vn="Vật lộn để thở hoặc cảm thấy bị nghiền nát bởi gánh nặng." data-context-en="The heavy atmosphere felt enough to suffocate his lungs." data-context-vn="Bầu không khí nặng nề cảm giác đủ làm ông nghẹt thở cả lồng ngực.">nghẹt thở</span>;
+    ông là một người 
+    <span class="vocab" id="w-man" data-word-en="Man" data-word-vn="Đàn ông" data-pos="danh từ / noun" data-def-en="An adult human male individual." data-def-vn="Một cá nhân nam giới trưởng thành." data-context-en="He stood alone, a mortal man among ancient phantoms." data-context-vn="Ông đứng một mình, một người đàn ông phàm trần giữa những bóng ma cổ xưa.">đàn ông</span> bị 
+    <span class="vocab" id="w-surround" data-word-en="Surrounded by" data-word-vn="Bao quanh" data-pos="động từ / verb" data-def-en="Encircled or enclosed completely on all sides." data-def-vn="Bị bao quanh hoặc bao bọc hoàn toàn ở mọi phía." data-context-en="He found himself surrounded by the ghosts of his past choices." data-context-vn="Ông thấy mình bị bao quanh bởi những bóng ma từ những lựa chọn trong quá khứ.">bao quanh</span> bởi những người mà mình đã 
+    <span class="vocab" id="w-disappoint" data-word-en="Let down / Disappoint" data-word-vn="Khiến thất vọng" data-pos="động từ / verb phrase" data-def-en="Failed to support, save, or satisfy standard expectations." data-def-vn="Thất bại trong việc hỗ trợ, cứu rỗi hoặc đáp ứng kỳ vọng tiêu chuẩn." data-context-en="He felt terrible that he had managed to let down his men." data-context-vn="Ông cảm thấy tồi tệ vì đã khiến những người của mình phải thất vọng.">khiến thất vọng</span>.
+  </p>
+
+  <p>
+    Cuối cùng, linh hồn của Tiresias 
+    <span class="vocab" id="w-appear" data-word-en="Appear" data-word-vn="Xuất hiện" data-pos="động từ / verb" data-def-en="To come into sight; become visible." data-def-vn="Đi vào tầm nhìn; trở nên hiển hiện rõ ràng." data-context-en="The glowing ghost of the seer began to appear slowly." data-context-vn="Bóng ma rực sáng của nhà tiên tri bắt đầu xuất hiện từ từ.">xuất hiện</span>. Nhà tiên tri nói với ông về những 
+    <span class="vocab" id="w-challenge" data-word-en="Challenges / Trials" data-word-vn="Thử thách" data-pos="danh từ / noun" data-def-en="Tasks or situations that test someone's abilities severely." data-def-vn="Những nhiệm vụ hoặc tình huống thử thách dữ dội khả năng của ai đó." data-context-en="The prophet revealed the terrifying challenges of the sea." data-context-vn="Nhà tiên tri đã tiết lộ những thử thách kinh hoàng trên biển.">thử thách</span> 
+    <span class="vocab" id="w-ahead" data-word-en="Ahead" data-word-vn="Phía trước" data-pos="trạng từ / adverb" data-def-en="Further forward in space or time; in the future path." data-def-vn="Tiến xa hơn về không gian hoặc thời gian; trên con đường tương lai." data-context-en="Worse dangers were waiting ahead on their journey." data-context-vn="Những mối nguy hiểm tồi tệ hơn đang chờ sẵn ở phía trước hành trình của họ.">phía trước</span>, 
+    <span class="vocab" id="w-especially" data-word-en="Especially" data-word-vn="Đặc biệt" data-pos="phó từ / adverb" data-def-en="To a great extent; uniquely or specifically." data-def-vn="Đến một mức độ lớn; một cách độc đáo hoặc cụ thể." data-context-en="He especially emphasized the danger of the sun god's animals." data-context-vn="Ông đặc biệt nhấn mạnh mối nguy hiểm từ những con vật của thần mặt trời.">đặc biệt</span> 
+    <span class="vocab" id="w-warn2" data-word-en="Warn" data-word-vn="Cảnh báo" data-pos="động từ / verb" data-def-en="To inform someone in advance of an impending danger." data-def-vn="Thông báo trước cho ai đó về một mối nguy hiểm sắp xảy ra." data-context-en="The blind ghost chose to warn him about a fatal error." data-context-vn="Bóng ma mù chọn cách cảnh báo ông về một sai lầm chết người.">cảnh báo</span> ông về 
+    <span class="vocab" id="w-island" data-word-en="Island" data-word-vn="Hòn đảo" data-pos="danh từ / noun" data-def-en="A piece of land completely surrounded by water." data-def-vn="Một vùng đất được bao quanh hoàn toàn bởi nước." data-context-en="They were destined to stop at a isolated island." data-context-vn="Họ định sẵn sẽ dừng chân tại một hòn đảo cô lập.">hòn đảo</span> Thrinacia, nơi 
+    <span class="vocab" id="w-cattle" data-word-en="Herd of cattle" data-word-vn="Đàn bò" data-pos="danh từ / noun" data-def-en="A large group of bovine animals kept together." data-def-vn="Một nhóm lớn các loài động vật thuộc giống bò được chăn nuôi cùng nhau." data-context-en="The herd of cattle belonged to Helios himself." data-context-vn="Đàn bò thuộc sở hữu của chính thần Helios.">đàn bò</span> 
+    <span class="vocab" id="w-sacred" data-word-en="Sacred / Holy" data-word-vn="Thiêng" data-pos="tính từ / adjective" data-def-en="Connected with a god and regarded with protective reverence." data-def-vn="Kết nối với một vị thần và được coi trọng với sự tôn kính bảo vệ." data-context-en="No mortal was allowed to kill the sacred beasts." data-context-vn="Không một người phàm nào được phép giết những con thú thiêng.">thiêng</span> của thần mặt trời Helios đang 
+    <span class="vocab" id="w-graze" data-word-en="Graze" data-word-vn="Gặm cỏ" data-pos="động từ / verb" data-def-en="To eat grass growing in a field or pasture." data-def-vn="Ăn cỏ mọc trên cánh đồng hoặc đồng cỏ." data-context-en="The golden oxen were left to graze under the sun." data-context-vn="Những con bò bò vàng được thả gặm cỏ dưới ánh mặt trời.">gặm cỏ</span>.
+  </p>
+
+  <p>
+    “Nếu ngươi <span class="vocab" id="w-touch" data-word-en="Touch" data-word-vn="Chạm vào" data-pos="động từ / verb" data-def-en="To come into physical contact with something." data-def-vn="Tiếp xúc vật lý hoặc chạm tay vào vật gì đó." data-context-en="Do not touch them even if your men are starving." data-context-vn="Đừng chạm vào chúng ngay cả khi người của ngươi đang chết đói.">chạm vào</span> chúng, ngươi sẽ phải 
+    <span class="vocab" id="w-endure" data-word-en="Endure / Suffer" data-word-vn="Chịu" data-pos="động từ / verb" data-def-en="To undergo or bear a painful experience." data-def-vn="Trải qua hoặc gánh chịu một trải nghiệm đau đớn." data-context-en="Your entire crew will endure a brutal punishment." data-context-vn="Toàn bộ thủy thủ đoàn của ngươi sẽ phải chịu một hình phạt tàn khốc.">chịu</span> 
+    <span class="vocab" id="w-suffering" data-word-en="Suffering" data-word-vn="Đau khổ" data-pos="danh từ / noun" data-def-en="The state of undergoing acute pain, distress, or hardship." data-def-vn="Trạng thái trải qua sự đau đớn dữ dội, cùng quẫn hoặc gian khổ." data-context-en="The prophecy promised endless suffering for the survivors." data-context-vn="Lời tiên tri hứa hẹn sự đau khổ vô tận cho những người sống sót.">đau khổ</span>,” nhà tiên tri cảnh báo.
+    “Nếu ngươi <span class="vocab" id="w-harm" data-word-en="Harm" data-word-vn="Làm hại" data-pos="động từ / verb" data-def-en="To cause physical injury or severe damage to something." data-def-vn="Gây thương tích vật lý hoặc thiệt hại nghiêm trọng cho thứ gì đó." data-context-en="If you harm the cattle, the gods will crush you." data-context-vn="Nếu ngươi làm hại đàn bò, các vị thần sẽ nghiền nát ngươi.">làm hại</span> chúng, ngươi sẽ 
+    <span class="vocab" id="w-lose" data-word-en="Lose" data-word-vn="Mất" data-pos="động từ / verb" data-def-en="To be deprived of a possession or companion permanently." data-def-vn="Bị tước đoạt vĩnh viễn một tài sản hoặc người đồng hành." data-context-en="You will lose everything you hold dear on this voyage." data-context-vn="Ngươi sẽ mất tất cả những gì ngươi trân quý trong chuyến đi biển này.">mất</span> 
+    <span class="vocab" id="w-ship" data-word-en="Ship" data-word-vn="Tàu" data-pos="danh từ / noun" data-def-en="A large seafaring vessel." data-def-vn="Một con tàu lớn đi biển." data-context-en="The wooden ship will be torn apart by thunderbolts." data-context-vn="Con tàu gỗ sẽ bị xé toạc bởi những tia sét.">tàu</span> và mất cả 
+    <span class="vocab" id="w-men" data-word-en="Men / Crew" data-word-vn="Người" data-pos="danh từ / noun" data-def-en="The human companions or soldiers under command." data-def-vn="Những người bạn đồng hành hoặc binh lính dưới quyền chỉ huy." data-context-en="He risked returning home without a single one of his men." data-context-vn="Ông có nguy cơ trở về nhà mà không có bất kỳ một người nào của mình.">người</span> của mình.”
+  </p>
+
+  <p>
+    Ulysses <span class="vocab" id="w-leave" data-word-en="Leave" data-word-vn="Rời" data-pos="động từ / verb" data-def-en="To depart or go away from a specific location." data-def-vn="Rời đi hoặc đi ra khỏi một địa điểm cụ thể." data-context-en="He turned around to leave the heavy atmosphere of Hades." data-context-vn="Ông quay lại để rời khỏi bầu không khí nặng nề của cõi âm ty.">rời</span> âm phủ với một 
+    <span class="vocab" id="w-clarity" data-word-en="Clarity / Sobriety" data-word-vn="Sự tỉnh táo" data-pos="danh từ / noun" data-def-en="The state of being clear-headed, realistic, and fully aware." data-def-vn="Trạng thái đầu óc tỉnh táo, thực tế và nhận thức đầy đủ." data-context-en="The terrible vision gave him a cold, sharp clarity." data-context-vn="Tầm nhìn kinh hoàng đã cho ông một sự tỉnh táo lạnh lùng, sắc bén.">sự tỉnh táo</span> 
+    <span class="vocab" id="w-chilling" data-word-en="Chilling / Cold" data-word-vn="Lạnh lẽo" data-pos="tính từ / adjective" data-def-en="Frightening, sobering, or physically cold." data-def-vn="Đáng sợ, làm cho tỉnh ngộ hoặc lạnh giá về mặt vật lý." data-context-en="The chilling prediction left him completely speechless." data-context-vn="Dự đoán lạnh lẽo khiến ông hoàn toàn không nói nên lời.">lạnh lẽo</span>.
+    Ông đã nhìn thấy 
+    <span class="vocab" id="w-price" data-word-en="Price / Cost" data-word-vn="Cái giá" data-pos="danh từ / noun" data-def-en="The severe consequence or cost of a mistake." data-def-vn="Hậu quả nghiêm trọng hoặc cái giá phải trả cho một sai lầm." data-context-en="He understood the terrible price of failing his mission." data-context-vn="Ông hiểu cái giá khủng khiếp của việc thất bại trong nhiệm vụ của mình.">cái giá</span> cuối cùng của 
+    <span class="vocab" id="w-failure" data-word-en="Failure" data-word-vn="Thất bại" data-pos="danh từ / noun" data-def-en="The lack of success or inability to preserve his goals." data-def-vn="Sự thiếu thành công hoặc không có khả năng bảo toàn mục tiêu của mình." data-context-en="Total failure meant absolute destruction for his entire house." data-context-vn="Thất bại toàn diện có nghĩa là sự hủy diệt tuyệt đối cho toàn bộ gia tộc ông.">thất bại</span>.
+  </p>
+
+  <p>
+    <span class="vocab" id="w-now" data-word-en="Now" data-word-vn="Giờ đây" data-pos="phó từ / adverb" data-def-en="At the present moment in time." data-def-vn="Tại thời điểm khoảnh khắc hiện tại." data-context-en="Now he looked at his map with completely different eyes." data-context-vn="Giờ đây ông nhìn vào bản đồ của mình với một đôi mắt hoàn toàn khác.">Giờ đây</span> ông 
+    <span class="vocab" id="w-understand" data-word-en="Understand" data-word-vn="Hiểu" data-pos="động từ / verb" data-def-en="To perceive the true significance or meaning of something." data-def-vn="Nhận thức được tầm quan trọng hoặc ý nghĩa thực sự của một điều gì đó." data-context-en="Ulysses began to understand the real purpose of the trials." data-context-vn="Ulysses bắt đầu hiểu được mục đích thực sự của các thử thách.">hiểu</span> rằng 
+    <span class="vocab" id="w-journey2" data-word-en="Journey" data-word-vn="Hành trình" data-pos="danh từ / noun" data-def-en="An extended process of travel or personal development." data-def-vn="Một quá trình di chuyển kéo dài hoặc phát triển cá nhân." data-context-en="Their physical journey had become a deep spiritual trial." data-context-vn="Hành trình vật lý của họ đã trở thành một thử thách tâm linh sâu sắc.">hành trình</span> của mình không chỉ là 
+    <span class="vocab" id="w-return2" data-word-en="Return" data-word-vn="Quay về" data-pos="động từ / verb" data-def-en="To navigate back to a starting location or point." data-def-vn="Điều hướng quay trở lại một vị trí hoặc địa điểm ban đầu." data-context-en="The ultimate goal was to return safely to Ithaca." data-context-vn="Mục tiêu cuối cùng là quay về Ithaca một cách an toàn.">quay về</span> về mặt 
+    <span class="vocab" id="w-body" data-word-en="Physical body" data-word-vn="Thể xác" data-pos="danh từ / noun" data-def-en="The biological or material form of a human being." data-def-vn="Hình thức sinh học hoặc vật chất của một con người." data-context-en="Surviving in the physical body was no longer enough." data-context-vn="Sống sót trong thể xác phàm trần này giờ đây không còn là đủ nữa.">thể xác</span>, mà còn là 
+    <span class="vocab" id="w-test" data-word-en="Test" data-word-vn="Bài kiểm tra" data-pos="danh từ / noun" data-def-en="A critical trial designed to measure true qualities." data-def-vn="Một thử thách quan trọng được thiết kế để đo lường những phẩm chất thực sự." data-context-en="The sea was a brutal test constructed by the gods." data-context-vn="Biển khơi là một bài kiểm tra tàn bạo do các vị thần dựng lên.">bài kiểm tra</span> 
+    <span class="vocab" id="w-character" data-word-en="Character" data-word-vn="Nhân cách" data-pos="danh từ / noun" data-def-en="The mental and moral qualities distinctive to an individual." data-def-vn="Những phẩm chất tinh thần và đạo đức đặc trưng của một cá nhân." data-context-en="The long voyage tested his internal moral character." data-context-vn="Chuyến hải trình dài đã thử thách nhân cách đạo đức bên trong ông.">nhân cách</span>.
+  </p>
+
+  <p>
+    Ông được 
+    <span class="vocab" id="w-require" data-word-en="Require / Ask" data-word-vn="Yêu cầu" data-pos="động từ / verb" data-def-en="Commanded or obliged by fate or authority to do something." data-def-vn="Bị số phận hoặc chính quyền ra lệnh hoặc bắt buộc phải làm điều gì đó." data-context-en="The destiny did require him to be completely selfless." data-context-vn="Số phận đã yêu cầu ông phải hoàn toàn vị tha.">yêu cầu</span> phải 
+    <span class="vocab" id="w-bear" data-word-en="Bear / Shoulder" data-word-vn="Gánh" data-pos="động từ / verb" data-def-en="To carry a heavy physical load or take heavy responsibility." data-def-vn="Mang một gánh nặng vật lý lớn hoặc nhận trách nhiệm nặng nề." data-context-en="He had to bear the grand burden of command." data-context-vn="Ông phải gánh vác trọng trách chỉ huy to lớn.">gánh</span> 
+    <span class="vocab" id="w-life" data-word-en="Life" data-word-vn="Mạng sống" data-pos="danh từ / noun" data-def-en="The state of living existence of his men." data-def-vn="Trạng thái tồn tại sống sót của những người của ông." data-context-en="The fragile life of every single sailor depended on him." data-context-vn="Mạng sống mong manh của từng người thủy thủ đều phụ thuộc vào ông.">mạng sống</span> của những người 
+    <span class="vocab" id="w-remaining" data-word-en="Remaining" data-word-vn="Còn lại" data-pos="tính từ / adjective" data-def-en="Left over after major losses or destructions." data-def-vn="Còn sót lại sau những tổn thất hoặc sự hủy diệt lớn." data-context-en="He counted his remaining men with a sad heart." data-context-vn="Ông đếm những người còn lại của mình với một trái tim buồn bã.">còn lại</span> 
+    <span class="vocab" id="w-shoulders" data-word-en="On shoulders" data-word-vn="Trên vai" data-pos="cụm giới từ / prepositional phrase" data-def-en="Carrying a massive personal responsibility directly." data-def-vn="Trực tiếp gánh vác một trách nhiệm cá nhân to lớn." data-context-en="He carried the collective destiny of Ithaca on his shoulders." data-context-vn="Ông mang theo vận mệnh tập thể của Ithaca trên đôi vai mình.">trên vai</span>, phải 
+    <span class="vocab" id="w-lead" data-word-en="Lead the way" data-word-vn="Dẫn đường" data-pos="động từ / verb" data-def-en="To guide or pilot a ship through dangerous waters." data-def-vn="Hướng dẫn hoặc điều khiển một con tàu đi qua vùng nước nguy hiểm." data-context-en="Ulysses must lead the way through the thick black fog." data-context-vn="Ulysses phải dẫn đường vượt qua làn sương mù đen đặc.">dẫn đường</span> qua một 
+    <span class="vocab" id="w-path2" data-word-en="Path / Road" data-word-vn="Con đường" data-pos="danh từ / noun" data-def-en="A perilous course or track chosen for travel." data-def-vn="Một tiến trình hoặc con đường hiểm trở được chọn để di chuyển." data-context-en="They sailed along a hidden path fraught with monsters." data-context-vn="Họ đi theo một con đường ẩn giấu đầy rẫy những con quái vật.">con đường</span> nơi mỗi 
+    <span class="vocab" id="w-decision" data-word-en="Decision" data-word-vn="Quyết định" data-pos="danh từ / noun" data-def-en="A critical choice made after intense consideration." data-def-vn="Một sự lựa chọn quan trọng được đưa ra sau khi xem xét kỹ lưỡng." data-context-en="One single bad decision would ruin their return entirely." data-context-vn="Một quyết định sai lầm duy nhất sẽ hủy hoại hoàn toàn sự trở về của họ.">quyết định</span> đều có thể trở thành 
+    <span class="vocab" id="w-deathsentence" data-word-en="Death sentence" data-word-vn="Án tử" data-pos="danh từ / noun" data-def-en="A fatal choice leading directly to absolute execution or demise." data-def-vn="Một lựa chọn sai lầm dẫn thẳng đến sự hành quyết hoặc cái chết tuyệt đối." data-context-en="A minor error at sea would become a swift death sentence." data-context-vn="Một sai sót nhỏ trên biển sẽ trở thành một bản án tử hình nhanh chóng.">án tử</span>.
+  </p>
+
+  <a href="../" class="back-btn">⏮ Go Up One Level</a>
+
+  <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+  
+  <div class="memory-grid">
+    <span class="memory-word" onclick="scrollToWord('w-episode')">Episode</span>
+    <span class="memory-word" onclick="scrollToWord('w-land1')">Vùng Đất</span>
+    <span class="memory-word" onclick="scrollToWord('w-dead1')">Người Chết</span>
+    <span class="memory-word" onclick="scrollToWord('w-warning')">Lời cảnh báo</span>
+    <span class="memory-word" onclick="scrollToWord('w-final')">cuối cùng</span>
+    <span class="memory-word" onclick="scrollToWord('w-terrifying')">đáng sợ</span>
+    <span class="memory-word" onclick="scrollToWord('w-truly')">thực sự</span>
+    <span class="memory-word" onclick="scrollToWord('w-findway')">tìm được đường</span>
+    <span class="memory-word" onclick="scrollToWord('w-home')">về nhà</span>
+    <span class="memory-word" onclick="scrollToWord('w-must1')">phải</span>
+    <span class="memory-word" onclick="scrollToWord('w-go')">đi đến</span>
+    <span class="memory-word" onclick="scrollToWord('w-alltheway')">tận</span>
+    <span class="memory-word" onclick="scrollToWord('w-edge')">rìa</span>
+    <span class="memory-word" onclick="scrollToWord('w-world')">thế giới</span>
+    <span class="memory-word" onclick="scrollToWord('w-entrance')">lối vào</span>
+    <span class="memory-word" onclick="scrollToWord('w-cross')">vượt qua</span>
+    <span class="memory-word" onclick="scrollToWord('w-river')">dòng sông</span>
+    <span class="memory-word" onclick="scrollToWord('w-fire')">lửa</span>
+    <span class="memory-word" onclick="scrollToWord('w-talk')">nói chuyện</span>
+    <span class="memory-word" onclick="scrollToWord('w-prophet')">nhà tiên tri</span>
+    <span class="memory-word" onclick="scrollToWord('w-blind')">mù</span>
+    <span class="memory-word" onclick="scrollToWord('w-journey')">Chuyến đi</span>
+    <span class="memory-word" onclick="scrollToWord('w-down')">xuống</span>
+    <span class="memory-word" onclick="scrollToWord('w-underworld')">âm phủ</span>
+    <span class="memory-word" onclick="scrollToWord('w-like')">giống như</span>
+    <span class="memory-word" onclick="scrollToWord('w-stepinto')">bước vào</span>
+    <span class="memory-word" onclick="scrollToWord('w-silence')">sự im lặng</span>
+    <span class="memory-word" onclick="scrollToWord('w-absolute')">tuyệt đối</span>
+    <span class="memory-word" onclick="scrollToWord('w-arrive')">đến nơi</span>
+    <span class="memory-word" onclick="scrollToWord('w-sun')">mặt trời</span>
+    <span class="memory-word" onclick="scrollToWord('w-disappear')">biến mất</span>
+    <span class="memory-word" onclick="scrollToWord('w-shadow')">cái bóng</span>
+    <span class="memory-word" onclick="scrollToWord('w-move')">chuyển động</span>
+    <span class="memory-word" onclick="scrollToWord('w-rock')">tảng đá</span>
+    <span class="memory-word" onclick="scrollToWord('w-ghosts')">ma quỷ</span>
+    <span class="memory-word" onclick="scrollToWord('w-dig')">đào</span>
+    <span class="memory-word" onclick="scrollToWord('w-pit')">cái hố</span>
+    <span class="memory-word" onclick="scrollToWord('w-offer')">dâng</span>
+    <span class="memory-word" onclick="scrollToWord('w-blood')">máu</span>
+    <span class="memory-word" onclick="scrollToWord('w-sacrifice')">vật hiến tế</span>
+    <span class="memory-word" onclick="scrollToWord('w-cause')">khiến</span>
+    <span class="memory-word" onclick="scrollToWord('w-soul')">linh hồn</span>
+    <span class="memory-word" onclick="scrollToWord('w-restless')">bất an</span>
+    <span class="memory-word" onclick="scrollToWord('w-swarm')">kéo nhau</span>
+    <span class="memory-word" onclick="scrollToWord('w-emerge')">trồi lên</span>
+    <span class="memory-word" onclick="scrollToWord('w-heartbroken')">đau lòng</span>
+    <span class="memory-word" onclick="scrollToWord('w-shattered')">tan nát</span>
+    <span class="memory-word" onclick="scrollToWord('w-wait')">chờ đợi</span>
+    <span class="memory-word" onclick="scrollToWord('w-return')">trở về</span>
+    <span class="memory-word" onclick="scrollToWord('w-comrade')">đồng đội</span>
+    <span class="memory-word" onclick="scrollToWord('w-fellow')">kẻ</span>
+    <span class="memory-word" onclick="scrollToWord('w-die')">chết</span>
+    <span class="memory-word" onclick="scrollToWord('w-fall')">ngã</span>
+    <span class="memory-word" onclick="scrollToWord('w-drunkenness')">cơn say</span>
+    <span class="memory-word" onclick="scrollToWord('w-palace')">cung điện</span>
+    <span class="memory-word" onclick="scrollToWord('w-weight')">Sức nặng</span>
+    <span class="memory-word" onclick="scrollToWord('w-emotional')">cảm xúc</span>
+    <span class="memory-word" onclick="scrollToWord('w-encounter')">cuộc gặp gỡ</span>
+    <span class="memory-word" onclick="scrollToWord('w-almost')">gần như</span>
+    <span class="memory-word" onclick="scrollToWord('w-suffocate')">nghẹt thở</span>
+    <span class="memory-word" onclick="scrollToWord('w-man')">đàn ông</span>
+    <span class="memory-word" onclick="scrollToWord('w-surround')">bao quanh</span>
+    <span class="memory-word" onclick="scrollToWord('w-disappoint')">khiến thất vọng</span>
+    <span class="memory-word" onclick="scrollToWord('w-appear')">xuất hiện</span>
+    <span class="memory-word" onclick="scrollToWord('w-challenge')">thử thách</span>
+    <span class="memory-word" onclick="scrollToWord('w-ahead')">phía trước</span>
+    <span class="memory-word" onclick="scrollToWord('w-especially')">đặc biệt</span>
+    <span class="memory-word" onclick="scrollToWord('w-island')">hòn đảo</span>
+    <span class="memory-word" onclick="scrollToWord('w-cattle')">đàn bò</span>
+    <span class="memory-word" onclick="scrollToWord('w-sacred')">thiêng</span>
+    <span class="memory-word" onclick="scrollToWord('w-graze')">gặm cỏ</span>
+    <span class="memory-word" onclick="scrollToWord('w-touch')">chạm vào</span>
+    <span class="memory-word" onclick="scrollToWord('w-endure')">chịu</span>
+    <span class="memory-word" onclick="scrollToWord('w-harm')">làm hại</span>
+    <span class="memory-word" onclick="scrollToWord('w-lose')">mất</span>
+    <span class="memory-word" onclick="scrollToWord('w-ship')">tàu</span>
+    <span class="memory-word" onclick="scrollToWord('w-men')">người</span>
+    <span class="memory-word" onclick="scrollToWord('w-leave')">rời</span>
+    <span class="memory-word" onclick="scrollToWord('w-clarity')">sự tỉnh táo</span>
+    <span class="memory-word" onclick="scrollToWord('w-chilling')">lạnh lẽo</span>
+    <span class="memory-word" onclick="scrollToWord('w-price')">cái giá</span>
+    <span class="memory-word" onclick="scrollToWord('w-failure')">thất bại</span>
+    <span class="memory-word" onclick="scrollToWord('w-now')">Giờ đây</span>
+    <span class="memory-word" onclick="scrollToWord('w-understand')">hiểu</span>
+    <span class="memory-word" onclick="scrollToWord('w-journey2')">hành trình</span>
+    <span class="memory-word" onclick="scrollToWord('w-body')">thể xác</span>
+    <span class="memory-word" onclick="scrollToWord('w-test')">bài kiểm tra</span>
+    <span class="memory-word" onclick="scrollToWord('w-character')">nhan cách</span>
+    <span class="memory-word" onclick="scrollToWord('w-require')">yêu cầu</span>
+    <span class="memory-word" onclick="scrollToWord('w-bear')">gánh</span>
+    <span class="memory-word" onclick="scrollToWord('w-life')">mạng sống</span>
+    <span class="memory-word" onclick="scrollToWord('w-remaining')">còn lại</span>
+    <span class="memory-word" onclick="scrollToWord('w-shoulders')">trên vai</span>
+    <span class="memory-word" onclick="scrollToWord('w-lead')">dẫn đường</span>
+    <span class="memory-word" onclick="scrollToWord('w-path2')">con đường</span>
+    <span class="memory-word" onclick="scrollToWord('w-decision')">quyết định</span>
+    <span class="memory-word" onclick="scrollToWord('w-deathsentence')">án tử</span>
+  </div>
+
+</div>
+
+<div id="popup-card" class="popup-card">
+  <div id="pop-title" class="popup-heading"></div>
+  <div id="pop-subtitle" class="popup-secondary"></div>
+  <div id="pop-pos" class="popup-pos"></div>
+  <div id="pop-def" class="popup-def"></div>
+  <div id="pop-context-label" class="popup-context-label"></div>
+  <div id="pop-context" class="popup-context"></div>
+</div>
+
+<script>
+  let activeWord = null;
+  const popup = document.getElementById('popup-card');
+
+  // Popup processing logic for Vietnamese main text input
+  document.querySelectorAll('.vocab').forEach(wordElement => {
+    wordElement.addEventListener('click', function(event) {
+      event.stopPropagation();
+      
+      if (activeWord === this) {
+        closePopupCard();
+        return;
+      }
+      
+      activeWord = this;
+
+      // Extract raw metadata attributes
+      const wordEn = this.getAttribute('data-word-en');
+      const wordVn = this.getAttribute('data-word-vn');
+      const pos = this.getAttribute('data-pos');
+      const defEn = this.getAttribute('data-def-en');
+      const contextEn = this.getAttribute('data-context-en');
+
+      // Populate using critical Vietnamese text display rules
+      document.getElementById('pop-title').innerText = wordEn; 
+      document.getElementById('pop-subtitle').innerText = wordVn;
+      document.getElementById('pop-pos').innerText = pos;
+      document.getElementById('pop-def').innerText = defEn; // English only
+      document.getElementById('pop-context-label').innerText = "In context:";
+      document.getElementById('pop-context').innerText = contextEn; // English only
+
+      popup.style.display = 'block';
+    });
+  });
+
+  // Close cases rules implementation
+  popup.addEventListener('click', function(event) {
+    closePopupCard();
+  });
+
+  window.addEventListener('click', function(event) {
+    if (popup.style.display === 'block') {
+      closePopupCard();
+    }
+  });
+
+  function closePopupCard() {
+    popup.style.display = 'none';
+    activeWord = null;
+  }
+
+  // Audio Playback Speed Control
+  function setPlaybackSpeed(speed) {
+    const audio = document.getElementById('audio-player');
+    if (audio) {
+      audio.playbackRate = speed;
+      document.querySelectorAll('.speed-btn').forEach(btn => {
+        btn.classList.remove('active');
+        if (parseFloat(btn.dataset.speed) === speed) {
+          btn.classList.add('active');
+        }
+      });
+    }
+  }
+
+  // Memory Grid Navigation Handler
+  function scrollToWord(id) {
+    const target = document.getElementById(id);
+    if (target) {
+      target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      
+      // Flash structural element highlight
+      target.style.backgroundColor = '#ffe082';
+      setTimeout(() => {
+        target.style.backgroundColor = 'transparent';
+      }, 1500);
+    }
+  }
+</script>
+
+</body>
+</html>
