@@ -1,0 +1,576 @@
+ Conversation with Gemini
+
+please execute the attached instructions.
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Episode 9: The Bow Contest</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            margin: 0;
+            padding: 20px;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            user-select: none;
+            display: flex;
+            justify-content: center;
+        }
+
+        .parchment-page {
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 2px solid #a0845a;
+            max-width: 750px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        h1 {
+            color: #3a1f00;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+
+        /* Audio Player Styling */
+        .audio-label {
+            color: #7a4e1a;
+            font-size: 0.95rem;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        audio {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        /* Custom Progress Accent Simulated Style Control */
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+
+        .rewind-btn, .speed-btn, .back-btn {
+            background-color: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            padding: 6px 12px;
+            margin: 4px;
+            cursor: pointer;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            border-radius: 2px;
+            transition: background 0.2s;
+        }
+
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background-color: #3e2a0f;
+        }
+
+        .speed-btn.active {
+            background-color: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+        }
+
+        /* Popup Card Configuration */
+        .popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.6);
+            z-index: 1000;
+            max-width: 420px;
+            width: 90%;
+            box-sizing: border-box;
+        }
+
+        .popup-heading {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin: 0 0 4px 0;
+            color: #3a1f00;
+        }
+
+        .popup-subheading {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #5c4033;
+            margin: 0 0 8px 0;
+        }
+
+        .popup-pos {
+            font-size: 0.95rem;
+            color: #7a4e1a;
+            font-weight: bold;
+            margin-bottom: 10px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 4px;
+        }
+
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+        }
+
+        .popup-def-en {
+            font-weight: bold;
+            margin-bottom: 4px;
+        }
+
+        .popup-def-vn {
+            color: #3a1f00;
+        }
+
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 10px;
+            color: #7a4e1a;
+        }
+
+        .popup-context {
+            font-size: 0.95rem;
+            margin-top: 2px;
+        }
+
+        /* Back Button Wrapper */
+        .back-button-container {
+            text-align: center;
+            margin: 30px 0 20px 0;
+            border-top: 1px solid #7a4e1a;
+            padding-top: 20px;
+        }
+
+        /* Test Your Memory Section */
+        .memory-section {
+            margin-top: 30px;
+            border-top: 2px solid #7a4e1a;
+            padding-top: 20px;
+        }
+
+        .memory-heading {
+            color: #3a1f00;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
+
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #1a5c20;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background-color: rgba(122, 78, 26, 0.05);
+        }
+
+        /* Dynamic Highlighting Flash CSS */
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="parchment-page">
+        <span class="audio-label">🎧 Listen to the text</span>
+        <audio id="audio-player" controls src="bow.mp3"></audio>
+
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+        <h1>
+            <span class="vocab" data-word-en="Episode" data-word-vn="Tập" data-pos="danh từ / noun" data-def-en="A section or part of a longer story or series." data-def-vn="Một phần hoặc chương của một câu chuyện hoặc chuỗi dài hơn." data-context-en="It marks the ninth part of the story series." data-context-vn="Nó đánh dấu phần thứ chín của chuỗi câu chuyện.">Episode</span> 9: 
+            The <span class="vocab" data-word-en="Bow" data-word-vn="Cây cung" data-pos="danh từ / noun" data-def-en="A weapon for shooting arrows, made of curved wood." data-def-vn="Vũ khí dùng để bắn tên, làm bằng một thanh gỗ uốn cong." data-context-en="The competition involved using a legendary bow." data-context-vn="Cuộc thi bao gồm việc sử dụng một cây cung huyền thoại.">Bow</span> 
+            <span class="vocab" data-word-en="Contest" data-word-vn="Cuộc thi" data-pos="danh từ / noun" data-def-en="A competition to show who is the best at a specific skill." data-def-vn="Một cuộc cạnh tranh để thể hiện ai là người giỏi nhất ở một kỹ năng cụ thể." data-context-en="A bow contest was set up to choose a husband." data-context-vn="Một cuộc thi bắn cung đã được tổ chức để chọn chồng.">Contest</span>
+        </h1>
+
+        <p>
+            The <span class="vocab" data-word-en="time" data-word-vn="thời gian" data-pos="danh từ / noun" data-def-en="The indefinite continued progress of existence and events." data-def-vn="Sự tiến triển tiếp diễn không xác định của sự tồn tại và các sự kiện." data-context-en="The appointed time had arrived." data-context-vn="Thời gian được chỉ định đã đến.">time</span> 
+            had <span class="vocab" data-word-en="come" data-word-vn="đến" data-pos="động từ / verb" data-def-en="Arrived at a specified phase, moment, or situation." data-def-vn="Đến một giai đoạn, thời điểm hoặc tình huống cụ thể." data-context-en="The crucial moment had come." data-context-vn="Thời điểm quan trọng đã đến.">come</span>.
+        </p>
+
+        <p>
+            Penelope <span class="vocab" data-word-en="announced" data-word-vn="thông báo" data-pos="động từ / verb" data-def-en="Made a formal public statement about a decision." data-def-vn="Đưa ra một tuyên bố chính thức trước công chúng về một quyết định." data-context-en="She announced the terms of the challenge." data-context-vn="Bà đã thông báo các điều khoản của thử thách.">announced</span> 
+            that she would <span class="vocab" data-word-en="marry" data-word-vn="kết hôn" data-pos="động từ / verb" data-def-en="Join in marriage with someone." data-def-vn="Kết hôn, lập gia đình với ai đó." data-context-en="She agreed to marry any man who won." data-context-vn="Bà đồng ý kết hôn với bất kỳ người đàn ông nào chiến thắng.">marry</span> 
+            any <span class="vocab" data-word-en="man" data-word-vn="người đàn ông" data-pos="danh từ / noun" data-def-en="An adult human male." data-def-vn="Một người đàn ông trưởng thành." data-context-en="Any man could try the challenge." data-context-vn="Bất kỳ người đàn ông nào cũng có thể thử thách.">man</span> 
+            who could <span class="vocab" data-word-en="perform" data-word-vn="thực hiện" data-pos="động từ / verb" data-def-en="Carry out, accomplish, or fulfill an action." data-def-vn="Thực hiện hoặc hoàn thành một hành động." data-context-en="To perform a highly difficult skill." data-context-vn="Để thực hiện một kỹ năng có độ khó cao.">perform</span> 
+            a <span class="vocab" data-word-en="feat" data-word-vn="kỳ tích" data-pos="danh từ / noun" data-def-en="An achievement that requires great courage, skill, or strength." data-def-vn="Một thành tựu đòi hỏi lòng can đảm, kỹ năng hoặc sức mạnh lớn." data-context-en="Stringing the bow was a difficult feat." data-context-vn="Lên dây cung là một kỳ tích khó khăn.">feat</span> 
+            only Ulysses had ever <span class="vocab" data-word-en="accomplished" data-word-vn="hoàn thành" data-pos="động từ / verb" data-def-en="Successfully completed or achieved." data-def-vn="Hoàn thành hoặc đạt được một cách thành công." data-context-en="A task that only the king accomplished." data-context-vn="Một nhiệm vụ mà chỉ có nhà vua hoàn thành.">accomplished</span>: 
+            <span class="vocab" data-word-en="stringing" data-word-vn="lên dây cung" data-pos="động từ / verb" data-def-en="Fitting a string tightly onto a bow structure." data-def-vn="Gắn chặt dây vào cấu trúc cây cung." data-context-en="Stringing his massive bow required great power." data-context-vn="Lên dây cho cây cung khổng lồ đòi hỏi sức mạnh lớn.">stringing</span> 
+            his <span class="vocab" data-word-en="massive" data-word-vn="khổng lồ" data-pos="tính từ / adjective" data-def-en="Large and heavy; great in size." data-def-vn="Lớn và nặng; kích thước to lớn." data-context-en="The weapon was massive and robust." data-context-vn="Vũ khí rất khổng lồ và chắc chắn.">massive</span>, 
+            <span class="vocab" data-word-en="heavy" data-word-vn="nặng nề" data-pos="tính từ / adjective" data-def-en="Weighing a lot; difficult to lift or pull." data-def-vn="Nặng; khó nâng hoặc kéo." data-context-en="The heavy bow defeated the competitors." data-context-vn="Cây cung nặng nề đã đánh bại các đối thủ cạnh tranh.">heavy</span> 
+            <span class="vocab" data-word-en="bow" data-word-vn="cây cung" data-pos="danh từ / noun" data-def-en="A weapon for shooting arrows, made of curved wood." data-def-vn="Vũ khí dùng để bắn tên, làm bằng một thanh gỗ uốn cong." data-context-en="He targeted the axes using the bow." data-context-vn="Ông nhắm vào những chiếc rìu bằng cây cung.">bow</span> 
+            and <span class="vocab" data-word-en="shooting" data-word-vn="bắn" data-pos="động từ / verb" data-def-en="Firing an arrow from a weapon." data-def-vn="Bắn một mũi tên từ vũ khí." data-context-en="Shooting accurately was part of the test." data-context-vn="Bắn chính xác là một phần của bài kiểm tra.">shooting</span> 
+            an <span class="vocab" data-word-en="arrow" data-word-vn="mũi tên" data-pos="danh từ / noun" data-def-en="A sharp, thin projectile shot from a bow." data-def-vn="Một vật phóng mỏng, sắc nhọn bắn ra từ cây cung." data-context-en="The arrow traveled through the loop holes." data-context-vn="Mũi tên di chuyển xuyên qua các lỗ vòng.">arrow</span> 
+            through the <span class="vocab" data-word-en="eyes" data-word-vn="lỗ trục" data-pos="danh từ / noun" data-def-en="The small circular openings or holes in the axe-heads." data-def-vn="Những lỗ tròn nhỏ hoặc khe hở trên lưỡi rìu." data-context-en="The arrow flew through the eyes of the axes." data-context-vn="Mũi tên bay xuyên qua các lỗ trục của những chiếc rìu.">eyes</span> 
+            of twelve <span class="vocab" data-word-en="axe-heads" data-word-vn="lưỡi rìu" data-pos="danh từ / noun" data-def-en="The metal top parts of axes containing an opening." data-def-vn="Phần kim loại phía trên của rìu có chứa một cái lỗ." data-context-en="Twelve axe-heads were set in place." data-context-vn="Mười hai lưỡi rìu đã được đặt vào vị trí.">axe-heads</span> 
+            <span class="vocab" data-word-en="lined" data-word-vn="xếp hàng" data-pos="động từ / verb" data-def-en="Arranged in a straight line." data-def-vn="Được sắp xếp thành một đường thẳng." data-context-en="The targets were lined up precisely." data-context-vn="Các mục tiêu đã được xếp hàng một cách chính xác.">lined</span> 
+            in a <span class="vocab" data-word-en="row" data-word-vn="hàng" data-pos="danh từ / noun" data-def-en="A number of things arranged in a straight line." data-def-vn="Một số vật được sắp xếp thành một đường thẳng." data-context-en="The items stood in a single row." data-context-vn="Các vật phẩm đứng thành một hàng duy nhất.">row</span>.
+        </p>
+
+        <p>
+            One by one, the <span class="vocab" data-word-en="suitors" data-word-vn="những kẻ cầu hôn" data-pos="danh từ / noun" data-def-en="Men who want to marry a specific woman." data-def-vn="Những người đàn ông muốn kết hôn với một người phụ nữ cụ thể." data-context-en="The suitors gathered to win her hand." data-context-vn="Những kẻ cầu hôn tụ tập để giành lấy tay bà.">suitors</span> 
+            <span class="vocab" data-word-en="tried" data-word-vn="cố gắng" data-pos="động từ / verb" data-def-en="Attempted to do or complete something." data-def-vn="Cố gắng làm hoặc hoàn thành một điều gì đó." data-context-en="They tried but failed to pull it." data-context-vn="Họ đã cố gắng nhưng không kéo được nó.">tried</span>. 
+            They were <span class="vocab" data-word-en="strong" data-word-vn="mạnh mẽ" data-pos="tính từ / adjective" data-def-en="Having great physical power or muscular strength." data-def-vn="Có sức mạnh thể chất lớn hoặc cơ bắp khỏe mạnh." data-context-en="Even strong competitors met their match." data-context-vn="Ngay cả những đối thủ mạnh mẽ cũng gặp phải đối thủ tầm cỡ.">strong</span>, 
+            <span class="vocab" data-word-en="arrogant" data-word-vn="kiêu ngạo" data-pos="tính từ / adjective" data-def-en="Having an exaggerated sense of one's own abilities." data-def-vn="Có cảm giác quá phóng đại về khả năng của bản thân." data-context-en="The arrogant men expected easy success." data-context-vn="Những người đàn ông kiêu ngạo mong đợi thành công dễ dàng.">arrogant</span> 
+            <span class="vocab" data-word-en="men" data-word-vn="những người đàn ông" data-pos="danh từ / noun" data-def-en="Adult human males." data-def-vn="Những người đàn ông trưởng thành." data-context-en="The men gathered inside the great hall." data-context-vn="Những người đàn ông tập trung bên trong đại sảnh.">men</span>, 
+            but they <span class="vocab" data-word-en="lacked" data-word-vn="thiếu" data-pos="động từ / verb" data-def-en="Were without or completely deficient in something needed." data-def-vn="Không có hoặc hoàn toàn thiếu hụt một điều cần thiết." data-context-en="They lacked the precision required." data-context-vn="Họ thiếu sự chính xác cần thiết.">lacked</span> 
+            the <span class="vocab" data-word-en="technique" data-word-vn="kỹ thuật" data-pos="danh từ / noun" data-def-en="A skillful or efficient way of doing a task." data-def-vn="Một cách làm việc khéo léo hoặc hiệu quả." data-context-en="Brute force failed without proper technique." data-context-vn="Sức mạnh thô bạo sẽ thất bại nếu không có kỹ thuật thích hợp.">technique</span>.
+        </p>
+
+        <p>
+            They couldn't even <span class="vocab" data-word-en="bend" data-word-vn="uốn cong" data-pos="động từ / verb" data-def-en="Force something straight into a curved shape." data-def-vn="Ép một vật thẳng thành hình cong." data-context-en="Nobody could bend the stiff frame." data-context-vn="Không ai có thể uốn cong khung cứng đó.">bend</span> 
+            the <span class="vocab" data-word-en="wood" data-word-vn="gỗ" data-pos="danh từ / noun" data-def-en="The hard fibrous material forming the bow." data-def-vn="Vật liệu sợi cứng tạo nên cây cung." data-context-en="The wood resisted all their pressure." data-context-vn="Thanh gỗ chống lại mọi áp lực của họ.">wood</span>. 
+            The <span class="vocab" data-word-en="palace" data-word-vn="cung điện" data-pos="danh từ / noun" data-def-en="The official large residence of a king or ruler." data-def-vn="Nơi ở lớn chính thức của vua hoặc người cai trị." data-context-en="Echoes rang through the royal palace." data-context-vn="Tiếng vang vọng khắp cung điện hoàng gia.">palace</span> 
+            <span class="vocab" data-word-en="filled" data-word-vn="tràn đầy" data-pos="động từ / verb" data-def-en="Became full of an emotional sound or presence." data-def-vn="Trở nên tràn ngập một âm thanh hoặc sự hiện diện cảm xúc." data-context-en="The room filled with standard mockery." data-context-vn="Căn phòng tràn ngập tiếng chế giễu thông thường.">filled</span> 
+            with <span class="vocab" data-word-en="laughter" data-word-vn="tiếng cười" data-pos="danh từ / noun" data-def-en="The sound or action of laughing out loud." data-def-vn="Âm thanh hoặc hành động cười lớn." data-context-en="Mocking laughter echoed from onlookers." data-context-vn="Tiếng cười chế giễu vang lên từ những người đứng xem.">laughter</span> 
+            as they <span class="vocab" data-word-en="failed" data-word-vn="thất bại" data-pos="động từ / verb" data-def-en="Were unsuccessful in achieving an objective." data-def-vn="Không thành công trong việc đạt được mục tiêu." data-context-en="Each candidate failed miserably." data-context-vn="Mỗi ứng cử viên đều thất bại thảm hại.">failed</span>, 
+            their <span class="vocab" data-word-en="faces" data-word-vn="khuôn mặt" data-pos="danh từ / noun" data-def-en="The front parts of the head from the forehead to the chin." data-def-vn="Phần trước của đầu từ trán đến cằm." data-context-en="Their faces showed intense strain." data-context-vn="Khuôn mặt của họ lộ rõ vẻ căng thẳng tột độ.">faces</span> 
+            <span class="vocab" data-word-en="turning" data-word-vn="trở nên" data-pos="động từ / verb" data-def-en="Becoming or changing into a different color or state." data-def-vn="Trở thành hoặc chuyển sang một màu sắc hoặc trạng thái khác." data-context-en="Their skin was turning dark red." data-context-vn="Da của họ đang chuyển sang màu đỏ sẫm.">turning</span> 
+            red with <span class="vocab" data-word-en="shame" data-word-vn="sự xấu ổ" data-pos="danh từ / noun" data-def-en="A painful feeling of humiliation or distress." data-def-vn="Cảm giác đau đớn vì bị sỉ nhục hoặc đau khổ." data-context-en="They slunk away in complete shame." data-context-vn="Họ lén bỏ đi trong sự xấu hổ tột cùng.">shame</span>.
+        </p>
+
+        <p>
+            Then, the <span class="vocab" data-word-en="ragged" data-word-vn="rách rưới" data-pos="tính từ / adjective" data-def-en="Wearing old, torn, or damaged clothes." data-def-vn="Mặc quần áo cũ, rách hoặc hư hỏng." data-context-en="A ragged traveler approached the floor." data-context-vn="Một người khách du lịch rách rưới tiến lại gần sàn nhà.">ragged</span>, 
+            <span class="vocab" data-word-en="old" data-word-vn="già nua" data-pos="tính từ / adjective" data-def-en="Having lived for a long time." data-def-vn="Đã sống được một thời gian dài." data-context-en="An old man asked for a turn." data-context-vn="Một ông già xin đến lượt mình.">old</span> 
+            <span class="vocab" data-word-en="beggar" data-word-vn="người ăn xin" data-pos="danh từ / noun" data-def-en="A person who lives by asking for charity or food." data-def-vn="Một người sống bằng cách xin tiền từ thiện hoặc thức ăn." data-context-en="Ulysses disguised himself as a beggar." data-context-vn="Ulysses tự cải trang thành một người ăn xin.">beggar</span> 
+            <span class="vocab" data-word-en="stepped" data-word-vn="bước" data-pos="động từ / verb" data-def-en="Moved by lifting and putting down one's foot." data-def-vn="Di chuyển bằng cách nhấc và đặt chân xuống." data-context-en="He stepped into the center arena." data-context-vn="Ông bước vào trung tâm đấu trường.">stepped</span> 
+            <span class="vocab" data-word-en="forward" data-word-vn="về phía trước" data-pos="phó từ / adverb" data-def-en="Toward the front direction." data-def-vn="Hướng về phía trước." data-context-en="The man moved forward confidently." data-context-vn="Người đàn ông tự tin tiến về phía trước.">forward</span>.
+        </p>
+
+        <p>
+            A <span class="vocab" data-word-en="murmur" data-word-vn="tiếng thì thầm" data-pos="danh từ / noun" data-def-en="A soft, low, indistinct sound made by a crowd." data-def-vn="Âm thanh nhỏ, trầm, không rõ ràng do đám đông tạo ra." data-context-en="A quiet murmur broke out." data-context-vn="Một tiếng thì thầm khẽ bộc phát.">murmur</span> 
+            of <span class="vocab" data-word-en="mockery" data-word-vn="sự chế giễu" data-pos="danh từ / noun" data-def-en="Teasing or contemptuous remarks or behavior." data-def-vn="Những lời nhận xét hoặc hành vi trêu chọc, khinh bỉ." data-context-en="Their mockery quickly turned to shock." data-context-vn="Sự chế giễu của họ nhanh chóng biến thành cú sốc.">mockery</span> 
+            <span class="vocab" data-word-en="rippled" data-word-vn="lan truyền" data-pos="động từ / verb" data-def-en="Moved through a space or crowd like a wave." data-def-vn="Di chuyển qua một không gian hoặc đám đông giống như một làn sóng." data-context-en="Whispers rippled across the benches." data-context-vn="Tiếng thì thầm lan truyền khắp các băng ghế.">rippled</span> 
+            through the <span class="vocab" data-word-en="hall" data-word-vn="đại sảnh" data-pos="danh từ / noun" data-def-en="A large room for formal gatherings or feasts." data-def-vn="Một căn phòng lớn dành cho các cuộc tụ họp chính thức hoặc lễ hội." data-context-en="The royal hall grew quiet." data-context-vn="Đại sảnh hoàng gia trở nên yên tĩnh.">hall</span>, 
+            but Ulysses <span class="vocab" data-word-en="ignored" data-word-vn="phớt lờ" data-pos="động từ / verb" data-def-en="Refused to take notice of something." data-def-vn="Từ chối chú ý đến điều gì đó." data-context-en="He ignored their insulting comments." data-context-vn="Ông phớt lờ những lời bình luận xúc phạm của họ.">ignored</span> it.
+        </p>
+
+        <p>
+            He <span class="vocab" data-word-en="walked" data-word-vn="đi bộ" data-pos="động từ / verb" data-def-en="Moved on foot at a regular pace." data-def-vn="Di chuyển bằng chân với tốc độ đều đặn." data-context-en="He walked toward the target podium." data-context-vn="Ông đi bộ về phía bục mục tiêu.">walked</span> 
+            to the <span class="vocab" data-word-en="bow" data-word-vn="cây cung" data-pos="danh từ / noun" data-def-en="A weapon for shooting arrows, made of curved wood." data-def-vn="Vũ khí dùng để bắn tên, làm bằng một thanh gỗ uốn cong." data-context-en="He approached his long-lost bow." data-context-vn="Ông tiếp cận cây cung đã mất từ lâu của mình.">bow</span>, 
+            <span class="vocab" data-word-en="testing" data-word-vn="kiểm tra" data-pos="động từ / verb" data-def-en="Checking the quality or weight of an object." data-def-vn="Kiểm tra chất lượng hoặc trọng lượng của một vật thể." data-context-en="Testing its condition after many years." data-context-vn="Kiểm tra tình trạng của nó sau nhiều năm.">testing</span> 
+            its <span class="vocab" data-word-en="weight" data-word-vn="trọng lượng" data-pos="danh từ / noun" data-def-en="The heaviness or mass of an object." data-def-vn="Độ nặng hoặc khối lượng của một vật thể." data-context-en="The weight felt right in his hands." data-context-vn="Trọng lượng cảm thấy vừa vặn trong tay ông.">weight</span> 
+            with a <span class="vocab" data-word-en="familiarity" data-word-vn="sự quen thuộc" data-pos="danh từ / noun" data-def-en="Close acquaintance with or knowledge of something." data-def-vn="Sự hiểu biết sâu sắc hoặc quen biết với một cái gì đó." data-context-en="His familiarity with the weapon was obvious." data-context-vn="Sự quen thuộc của ông với vũ khí là điều hiển nhiên.">familiarity</span> 
+            that <span class="vocab" data-word-en="made" data-word-vn="làm cho" data-pos="động từ / verb" data-def-en="Caused something to happen or someone to react." data-def-vn="Làm cho một điều gì đó xảy ra hoặc ai đó phản ứng." data-context-en="It made the audience feel uneasy." data-context-vn="Nó khiến khán giả cảm thấy bất an.">made</span> 
+            the <span class="vocab" data-word-en="suitors" data-word-vn="những kẻ cầu hôn" data-pos="danh từ / noun" data-def-en="Men who want to marry a specific woman." data-def-vn="Những người đàn ông muốn kết hôn với một người phụ nữ cụ thể." data-context-en="The suitors watched him closely." data-context-vn="Những kẻ cầu hôn theo dõi ông chặt chẽ.">suitors</span> 
+            <span class="vocab" data-word-en="freeze" data-word-vn="bất động" data-pos="động từ / verb" data-def-en="Stop moving suddenly from surprise or fear." data-def-vn="Đột ngột ngừng di chuyển vì ngạc nhiên hoặc sợ hãi." data-context-en="They began to freeze with suspicion." data-context-vn="Họ bắt đầu đứng bất động với sự nghi ngờ.">freeze</span>.
+        </p>
+
+        <p>
+            He <span class="vocab" data-word-en="wiped" data-word-vn="lau sạch" data-pos="động từ / verb" data-def-en="Cleaned something by rubbing a surface." data-def-vn="Làm sạch thứ gì đó bằng cách chà xát bề mặt." data-context-en="He wiped the old weapon carefully." data-context-vn="Ông lau chùi vũ khí cũ một cách cẩn thận.">wiped</span> 
+            the <span class="vocab" data-word-en="dust" data-word-vn="bụi bẩn" data-pos="danh từ / noun" data-def-en="Fine dry powder consisting of tiny particles." data-def-vn="Bột khô mịn bao gồm các hạt nhỏ." data-context-en="Thick dust had covered the wood." data-context-vn="Bụi dày đặc đã bao phủ thanh gỗ.">dust</span> 
+            from the <span class="vocab" data-word-en="wood" data-word-vn="gỗ" data-pos="danh từ / noun" data-def-en="The hard fibrous material forming the bow." data-def-vn="Vật liệu sợi cứng tạo nên cây cung." data-context-en="The ancient wood remained intact." data-context-vn="Thanh gỗ cổ xưa vẫn còn nguyên vẹn.">wood</span>, 
+            <span class="vocab" data-word-en="pulled" data-word-vn="kéo" data-pos="động từ / verb" data-def-en="Exerted force to move something toward oneself." data-def-vn="Tác dụng lực để di chuyển vật gì đó về phía mình." data-context-en="He pulled back with total control." data-context-vn="Ông kéo lại với sự kiểm soát hoàn toàn.">pulled</span> 
+            the <span class="vocab" data-word-en="string" data-word-vn="dây cung" data-pos="danh từ / noun" data-def-en="The cord attached to both ends of a bow." data-def-vn="Đoạn dây gắn vào cả hai đầu của cây cung." data-context-en="The string hummed under tension." data-context-vn="Dây cung ngân lên dưới sức căng.">string</span> 
+            with <span class="vocab" data-word-en="fluid" data-word-vn="uyển chuyển" data-pos="tính từ / adjective" data-def-en="Smooth, elegant, and effortless in movement." data-def-vn="Mượt mà, thanh lịch và không tốn sức trong chuyển động." data-context-en="His fluid motion stunned the crowd." data-context-vn="Chuyển động uyển chuyển của ông làm đám đông kinh ngạc.">fluid</span>, 
+            <span class="vocab" data-word-en="terrifying" data-word-vn="đáng sợ" data-pos="tính từ / adjective" data-def-en="Causing extreme fear or awe." data-def-vn="Gây ra nỗi sợ hãi hoặc kinh ngạc tột độ." data-context-en="A terrifying exhibition of strength." data-context-vn="Một sự thể hiện sức mạnh đáng sợ.">terrifying</span> 
+            <span class="vocab" data-word-en="grace" data-word-vn="vẻ duyên dáng" data-pos="danh từ / noun" data-def-en="Smoothness and elegance of bodily movement." data-def-vn="Sự mượt mà và thanh lịch của chuyển động cơ thể." data-context-en="He executed the task with veteran grace." data-context-vn="Ông thực hiện nhiệm vụ với vẻ duyên dáng kỳ cựu.">grace</span>, 
+            and <span class="vocab" data-word-en="let" data-word-vn="để cho" data-pos="động từ / verb" data-def-en="Allowed something to move or fly freely." data-def-vn="Cho phép một vật di chuyển hoặc bay tự do." data-context-en="He let the missile loose." data-context-vn="Ông để cho vật phóng lao đi.">let</span> 
+            the <span class="vocab" data-word-en="arrow" data-word-vn="mũi tên" data-pos="danh từ / noun" data-def-en="A sharp, thin projectile shot from a bow." data-def-vn="Một vật phóng mỏng, sắc nhọn bắn ra từ cây cung." data-context-en="The arrow shot straight forward." data-context-vn="Mũi tên bắn thẳng về phía trước.">arrow</span> 
+            <span class="vocab" data-word-en="fly" data-word-vn="bay" data-pos="động từ / verb" data-def-en="Move rapidly through the air." data-def-vn="Di chuyển nhanh chóng trong không khí." data-context-en="He allowed the arrow to fly." data-context-vn="Ông để mũi tên bay đi.">fly</span>.
+        </p>
+
+        <p>
+            It <span class="vocab" data-word-en="whistled" data-word-vn="rít lên" data-pos="động từ / verb" data-def-en="Produced a high, clear sound while cutting through air." data-def-vn="Tạo ra âm thanh cao, rõ ràng khi cắt qua không khí." data-context-en="The missile whistled as it flew." data-context-vn="Vật phóng rít lên khi nó bay.">whistled</span> 
+            through the <span class="vocab" data-word-en="air" data-word-vn="không khí" data-pos="danh từ / noun" data-def-en="The invisible gaseous substance around us." data-def-vn="Chất khí vô hình xung quanh chúng ta." data-context-en="It cut clean through the air." data-context-vn="Nó cắt sạch qua không khí.">air</span>, 
+            <span class="vocab" data-word-en="piercing" data-word-vn="đâm xuyên" data-pos="động từ / verb" data-def-en="Going cleanly through an opening or object." data-def-vn="Đi xuyên qua một khe hở hoặc vật thể một cách gọn gàng." data-context-en="Piercing each narrow opening effortlessly." data-context-vn="Đâm xuyên qua từng khe hở hẹp một cách dễ dàng.">piercing</span> 
+            every <span class="vocab" data-word-en="single" data-word-vn="duy nhất" data-pos="tính từ / adjective" data-def-en="Only one; individual." data-def-vn="Chỉ một; riêng lẻ." data-context-en="Not a single target was missed." data-context-vn="Không một mục tiêu duy nhất nào bị bỏ sót.">single</span> 
+            <span class="vocab" data-word-en="axe-head" data-word-vn="lưỡi rìu" data-pos="danh từ / noun" data-def-en="The metal top part of an axe containing an opening." data-def-vn="Phần kim loại phía trên của rìu có chứa một cái lỗ." data-context-en="Every axe-head remained stable." data-context-vn="Mỗi lưỡi rìu vẫn giữ nguyên vị trí ổn định.">axe-head</span> 
+            with a <span class="vocab" data-word-en="clean" data-word-vn="gọn gàng" data-pos="tính từ / adjective" data-def-en="Smooth, precise, and perfect." data-def-vn="Mượt mà, chính xác và hoàn hảo." data-context-en="It was a clean shot." data-context-vn="Đó là một cú bắn gọn gàng.">clean</span>, 
+            <span class="vocab" data-word-en="metallic" data-word-vn="thuộc kim loại" data-pos="tính từ / adjective" data-def-en="Relating to or sounding like metal." data-def-vn="Liên quan đến hoặc có âm thanh giống như kim loại." data-context-en="A metallic ring echoed out." data-context-vn="Một tiếng vang kim loại vang lên.">metallic</span> 
+            <span class="vocab" data-word-en="thrum" data-word-vn="tiếng rung" data-pos="danh từ / noun" data-def-en="A low, continuous vibrating sound." data-def-vn="Âm thanh rung động trầm, liên tục." data-context-en="The strike made a definitive thrum." data-context-vn="Cú đánh tạo ra một tiếng rung rõ rệt.">thrum</span>.
+        </p>
+
+        <p>
+            In the <span class="vocab" data-word-en="sudden" data-word-vn="đột ngột" data-pos="tính từ / adjective" data-def-en="Occurring quickly and unexpectedly." data-def-vn="Xảy ra nhanh chóng và bất ngờ." data-context-en="A sudden shock paralyzed the room." data-context-vn="Một cú sốc đột ngột làm tê liệt căn phòng.">sudden</span>, 
+            <span class="vocab" data-word-en="suffocating" data-word-vn="ngột ngạt" data-pos="tính từ / adjective" data-def-en="Overwhelming; making it difficult to breathe." data-def-vn="Áp đảo; làm cho khó thở." data-context-en="The room felt filled with suffocating silence." data-context-vn="Căn phòng như tràn ngập sự im lặng ngột ngạt.">suffocating</span> 
+            <span class="vocab" data-word-en="silence" data-word-vn="sự im lặng" data-pos="danh từ / noun" data-def-en="Complete absence of any sound." data-def-vn="Sự vắng mặt hoàn toàn của bất kỳ âm thanh nào." data-context-en="Complete silence descended on them." data-context-vn="Sự im lặng hoàn toàn bao trùm lấy họ.">silence</span> 
+            that <span class="vocab" data-word-en="followed" data-word-vn="theo sau" data-pos="động từ / verb" data-def-en="Came after an event or action." data-def-vn="Đến sau một sự kiện hoặc hành động." data-context-en="A heavy realization followed the shot." data-context-vn="Một nhận thức nặng nề theo sau cú bắn.">followed</span>, 
+            the <span class="vocab" data-word-en="beggar" data-word-vn="người ăn xin" data-pos="danh từ / noun" data-def-en="A person who lives by asking for charity or food." data-def-vn="Một người sống bằng cách xin tiền từ thiện hoặc thức ăn." data-context-en="The old beggar altered his posture." data-context-vn="Người ăn xin già thay đổi tư thế của mình.">beggar</span> 
+            <span class="vocab" data-word-en="stood" data-word-vn="đứng" data-pos="động từ / verb" data-def-en="Remained upright on one's feet." data-def-vn="Giữ tư thế thẳng đứng trên đôi chân của mình." data-context-en="He stood up high." data-context-vn="Ông đứng thẳng dậy.">stood</span> 
+            <span class="vocab" data-word-en="taller" data-word-vn="cao hơn" data-pos="tính từ / adjective" data-def-en="Having greater height than before." data-def-vn="Có chiều cao lớn hơn trước." data-context-en="He seemed much taller now." data-context-vn="Bây giờ ông trông cao hơn nhiều.">taller</span>.
+        </p>
+
+        <p>
+            He <span class="vocab" data-word-en="dropped" data-word-vn="buông bỏ" data-pos="động từ / verb" data-def-en="Let something fall to the ground." data-def-vn="Để một thứ gì đó rơi xuống đất." data-context-en="He dropped his disguise." data-context-vn="Ông đã bỏ lớp ngụy trang của mình xuống.">dropped</span> 
+            his <span class="vocab" data-word-en="cloak" data-word-vn="áo choàng" data-pos="danh từ / noun" data-def-en="A loose outer garment without sleeves." data-def-vn="Một chiếc áo khoác ngoài lỏng lẻo không có tay áo." data-context-en="The old cloak fell away." data-context-vn="Chiếc áo choàng cũ rơi ra.">cloak</span>, 
+            and the <span class="vocab" data-word-en="light" data-word-vn="ánh sáng" data-pos="danh từ / noun" data-def-en="The natural agent that stimulates sight and makes things visible." data-def-vn="Tác nhân tự nhiên kích thích thị giác và làm cho mọi thứ có thể nhìn thấy được." data-context-en="Flickering light revealed his identity." data-context-vn="Ánh sáng nhấp nháy đã tiết lộ danh tính của ông.">light</span> 
+            from the <span class="vocab" data-word-en="torches" data-word-vn="những ngọn đuốc" data-pos="danh từ / noun" data-def-en="Portable burning sticks used for illumination." data-def-vn="Các thanh đốt di động được sử dụng để chiếu sáng." data-context-en="The torches illuminated his real stature." data-context-vn="Những ngọn đuốc soi sáng vóc dáng thực sự của ông.">torches</span> 
+            <span class="vocab" data-word-en="seemed" data-word-vn="dường như" data-pos="động từ / verb" data-def-en="Gave the impression of being or doing something." data-def-vn="Tạo ấn tượng là đang làm hoặc có một điều gì đó." data-context-en="He seemed like a totally different person." data-context-vn="Ông dường như là một người hoàn toàn khác.">seemed</span> 
+            to <span class="vocab" data-word-en="focus" data-word-vn="tập trung" data-pos="động từ / verb" data-def-en="Direct attention or light onto a specific center point." data-def-vn="Hướng sự chú ý hoặc ánh sáng vào một điểm trung tâm cụ thể." data-context-en="All eyes began to focus on his build." data-context-vn="Mọi ánh mắt bắt đầu tập trung vào vóc dáng của ông.">focus</span> 
+            <span class="vocab" data-word-en="entirely" data-word-vn="hoàn toàn" data-pos="phó từ / adverb" data-def-en="Completely; entirely." data-def-vn="Hoàn toàn; trọn vẹn." data-context-en="The spotlight was entirely on him." data-context-vn="Ánh hào quang hoàn toàn hướng về ông.">entirely</span> on him.
+        </p>
+
+        <p>
+            He wasn't a <span class="vocab" data-word-en="beggar" data-word-vn="người ăn xin" data-pos="danh từ / noun" data-def-en="A person who lives by asking for charity or food." data-def-vn="Một người sống bằng cách xin tiền từ thiện hoặc thức ăn." data-context-en="He abandoned the beggar appearance." data-context-vn="Ông từ bỏ vẻ ngoài của một người ăn xin.">beggar</span> 
+            <span class="vocab" data-word-en="anymore" data-word-vn="nữa" data-pos="phó từ / adverb" data-def-en="To any further extent; any longer." data-def-vn="Đến bất kỳ mức độ nào nữa; không còn nữa." data-context-en="He was not a captive anymore." data-context-vn="Ông không còn là một tù nhân nữa.">anymore</span>; 
+            he was a <span class="vocab" data-word-en="storm" data-word-vn="cơn bão" data-pos="danh từ / noun" data-def-en="A violent disturbance or outburst of power." data-def-vn="Một sự náo loạn dữ dội hoặc sự bùng nổ của sức mạnh." data-context-en="He stood like a brewing storm." data-context-vn="Ông đứng đó như một cơn bão đang chớm nở.">storm</span> 
+            <span class="vocab" data-word-en="waiting" data-word-vn="chờ đợi" data-pos="động từ / verb" data-def-en="Staying in a place or state looking forward to an event." data-def-vn="Ở một nơi hoặc một trạng thái để mong đợi một sự kiện." data-context-en="A crisis waiting to unfold." data-context-vn="Một cuộc khủng hoảng đang chờ mở ra.">waiting</span> 
+            to <span class="vocab" data-word-en="break" data-word-vn="bùng nổ" data-pos="động từ / verb" data-def-en="Burst forth violently or unleash fury." data-def-vn="Bùng phát dữ dội hoặc giải phóng cơn thịnh nộ." data-context-en="The tempest was ready to break." data-context-vn="Cơn giông bão đã sẵn sàng bùng nổ.">break</span>.
+        </p>
+
+        <p>
+            The <span class="vocab" data-word-en="suitors" data-word-vn="những kẻ cầu hôn" data-pos="danh từ / noun" data-def-en="Men who want to marry a specific woman." data-def-vn="Những người đàn ông muốn kết hôn với một người phụ nữ cụ thể." data-context-en="The suitors turned pale instantly." data-context-vn="Những kẻ cầu hôn lập tức tái mặt.">suitors</span> 
+            <span class="vocab" data-word-en="looked" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="Directed one's gaze in a specified direction." data-def-vn="Hướng cái nhìn của mình theo một hướng chỉ định." data-context-en="They looked at his royal profile." data-context-vn="Họ nhìn vào khuôn mặt hoàng gia của ông.">looked</span> 
+            at his <span class="vocab" data-word-en="face" data-word-vn="khuôn mặt" data-pos="danh từ / noun" data-def-en="The front part of the head." data-def-vn="Phần phía trước của đầu." data-context-en="They stared directly at his face." data-context-vn="Họ nhìn chằm chằm vào khuôn mặt ông.">face</span> 
+            and <span class="vocab" data-word-en="finally" data-word-vn="cuối cùng" data-pos="phó từ / adverb" data-def-en="After a long time; at last." data-def-vn="Sau một thời gian dài; cuối cùng." data-context-en="They finally discovered the truth." data-context-vn="Cuối cùng họ đã khám phá ra sự thật.">finally</span> 
+            <span class="vocab" data-word-en="understood" data-word-vn="hiểu ra" data-pos="động từ / verb" data-def-en="Perceived the intended meaning or identity." data-def-vn="Nhận thức được ý nghĩa hoặc danh tính dự kiến." data-context-en="They understood that doom had arrived." data-context-vn="Họ hiểu ra rằng điềm xấu đã đến.">understood</span>. 
+            Their <span class="vocab" data-word-en="dread" data-word-vn="sự kinh hãi" data-pos="danh từ / noun" data-def-en="Great fear or apprehension regarding future events." data-def-vn="Nỗi sợ hãi hoặc e ngại lớn về các sự kiện tương lai." data-context-en="Absolute dread paralyzed them." data-context-vn="Sự kinh hãi tuyệt đối làm họ tê liệt.">dread</span> 
+            was <span class="vocab" data-word-en="absolute" data-word-vn="tuyệt đối" data-pos="tính từ / adjective" data-def-en="Total, complete, and unconditional." data-def-vn="Tổng cộng, hoàn chỉnh và vô điều kiện." data-context-en="Their terror was absolute." data-context-vn="Nỗi khiếp sợ của họ là tuyệt đối.">absolute</span>.
+        </p>
+
+        <p>
+            The <span class="vocab" data-word-en="king" data-word-vn="vua" data-pos="danh từ / noun" data-def-en="The male ruler of an independent state." data-def-vn="Người nam cai trị của một quốc gia độc lập." data-context-en="The true king claimed his throne." data-context-vn="Vị vua đích thực đã đòi lại ngai vàng.">king</span> 
+            had <span class="vocab" data-word-en="returned" data-word-vn="trở lại" data-pos="động từ / verb" data-def-en="Come back to a former place or state." data-def-vn="Quay trở lại một nơi hoặc trạng thái trước đây." data-context-en="The warrior returned to execute justice." data-context-vn="Chiến binh trở lại để thực thi công lý.">returned</span>, 
+            and there was <span class="vocab" data-word-en="nowhere" data-word-vn="không nơi nào" data-pos="phó từ / adverb" data-def-en="Not anywhere; no place." data-def-vn="Không ở bất cứ đâu; không có nơi nào." data-context-en="There was nowhere to seek safety." data-context-vn="Không có nơi nào để tìm kiếm sự an toàn.">nowhere</span> 
+            <span class="vocab" data-word-en="left" data-word-vn="còn lại" data-pos="tính từ / adjective" data-def-en="Remaining; still available." data-def-vn="Còn lại; vẫn có sẵn." data-context-en="No choices were left for them." data-context-vn="Không còn lựa chọn nào lại cho họ.">left</span> 
+            to <span class="vocab" data-word-en="run" data-word-vn="chạy trốn" data-pos="động từ / verb" data-def-en="Flee or escape from danger." data-def-vn="Chạy trốn hoặc thoát khỏi nguy hiểm." data-context-en="They attempted to run away." data-context-vn="Họ đã cố gắng chạy trốn.">run</span>.
+        </p>
+
+        <div class="back-button-container">
+            <button class="back-btn" onclick="window.history.back();">⬅ Go Back One Level</button>
+        </div>
+
+        <div class="memory-section">
+            <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+            <div class="memory-grid">
+                <span class="memory-word" onclick="scrollToWord('Episode')">Episode</span>
+                <span class="memory-word" onclick="scrollToWord('Bow')">Bow</span>
+                <span class="memory-word" onclick="scrollToWord('Contest')">Contest</span>
+                <span class="memory-word" onclick="scrollToWord('time')">time</span>
+                <span class="memory-word" onclick="scrollToWord('come')">come</span>
+                <span class="memory-word" onclick="scrollToWord('announced')">announced</span>
+                <span class="memory-word" onclick="scrollToWord('marry')">marry</span>
+                <span class="memory-word" onclick="scrollToWord('man')">man</span>
+                <span class="memory-word" onclick="scrollToWord('perform')">perform</span>
+                <span class="memory-word" onclick="scrollToWord('feat')">feat</span>
+                <span class="memory-word" onclick="scrollToWord('accomplished')">accomplished</span>
+                <span class="memory-word" onclick="scrollToWord('stringing')">stringing</span>
+                <span class="memory-word" onclick="scrollToWord('massive')">massive</span>
+                <span class="memory-word" onclick="scrollToWord('heavy')">heavy</span>
+                <span class="memory-word" onclick="scrollToWord('shooting')">shooting</span>
+                <span class="memory-word" onclick="scrollToWord('arrow')">arrow</span>
+                <span class="memory-word" onclick="scrollToWord('eyes')">eyes</span>
+                <span class="memory-word" onclick="scrollToWord('axe-heads')">axe-heads</span>
+                <span class="memory-word" onclick="scrollToWord('lined')">lined</span>
+                <span class="memory-word" onclick="scrollToWord('row')">row</span>
+                <span class="memory-word" onclick="scrollToWord('suitors')">suitors</span>
+                <span class="memory-word" onclick="scrollToWord('tried')">tried</span>
+                <span class="memory-word" onclick="scrollToWord('strong')">strong</span>
+                <span class="memory-word" onclick="scrollToWord('arrogant')">arrogant</span>
+                <span class="memory-word" onclick="scrollToWord('men')">men</span>
+                <span class="memory-word" onclick="scrollToWord('lacked')">lacked</span>
+                <span class="memory-word" onclick="scrollToWord('technique')">technique</span>
+                <span class="memory-word" onclick="scrollToWord('bend')">bend</span>
+                <span class="memory-word" onclick="scrollToWord('wood')">wood</span>
+                <span class="memory-word" onclick="scrollToWord('palace')">palace</span>
+                <span class="memory-word" onclick="scrollToWord('filled')">filled</span>
+                <span class="memory-word" onclick="scrollToWord('laughter')">laughter</span>
+                <span class="memory-word" onclick="scrollToWord('failed')">failed</span>
+                <span class="memory-word" onclick="scrollToWord('faces')">faces</span>
+                <span class="memory-word" onclick="scrollToWord('turning')">turning</span>
+                <span class="memory-word" onclick="scrollToWord('shame')">shame</span>
+                <span class="memory-word" onclick="scrollToWord('ragged')">ragged</span>
+                <span class="memory-word" onclick="scrollToWord('old')">old</span>
+                <span class="memory-word" onclick="scrollToWord('beggar')">beggar</span>
+                <span class="memory-word" onclick="scrollToWord('stepped')">stepped</span>
+                <span class="memory-word" onclick="scrollToWord('forward')">forward</span>
+                <span class="memory-word" onclick="scrollToWord('murmur')">murmur</span>
+                <span class="memory-word" onclick="scrollToWord('mockery')">mockery</span>
+                <span class="memory-word" onclick="scrollToWord('rippled')">rippled</span>
+                <span class="memory-word" onclick="scrollToWord('hall')">hall</span>
+                <span class="memory-word" onclick="scrollToWord('ignored')">ignored</span>
+                <span class="memory-word" onclick="scrollToWord('walked')">walked</span>
+                <span class="memory-word" onclick="scrollToWord('testing')">testing</span>
+                <span class="memory-word" onclick="scrollToWord('weight')">weight</span>
+                <span class="memory-word" onclick="scrollToWord('familiarity')">familiarity</span>
+                <span class="memory-word" onclick="scrollToWord('made')">made</span>
+                <span class="memory-word" onclick="scrollToWord('freeze')">freeze</span>
+                <span class="memory-word" onclick="scrollToWord('wiped')">wiped</span>
+                <span class="memory-word" onclick="scrollToWord('dust')">dust</span>
+                <span class="memory-word" onclick="scrollToWord('pulled')">pulled</span>
+                <span class="memory-word" onclick="scrollToWord('string')">string</span>
+                <span class="memory-word" onclick="scrollToWord('fluid')">fluid</span>
+                <span class="memory-word" onclick="scrollToWord('terrifying')">terrifying</span>
+                <span class="memory-word" onclick="scrollToWord('grace')">grace</span>
+                <span class="memory-word" onclick="scrollToWord('let')">let</span>
+                <span class="memory-word" onclick="scrollToWord('fly')">fly</span>
+                <span class="memory-word" onclick="scrollToWord('whistled')">whistled</span>
+                <span class="memory-word" onclick="scrollToWord('air')">air</span>
+                <span class="memory-word" onclick="scrollToWord('piercing')">piercing</span>
+                <span class="memory-word" onclick="scrollToWord('single')">single</span>
+                <span class="memory-word" onclick="scrollToWord('axe-head')">axe-head</span>
+                <span class="memory-word" onclick="scrollToWord('clean')">clean</span>
+                <span class="memory-word" onclick="scrollToWord('metallic')">metallic</span>
+                <span class="memory-word" onclick="scrollToWord('thrum')">thrum</span>
+                <span class="memory-word" onclick="scrollToWord('sudden')">sudden</span>
+                <span class="memory-word" onclick="scrollToWord('suffocating')">suffocating</span>
+                <span class="memory-word" onclick="scrollToWord('silence')">silence</span>
+                <span class="memory-word" onclick="scrollToWord('followed')">followed</span>
+                <span class="memory-word" onclick="scrollToWord('stood')">stood</span>
+                <span class="memory-word" onclick="scrollToWord('taller')">taller</span>
+                <span class="memory-word" onclick="scrollToWord('dropped')">dropped</span>
+                <span class="memory-word" onclick="scrollToWord('cloak')">cloak</span>
+                <span class="memory-word" onclick="scrollToWord('light')">light</span>
+                <span class="memory-word" onclick="scrollToWord('torches')">torches</span>
+                <span class="memory-word" onclick="scrollToWord('seemed')">seemed</span>
+                <span class="memory-word" onclick="scrollToWord('focus')">focus</span>
+                <span class="memory-word" onclick="scrollToWord('entirely')">entirely</span>
+                <span class="memory-word" onclick="scrollToWord('anymore')">anymore</span>
+                <span class="memory-word" onclick="scrollToWord('storm')">storm</span>
+                <span class="memory-word" onclick="scrollToWord('waiting')">waiting</span>
+                <span class="memory-word" onclick="scrollToWord('break')">break</span>
+                <span class="memory-word" onclick="scrollToWord('looked')">looked</span>
+                <span class="memory-word" onclick="scrollToWord('face')">face</span>
+                <span class="memory-word" onclick="scrollToWord('finally')">finally</span>
+                <span class="memory-word" onclick="scrollToWord('understood')">understood</span>
+                <span class="memory-word" onclick="scrollToWord('dread')">dread</span>
+                <span class="memory-word" onclick="scrollToWord('absolute')">absolute</span>
+                <span class="memory-word" onclick="scrollToWord('king')">king</span>
+                <span class="memory-word" onclick="scrollToWord('returned')">returned</span>
+                <span class="memory-word" onclick="scrollToWord('nowhere')">nowhere</span>
+                <span class="memory-word" onclick="scrollToWord('left')">left</span>
+                <span class="memory-word" onclick="scrollToWord('run')">run</span>
+            </div>
+        </div>
+    </div>
+
+    <div id="popup-card" class="popup-card">
+        <div id="pop-vn-word" class="popup-heading"></div>
+        <div id="pop-en-word" class="popup-subheading"></div>
+        <div id="pop-pos" class="popup-pos"></div>
+        <div class="popup-def">
+            <div id="pop-def-en" class="popup-def-en"></div>
+            <div id="pop-def-vn" class="popup-def-vn"></div>
+        </div>
+        <div class="popup-context-label">Trong văn bản:</div>
+        <div id="pop-context" class="popup-context"></div>
+    </div>
+
+    <script>
+        let currentActiveWord = null;
+        const popup = document.getElementById('popup-card');
+
+        // Interactive Definition Logic Mapping
+        document.querySelectorAll('.vocab').forEach(el => {
+            el.addEventListener('click', function(e) {
+                e.stopPropagation();
+                if (currentActiveWord === this) {
+                    closePopup();
+                } else {
+                    openPopup(this);
+                }
+            });
+        });
+
+        popup.addEventListener('click', function(e) {
+            closePopup();
+        });
+
+        function openPopup(element) {
+            currentActiveWord = element;
+            document.getElementById('pop-vn-word').innerText = element.dataset.wordVn;
+            document.getElementById('pop-en-word').innerText = element.dataset.wordEn;
+            document.getElementById('pop-pos').innerText = element.dataset.pos;
+            document.getElementById('pop-def-en').innerText = element.dataset.defEn;
+            document.getElementById('pop-def-vn').innerText = element.dataset.defVn;
+            document.getElementById('pop-context').innerText = element.dataset.contextVn;
+            popup.style.display = 'block';
+        }
+
+        function closePopup() {
+            popup.style.display = 'none';
+            currentActiveWord = null;
+        }
+
+        // Custom Playback Control Functions
+        function setPlaybackSpeed(speed) {
+            const audio = document.getElementById('audio-player');
+            if (audio) {
+                audio.playbackRate = speed;
+                document.querySelectorAll('.speed-btn').forEach(btn => {
+                    btn.classList.remove('active');
+                    if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+                });
+            }
+        }
+
+        // Smooth Scroll and Instant Accent Highlight Tracker Logic
+        function scrollToWord(word) {
+            const elements = document.querySelectorAll('.vocab');
+            for (let el of elements) {
+                if (el.dataset.wordEn.toLowerCase() === word.toLowerCase()) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('highlight-flash');
+                    setTimeout(() => {
+                        el.classList.remove('highlight-flash');
+                    }, 1500);
+                    break;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+Gemini is AI and can make mistakes.
