@@ -1,0 +1,744 @@
+ Conversation with Gemini
+
+execute the attached instruction carefully. Be sure to include speed controls for the player.
+HTML
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>You’re the Eighth & What Did I Leave Behind?</title>
+  <style>
+    /* Global Styles & Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      background-color: #2b2b2b;
+      font-family: Arial, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      padding: 20px 10px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    /* Main Parchment Container */
+    #main-page {
+      background-color: #f0e6c8;
+      color: #2a1500;
+      width: 100%;
+      padding: 20px 15px;
+      border: 2px solid #a0845a;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+      border-radius: 4px;
+    }
+    @media (min-width: 768px) {
+      #main-page {
+        max-width: 875px;
+        padding: 40px 50px;
+      }
+    }
+
+    /* Headings */
+    h1, h2, h3 {
+      color: #3a1f00;
+      font-family: Arial, sans-serif;
+      margin-top: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    h1 {
+      font-size: 2.2rem;
+      border-bottom: 3px double #7a4e1a;
+      padding-bottom: 10px;
+      text-align: center;
+    }
+    h2 {
+      font-size: 1.6rem;
+      border-bottom: 2px solid #7a4e1a;
+      padding-bottom: 5px;
+      margin-top: 2.5rem;
+    }
+    h3 {
+      font-size: 1.3rem;
+    }
+
+    /* Paragraphs */
+    p {
+      font-size: 19px;
+      line-height: 1.7;
+      margin-bottom: 1.2rem;
+      text-align: justify;
+    }
+
+    /* Audio Component Styles */
+    .audio-wrapper {
+      background-color: #2e1f0a;
+      padding: 15px;
+      border: 1px solid #7a4e1a;
+      border-radius: 4px;
+      margin-bottom: 2rem;
+    }
+    .audio-label {
+      color: #f0d9a0;
+      font-size: 0.95rem;
+      margin-bottom: 8px;
+      display: block;
+      font-weight: bold;
+    }
+    audio {
+      width: 100%;
+      margin-bottom: 12px;
+    }
+    /* Simple audio element personalization styling via selector wrapper logic where possible, 
+       but standard browser controls persist. Progress accent color mentioned in instructions: #c8a060 */
+    
+    .audio-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+    .speed-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      justify-content: flex-start;
+      border-top: 1px solid #7a4e1a;
+      padding-top: 10px;
+      margin-top: 5px;
+    }
+    .rewind-btn, .speed-btn {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 6px 12px;
+      font-family: Arial, sans-serif;
+      font-size: 0.9rem;
+      cursor: pointer;
+      border-radius: 3px;
+      flex: 1 1 calc(33.333% - 8px);
+      text-align: center;
+      transition: background 0.2s;
+    }
+    @media(min-width: 480px) {
+      .rewind-btn { flex: 1 1 auto; }
+      .speed-btn { flex: 0 1 auto; }
+    }
+    .rewind-btn:hover, .speed-btn:hover {
+      background-color: #422d11;
+    }
+    .speed-btn.active {
+      background-color: #7a4e1a;
+      color: #ffffff;
+    }
+
+    /* Clickable Vocab Words */
+    .vocab {
+      border-bottom: 2.5px dotted #1a5c20;
+      cursor: pointer;
+      display: inline-block;
+    }
+    .vocab:hover {
+      background-color: rgba(26, 92, 32, 0.1);
+    }
+
+    /* Target Flash Highlight Animation */
+    @keyframes flashHighlight {
+      0% { background-color: transparent; }
+      20% { background-color: #ffe082; }
+      80% { background-color: #ffe082; }
+      100% { background-color: transparent; }
+    }
+    .flash-target {
+      animation: flashHighlight 1.5s ease-in-out;
+    }
+
+    /* Interactive Definition Card */
+    #definition-card {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: #f0e6c8;
+      border: 3px solid #a0845a;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.7);
+      padding: 20px;
+      width: 90%;
+      max-width: 450px;
+      z-index: 1000;
+      display: none;
+      border-radius: 6px;
+      color: #2a1500;
+    }
+    #card-overlay {
+      position: fixed;
+      top:0; left:0; right:0; bottom:0;
+      background: rgba(0,0,0,0.5);
+      z-index: 999;
+      display: none;
+    }
+    .card-heading {
+      font-size: 1.3rem;
+      font-weight: bold;
+      margin-bottom: 2px;
+      color: #3a1f00;
+    }
+    .card-secondary {
+      font-size: 0.95rem;
+      font-style: italic;
+      color: #5c4328;
+      margin-bottom: 6px;
+    }
+    .card-pos {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #1a5c20;
+      margin-bottom: 10px;
+      border-bottom: 1px dashed #a0845a;
+      padding-bottom: 4px;
+    }
+    .card-def {
+      font-size: 1rem;
+      margin-bottom: 12px;
+      line-height: 1.5;
+    }
+    .card-def-en {
+      margin-bottom: 6px;
+    }
+    .card-def-vn {
+      border-top: 1px solid rgba(122, 78, 26, 0.2);
+      padding-top: 6px;
+    }
+    .card-context-label {
+      font-size: 0.95rem;
+      font-weight: bold;
+      color: #7a4e1a;
+      margin-top: 10px;
+    }
+    .card-context-text {
+      font-size: 0.95rem;
+      font-style: italic;
+      margin-top: 2px;
+    }
+
+    /* Test Your Memory Grid Layout */
+    .memory-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
+      gap: 12px;
+      margin-top: 1.5rem;
+      margin-bottom: 2rem;
+    }
+    .memory-item {
+      font-size: 1rem;
+      padding: 6px;
+      background-color: rgba(122, 78, 26, 0.08);
+      border-bottom: 1.5px dotted #7a4e1a;
+      text-align: center;
+      cursor: pointer;
+      color: #3a1f00;
+      transition: background 0.2s;
+    }
+    .memory-item:hover {
+      background-color: rgba(122, 78, 26, 0.2);
+    }
+
+    /* Navigation / Buttons */
+    .back-btn {
+      display: inline-block;
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+      border: 1px solid #7a4e1a;
+      padding: 10px 20px;
+      text-decoration: none;
+      font-family: Arial, sans-serif;
+      font-size: 1rem;
+      border-radius: 4px;
+      margin: 1.5rem 0;
+      transition: background 0.2s;
+    }
+    .back-btn:hover {
+      background-color: #422d11;
+    }
+
+    /* Tables & Notes styling */
+    .notes-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.95rem;
+    }
+    .notes-table th, .notes-table td {
+      border: 1px solid #a0845a;
+      padding: 8px;
+      text-align: left;
+    }
+    .notes-table th {
+      background-color: #2e1f0a;
+      color: #f0d9a0;
+    }
+    .notes-section {
+      margin-top: 3rem;
+      border-top: 2px dashed #7a4e1a;
+      padding-top: 1.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-page">
+    
+    <div class="audio-wrapper">
+      <span class="audio-label">🎧 Listen to the text</span>
+      <audio id="audio-player" controls src="one-and-two.mp3"></audio>
+      
+      <div class="audio-controls">
+        <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+        <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+      </div>
+
+      <div class="speed-controls">
+        <span class="audio-label" style="display:inline-block; margin-right:10px; padding-top:5px;">Speed:</span>
+        <button class="speed-btn" onclick="setSpeed(0.75, this)">0.75x</button>
+        <button class="speed-btn active" onclick="setSpeed(1.0, this)">1.0x</button>
+        <button class="speed-btn" onclick="setSpeed(1.25, this)">1.25x</button>
+        <button class="speed-btn" onclick="setSpeed(1.5, this)">1.5x</button>
+        <button class="speed-btn" onclick="setSpeed(2.0, this)">2.0x</button>
+      </div>
+    </div>
+
+    <article>
+      <h1>
+        <span class="vocab" id="term-eighth" data-word-en="Eighth" data-word-vn="Thứ tám" data-pos="tính từ / adjective" data-def-en="Coming next after the seventh." data-def-vn="Đứng vị trí ngay sau thứ bảy." data-context-en="The fisherman tells Joe that he is the eighth person fooled today." data-context-vn="Người câu cá nói với Joe rằng anh ta là người thứ tám bị lừa hôm nay.">Eighth</span>
+      </h1>
+
+      <h2>Story 1: You’re the Eighth</h2>
+      
+      <p>
+        <span class="vocab" id="term-joe" data-word-en="Joe" data-word-vn="Joe" data-pos="danh từ riêng / proper noun" data-def-en="A male given name used as a character in the story." data-def-vn="Tên riêng của nam giới được dùng làm nhân vật trong truyện." data-context-en="Joe is the main character who goes to his usual bar." data-context-vn="Joe là nhân vật chính đi đến quán rượu quen thuộc của mình.">Joe</span> 
+        was 
+        <span class="vocab" id="term-going" data-word-en="going" data-word-vn="đi" data-pos="động từ / verb" data-def-en="Moving or traveling to a place." data-def-vn="Di chuyển hoặc đi tới một địa điểm nào đó." data-context-en="Joe was going into his favorite tavern." data-context-vn="Joe đang đi vào quán rượu yêu thích của mình.">going</span> 
+        into his 
+        <span class="vocab" id="term-usual" data-word-en="usual" data-word-vn="quen thuộc" data-pos="tính từ / adjective" data-def-en="Habitual, traditional, or common." data-def-vn="Quen thuộc, theo thói quen hoặc phổ biến." data-context-en="He went to his usual bar, not a new one." data-context-vn="Anh ấy đi đến quán rượu quen thuộc chứ không phải quán mới.">usual</span> 
+        <span class="vocab" id="term-bar" data-word-en="bar" data-word-vn="quán rượu" data-pos="danh từ / noun" data-def-en="An establishment where alcoholic drinks are served." data-def-vn="Một cơ sở nơi đồ uống có cồn được phục vụ." data-context-en="Joe was entering a bar before lunch." data-context-vn="Joe đang bước vào một quán rượu trước giờ ăn trưa.">bar</span> 
+        before 
+        <span class="vocab" id="term-lunch" data-word-en="lunch" data-word-vn="bữa trưa" data-pos="danh từ / noun" data-def-en="A meal eaten in the middle of the day." data-def-vn="Bữa ăn vào giữa ngày." data-context-en="The event happened just right before lunch." data-context-vn="Sự việc xảy ra ngay trước giờ ăn trưa.">lunch</span> 
+        when he 
+        <span class="vocab" id="term-saw" data-word-en="saw" data-word-vn="nhìn thấy" data-pos="động từ / verb" data-def-en="Perceived with the eyes (past tense of see)." data-def-vn="Nhìn thấy bằng mắt (thì quá khứ của see)." data-context-en="He saw a shabbily dressed man standing outside." data-context-vn="Anh nhìn thấy một người đàn ông ăn mặc tồi tàn đứng bên ngoài.">saw</span> 
+        a 
+        <span class="vocab" id="term-man" data-word-en="man" data-word-vn="người đàn ông" data-pos="danh từ / noun" data-def-en="An adult human male." data-def-vn="Một người đàn ông trưởng thành." data-context-en="The man was fishing in a puddle of water." data-context-vn="Người đàn ông đang câu cá trong một vũng nước.">man</span> 
+        <span class="vocab" id="term-dressed" data-word-en="dressed" data-word-vn="ăn mặc" data-pos="động từ / verb" data-def-en="Wearing clothes of a specified kind." data-def-vn="Mặc quần áo thuộc một loại cụ thể nào đó." data-context-en="The man was dressed in very old clothes." data-context-vn="Người đàn ông mặc quần áo rất cũ kỹ.">dressed</span> 
+        in 
+        <span class="vocab" id="term-shabby" data-word-en="shabby" data-word-vn="tồi tàn" data-pos="tính từ / adjective" data-def-en="In poor condition through long use or lack of care." data-def-vn="Trong tình trạng tồi tàn do dùng lâu hoặc thiếu chăm sóc." data-context-en="The man wore shabby clothes outside the bar." data-context-vn="Người đàn ông mặc quần áo tồi tàn bên ngoài quán rượu.">shabby</span> 
+        <span class="vocab" id="term-clothes" data-word-en="clothes" data-word-vn="quần áo" data-pos="danh từ / noun" data-def-en="Items worn to cover the body." data-def-vn="Trang phục mặc để che thân thể." data-context-en="His clothes looked very old and unwashed." data-context-vn="Quần áo của anh ta trông rất cũ và chưa giặt.">clothes</span> 
+        <span class="vocab" id="term-fishing" data-word-en="fishing" data-word-vn="câu cá" data-pos="động từ / verb" data-def-en="The activity of catching or trying to catch fish." data-def-vn="Hoạt động bắt hoặc cố gắng bắt cá." data-context-en="He was fishing inside a rain puddle." data-context-vn="Anh ta đang câu cá bên trong một vũng nước mưa.">fishing</span> 
+        in a 
+        <span class="vocab" id="term-small" data-word-en="small" data-word-vn="nhỏ" data-pos="tính từ / adjective" data-def-en="Size that is less than normal or usual." data-def-vn="Kích thước nhỏ hơn bình size bình thường." data-context-en="The puddle of water was quite small." data-context-vn="Vũng nước mưa khá là nhỏ.">small</span> 
+        <span class="vocab" id="term-pool" data-word-en="pool" data-word-vn="vũng nước" data-pos="danh từ / noun" data-def-en="A small body of still water." data-def-vn="Một lượng nhỏ nước đọng." data-context-en="It was a small pool of rain water." data-context-vn="Đó là một vũng nước mưa nhỏ.">pool</span> 
+        of 
+        <span class="vocab" id="term-rain" data-word-en="rain" data-word-vn="mưa" data-pos="danh từ / noun" data-def-en="Water falling in drops from vapor in the atmosphere." data-def-vn="Nước rơi thành giọt từ hơi nước trong khí quyển." data-context-en="The puddle consisted entirely of rain water." data-context-vn="Vũng nước hoàn toàn được tạo thành từ nước mưa.">rain</span> 
+        <span class="vocab" id="term-water" data-word-en="water" data-word-vn="nước" data-pos="danh từ / noun" data-def-en="The clear liquid that falls from clouds as rain." data-def-vn="Chất lỏng trong suốt rơi từ các đám mây xuống dưới dạng mưa." data-context-en="The water was only five centimeters deep." data-context-vn="Nước chỉ sâu khoảng năm xăng-ti-mét.">water</span> 
+        <span class="vocab" id="term-about" data-word-en="about" data-word-vn="khoảng" data-pos="trạng từ / adverb" data-def-en="Approximately; nearly." data-def-vn="Xấp xỉ; gần bằng khoảng." data-context-en="The water was about five centimeters deep." data-context-vn="Nước sâu khoảng năm xăng-ti-mét.">about</span> 
+        five 
+        <span class="vocab" id="term-centimeters" data-word-en="centimeters" data-word-vn="xăng-ti-mét" data-pos="danh từ / noun" data-def-en="Metric units of length equal to one hundredth of a meter." data-def-vn="Đơn vị đo độ dài bằng một phần trăm mét." data-context-en="The puddle measured five centimeters in depth." data-context-vn="Vũng nước đo được độ sâu năm xăng-ti-mét.">centimeters</span> 
+        <span class="vocab" id="term-deep" data-word-en="deep" data-word-vn="sâu" data-pos="tính từ / adjective" data-def-en="Extending far down from the top or surface." data-def-vn="Kéo dài ra xa từ phía trên bề mặt xuống dưới." data-context-en="The puddle wasn't very deep at all." data-context-vn="Vũng nước hoàn toàn không sâu lắm.">deep</span> 
+        <span class="vocab" id="term-outside" data-word-en="outside" data-word-vn="bên ngoài" data-pos="giới từ / preposition" data-def-en="On or to the outer side of a building." data-def-vn="Ở hoặc hướng về phía mặt ngoài của một tòa nhà." data-context-en="The man was standing outside the bar entrance." data-context-vn="Người đàn ông đang đứng bên ngoài lối vào quán rượu.">outside</span> 
+        the bar.
+      </p>
+
+      <p>
+        Joe 
+        <span class="vocab" id="term-stopped" data-word-en="stopped" data-word-vn="dừng lại" data-pos="động từ / verb" data-def-en="Ceased moving; came to a halt." data-def-vn="Ngừng di chuyển; đứng hẳn lại." data-context-en="Joe stopped to watch what the man was doing." data-context-vn="Joe dừng lại để xem người đàn ông đang làm gì.">stopped</span> 
+        and 
+        <span class="vocab" id="term-watched" data-word-en="watched" data-word-vn="quan sát" data-pos="động từ / verb" data-def-en="Looked at someone or something attentively." data-def-vn="Nhìn ai đó hoặc cái gì đó một cách chăm chú." data-context-en="He watched the fisherman for a few minutes." data-context-vn="Anh ấy đã quan sát người câu cá trong vài phút.">watched</span> 
+        the man for a 
+        <span class="vocab" id="term-few" data-word-en="few" data-word-vn="vài" data-pos="tính từ / adjective" data-def-en="A small number of." data-def-vn="Một số lượng nhỏ cái gì đó." data-context-en="He waited for a few minutes to see what happened." data-context-vn="Anh ta đợi vài phút để xem chuyện gì xảy ra.">few</span> 
+        <span class="vocab" id="term-minutes" data-word-en="minutes" data-word-vn="phút" data-pos="danh từ / noun" data-def-en="Units of time equal to sixty seconds." data-def-vn="Đơn vị thời gian bằng sáu mươi giây." data-context-en="He watched the scene for several minutes." data-context-vn="Anh ấy đã theo dõi cảnh tượng đó trong vài phút.">minutes</span>.
+        He saw that 
+        <span class="vocab" id="term-most" data-word-en="most" data-word-vn="hầu hết" data-pos="tính từ / adjective" data-def-en="The greatest amount or quantity of." data-def-vn="Số lượng hoặc khối lượng lớn nhất của cái gì." data-context-en="Most of the passersby thought the man was crazy." data-context-vn="Hầu hết người qua đường đều nghĩ người đàn ông bị điên.">most</span> 
+        of the 
+        <span class="vocab" id="term-people" data-word-en="people" data-word-vn="người" data-pos="danh từ / noun" data-def-en="Human beings in general or considered collectively." data-def-vn="Con người nói chung hoặc được xem xét tập thể." data-context-en="Many people walk down this street daily." data-context-vn="Nhiều người đi bộ qua con phố này hàng ngày.">people</span> 
+        who 
+        <span class="vocab" id="term-passed" data-word-en="passed" data-word-vn="đi qua" data-pos="động từ / verb" data-def-en="Moved past or went by." data-def-vn="Di chuyển vượt qua hoặc đi ngang qua." data-context-en="People passed by him without stopping." data-context-vn="Mọi người đi ngang qua anh ta mà không dừng lại.">passed</span> 
+        <span class="vocab" id="term-by" data-word-en="by" data-word-vn="ngang qua" data-pos="trạng từ / adverb" data-def-en="Past; near or alongside." data-def-vn="Đi qua; ở gần hoặc dọc theo." data-context-en="They walked by without offering any real help." data-context-vn="Họ đi ngang qua mà không hề đưa ra sự giúp đỡ nào.">by</span> 
+        him 
+        <span class="vocab" id="term-thought" data-word-en="thought" data-word-vn="nghĩ" data-pos="động từ / verb" data-def-en="Believed or had a particular opinion (past tense of think)." data-def-vn="Tin tưởng hoặc có một ý kiến cụ thể (thì quá khứ của think)." data-context-en="They thought he lost his mind." data-context-vn="Họ nghĩ rằng anh ta đã mất trí.">thought</span> 
+        he was 
+        <span class="vocab" id="term-crazy" data-word-en="crazy" data-word-vn="bị điên" data-pos="tính từ / adjective" data-def-en="Mentally deranged; insane." data-def-vn="Bị loạn trí; điên rồ." data-context-en="Fishing in a tiny puddle made him look crazy." data-context-vn="Câu cá trong một vũng nước nhỏ khiến anh ta trông như bị điên.">crazy</span>.
+      </p>
+
+      <p>
+        Joe 
+        <span class="vocab" id="term-pitied" data-word-en="pitied" data-word-vn="thương hại" data-pos="động từ / verb" data-def-en="Felt sorrow or compassion for the misfortune of someone." data-def-vn="Cảm thấy đau buồn hoặc thương xót cho sự bất hạnh của ai đó." data-context-en="Joe pitied the poor man standing in the rain." data-context-vn="Joe thương hại người đàn ông tội nghiệp đứng dưới mưa.">pitied</span> 
+        the man, so 
+        <span class="vocab" id="term-after" data-word-en="after" data-word-vn="sau khi" data-pos="giới từ / preposition" data-def-en="Later in time than; following." data-def-vn="Muộn hơn thời điểm nào đó; sau khi." data-context-en="Joe went up to him after watching for a bit." data-context-vn="Joe đi đến chỗ anh ta sau khi quan sát một lúc.">after</span> 
+        a few minutes he 
+        <span class="vocab" id="term-went" data-word-en="went" data-word-vn="đi đến" data-pos="động từ / verb" data-def-en="Moved or traveled to a destination (past tense of go)." data-def-vn="Di chuyển hoặc đi tới một đích đến (thì quá khứ của go)." data-context-en="He went up to speak to the fisherman directly." data-context-vn="Anh ta đi đến nói chuyện trực tiếp với người câu cá.">went</span> 
+        <span class="vocab" id="term-up" data-word-en="up" data-word-vn="đến gần" data-pos="trạng từ / adverb" data-def-en="Approaching close to a person or place." data-def-vn="Tiếp cận gần một người hoặc địa điểm." data-context-en="He walked up to the man to make an offer." data-context-vn="Anh ta bước đến gần người đàn ông để đưa ra lời đề nghị.">up</span> 
+        to him and 
+        <span class="vocab" id="term-said" data-word-en="said" data-word-vn="nói" data-pos="động từ / verb" data-def-en="Uttered words so as to convey information (past tense of say)." data-def-vn="Thốt ra những lời nói để truyền đạt thông tin (thì quá khứ của say)." data-context-en="Joe said something kind to the fisherman." data-context-vn="Joe nói điều gì đó tử tế với người câu cá.">said</span> 
+        <span class="vocab" id="term-kindly" data-word-en="kindly" data-word-vn="tử tế" data-pos="trạng từ / adverb" data-def-en="In a kind, warm, or gentle manner." data-def-vn="Một cách tử tế, ấm áp hoặc nhẹ nhàng." data-context-en="Joe spoke kindly because he felt sorry for him." data-context-vn="Joe nói chuyện tử tế vì anh thấy thương cảm cho anh ta.">kindly</span>, 
+        “Hello, 
+        <span class="vocab" id="term-like" data-word-en="like" data-word-vn="muốn" data-pos="động từ / verb" data-def-en="Wish for; want or prefer something." data-def-vn="Ước muốn; muốn hoặc thích cái gì hơn." data-context-en="Would you like to join me for a beverage?" data-context-vn="Bạn có muốn tham gia cùng tôi để uống một chút đồ uống không?">like</span> 
+        to 
+        <span class="vocab" id="term-come" data-word-en="come" data-word-vn="vào" data-pos="động từ / verb" data-def-en="Move or travel toward or into a place." data-def-vn="Di chuyển hoặc đi về hướng hoặc vào một địa điểm." data-context-en="He invited the fisherman to come inside the building." data-context-vn="Anh mời người câu cá đi vào bên trong tòa nhà.">come</span> 
+        into the bar and 
+        <span class="vocab" id="term-drink" data-word-en="drink" data-word-vn="đồ uống" data-pos="danh từ / noun" data-def-en="A liquid swallowed for refreshment or pleasure." data-def-vn="Chất lỏng được nuốt vào để giải khát hoặc giải trí." data-context-en="Joe offered to buy him a hot or cold drink." data-context-vn="Joe đề nghị mua cho anh ta một thức uống nóng hoặc lạnh.">drink</span> 
+        <span class="vocab" id="term-together" data-word-en="together" data-word-vn="cùng nhau" data-pos="trạng từ / adverb" data-def-en="With each other; in company or association." data-def-vn="Với nhau; trong sự đồng hành hoặc kết hợp." data-context-en="The two men enjoyed their drinks together." data-context-vn="Hai người đàn ông thưởng thức đồ uống cùng nhau.">together</span>?”
+      </p>
+
+      <p>
+        The ‘<span class="vocab" id="term-fisherman" data-word-en="fisherman" data-word-vn="người câu cá" data-pos="danh từ / noun" data-def-en="A person who catches fish for a living or for sport." data-def-vn="Người bắt cá để kiếm sống hoặc để giải trí." data-context-en="The pseudo fisherman was actually very clever." data-context-vn="Người giả vờ câu cá thực ra lại rất thông minh.">fisherman</span>’ 
+        was 
+        <span class="vocab" id="term-delighted" data-word-en="delighted" data-word-vn="vui mừng" data-pos="tính từ / adjective" data-def-en="Feeling or showing great pleasure." data-def-vn="Cảm thấy hoặc bày tỏ niềm vui sướng lớn." data-context-en="He was delighted to get a free drink offer." data-context-vn="Anh ấy rất vui mừng khi nhận được lời đề nghị uống nước miễn phí.">delighted</span> 
+        to 
+        <span class="vocab" id="term-accept" data-word-en="accept" data-word-vn="chấp nhận" data-pos="động từ / verb" data-def-en="Consent to receive a thing offered." data-def-vn="Đồng ý nhận một thứ gì đó được cung cấp." data-context-en="He didn't hesitate to accept Joe's invitation." data-context-vn="Anh không ngần ngại chấp nhận lời mời của Joe.">accept</span> 
+        the 
+        <span class="vocab" id="term-offer" data-word-en="offer" data-word-vn="lời đề nghị" data-pos="danh từ / noun" data-def-en="An expression of readiness to do or give something." data-def-vn="Sự bày tỏ sự sẵn sàng làm hoặc đưa ra điều gì đó." data-context-en="The kind offer was accepted with a warm smile." data-context-vn="Lời đề nghị tử tế đã được chấp nhận với một nụ cười ấm áp.">offer</span> 
+        and the 
+        <span class="vocab" id="term-two" data-word-en="two" data-word-vn="hai" data-pos="tính từ / adjective" data-def-en="Equivalent to the sum of one and one." data-def-vn="Tương đương với tổng của một và một." data-context-en="The two men walked straight into the bar." data-context-vn="Hai người đàn ông bước thẳng vào quán rượu.">two</span> 
+        men went into the bar together.
+      </p>
+
+      <p>
+        Joe 
+        <span class="vocab" id="term-bought" data-word-en="bought" data-word-vn="mua" data-pos="động từ / verb" data-def-en="Obtained in exchange for payment (past tense of buy)." data-def-vn="Có được để đổi lấy tiền thanh toán (thì quá khứ của buy)." data-context-en="Joe bought several alcoholic beverages for him." data-context-vn="Joe đã mua vài ly đồ uống có cồn cho anh ta.">bought</span> 
+        the man a few 
+        <span class="vocab" id="term-drinks" data-word-en="drinks" data-word-vn="các ly nước" data-pos="danh từ / noun" data-def-en="Portions of liquid liquid liquid for drinking." data-def-vn="Các phần chất lỏng phục vụ cho việc uống." data-context-en="They finished their drinks within an hour." data-context-vn="Họ đã uống hết các ly nước trong vòng một giờ.">drinks</span> 
+        and 
+        <span class="vocab" id="term-finally" data-word-en="finally" data-word-vn="cuối cùng" data-pos="trạng từ / adverb" data-def-en="After a long time, typically involving difficulty or delay." data-def-vn="Sau một thời gian dài, thường liên quan đến khó khăn hoặc trì hoãn." data-context-en="Joe finally asked him a burning question." data-context-vn="Cuối cùng Joe đã hỏi anh ta một câu hỏi gây tò mò.">finally</span> 
+        said to him, “You’ve been fishing outside here 
+        <span class="vocab" id="term-all" data-word-en="all" data-word-vn="toàn bộ" data-pos="tính từ / adjective" data-def-en="The whole quantity or extent of a duration." data-def-vn="Toàn bộ số lượng hoặc phạm vi của một khoảng thời gian." data-context-en="The man spent all morning fishing outside." data-context-vn="Người đàn ông đã dành toàn bộ buổi sáng để câu cá bên ngoài.">all</span> 
+        <span class="vocab" id="term-morning" data-word-en="morning" data-word-vn="buổi sáng" data-pos="danh từ / noun" data-def-en="The period of time between dawn and noon." data-def-vn="Khoảng thời gian từ lúc bình minh đến giữa trưa." data-context-en="He worked hard out there all morning." data-context-vn="Anh ấy đã làm việc chăm chỉ ngoài đó suốt buổi sáng.">morning</span>. 
+        <span class="vocab" id="term-how" data-word-en="how" data-word-vn="bao nhiêu" data-pos="trạng từ / adverb" data-def-en="In what way or to what quantity." data-def-vn="Theo cách nào hoặc với số lượng bao nhiêu." data-context-en="Joe wanted to know how many fish were caught." data-context-vn="Joe muốn biết có bao nhiêu con cá đã được câu.">How</span> 
+        <span class="vocab" id="term-many" data-word-en="many" data-word-vn="nhiều" data-pos="tính từ / adjective" data-def-en="A large number of (used with count nouns)." data-def-vn="Một số lượng lớn (dùng với danh từ đếm được)." data-context-en="How many targets did you manage to get?" data-context-vn="Bạn đã xoay xở có được bao nhiêu mục tiêu rồi?">many</span> 
+        did you 
+        <span class="vocab" id="term-manage" data-word-en="manage" data-word-vn="xoay xở" data-pos="động từ / verb" data-def-en="Succeed in surviving or attaining a difficult goal." data-def-vn="Thành công trong việc sinh tồn hoặc đạt được mục tiêu khó khăn." data-context-en="Did you manage to capture any fish today?" data-context-vn="Bạn có xoay xở bắt được con cá nào hôm nay không?">manage</span> 
+        to 
+        <span class="vocab" id="term-catch" data-word-en="catch" data-word-vn="bắt được" data-pos="động từ / verb" data-def-en="Intercept and hold something; capture." data-def-vn="Chặn lại và giữ một thứ gì đó; bắt giữ." data-context-en="It's impossible to catch fish in a rain pool." data-context-vn="Không thể nào bắt được cá trong vũng nước mưa.">catch</span> 
+        this morning, if I may 
+        <span class="vocab" id="term-ask" data-word-en="ask" data-word-vn="hỏi" data-pos="động từ / verb" data-def-en="Say something in order to obtain information." data-def-vn="Nói điều gì đó nhằm thu thập thông tin." data-context-en="Joe decided to ask politely about the results." data-context-vn="Joe quyết định hỏi một cách lịch sự về kết quả.">ask</span>?”
+      </p>
+
+      <p>
+        “You’re the eighth,” the fisherman 
+        <span class="vocab" id="term-answered" data-word-en="answered" data-word-vn="trả lời" data-pos="động từ / verb" data-def-en="Said something in reply to a question." data-def-vn="Nói điều gì đó để đáp lại một câu hỏi." data-context-en="The fisherman answered with a brilliant grin." data-context-vn="Người câu cá trả lời với một nụ cười rạng rỡ.">answered</span> 
+        <span class="vocab" id="term-happily" data-word-en="happily" data-word-vn="vui vẻ" data-pos="trạng từ / adverb" data-def-en="In a happy, joyful, or satisfied manner." data-def-vn="Một cách vui vẻ, vui sướng hoặc hài lòng." data-context-en="He smiled happily because his trick worked perfectly." data-context-vn="Anh mỉm cười vui vẻ vì trò lừa của mình thành công tốt đẹp.">happily</span>.
+      </p>
+
+      <h2>Story 2: WHAT DID I LEAVE BEHIND?</h2>
+
+      <p>
+        Six 
+        <span class="vocab" id="term-traveling" data-word-en="traveling" data-word-vn="di chuyển" data-pos="động từ / verb" data-def-en="Making a journey; moving from place to place." data-def-vn="Thực hiện một hành trình; di chuyển từ nơi này sang nơi khác." data-context-en="They were traveling together across the countryside." data-context-vn="Họ đang cùng nhau di chuyển qua vùng nông thôn.">traveling</span> 
+        were traveling in a 
+        <span class="vocab" id="term-compartment" data-word-en="compartment" data-word-vn="toa xe" data-pos="danh từ / noun" data-def-en="A separate section of a structure, especially a train." data-def-vn="Một phần ngăn cách của một cấu trúc, đặc biệt là tàu hỏa." data-context-en="The train compartment was crowded with passengers." data-context-vn="Toa xe tàu hỏa đông nghẹt hành khách.">compartment</span> 
+        on a 
+        <span class="vocab" id="term-train" data-word-en="train" data-word-vn="tàu hỏa" data-pos="danh từ / noun" data-def-en="A series of connected railway carriages or wagons." data-def-vn="Một chuỗi các toa xe hoặc toa xe đường sắt được kết nối với nhau." data-context-en="They were sitting inside a fast moving passenger train." data-context-vn="Họ đang ngồi bên trong một đoàn tàu hỏa chở khách chạy nhanh.">train</span>.
+        Five of them were 
+        <span class="vocab" id="term-quiet" data-word-en="quiet" data-word-vn="yên lặng" data-pos="tính từ / adjective" data-def-en="Making little or no noise; peaceful." data-def-vn="Tạo ra ít hoặc không có tiếng ồn; yên bình." data-context-en="The passengers remained completely quiet during the ride." data-context-vn="Các hành khách hoàn toàn yên lặng suốt chuyến đi.">quiet</span> 
+        and 
+        <span class="vocab" id="term-behaved" data-word-en="well-behaved" data-word-vn="cư xử tốt" data-pos="tính từ / adjective" data-def-en="Conducting oneself in a proper and polite manner." data-def-vn="Cư xử một cách đúng đắn và lịch sự." data-context-en="They were very well-behaved and polite individuals." data-context-vn="Họ là những người cư xử tốt và rất lịch sự.">well-behaved</span>, 
+        but the 
+        <span class="vocab" id="term-sixth" data-word-en="sixth" data-word-vn="thứ sáu" data-pos="tính từ / adjective" data-def-en="Constituting number six in a sequence." data-def-vn="Cấu thành số sáu trong một chuỗi thứ tự." data-context-en="The sixth traveler was extremely impolite." data-context-vn="Người hành khách thứ sáu cực kỳ mất lịch sự.">sixth</span> 
+        was a 
+        <span class="vocab" id="term-rude" data-word-en="rude" data-word-vn="thô lỗ" data-pos="tính từ / adjective" data-def-en="Offensively impolite or ill-mannered." data-def-vn="Bất lịch sự hoặc cư xử tồi tệ một cách xúc phạm." data-context-en="He was a rude young man causing disruptions." data-context-vn="Anh ta là một thanh niên thô lỗ gây ra nhiều sự gián đoạn.">rude</span> 
+        <span class="vocab" id="term-young" data-word-en="young" data-word-vn="trẻ tuổi" data-pos="tính từ / adjective" data-def-en="Having lived or existed for only a short time." data-def-vn="Đã sống hoặc tồn tại chỉ trong một thời gian ngắn." data-context-en="The young passenger had no respect for elders." data-context-vn="Người hành khách trẻ tuổi không có chút tôn trọng người lớn tuổi.">young</span> 
+        was causing a 
+        <span class="vocab" id="term-lot" data-word-en="lot" data-word-vn="nhiều" data-pos="danh từ / noun" data-def-en="A large number or amount; a great deal." data-def-vn="Một số lượng hoặc khối lượng lớn; rất nhiều." data-context-en="He caused a lot of friction inside the carriage." data-context-vn="Anh ta đã gây ra rất nhiều sự xích mích bên trong toa tàu.">lot</span> 
+        of 
+        <span class="vocab" id="term-trouble" data-word-en="trouble" data-word-vn="rắc rối" data-pos="danh từ / noun" data-def-en="Difficulty, distress, or public disturbance." data-def-vn="Khó khăn, đau khổ, hoặc sự làm náo loạn công cộng." data-context-en="He brought unnecessary trouble to everyone nearby." data-context-vn="Anh ta mang lại rắc rối không cần thiết cho mọi người xung quanh.">trouble</span> 
+        to the 
+        <span class="vocab" id="term-other" data-word-en="other" data-word-vn="khác" data-pos="tính từ / adjective" data-def-en="Further; additional; different from the one mentioned." data-def-vn="Thêm nữa; bổ sung; khác với cái được đề cập." data-context-en="The other passengers tried their best to ignore him." data-context-vn="Các hành khách khác cố gắng hết sức để phớt lờ anh ta.">other</span> 
+        <span class="vocab" id="term-passengers" data-word-en="passengers" data-word-vn="hành khách" data-pos="danh từ / noun" data-def-en="Travelers on a public transport vehicle other than the driver." data-def-vn="Những người di chuyển trên phương tiện giao thông công cộng ngoài tài xế." data-context-en="All passengers felt annoyed by his bad behavior." data-context-vn="Tất cả hành khách đều cảm thấy khó chịu vì hành vi xấu của anh ta.">passengers</span>.
+      </p>
+
+      <p>
+        At 
+        <span class="vocab" id="term-last" data-word-en="last" data-word-vn="cuối cùng" data-pos="trạng từ / adverb" data-def-en="Finally; after a long delay or series of events." data-def-vn="Cuối cùng; sau một sự chậm trễ lâu dài hoặc một chuỗi sự kiện." data-context-en="At last, the long and painful journey ended for them." data-context-vn="Cuối cùng, hành trình dài và đau khổ đã kết thúc với họ.">last</span> 
+        the young man 
+        <span class="vocab" id="term-got" data-word-en="got" data-word-vn="xuống" data-pos="động từ / verb" data-def-en="Exited or disembarked from a vehicle (with 'out')." data-def-vn="Thoát ra hoặc xuống khỏi một phương tiện (kèm từ 'out')." data-context-en="He got out of the train vehicle at a platform." data-context-vn="Anh ta đã xuống khỏi phương tiện tàu hỏa tại một sân ga.">got</span> 
+        <span class="vocab" id="term-out" data-word-en="out" data-word-vn="ra" data-pos="trạng từ / adverb" data-def-en="Moving away from the inside of a place." data-def-vn="Di chuyển ra xa khỏi phía bên trong của một địa điểm." data-context-en="He carried his bags out of the compartment." data-context-vn="Anh ta mang túi của mình ra khỏi toa xe.">out</span> 
+        at a 
+        <span class="vocab" id="term-station" data-word-en="station" data-word-vn="nhà ga" data-pos="danh từ / noun" data-def-en="A regular stopping place on a railway line." data-def-vn="Một điểm dừng thường xuyên trên tuyến đường sắt." data-context-en="The train stopped briefly at a small train station." data-context-vn="Tàu dừng lại một lát tại một nhà ga tàu hỏa nhỏ.">station</span> 
+        with his 
+        <span class="vocab" id="term-heavy" data-word-en="heavy" data-word-vn="nặng" data-pos="tính từ / adjective" data-def-en="Of great weight; difficult to lift or carry." data-def-vn="Có trọng lượng lớn; khó nâng hoặc mang vác." data-context-en="He struggled with two heavy suitcases on the platform." data-context-vn="Anh vật lộn với hai chiếc vali nặng trên sân ga.">heavy</span> 
+        <span class="vocab" id="term-bags" data-word-en="bags" data-word-vn="túi xách" data-pos="danh từ / noun" data-def-en="Containers made of flexible material for carrying things." data-def-vn="Hộp đựng làm bằng vật liệu mềm dẻo để mang theo đồ đạc." data-context-en="He packed his large bags full of clothes." data-context-vn="Anh đóng gói những chiếc túi xách lớn chứa đầy quần áo của mình.">bags</span>.
+        None of the other passengers 
+        <span class="vocab" id="term-helped" data-word-en="helped" data-word-vn="giúp đỡ" data-pos="động từ / verb" data-def-en="Assisted someone to do something; gave aid." data-def-vn="Hỗ trợ ai đó làm điều gì đó; giúp đỡ." data-context-en="Nobody helped him because he was so rude earlier." data-context-vn="Không ai giúp đỡ anh ta vì lúc nãy anh ta quá thô lỗ.">helped</span> 
+        him, 
+        <span class="vocab" id="term-waited" data-word-en="waited" data-word-vn="chờ đợi" data-pos="động từ / verb" data-def-en="Remained inactive until a specified time or event." data-def-vn="Duy trì trạng thái không hoạt động cho đến một thời điểm hoặc sự kiện cụ thể." data-context-en="One passenger waited until the platform cleared up." data-context-vn="Một hành khách đã chờ đợi cho đến khi sân ga thông thoáng hơn.">waited</span> 
+        until the young man was 
+        <span class="vocab" id="term-quite" data-word-en="quite" data-word-vn="khá" data-pos="trạng từ / adverb" data-def-en="To a certain degree; fairly; completely." data-def-vn="Đến một mức độ nhất định; khá; hoàn toàn." data-context-en="He was quite far away when the passenger shouted." data-context-vn="Anh ta đã ở khá xa khi người hành khách hét lên.">quite</span> 
+        <span class="vocab" id="term-far" data-word-en="far" data-word-vn="xa" data-pos="tính từ / adjective" data-def-en="At, to, or by a great distance." data-def-vn="Ở, đến, hoặc một khoảng cách rất xa." data-context-en="The young man walked far away down the path." data-context-vn="Chàng thanh niên đi bộ ra xa dọc theo con đường.">far</span> 
+        <span class="vocab" id="term-away" data-word-en="away" data-word-vn="xa cách" data-pos="trạng từ / adverb" data-def-en="At a distance from a particular place or person." data-def-vn="Ở một khoảng cách xa so với một địa điểm hoặc một người cụ thể." data-context-en="He kept walking away toward the main exit." data-context-vn="Anh ta tiếp tục bước đi xa cách hướng về lối ra chính.">away</span>.
+      </p>
+
+      <p>
+        Then he 
+        <span class="vocab" id="term-opened" data-word-en="opened" data-word-vn="mở" data-pos="động từ / verb" data-def-en="Moved a door or window to allow access or air." data-def-vn="Di chuyển một cánh cửa hoặc cửa sổ để cho phép đi vào hoặc lấy không khí." data-context-en="The passenger opened the window pane wider." data-context-vn="Người hành khách đã mở ô cửa sổ rộng hơn.">opened</span> 
+        the 
+        <span class="vocab" id="term-window" data-word-en="window" data-word-vn="cửa sổ" data-pos="danh từ / noun" data-def-en="An opening in a wall or vehicle window to let light or air in." data-def-vn="Một ô trống ở tường hoặc ô cửa sổ phương tiện để đón ánh sáng hoặc không khí." data-context-en="He stuck his head out of the train window." data-context-vn="Anh ta thò đầu ra ngoài cửa sổ tàu hỏa.">window</span> 
+        and 
+        <span class="vocab" id="term-shouted" data-word-en="shouted" data-word-vn="hét lên" data-pos="động từ / verb" data-def-en="Uttered a loud call or cry; yelled." data-def-vn="Thốt ra một tiếng gọi hoặc tiếng kêu lớn; la hét." data-context-en="He shouted loudly so the boy could hear." data-context-vn="Anh ta hét lên thật to để cậu bé có thể nghe thấy.">shouted</span> 
+        <span class="vocab" id="term-behind" data-word-en="behind" data-word-vn="phía sau" data-pos="trạng từ / adverb" data-def-en="At or to the back of someone or something." data-def-vn="Ở hoặc hướng về phía sau lưng của một ai đó hoặc cái gì đó." data-context-en="He left a bad reputation behind in the train." data-context-vn="Anh ta đã để lại một danh tiếng xấu phía sau ở trên tàu.">behind</span> 
+        in the compartment!” Then he 
+        <span class="vocab" id="term-closed" data-word-en="closed" data-word-vn="đóng" data-pos="động từ / verb" data-def-en="Moved something to cover an opening (past tense of close)." data-def-vn="Di chuyển thứ gì đó để che một khoảng trống (thì quá khứ của close)." data-context-en="He quickly closed the window right after yelling." data-context-vn="Anh nhanh chóng đóng cửa sổ ngay sau khi hét lên.">closed</span> 
+        the window again.
+      </p>
+
+      <p>
+        The young man 
+        <span class="vocab" id="term-turned" data-word-en="turned" data-word-vn="quay lại" data-pos="động từ / verb" data-def-en="Changed direction or position of the body." data-def-vn="Thay đổi hướng hoặc vị trí của cơ thể." data-context-en="The young man turned around immediately on hearing." data-context-vn="Chàng thanh niên quay người lại ngay lập tức khi nghe thấy.">turned</span> 
+        <span class="vocab" id="term-around" data-word-en="around" data-word-vn="xung quanh" data-pos="trạng từ / adverb" data-def-en="To face in the opposite direction." data-def-vn="Để đối mặt theo hướng ngược lại." data-context-en="He spun around to see who was calling." data-context-vn="Anh xoay người xung quanh để xem ai đang gọi.">around</span> 
+        and 
+        <span class="vocab" id="term-rushed" data-word-en="rushed" data-word-vn="lao đến" data-pos="động từ / verb" data-def-en="Moved with urgent haste or high speed." data-def-vn="Di chuyển với sự vội vã khẩn cấp hoặc tốc độ cao." data-context-en="He rushed back carrying his heavy packages." data-context-vn="Anh ta lao đến quay lại mang theo những kiện hàng nặng của mình.">rushed</span> 
+        <span class="vocab" id="term-back" data-word-en="back" data-word-vn="trở lại" data-pos="trạng từ / adverb" data-def-en="Returning to a previous place or position." data-def-vn="Trở lại một địa điểm hoặc vị trí trước đó." data-context-en="He came back expecting to retrieve forgotten goods." data-context-vn="Anh quay trở lại với hy vọng nhận lại món đồ bị bỏ quên.">back</span> 
+        with his two bags. He was 
+        <span class="vocab" id="term-breath" data-word-en="breath" data-word-vn="hơi thở" data-pos="danh từ / noun" data-def-en="The air taken into and expelled from the lungs (with 'out of')." data-def-vn="Không khí được hít vào và tống ra khỏi phổi (đi kèm 'out of')." data-context-en="Running fast made him completely out of breath." data-context-vn="Chạy nhanh khiến anh ta hoàn toàn hụt hơi thở.">breath</span> 
+        when he 
+        <span class="vocab" id="term-arrived" data-word-en="arrived" data-word-vn="đến nơi" data-pos="động từ / verb" data-def-en="Reached a destination or stopping point." data-def-vn="Đến một đích đến hoặc điểm dừng." data-context-en="He arrived back at the window looking exhausted." data-context-vn="Anh ta quay trở lại bên cửa sổ trông có vẻ kiệt sức.">arrived</span> 
+        but he shouted through the window, “What did I leave behind?”
+      </p>
+
+      <p>
+        As the train 
+        <span class="vocab" id="term-began" data-word-en="began" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Started an action or motion (past tense of begin)." data-def-vn="Bắt đầu một hành động hoặc chuyển động (thì quá khứ của begin)." data-context-en="The wheels began to roll along the tracks." data-context-vn="Các bánh xe bắt đầu lăn dọc theo đường ray.">began</span> 
+        to 
+        <span class="vocab" id="term-move" data-word-en="move" data-word-vn="di chuyển" data-pos="động từ / verb" data-def-en="Change position; go from one place to another." data-def-vn="Thay đổi vị trí; đi từ nơi này sang nơi khác." data-context-en="The train started to move out of the terminal." data-context-vn="Đoàn tàu bắt đầu di chuyển ra khỏi nhà ga.">move</span> 
+        again, the 
+        <span class="vocab" id="term-passenger" data-word-en="passenger" data-word-vn="hành khách" data-pos="danh từ / noun" data-def-en="A person traveling in a public vehicle." data-def-vn="Một người đi lại trên một phương tiện công cộng." data-context-en="The passenger delivered a clever final insult." data-context-vn="Người hành khách đã đưa ra lời chế giễu thông minh cuối cùng.">passenger</span> 
+        who had 
+        <span class="vocab" id="term-called" data-word-en="called" data-word-vn="gọi" data-pos="động từ / verb" data-def-en="Shouted out to attract someone's attention." data-def-vn="Hét to lên để thu hút sự chú ý của ai đó." data-context-en="The elderly passenger called him back for a lesson." data-context-vn="Người hành khách lớn tuổi đã gọi anh ta lại để dạy một bài học.">called</span> 
+        him back shouted, “A very 
+        <span class="vocab" id="term-bad" data-word-en="bad" data-word-vn="tồi tệ" data-pos="tính từ / adjective" data-def-en="Poor; unpleasant; full of negative traits." data-def-vn="Kém cỏi; không dễ chịu; đầy những nét tiêu cực." data-context-en="Leaving a bad impression is highly undesirable." data-context-vn="Để lại một ấn tượng tồi tệ là điều vô cùng không mong muốn.">bad</span> 
+        <span class="vocab" id="term-impression" data-word-en="impression" data-word-vn="ấn tượng" data-pos="danh từ / noun" data-def-en="An idea, feeling, or opinion about someone or something." data-def-vn="Một ý kiến, cảm xúc, hoặc quan niệm về ai đó hoặc cái gì đó." data-context-en="He left an awful impression on everyone in the train." data-context-vn="Anh ta đã để lại một ấn tượng tồi tệ cho mọi người trên tàu.">impression</span>!”
+      </p>
+    </article>
+
+    <a href="../" class="back-btn">← Quay lại danh mục</a>
+
+    <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    
+    <div class="memory-grid">
+      <span class="memory-item" onclick="scrollToWord('term-eighth')">Eighth</span>
+      <span class="memory-item" onclick="scrollToWord('term-joe')">Joe</span>
+      <span class="memory-item" onclick="scrollToWord('term-going')">going</span>
+      <span class="memory-item" onclick="scrollToWord('term-usual')">usual</span>
+      <span class="memory-item" onclick="scrollToWord('term-bar')">bar</span>
+      <span class="memory-item" onclick="scrollToWord('term-lunch')">lunch</span>
+      <span class="memory-item" onclick="scrollToWord('term-saw')">saw</span>
+      <span class="memory-item" onclick="scrollToWord('term-man')">man</span>
+      <span class="memory-item" onclick="scrollToWord('term-dressed')">dressed</span>
+      <span class="memory-item" onclick="scrollToWord('term-shabby')">shabby</span>
+      <span class="memory-item" onclick="scrollToWord('term-clothes')">clothes</span>
+      <span class="memory-item" onclick="scrollToWord('term-fishing')">fishing</span>
+      <span class="memory-item" onclick="scrollToWord('term-small')">small</span>
+      <span class="memory-item" onclick="scrollToWord('term-pool')">pool</span>
+      <span class="memory-item" onclick="scrollToWord('term-rain')">rain</span>
+      <span class="memory-item" onclick="scrollToWord('term-water')">water</span>
+      <span class="memory-item" onclick="scrollToWord('term-about')">about</span>
+      <span class="memory-item" onclick="scrollToWord('term-centimeters')">centimeters</span>
+      <span class="memory-item" onclick="scrollToWord('term-deep')">deep</span>
+      <span class="memory-item" onclick="scrollToWord('term-outside')">outside</span>
+      <span class="memory-item" onclick="scrollToWord('term-stopped')">stopped</span>
+      <span class="memory-item" onclick="scrollToWord('term-watched')">watched</span>
+      <span class="memory-item" onclick="scrollToWord('term-few')">few</span>
+      <span class="memory-item" onclick="scrollToWord('term-minutes')">minutes</span>
+      <span class="memory-item" onclick="scrollToWord('term-most')">most</span>
+      <span class="memory-item" onclick="vocabScrollToWord('term-people')">people</span>
+      <span class="memory-item" onclick="scrollToWord('term-passed')">passed</span>
+      <span class="memory-item" onclick="scrollToWord('term-by')">by</span>
+      <span class="memory-item" onclick="scrollToWord('term-thought')">thought</span>
+      <span class="memory-item" onclick="scrollToWord('term-crazy')">crazy</span>
+      <span class="memory-item" onclick="scrollToWord('term-pitied')">pitied</span>
+      <span class="memory-item" onclick="scrollToWord('term-after')">after</span>
+      <span class="memory-item" onclick="scrollToWord('term-went')">went</span>
+      <span class="memory-item" onclick="scrollToWord('term-up')">up</span>
+      <span class="memory-item" onclick="scrollToWord('term-said')">said</span>
+      <span class="memory-item" onclick="scrollToWord('term-kindly')">kindly</span>
+      <span class="memory-item" onclick="scrollToWord('term-like')">like</span>
+      <span class="memory-item" onclick="scrollToWord('term-come')">come</span>
+      <span class="memory-item" onclick="scrollToWord('term-drink')">drink</span>
+      <span class="memory-item" onclick="scrollToWord('term-together')">together</span>
+      <span class="memory-item" onclick="scrollToWord('term-fisherman')">fisherman</span>
+      <span class="memory-item" onclick="scrollToWord('term-delighted')">delighted</span>
+      <span class="memory-item" onclick="scrollToWord('term-accept')">accept</span>
+      <span class="memory-item" onclick="scrollToWord('term-offer')">offer</span>
+      <span class="memory-item" onclick="scrollToWord('term-two')">two</span>
+      <span class="memory-item" onclick="scrollToWord('term-bought')">bought</span>
+      <span class="memory-item" onclick="scrollToWord('term-drinks')">drinks</span>
+      <span class="memory-item" onclick="scrollToWord('term-finally')">finally</span>
+      <span class="memory-item" onclick="scrollToWord('term-all')">all</span>
+      <span class="memory-item" onclick="scrollToWord('term-morning')">morning</span>
+      <span class="memory-item" onclick="scrollToWord('term-how')">how</span>
+      <span class="memory-item" onclick="scrollToWord('term-many')">many</span>
+      <span class="memory-item" onclick="scrollToWord('term-manage')">manage</span>
+      <span class="memory-item" onclick="scrollToWord('term-catch')">catch</span>
+      <span class="memory-item" onclick="scrollToWord('term-ask')">ask</span>
+      <span class="memory-item" onclick="scrollToWord('term-answered')">answered</span>
+      <span class="memory-item" onclick="scrollToWord('term-happily')">happily</span>
+      <span class="memory-item" onclick="scrollToWord('term-traveling')">traveling</span>
+      <span class="memory-item" onclick="scrollToWord('term-compartment')">compartment</span>
+      <span class="memory-item" onclick="scrollToWord('term-train')">train</span>
+      <span class="memory-item" onclick="scrollToWord('term-quiet')">quiet</span>
+      <span class="memory-item" onclick="scrollToWord('term-behaved')">well-behaved</span>
+      <span class="memory-item" onclick="scrollToWord('term-sixth')">sixth</span>
+      <span class="memory-item" onclick="scrollToWord('term-rude')">rude</span>
+      <span class="memory-item" onclick="scrollToWord('term-young')">young</span>
+      <span class="memory-item" onclick="scrollToWord('term-lot')">lot</span>
+      <span class="memory-item" onclick="scrollToWord('term-trouble')">trouble</span>
+      <span class="memory-item" onclick="scrollToWord('term-other')">other</span>
+      <span class="memory-item" onclick="scrollToWord('term-passengers')">passengers</span>
+      <span class="memory-item" onclick="scrollToWord('term-last')">last</span>
+      <span class="memory-item" onclick="scrollToWord('term-got')">got</span>
+      <span class="memory-item" onclick="scrollToWord('term-out')">out</span>
+      <span class="memory-item" onclick="scrollToWord('term-station')">station</span>
+      <span class="memory-item" onclick="scrollToWord('term-heavy')">heavy</span>
+      <span class="memory-item" onclick="scrollToWord('term-bags')">bags</span>
+      <span class="memory-item" onclick="scrollToWord('term-helped')">helped</span>
+      <span class="memory-item" onclick="scrollToWord('term-waited')">waited</span>
+      <span class="memory-item" onclick="scrollToWord('term-quite')">quite</span>
+      <span class="memory-item" onclick="scrollToWord('term-far')">far</span>
+      <span class="memory-item" onclick="scrollToWord('term-away')">away</span>
+      <span class="memory-item" onclick="scrollToWord('term-opened')">opened</span>
+      <span class="memory-item" onclick="scrollToWord('term-window')">window</span>
+      <span class="memory-item" onclick="scrollToWord('term-shouted')">shouted</span>
+      <span class="memory-item" onclick="scrollToWord('term-behind')">behind</span>
+      <span class="memory-item" onclick="scrollToWord('term-closed')">closed</span>
+      <span class="memory-item" onclick="scrollToWord('term-turned')">turned</span>
+      <span class="memory-item" onclick="scrollToWord('term-around')">around</span>
+      <span class="memory-item" onclick="scrollToWord('term-rushed')">rushed</span>
+      <span class="memory-item" onclick="scrollToWord('term-back')">back</span>
+      <span class="memory-item" onclick="scrollToWord('term-breath')">breath</span>
+      <span class="memory-item" onclick="scrollToWord('term-arrived')">arrived</span>
+      <span class="memory-item" onclick="scrollToWord('term-began')">began</span>
+      <span class="memory-item" onclick="scrollToWord('term-move')">move</span>
+      <span class="memory-item" onclick="scrollToWord('term-passenger')">passenger</span>
+      <span class="memory-item" onclick="scrollToWord('term-called')">called</span>
+      <span class="memory-item" onclick="scrollToWord('term-bad')">bad</span>
+      <span class="memory-item" onclick="scrollToWord('term-impression')">impression</span>
+    </div>
+
+    <div class="notes-section">
+      <h3>Transcription Notes</h3>
+      <p style="font-size:0.95rem;">No technical voice-to-text anomalies or corruptions requiring structural adjustments were found in this raw clean script copy.</p>
+      <table class="notes-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Original</th>
+            <th>Corrected</th>
+            <th>Reason</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>1</td>
+            <td>—</td>
+            <td>—</td>
+            <td>Input is clean, direct editorial text. No automated layout errors flagged.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+
+  <div id="card-overlay" onclick="closeCard()"></div>
+  <div id="definition-card" onclick="closeCard()">
+    <div class="card-heading" id="lbl-heading-vn"></div>
+    <div class="card-secondary" id="lbl-sub-en"></div>
+    <div class="card-pos" id="lbl-pos"></div>
+    <div class="card-def">
+      <div class="card-def-en" id="lbl-def-en"></div>
+      <div class="card-def-vn" id="lbl-def-vn"></div>
+    </div>
+    <div class="card-context-label">Trong văn bản:</div>
+    <div class="card-context-text" id="lbl-context-vn"></div>
+  </div>
+
+  <script>
+    // Audio Speed Control Logic
+    function setSpeed(speed, btnElement) {
+      var audio = document.getElementById('audio-player');
+      audio.playbackRate = speed;
+      
+      // Update UI active buttons state
+      var buttons = document.querySelectorAll('.speed-btn');
+      buttons.forEach(function(btn) {
+        btn.classList.remove('active');
+      });
+      btnElement.classList.add('active');
+    }
+
+    // Interactive Definition Click Handlers
+    var vocabWords = document.querySelectorAll('.vocab');
+    vocabWords.forEach(function(element) {
+      element.addEventListener('click', function(event) {
+        event.stopPropagation();
+        openCard(this);
+      });
+    });
+
+    function openCard(elem) {
+      // Fetch structural configuration strings from element dataset
+      var wordEn = elem.getAttribute('data-word-en');
+      var wordVn = elem.getAttribute('data-word-vn');
+      var pos = elem.getAttribute('data-pos');
+      var defEn = elem.getAttribute('data-def-en');
+      var defVn = elem.getAttribute('data-def-vn');
+      var contextVn = elem.getAttribute('data-context-vn');
+
+      // Populate interactive element text nodes 
+      // Input Text is English Layout Mode -> Title is VN, secondary line is EN
+      document.getElementById('lbl-heading-vn').innerText = wordVn;
+      document.getElementById('lbl-sub-en').innerText = wordEn;
+      document.getElementById('lbl-pos').innerText = pos;
+      document.getElementById('lbl-def-en').innerText = "EN: " + defEn;
+      document.getElementById('lbl-def-vn').innerText = "VN: " + defVn;
+      document.getElementById('lbl-context-vn').innerText = contextVn;
+
+      // Show Layout Elements
+      document.getElementById('card-overlay').style.display = 'block';
+      document.getElementById('definition-card').style.display = 'block';
+    }
+
+    function closeCard() {
+      document.getElementById('card-overlay').style.display = 'none';
+      document.getElementById('definition-card').style.display = 'none';
+    }
+
+    // Scroll to Target Word Position Method
+    function scrollToWord(id) {
+      var target = document.getElementById(id);
+      if(target) {
+        target.scrollIntoView({ behavior: 'smooth', block: 'center' });
+        
+        // Add animation flash highlighting classes hooks
+        target.classList.add('flash-target');
+        setTimeout(function() {
+          target.classList.remove('flash-target');
+        }, 1500);
+      }
+    }
+  </script>
+
+</body>
+</html>
+
+
+Gemini is AI and can make mistakes.
