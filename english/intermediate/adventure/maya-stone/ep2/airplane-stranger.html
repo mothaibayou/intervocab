@@ -507,6 +507,7 @@
 
   </div><!-- end story-content -->
 
+	<!--
   <!-- BACK BUTTON -->
   <div style="margin: 22px 0 10px 0;">
     <a href="../" class="back-btn">← Back</a>
@@ -652,3 +653,105 @@ var styleEl = document.createElement('style');
 styleEl.textContent = '.highlight-scroll { background: #ffe082 !important; transition: background 0.2s; }';
 document.head.appendChild(styleEl);
 </script></body></html>
+-->
+
+ <a href="../" class="back-btn">← Quay lại danh mục</a>
+
+    <div class="memory-section">    
+        <h3>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h3>
+        <div id="memory-grid" class="memory-grid">
+            <!-- Populated dynamically via JS -->
+        </div>
+    </div>
+</div>
+
+<!-- Popup Overlay and Card -->
+<div class="popup-overlay" id="popup-overlay"></div>
+<div id="popup-card">
+    <div class="pop-vn" id="pop-vn"></div>
+    <div class="pop-en" id="pop-en"></div>
+    <div class="pop-pos" id="pop-pos"></div>
+    <div class="pop-def-en" id="pop-def-en"></div>
+    <div class="pop-def-vn" id="pop-def-vn"></div>
+    <div class="pop-context-label">Trong văn bản:</div>
+    <div class="pop-context" id="pop-context"></div>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+    const popup = document.getElementById("popup-card");
+    const overlay = document.getElementById("popup-overlay");
+    const words = document.querySelectorAll(".vocab");
+    const grid = document.getElementById("memory-grid");
+    const uniqueWords = new Map();
+
+    // Process all vocab words
+    words.forEach((el, index) => {
+        const en = el.getAttribute("data-word-en");
+        if (!en) return;
+        
+        const wordId = "vocab-word-" + index;
+        el.id = wordId;
+        
+        const normalizedEn = en.toLowerCase();
+        if (!uniqueWords.has(normalizedEn)) {
+            uniqueWords.set(normalizedEn, {
+                id: wordId,
+                text: en
+            });
+        }
+
+        // Popup logic
+        el.addEventListener("click", (e) => {
+            e.stopPropagation();
+            if (popup.style.display === "block" && popup.dataset.currentId === el.id) {
+                // Dismiss if second click on same word
+                popup.style.display = "none";
+                overlay.style.display = "none";
+                return;
+            }
+            
+            document.getElementById("pop-vn").textContent = el.getAttribute("data-word-vn");
+            document.getElementById("pop-en").textContent = el.getAttribute("data-word-en");
+            document.getElementById("pop-pos").textContent = el.getAttribute("data-pos");
+            document.getElementById("pop-def-en").textContent = el.getAttribute("data-def-en");
+            document.getElementById("pop-def-vn").textContent = el.getAttribute("data-def-vn");
+            document.getElementById("pop-context").textContent = el.getAttribute("data-context-vn");
+            
+            popup.dataset.currentId = el.id;
+            popup.style.display = "block";
+            overlay.style.display = "block";
+        });
+    });
+
+    // Dismiss popup logic
+    overlay.addEventListener("click", () => {
+        popup.style.display = "none";
+        overlay.style.display = "none";
+    });
+
+    // Populate Memory Grid
+    uniqueWords.forEach((data, key) => {
+        const span = document.createElement("span");
+        span.className = "memory-word";
+        span.textContent = data.text;
+        span.addEventListener("click", () => {
+            const target = document.getElementById(data.id);
+            if (target) {
+                target.scrollIntoView({ behavior: "smooth", block: "center" });
+                target.classList.add("highlighted");
+                setTimeout(() => {
+                    target.classList.remove("highlighted");
+                }, 1500);
+            }
+        });
+        grid.appendChild(span);
+    });
+});
+</script>
+
+</body>
+</html>
+
+
+
