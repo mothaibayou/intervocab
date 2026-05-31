@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Episode 10: The Cliffhanger (Season Finale)</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #7a4e1a;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Episode 10: The Cliffhanger (Season Finale)</h1>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 10</div>
+        <audio id="audio-player" src="ep10.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        The temple was <span class="vocab" data-word-en="collapsing" data-word-vn="đang sụp đổ / đổ sập" data-pos="động từ / verb (continuous)" data-def-en="Falling down or caving in suddenly due to structural failure." data-def-vn="Đổ sập hoặc sụp xuống một cách đột ngột do đứt gãy cấu trúc cấu kiện." data-context-en="The temple was collapsing." data-context-vn="Ngôi đền cổ kính đang sụp đổ tan tành.">collapsing</span>. "Run!" Jack <span class="vocab" data-word-en="screamed" data-word-vn="hét lên / la thất thanh" data-pos="động từ / verb (past tense)" data-def-en="Cried out loudly in a high-pitched tone, often from fear or excitement." data-def-vn="Hét lên hoặc la lớn bằng giọng cao dốc, thường do sợ hãi tột độ hoặc kích động." data-context-en='"Run!" Jack screamed.' data-context-vn='"Chạy đi!" Jack hét lên la thất thanh.'>screamed</span>.
+    </p>
+ 
+    <p>
+        Maya <span class="vocab" data-word-en="grabbed" data-word-vn="chộp lấy / vồ lấy" data-pos="động từ / verb" data-def-en="Seized or took hold of something suddenly, eagerly, or roughly." data-def-vn="Chộp lấy, vồ lấy hoặc nhanh tay bám chặt lấy một thứ gì đó thật nhanh." data-context-en="Maya grabbed the scroll and the jade dragon." data-context-vn="Maya chộp vội lấy cuộn sách và con rồng ngọc bích.">grabbed</span> the scroll and the jade dragon, but a <span class="vocab" data-word-en="falling rock" data-word-vn="hòn đá đang rơi" data-pos="cụm danh từ / noun phrase" data-def-en="A piece of stone tumbling down due to gravity or structural failure." data-def-vn="Một khối đá hoặc mảnh đá đang rơi rụng tự do xuống do trọng lực hoặc sập đổ mái." data-context-en="But a falling rock hit her shoulder." data-context-vn="Nhưng một hòn đá đang rơi trúng vào vai cô ấy.">falling rock</span> hit her shoulder, making her drop the scroll. It rolled toward the <span class="vocab" data-word-en="edge of the pit" data-word-vn="rìa hố / mép vực" data-pos="cụm danh từ / noun phrase" data-def-en="The brink or outer boundary of a deep hole or chasm." data-def-vn="Phần rìa, mép ngoài hoặc ranh giới biên của một cái hố sâu hay vực thẳm." data-context-en="It rolled toward the edge of the pit." data-context-vn="Nó lăn về phía rìa hố sâu không đáy.">edge of the pit</span>.
+    </p>
+ 
+    <p>
+        "The map!" Thorne yelled, <span class="vocab" data-word-en="ignoring" data-word-vn="phớt lờ / bất chấp" data-pos="động từ / verb (participle)" data-def-en="Refusing to take notice of or pay attention to something dangerous or relevant." data-def-vn="Phớt lờ, bất chấp hoặc cố tình không để ý đến điều gì đó nguy hiểm sắp xảy ra." data-context-en="Ignoring the falling stones." data-context-vn="Bất chấp những hòn đá đang rơi lả tả xuống đầu.">ignoring</span> the falling stones. He <span class="vocab" data-word-en="lunged" data-word-vn="lao người tới / rướn người vồ" data-pos="động từ / verb" data-def-en="Made a sudden forward thrust or jump toward a target." data-def-vn="Lao mạnh trọng tâm cơ thể về phía trước hoặc rướn người tới hòng chộp lấy mục tiêu." data-context-en="He lunged for the scroll." data-context-vn="Ông ta lao phắt người tới để chụp lấy cuộn giấy.">lunged</span> for the scroll.
+    </p>
+ 
+    <p>
+        Maya and Jack ran for the <span class="vocab" data-word-en="exit" data-word-vn="lối thoát / lối ra" data-pos="danh từ / noun" data-def-en="A way out, especially from a building or an enclosed dangerous space." data-def-vn="Lối ra, đường thoát hiểm, đặc biệt là từ một tòa nhà hoặc không gian khép kín." data-context-en="Maya and Jack ran for the exit." data-context-vn="Maya và Jack chạy bán mạng về phía lối thoát.">exit</span> as the floor began to <span class="vocab" data-word-en="crack" data-word-vn="nứt nẻ / rạn nứt" data-pos="động từ / verb" data-def-en="To break or split open structural lines without complete separation of parts." data-def-vn="Rạn nứt, nứt nẻ hoặc vỡ tạo thành các đường rãnh nhưng chưa nát hẳn rời nhau." data-context-en="As the floor began to crack." data-context-vn="Khi mặt sàn đất đá bắt đầu rạn nứt gãy vụn.">crack</span>. They <span class="vocab" data-word-en="dived through" data-word-vn="lao mình qua / phóng qua" data-pos="cụm động từ / phrasal verb" data-def-en="Jumped or plunged quickly through an opening or low gateway." data-def-vn="Lao người rạp xuống qua hoặc nhảy phóng qua một lối đi hẹp một cách khẩn trương." data-context-en="They dived through the stone gate." data-context-vn="Họ lao mình phóng qua cánh cổng đá.">dived through</span> the stone gate just as the roof of the temple fell with a <span class="vocab" data-word-en="thunderous roar" data-word-vn="tiếng gầm vang như sấm / tiếng nổ ầm trời" data-pos="cụm danh từ / noun phrase" data-def-en="A very loud, deep, echoing sound resembling thunder explosion." data-def-vn="Một âm thanh vô cùng lớn, trầm dội và vang rền long trời lở đất giống tiếng sấm sét nổ." data-context-en="The roof of the temple fell with a thunderous roar." data-context-vn="Mái đền đổ sập xuống với một tiếng gầm vang như sấm dội.">thunderous roar</span>. A <span class="vocab" data-word-en="cloud of dust" data-word-vn="đám mây bụi / làn bụi mịt mù" data-pos="cụm danh từ / noun phrase" data-def-en="A large, airborne mass of fine powdery dirt particles." data-def-vn="Một khối lượng bụi mịn khổng lồ bay lơ lửng trong không trung tạo thành màn sương mịt mù." data-context-en="A cloud of dust exploded into the forest." data-context-vn="Một làn bụi mịt mù bùng nổ hắt thẳng ra ngoài khu rừng.">cloud of dust</span> <span class="vocab" data-word-en="exploded" data-word-vn="bùng nổ / nổ tung ra" data-pos="động từ / verb (past tense)" data-def-en="Burst out suddenly and violently with a loud noise or rapid expansion." data-def-vn="Bùng nổ, nổ tung hoặc phát tán ra xung quanh một cách đột ngột và cực kỳ dữ dội." data-context-en="A cloud of dust exploded into the forest." data-context-vn="Một làn bụi mịt mù bùng nổ hắt thẳng ra ngoài khu rừng.">exploded</span> into the forest.
+    </p>
+ 
+    <p>
+        When the dust <span class="vocab" data-word-en="cleared" data-word-vn="tan đi / lắng xuống" data-pos="động từ / verb (past tense)" data-def-en="Became bright, transparent, or free from airborne particles." data-def-vn="Tan đi, lắng xuống, trở nên quang đãng hoặc không còn bị che khuất tầm nhìn." data-context-en="When the dust cleared..." data-context-vn="Khi làn bụi bặm bắt đầu tan đi...">cleared</span>, the temple entrance was <span class="vocab" data-word-en="completely blocked" data-word-vn="bị lấp kín hoàn toàn / chặn đứng" data-pos="cụm tính từ / adjective phrase" data-def-en="Totally obstructed or closed off so that no passage is possible." data-def-vn="Bị chặn đứng hoặc lấp kín hoàn toàn khiến không một ai có thể di chuyển qua được nữa." data-context-en="The temple entrance was completely blocked." data-context-vn="Lối vào ngôi đền đã bị đất đá lấp kín hoàn toàn.">completely blocked</span> by <span class="vocab" data-word-en="tons of rock" data-word-vn="hàng tấn đất đá" data-pos="cụm danh từ / noun phrase" data-def-en="An immense, heavy weight of fragmented stones and boulders." data-def-vn="Một khối lượng cực kỳ lớn và nặng nề của các mảng đá, vách đá vỡ vụn." data-context-en="Completely blocked by tons of rock.">tons of rock</span>. Thorne was gone. The map was gone.
+    </p>
+ 
+    <p>
+        Maya sat on the grass, <span class="vocab" data-word-en="clutching" data-word-vn="ôm chặt / ghì chặt vào lòng" data-pos="động từ / verb (participle)" data-def-en="Holding something tightly with hands, often out of anxiety or protection." data-def-vn="Nắm chặt, ghì chặt hoặc ôm sát một vật thể vào lòng do lo lắng hoặc cố bảo vệ nó." data-context-en="Maya sat on the grass, clutching the small jade dragon." data-context-vn="Maya ngồi thẫn thờ trên bãi cỏ, ôm chặt lấy con rồng ngọc bích nhỏ.">clutching</span> the small jade dragon. "We lost the map, Jack. Thorne won".
+    </p>
+ 
+    <p>
+        Jack sat down next to her, <span class="vocab" data-word-en="bleeding" data-word-vn="đang bị chảy máu / rỉ máu" data-pos="động từ / verb (participle)" data-def-en="Losing or emitting blood from the body due to an open injury." data-def-vn="Đang bị rỉ máu hoặc tuôn máu ra ngoài cơ thể từ một vết thương hở sâu." data-context-en="Bleeding from a small cut on his forehead." data-context-vn="Đang bị chảy máu từ một vết cắt nhỏ trên vầng trán.">bleeding</span> from a small cut on his <span class="vocab" data-word-en="forehead" data-word-vn="vầng trán / phần trán" data-pos="danh từ / noun" data-def-en="The part of the face above the eyebrows and below the hairline." data-def-vn="Vầng trán, phần da thịt diện tích phía trên lông mày và dưới đường chân tóc." data-context-en="From a small cut on his forehead.">forehead</span>. He smiled <span class="vocab" data-word-en="weakly" data-word-vn="một cách yếu ớt / thều thào" data-pos="trạng từ / adverb" data-def-en="In a tired way that lacks physical strength, energy, or structural force." data-def-vn="Theo một cách mệt mỏi, thiếu đi sức mạnh thể chất hoặc năng lượng cơ bắp." data-context-en="He smiled weakly and pointed to the jade dragon." data-context-vn="Anh mỉm cười một cách yếu ớt và chỉ tay về phía con rồng ngọc bích.">weakly</span> and <span class="vocab" data-word-en="pointed to" data-word-vn="chỉ tay vào / hướng mắt về" data-pos="cụm động từ / verb phrase" data-def-en="Directed someone's attention to something by extending a finger." data-def-vn="Hướng sự chú ý của ai đó vào một vật thể cụ thể bằng cách giơ ngón tay ra." data-context-en="He smiled weakly and pointed to the jade dragon.">pointed to</span> the jade dragon. "Look at the bottom, Maya".
+    </p>
+ 
+    <p>
+        Maya <span class="vocab" data-word-en="turned the statue over" data-word-vn="lật ngược bức tượng lại" data-pos="cụm động từ / phrasal verb" data-def-en="Flipped or rotated an object to examine its reverse or bottom side." data-def-vn="Lật úp ngược hoặc xoay ngược một vật thể lại nhằm kiểm tra bề mặt dưới đáy." data-context-en="Maya turned the statue over." data-context-vn="Maya lật ngược bức tượng lại để xem xét.">turned the statue over</span>. <span class="vocab" data-word-en="Carved into" data-word-vn="được chạm khắc vào / đục sâu vào" data-pos="cụm động từ / verb phrase (passive)" data-def-en="Cut or engraved a design, pattern, or text securely into a hard surface." data-def-vn="Được khắc, chạm trổ hoặc đục một hình vẽ hay văn bản chìm sâu vào một bề mặt cứng." data-context-en="Carved into the base was a tiny, modern microchip." data-context-vn="Được khắc sâu vào phần chân đế là một chiếc vi mạch nhỏ hiện đại.">Carved into</span> the <span class="vocab" data-word-en="base" data-word-vn="phần chân đế / mặt đáy đôn" data-pos="danh từ / noun" data-def-en="The lowest supporting part or bottom foundation platform of a sculpture." data-def-vn="Phần đôn nâng đỡ dưới cùng hoặc mặt nền móng đáy của một khối tượng điêu khắc." data-context-en="Carved into the base was a tiny...">base</span> was a tiny, modern <span class="vocab" data-word-en="microchip" data-word-vn="vi mạch / con chip điện tử" data-pos="danh từ / noun" data-def-en="A tiny unit of integrated circuitry used to store digital information architecture." data-def-vn="Một đơn vị bảng mạch tích hợp siêu vi mô được thiết kế để lưu trữ thông tin kỹ thuật số." data-context-en="Carved into the base was a tiny, modern microchip.">microchip</span> <span class="vocab" data-word-en="hidden" data-word-vn="được giấu kín / ẩn giấu bên dưới" data-pos="tính từ / adjective (participle)" data-def-en="Kept entirely out of sight; concealed or made secret." data-def-vn="Bị che đậy khuất tầm nhìn; giữ bí mật hoặc bọc kín hoàn toàn tránh bị phát hiện." data-context-en="Hidden under a layer of wax.">hidden</span> under a <span class="vocab" data-word-en="layer of wax" data-word-vn="lớp sáp bọc" data-pos="cụm danh từ / noun phrase" data-def-en="A thin outer coating of a sticky, moldable waterproof substance." data-def-vn="Một màng bọc bảo vệ bên ngoài làm bằng chất sáp dẻo cô đặc chống thấm." data-context-en="Hidden under a layer of wax.">layer of wax</span>. Her grandfather hadn't just left a map; he had left a <span class="vocab" data-word-en="digital legacy" data-word-vn="di sản kỹ thuật số / di sản công nghệ" data-pos="cụm danh từ / noun phrase" data-def-en="A collection of digital assets, keys, and cryptographic files left behind." data-def-vn="Một tập hợp các tài sản công nghệ, khóa mã và dữ liệu số lưu lại cho thế hệ sau." data-context-en="He had left a digital legacy.">digital legacy</span>.
+    </p>
+ 
+    <p>
+        "This is just the beginning," Jack <span class="vocab" data-word-en="whispered" data-word-vn="thì thầm / nói nhỏ nhẹ" data-pos="động từ / verb (past tense)" data-def-en="Spoke very softly using one's breath rather than vocal cords." data-def-vn="Nói rất khẽ khàng bằng hơi thở ra thay vì dùng dây thanh quản phát thanh lớn." data-context-en='"This is just the beginning," Jack whispered.' data-context-vn='"Đây chỉ mới là sự bắt đầu thôi," Jack thì thầm.'>whispered</span>.
+    </p>
+ 
+    <p>
+        <span class="vocab" data-word-en="Suddenly" data-word-vn="Đột nhiên / bỗng nhiên" data-pos="trạng từ / adverb" data-def-en="Quickly and unexpectedly; without any advanced warning." data-def-vn="Xảy ra một cách nhanh chóng và hoàn toàn bất ngờ; không có cảnh báo trước.">Suddenly</span>, the sound of a helicopter filled the air. A black <span class="vocab" data-word-en="chopper" data-word-vn="máy bay trực thăng / chuyên cơ bay" data-pos="danh từ / noun (slang)" data-def-en="A colloquial or informal text slang term for a helicopter." data-def-vn="Thuật ngữ từ lóng, tên gọi thân mật thông dụng dùng để chỉ chiếc trực thăng." data-context-en="A black chopper rose from behind the trees.">chopper</span> rose from behind the trees, with a large "T" painted on the side. Thorne had <span class="vocab" data-word-en="survived" data-word-vn="đã sống sót / bảo toàn tính mạng" data-pos="động từ / verb" data-def-en="Continued to live or exist after narrow escape from a deadly catastrophe." data-def-vn="Tiếp tục sống sót thành công hoặc giữ được tính mạng sau thảm họa sập hầm." data-context-en="Thorne had survived, and he wasn't alone.">survived</span>, and he wasn't alone. A <span class="vocab" data-word-en="dozen" data-word-vn="một tá / khoảng mười hai" data-pos="danh từ / noun" data-def-en="A group or collection containing exactly twelve items or people." data-def-vn="Một nhóm tập hợp gồm đúng 12 (hoặc khoảng trên dưới mười hai) cá thể.">dozen</span> <span class="vocab" data-word-en="armed men" data-word-vn="kẻ có vũ trang / tay súng" data-pos="cụm danh từ / noun phrase" data-def-en="Individuals heavily equipped with lethal military weapons or firearms." data-def-vn="Những cá nhân hoặc lính đánh thuê được trang bị súng ống vũ khí nguy hiểm đầy mình." data-context-en="A dozen armed men began to descend on ropes.">armed men</span> began to <span class="vocab" data-word-en="descend on ropes" data-word-vn="đu dây xuống / tụt dây đổ bộ xuống" data-pos="cụm động từ / verb phrase" data-def-en="Move downward rapidly from an aircraft utilizing thick tactical ropes." data-def-vn="Di chuyển từ trên máy bay trực thăng đáp xuống đất bằng cách bám trượt dọc dây thừng." data-context-en="A dozen armed men began to descend on ropes.">descend on ropes</span>.
+    </p>
+ 
+    <p>
+        Maya looked at Jack, then at the forest.
+        <br><strong style="color: #7a4e1a;">[ to be continued in season 2 ]</strong>
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">collapsing</div>
+        <div class="memory-word">screamed</div>
+        <div class="memory-word">grabbed</div>
+        <div class="memory-word">falling rock</div>
+        <div class="memory-word">edge of the pit</div>
+        <div class="memory-word">ignoring</div>
+        <div class="memory-word">lunged</div>
+        <div class="memory-word">exit</div>
+        <div class="memory-word">crack</div>
+        <div class="memory-word">dived through</div>
+        <div class="memory-word">thunderous roar</div>
+        <div class="memory-word">cloud of dust</div>
+        <div class="memory-word">exploded</div>
+        <div class="memory-word">cleared</div>
+        <div class="memory-word">completely blocked</div>
+        <div class="memory-word">tons of rock</div>
+        <div class="memory-word">clutching</div>
+        <div class="memory-word">bleeding</div>
+        <div class="memory-word">forehead</div>
+        <div class="memory-word">weakly</div>
+        <div class="memory-word">pointed to</div>
+        <div class="memory-word">turned the statue over</div>
+        <div class="memory-word">Carved into</div>
+        <div class="memory-word">base</div>
+        <div class="memory-word">microchip</div>
+        <div class="memory-word">hidden</div>
+        <div class="memory-word">layer of wax</div>
+        <div class="memory-word">digital legacy</div>
+        <div class="memory-word">whispered</div>
+        <div class="memory-word">Suddenly</div>
+        <div class="memory-word">chopper</div>
+        <div class="memory-word">survived</div>
+        <div class="memory-word">dozen</div>
+        <div class="memory-word">armed men</div>
+        <div class="memory-word">descend on ropes</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
