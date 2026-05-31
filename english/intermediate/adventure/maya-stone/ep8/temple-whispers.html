@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Episode 8: The Temple of Whispers</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #7a4e1a;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Episode 8: The Temple of Whispers</h1>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 8</div>
+        <audio id="audio-player" src="ep8.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        The temple was <span class="vocab" data-word-en="silent" data-word-vn="yên lặng / tĩnh mịch" data-pos="tính từ / adjective" data-def-en="Completely quiet; accompanied by or making no sound." data-def-vn="Hoàn toàn yên ắng; không có hoặc không tạo ra âm thanh." data-context-en="The temple was silent, but it didn't feel empty." data-context-vn="Ngôi đền hoàn toàn tĩnh mịch, nhưng nó không có cảm giác trống rỗng.">silent</span>, but it didn't feel empty. Stone dragons <span class="vocab" data-word-en="guarded" data-word-vn="canh giữ / bảo vệ" data-pos="động từ / verb (past tense)" data-def-en="Watched over in order to protect or control." data-def-vn="Trông chừng nhằm mục đích bảo vệ hoặc kiểm soát." data-context-en="Stone dragons guarded the entrance." data-context-vn="Những con rồng đá canh giữ lối vào.">guarded</span> the <span class="vocab" data-word-en="entrance" data-word-vn="lối vào / cổng vào" data-pos="danh từ / noun" data-def-en="An opening, such as a door or gate, that allows access to a place." data-def-vn="Một lối mở, chẳng hạn như cửa ra vào hoặc cổng, cho phép đi vào một nơi." data-context-en="Stone dragons guarded the entrance." data-context-vn="Những con rồng đá canh giữ lối vào.">entrance</span>, their mossy eyes staring at Maya.
+    </p>
+
+    <p>
+        "The box should be under the main <span class="vocab" data-word-en="altar" data-word-vn="bàn thờ / bệ thờ" data-pos="danh từ / noun" data-def-en="A raised structure or table used as a focus for religious rituals." data-def-vn="Một cấu trúc nhô cao hoặc chiếc bàn được sử dụng làm trung tâm cho các nghi lễ tôn giáo." data-context-en='"The box should be under the main altar," Maya whispered.' data-context-vn='"Chiếc hộp đáng lẽ phải ở dưới bệ thờ chính," Maya thì thầm.'>altar</span>," Maya whispered.
+    </p>
+
+    <p>
+        They stepped inside. The air was cool and smelled of <span class="vocab" data-word-en="incense" data-word-vn="hương / nhang trầm" data-pos="danh từ / noun" data-def-en="A substance that is burned for the sweet smell it produces, often in religious ceremonies." data-def-vn="Một chất được đốt để tỏa ra mùi thơm dễ chịu, thường dùng trong các nghi lễ tôn giáo." data-context-en="The air was cool and smelled of incense." data-context-vn="Không khí mát mẻ và thoang thoảng mùi hương trầm.">incense</span>. Maya found the altar and looked for a keyhole. Instead, she found a small, round <span class="vocab" data-word-en="indentation" data-word-vn="vết lõm / chỗ lõm" data-pos="danh từ / noun" data-def-en="A deep recess or notch on the surface of something." data-def-vn="Một vết lõm sâu hoặc rãnh trên bề mặt của thứ gì đó." data-context-en="She found a small, round indentation in the stone." data-context-vn="Cô tìm thấy một vết lõm nhỏ, tròn trên phiến đá.">indentation</span> in the stone.
+    </p>
+
+    <p>
+        "The lens!" Jack realized.
+    </p>
+
+    <p>
+        Maya placed the glass lens into the stone. Suddenly, a <span class="vocab" data-word-en="beam of sunlight" data-word-vn="tia nắng / luồng ánh sáng mặt trời" data-pos="cụm danh từ / noun phrase" data-def-en="A long, narrow ray of light coming from the sun." data-def-vn="Một tia sáng dài, hẹp chiếu xuống từ mặt trời." data-context-en="Suddenly, a beam of sunlight hit the lens." data-context-vn="Đột nhiên, một tia nắng rọi thẳng vào thấu kính.">beam of sunlight</span> hit the lens, and a map appeared on the floor, made of light and shadow. It pointed to a <span class="vocab" data-word-en="loose stone" data-word-vn="phiến đá lỏng lẻo / viên đá lung lay" data-pos="cụm danh từ / noun phrase" data-def-en="A piece of rock that is not securely fixed in place." data-def-vn="Một mảng đá hoặc viên đá không được gắn cố định chắc chắn tại chỗ." data-context-en="It pointed to a loose stone in the corner." data-context-vn="Nó chỉ vào một phiến đá lỏng lẻo ở góc tường.">loose stone</span> in the corner. Behind the stone was a small, <span class="vocab" data-word-en="iron-bound chest" data-word-vn="chiếc rương bịt sắt / hòm nẹp sắt" data-pos="cụm danh từ / noun phrase" data-def-en="A strong wooden box reinforced with iron straps or bands." data-def-vn="Một chiếc hộp gỗ chắc chắn được gia cố bằng các đai hoặc thanh nẹp bằng sắt." data-context-en="Behind the stone was a small, iron-bound chest." data-context-vn="Phía sau phiến đá là một chiếc rương nhỏ được bịt sắt.">iron-bound chest</span>.
+    </p>
+
+    <p>
+        Maya used the golden key. Click. The lid <span class="vocab" data-word-en="creaked open" data-word-vn="mở ra kêu cót két" data-pos="cụm động từ / verb phrase" data-def-en="Opened slowly while making a harsh, high-pitched squeaking sound." data-def-vn="Mở ra một cách chậm rãi đồng thời phát ra âm thanh kẽo kẹt, cót két chói tai." data-context-en="The lid creaked open." data-context-vn="Nắp rương mở ra phát ra tiếng kêu cót két.">creaked open</span>. Inside wasn't gold or jewels, but a single, <span class="vocab" data-word-en="ancient scroll" data-word-vn="cuộn sách cổ / cuộn giấy cổ" data-pos="cụm danh từ / noun phrase" data-def-en="A roll of parchment, papyrus, or paper containing ancient writing." data-def-vn="Một cuộn da, giấy cói hoặc giấy thông thường chứa các văn tự cổ xưa." data-context-en="Inside wasn't gold or jewels, but a single, ancient scroll." data-context-vn="Bên trong không phải vàng bạc hay châu báu, mà là một cuộn sách cổ duy nhất.">ancient scroll</span> and a small <span class="vocab" data-word-en="jade statue" data-word-vn="tượng ngọc bích" data-pos="cụm danh từ / noun phrase" data-def-en="A carved figure made from a hard, typically green stone used for ornaments." data-def-vn="Một bức tượng được khắc từ một loại đá cứng, thường có màu xanh lục, dùng làm đồ trang trí." data-context-en="And a small jade statue of a dragon." data-context-vn="Và một bức tượng rồng nhỏ bằng ngọc bích.">jade statue</span> of a dragon.
+    </p>
+
+    <p>
+        "We found it," Maya <span class="vocab" data-word-en="breathed" data-word-vn="thốt lên khe khẽ / nói thì thầm" data-pos="động từ / verb" data-def-en="Spoke very softly or in a whisper, often out of awe or surprise." data-def-vn="Nói rất khẽ hoặc thì thầm, thường là do kinh ngạc hoặc ngạc nhiên." data-context-en='"We found it," Maya breathed.' data-context-vn='"Chúng ta tìm thấy nó rồi," Maya thốt lên khe khẽ.'>breathed</span>.
+    </p>
+
+    <p>
+        "Yes, you did," a voice <span class="vocab" data-word-en="boomed" data-word-vn="vang lên rền vang / nói lớn tiếng" data-pos="động từ / verb" data-def-en="Made a loud, deep, resonant sound." data-def-vn="Phát ra âm thanh to, trầm và có độ vang lớn." data-context-en='"Yes, you did," a voice boomed from the doorway.' data-context-vn='"Phải, các người tìm thấy rồi," một giọng nói rền vang lên từ phía cửa ra vào.'>boomed</span> from the doorway. Marcus Thorne walked in, holding a <span class="vocab" data-word-en="pistol" data-word-vn="khẩu súng ngắn" data-pos="danh từ / noun" data-def-en="A small firearm designed to be held and fired with one hand." data-def-vn="Một loại vũ khí nhỏ cầm tay được thiết kế để giữ và bắn bằng một tay." data-context-en="Marcus Thorne walked in, holding a pistol." data-context-vn="Marcus Thorne bước vào, trên tay cầm một khẩu súng ngắn.">pistol</span>. Beside him was the mercenary from the train. "And now, you're going to give it to me".
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">silent</div>
+        <div class="memory-word">guarded</div>
+        <div class="memory-word">entrance</div>
+        <div class="memory-word">altar</div>
+        <div class="memory-word">incense</div>
+        <div class="memory-word">indentation</div>
+        <div class="memory-word">beam of sunlight</div>
+        <div class="memory-word">loose stone</div>
+        <div class="memory-word">iron-bound chest</div>
+        <div class="memory-word">creaked open</div>
+        <div class="memory-word">ancient scroll</div>
+        <div class="memory-word">jade statue</div>
+        <div class="memory-word">breathed</div>
+        <div class="memory-word">boomed</div>
+        <div class="memory-word">pistol</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
