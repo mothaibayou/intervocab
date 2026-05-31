@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Episode 1: The Secret in the Attic</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #7a4e1a;
+        }
+        p {
+            line-height: 1.6;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Episode 1: The Secret in the Attic</h1>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 1</div>
+        <audio id="audio-player" src="ep1.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        Maya Stone lived <span class="vocab" data-word-en="parallel lives" data-word-vn="cuộc sống song song" data-pos="cụm danh từ / noun phrase" data-def-en="Two or more separate identities or lifestyles led by one person simultaneously." data-def-vn="Hai hoặc nhiều danh tính, lối sống khác nhau diễn ra đồng thời ở một người." data-context-en="Maya Stone lived parallel lives." data-context-vn="Maya Stone đã sống những cuộc sống song song.">parallel lives</span>. To her neighbors in London, she was a quiet, <span class="vocab" data-word-en="sedentary" data-word-vn="ít vận động / thụ động" data-pos="tính từ / adjective" data-def-en="Tending to spend much time seated; physically inactive." data-def-vn="Có xu hướng ngồi nhiều một chỗ; ít vận động, xê dịch." data-context-en="She was a quiet, sedentary researcher." data-context-vn="Cô ấy từng là một nhà nghiên cứu trầm lặng, ít vận động.">sedentary</span> <span class="vocab" data-word-en="researcher" data-word-vn="nhà nghiên cứu" data-pos="danh từ / noun" data-def-en="A person who carries out academic or scientific investigations." data-def-vn="Người thực hiện các công việc tìm tòi, điều tra mang tính học thuật hoặc khoa học." data-context-en="She was a quiet, sedentary researcher." data-context-vn="Cô ấy là một nhà nghiên cứu trầm lặng và ít dịch chuyển.">researcher</span> with a messy apartment. But Maya was a <span class="vocab" data-word-en="Việt Kiều" data-word-vn="Việt Kiều" data-pos="danh từ / noun" data-def-en="An overseas Vietnamese person living outside of Vietnam." data-def-vn="Người gốc Việt sinh sống hoặc định cư ở nước ngoài." data-context-en="But Maya was a Việt Kiều with a secret." data-context-vn="Nhưng Maya lại là một người Việt Kiều mang một bí mật.">Việt Kiều</span> with a secret. Her grandfather had been a famous <span class="vocab" data-word-en="explorer" data-word-vn="nhà thám hiểm" data-pos="danh từ / noun" data-def-en="A person who travels to unfamiliar places to discover things." data-def-vn="Người đi đến những vùng đất xa lạ để tìm kiếm, khám phá thông tin." data-context-en="Her grandfather had been a famous explorer." data-context-vn="Ông nội của cô từng là một nhà thám hiểm nổi tiếng.">explorer</span> in Vietnam, and her home was filled with his old <span class="vocab" data-word-en="trunks" data-word-vn="hòm / rương lớn" data-pos="danh từ / noun" data-def-en="Large, sturdy chest boxes used for moving or storing belongings." data-def-vn="Những chiếc hòm lớn, chắc chắn dùng để lưu trữ hoặc vận chuyển đồ đạc." data-context-en="Filled with his old trunks and dusty maps." data-context-vn="Chứa đầy những chiếc rương cũ kỹ và bản đồ đầy bụi của ông.">trunks</span> and <span class="vocab" data-word-en="dusty" data-word-vn="bụi bặm / phủ đầy bụi" data-pos="tính từ / adjective" data-def-en="Covered with a fine layer of dirt or gray powder particles." data-def-vn="Bị bao phủ bởi một lớp hạt bụi bẩn bám lâu ngày." data-context-en="Filled with his old trunks and dusty maps." data-context-vn="Bên trong chất đầy các hòm cũ và các tấm bản đồ bám đầy bụi.">dusty</span> maps.
+    </p>
+
+    <p>
+        One rainy Tuesday, Maya was in her attic, looking for a warm coat. Instead, she <span class="vocab" data-word-en="tripped over" data-word-vn="vấp phải / vấp ngã" data-pos="cụm động từ / phrasal verb" data-def-en="Stumbled and nearly lost footing after hitting an object with the foot." data-def-vn="Vấp chân trúng vào một vật gì đó và suýt nữa bị ngã nhào." data-context-en="Instead, she tripped over a heavy wooden box." data-context-vn="Thay vào đó, cô lại vấp phải một chiếc hộp gỗ nặng nề.">tripped over</span> a heavy wooden box. Inside, hidden under an old silk <span class="vocab" data-word-en="áo dài" data-word-vn="áo dài" data-pos="danh từ / noun" data-def-en="A traditional Vietnamese national long tunic worn over loose trousers." data-def-vn="Trang phục truyền thống của Việt Nam với tà áo dài xẻ mặc cùng quần." data-context-en="Hidden under an old silk áo dài." data-context-vn="Được giấu kín bên dưới một chiếc áo dài lụa cũ.">áo dài</span>, she found a leather <span class="vocab" data-word-en="journal" data-word-vn="cuốn nhật ký / sổ ghi chép" data-pos="danh từ / noun" data-def-en="A daily written record of events, thoughts, or experiences; a diary." data-def-vn="Sổ ghi chép cá nhân hàng ngày về các sự kiện, suy nghĩ hoặc trải nghiệm." data-context-en="She found a leather journal." data-context-vn="Cô đã tìm thấy một cuốn nhật ký bằng da cũ.">journal</span>.
+    </p>
+
+    <p>
+        "Grandfather’s diary," Maya <span class="vocab" data-word-en="whispered" data-word-vn="thì thầm" data-pos="động từ / verb" data-def-en="Spoke very softly using the breath rather than the vocal cords." data-def-vn="Nói rất khẽ khàng bằng hơi thở nhỏ để không ai nghe thấy." data-context-en="Maya whispered." data-context-vn="Maya thì thầm nhỏ nhẹ.">whispered</span>.
+    </p>
+
+    <p>
+        She opened it and a small, golden key fell onto the floor. On the first page, her grandfather had written a note in English: For Maya. The Jade Dragon is not just a <span class="vocab" data-word-en="legend" data-word-vn="truyền thuyết" data-pos="danh từ / noun" data-def-en="A traditional historical story that is widely popular but unverified." data-def-vn="Một câu chuyện dân gian truyền miệng lâu đời nhưng chưa được kiểm chứng." data-context-en="The Jade Dragon is not just a legend." data-context-vn="Rồng Ngọc không chỉ là một câu chuyện truyền thuyết đơn thuần.">legend</span>. It is a map. Follow the <span class="vocab" data-word-en="scent" data-word-vn="mùi hương / hương thơm" data-pos="danh từ / noun" data-def-en="A distinctive, pleasant, or recognizable smell." data-def-vn="Một mùi hương đặc trưng, dễ nhận biết hoặc dễ chịu." data-context-en="Follow the scent of the pine trees." data-context-vn="Hãy đi theo mùi hương của những hàng cây thông.">scent</span> of the <span class="vocab" data-word-en="pine trees" data-word-vn="cây thông" data-pos="danh từ / noun" data-def-en="Evergreen coniferous trees with needle-shaped leaves." data-def-vn="Loại cây lá kim xanh quanh năm, phổ biến ở các vùng có khí hậu lạnh." data-context-en="Follow the scent of the pine trees in Đà Lạt." data-context-vn="Hãy lần theo hương thơm của những rặng cây thông ở Đà Lạt.">pine trees</span> in Đà Lạt.
+    </p>
+
+    <p>
+        Suddenly, the <span class="vocab" data-word-en="floorboards" data-word-vn="ván sàn / tấm gỗ lót sàn" data-pos="danh từ / noun" data-def-en="The long thick boards making up a wooden floor structure." data-def-vn="Những tấm ván bằng gỗ dài tạo thành cấu trúc của sàn nhà." data-context-en="Suddenly, the floorboards creaked outside." data-context-vn="Đột nhiên, các tấm ván sàn phát ra âm thanh cót két bên ngoài.">floorboards</span> <span class="vocab" data-word-en="creaked" data-word-vn="kêu cót két" data-pos="động từ / verb" data-def-en="Made a harsh, squeaking sound when moved or pressured." data-def-vn="Tạo ra âm thanh kẽo kẹt, chói tai khi có vật nặng đè lên hoặc chuyển động." data-context-en="The floorboards creaked outside her door." data-context-vn="Những tấm ván sàn gỗ kêu cót két bên ngoài cánh cửa phòng cô.">creaked</span> outside her door. Maya <span class="vocab" data-word-en="froze" data-word-vn="đứng hình / bất động" data-pos="động từ / verb" data-def-en="Became suddenly rigid and completely still from fear or surprise." data-def-vn="Đột ngột đứng im re, không thể di chuyển nổi vì sợ hãi hoặc sững sờ." data-context-en="Maya froze." data-context-vn="Maya đứng hình bất động vì hoảng hốt.">froze</span>. She lived alone, and she wasn't expecting any visitors.
+    </p>
+
+    <p>
+        "I know you're in there, Maya," a <span class="vocab" data-word-en="smooth" data-word-vn="mượt mà / trơn tru (nhưng nguy hiểm)" data-pos="tính từ / adjective" data-def-en="Suave, polite, or persuasive, but possibly insincere and sinister." data-def-vn="Ngọt ngào, khéo léo, trôi chảy nhưng có thể ẩn chứa sự gian trá hiểm độc." data-context-en="A smooth, dangerous voice called out." data-context-vn="Một giọng nói ngọt ngào êm tai nhưng đầy hiểm ác cất lên.">smooth</span>, dangerous voice called out.
+    </p>
+
+    <p>
+        It was Marcus Thorne. He was a wealthy "<span class="vocab" data-word-en="treasure hunter" data-word-vn="kẻ săn lùng kho báu" data-pos="danh từ / noun" data-def-en="A person who searches for ancient hidden treasures and valuables." data-def-vn="Người chuyên tìm kiếm, thu thập các báu vật cổ xưa hoặc đồ quý giá bị chôn giấu." data-context-en="He was a wealthy treasure hunter." data-context-vn="Hắn ta là một kẻ săn lùng kho báu giàu có tột bậc.">treasure hunter</span>" who had been trying to buy her grandfather's <span class="vocab" data-word-en="collection" data-word-vn="bộ sưu tập" data-pos="danh từ / noun" data-def-en="A group of accumulated historical or artistic pieces kept together." data-def-vn="Một tập hợp các hiện vật có giá trị lịch sử hoặc nghệ thuật được lưu giữ." data-context-en="Trying to buy her grandfather's collection." data-context-vn="Đã cố gắng mua lại toàn bộ bộ sưu tập của ông nội cô suốt nhiều năm.">collection</span> for years. Maya quickly <span class="vocab" data-word-en="bolted" data-word-vn="chốt chặt cửa / cài then" data-pos="động từ / verb" data-def-en="Fastened or locked a door using a strong metal sliding bar." data-def-vn="Khóa chặt cửa bằng cách đẩy thanh then cài bằng sắt." data-context-en="Maya quickly bolted the door." data-context-vn="Maya vội vàng gạt then chốt chặt cửa phòng lại.">bolted</span> the door, but she heard Thorne’s heavy <span class="vocab" data-word-en="boots" data-word-vn="đôi ủng / giày bốt" data-pos="danh từ / noun" data-def-en="Sturdy leather footwear covering the foot and part of the leg." data-def-vn="Loại giày da dày và cao cổ bảo vệ bàn chân và bắp chân." data-context-en="Heard Thorne’s heavy boots hitting the wood." data-context-vn="Nghe thấy tiếng bước chân nện giày bốt nặng nề của Thorne lên sàn gỗ.">boots</span> hitting the wood. Bang! Bang!
+    </p>
+
+    <p>
+        Maya looked around her small attic. There was no other door. She grabbed her backpack, threw the journal and the golden key inside, and ran to the narrow window. Below her, the London streets were wet and grey.
+    </p>
+
+    <p>
+        "The Jade Dragon belongs in a museum, Thorne! Not in your private collection!" Maya shouted through the door.
+    </p>
+
+    <p>
+        The door began to <span class="vocab" data-word-en="splinter" data-word-vn="nứt vụn / vỡ thành mảnh vụn" data-pos="động từ / verb" data-def-en="Break apart into small, sharp, thin fragments of wood." data-def-vn="Nứt vỡ tung tóe ra thành nhiều dăm gỗ hoặc mảnh vụn nhọn nhỏ." data-context-en="The door began to splinter." data-context-vn="Cánh cửa bắt đầu nứt toác và vỡ vụn ra thành dăm.">splinter</span>. Thorne was <span class="vocab" data-word-en="breaking in" data-word-vn="đột nhập vào" data-pos="cụm động từ / phrasal verb" data-def-en="Forcing illegal entry into a locked building or room." data-def-vn="Dùng vũ lực phá hoại tài sản để đột nhập trái phép vào phòng." data-context-en="Thorne was breaking in." data-context-vn="Thorne đang tìm cách đập cửa để đột nhập vào bên trong.">breaking in</span>. Maya climbed out onto the wet <span class="vocab" data-word-en="roof" data-word-vn="mái nhà" data-pos="danh từ / noun" data-def-en="The external upper covering structure of a house." data-def-vn="Cấu trúc bên trên cùng dùng để che chắn toàn bộ một ngôi nhà." data-context-en="Maya climbed out onto the wet roof." data-context-vn="Maya leo hẳn ra bên ngoài mái nhà sũng nước mưa.">roof</span>. The wind was cold, and the ground was very far away. Just as Thorne <span class="vocab" data-word-en="smashed" data-word-vn="phá toang / đập nát" data-pos="động từ / verb" data-def-en="Broke through something forcefully and violently." data-def-vn="Đập vỡ hoặc tông thẳng qua một chướng ngại vật một cách bạo lực." data-context-en="Just as Thorne smashed the door open." data-context-vn="Ngay lúc Thorne dùng sức đập phá toang cánh cửa ra.">smashed</span> the door open, Maya's foot <span class="vocab" data-word-en="slipped" data-word-vn="trượt chân" data-pos="động từ / verb" data-def-en="Lost balance on a smooth or slippery surface." data-def-vn="Mất thăng bằng, mất độ bám trên bề mặt trơn trượt dẫn đến bị ngã." data-context-en="Maya's foot slipped." data-context-vn="Bàn chân của Maya bất ngờ bị trượt đi.">slipped</span>.
+    </p>
+
+    <p>
+        She screamed as she <span class="vocab" data-word-en="slid" data-word-vn="trượt dài" data-pos="động từ / verb" data-def-en="Moved smoothly and uncontrollably down a slippery surface." data-def-vn="Di chuyển lướt đi ngoài tầm kiểm soát trên một mặt phẳng dốc, trơn." data-context-en="She screamed as she slid toward the edge." data-context-vn="Cô ấy hét lên thất thanh khi trượt dài về phía mép mái.">slid</span> toward the <span class="vocab" data-word-en="edge" data-word-vn="rìa / mép" data-pos="danh từ / noun" data-def-en="The outside limit or boundary line of an area or surface." data-def-vn="Đường giới hạn ranh giới tận cùng của một bề mặt." data-context-en="Slid toward the edge of the roof." data-context-vn="Bị trượt tuột thẳng về phía mép của mái nhà cao tầng.">edge</span> of the roof. Below her, a black car was waiting with its lights flashing. Was it a <span class="vocab" data-word-en="trap" data-word-vn="cạm bẫy / cái bẫy" data-pos="danh từ / noun" data-def-en="A trick or device intended to catch or deceive someone." data-def-vn="Một mưu đồ hoặc thiết bị được sắp đặt để lừa bẫy, bắt giữ ai đó." data-context-en="Was it a trap, or was someone there?" data-context-vn="Liệu đó là một cạm bẫy nguy hiểm hay có ai đó đến giúp?">trap</span>, or was someone there to help her?
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2>Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">parallel lives</div>
+        <div class="memory-word">sedentary</div>
+        <div class="memory-word">researcher</div>
+        <div class="memory-word">Việt Kiều</div>
+        <div class="memory-word">explorer</div>
+        <div class="memory-word">trunks</div>
+        <div class="memory-word">dusty</div>
+        <div class="memory-word">tripped over</div>
+        <div class="memory-word">áo dài</div>
+        <div class="memory-word">journal</div>
+        <div class="memory-word">whispered</div>
+        <div class="memory-word">legend</div>
+        <div class="memory-word">scent</div>
+        <div class="memory-word">pine trees</div>
+        <div class="memory-word">floorboards</div>
+        <div class="memory-word">creaked</div>
+        <div class="memory-word">froze</div>
+        <div class="memory-word">smooth</div>
+        <div class="memory-word">treasure hunter</div>
+        <div class="memory-word">collection</div>
+        <div class="memory-word">bolted</div>
+        <div class="memory-word">boots</div>
+        <div class="memory-word">splinter</div>
+        <div class="memory-word">breaking in</div>
+        <div class="memory-word">roof</div>
+        <div class="memory-word">smashed</div>
+        <div class="memory-word">slipped</div>
+        <div class="memory-word">slid</div>
+        <div class="memory-word">edge</div>
+        <div class="memory-word">trap</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
