@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Episode 1: The Land of the Lotus Eaters</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Episode 1: The Land of the Lotus Eaters</h1>
+    <h2 class="subtitle">Odyssey Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 1</div>
+        <audio id="audio-player" src="lotus.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        Ulysses was a <span class="vocab" data-word-en="legendary warrior" data-word-vn="nhà chiến binh huyền thoại" data-pos="cụm danh từ / noun phrase" data-def-en="A widely celebrated soldier known from historical tales or myths." data-def-vn="Một người lính nổi tiếng khắp nơi, được biết đến từ các câu chuyện lịch sử hoặc thần thoại." data-context-en="Ulysses was a legendary warrior." data-context-vn="Ulysses là một chiến binh huyền thoại.">legendary warrior</span>, a <span class="vocab" data-word-en="king known for" data-word-vn="vị vua nổi tiếng vì" data-pos="cụm danh từ / noun phrase" data-def-en="A male monarch recognized widely for specific traits or actions." data-def-vn="Một vị vua được công nhận rộng rãi nhờ những đặc điểm hoặc hành động cụ thể." data-context-en="A king known for his bravery..." data-context-vn="Một vị vua nổi tiếng vì lòng dũng cảm của mình...">king known for</span> his <span class="vocab" data-word-en="bravery" data-word-vn="sự dũng cảm / lòng can đảm" data-pos="danh từ / noun" data-def-en="Courageous behavior or character in the face of danger." data-def-vn="Hành vi hoặc tính cách dũng cảm khi đối mặt với nguy hiểm." data-context-en="Known for his bravery and his sharp mind.">bravery</span> and his <span class="vocab" data-word-en="sharp mind" data-word-vn="đầu óc sắc bén / trí tuệ nhạy bén" data-pos="cụm danh từ / noun phrase" data-def-en="An exceptionally quick, clever, and intelligent intellect." data-def-vn="Một trí tuệ đặc biệt nhanh nhẹn, khôn ngoan và thông minh." data-context-en="Known for his bravery and his sharp mind." data-context-vn="Nổi tiếng vì sự can trường và đầu óc nhạy bén của mình.">sharp mind</span>. Yet, <span class="vocab" data-word-en="duty had called him away" data-word-vn="nghĩa vụ đã thôi thúc ông rời đi" data-pos="mệnh đề / clause" data-def-en="Moral or legal obligations forced someone to leave a place." data-def-vn="Trách nhiệm đạo đức hoặc pháp lý đã buộc ai đó phải rời khỏi một nơi." data-context-en="Yet, duty had called him away from his beloved home." data-context-vn="Thế nhưng, tiếng gọi của nghĩa vụ đã buộc ông phải rời xa quê hương.">duty had called him away</span> from his <span class="vocab" data-word-en="beloved home" data-word-vn="quê hương yêu dấu" data-pos="cụm danh từ / noun phrase" data-def-en="A cherished, deeply loved place where one permanently resides." data-def-vn="Nơi chốn thân thương, được yêu mến sâu sắc, nơi một người sinh sống lâu dài." data-context-en="Away from his beloved home.">beloved home</span>. He had <span class="vocab" data-word-en="been forced to" data-word-vn="bị ép buộc phải" data-pos="cụm động từ / verb phrase (passive)" data-def-en="Compelled or required by external circumstances to take action." data-def-vn="Bị hoàn cảnh bên ngoài bắt buộc hoặc yêu cầu phải thực hiện hành động." data-context-en="He had been forced to leave behind his beautiful wife.">been forced to</span> <span class="vocab" data-word-en="leave behind" data-word-vn="bỏ lại phía sau" data-pos="cụm động từ / phrasal verb" data-def-en="To depart without taking someone or something along." data-def-vn="Rời đi mà không mang theo ai đó hoặc thứ gì đó." data-context-en="He had been forced to leave behind his beautiful wife.">leave behind</span> his <span class="vocab" data-word-en="beautiful wife" data-word-vn="người vợ xinh đẹp" data-pos="cụm danh từ / noun phrase" data-def-en="An attractive and cherished female marriage partner." data-def-vn="Người bạn đời là nữ giới vô cùng thu hút và được yêu thương." data-context-en="Leave behind his beautiful wife, Penelope.">beautiful wife</span>, Penelope, and his <span class="vocab" data-word-en="young son" data-word-vn="cậu con trai nhỏ" data-pos="cụm danh từ / noun phrase" data-def-en="A male child in the early stages of life." data-def-vn="Một đứa trẻ thuộc giới tính nam đang trong những giai đoạn đầu của cuộc đời." data-context-en="And his young son...">young son</span>, to <span class="vocab" data-word-en="fight for" data-word-vn="chiến đấu trong" data-pos="cụm động từ / verb phrase" data-def-en="To engage in physical combat or warfare for a prolonged period." data-def-vn="Tham gia vào cuộc chiến đấu hoặc chiến tranh trong một khoảng thời gian dài." data-context-en="To fight for ten long years.">fight for</span> ten long years in a <span class="vocab" data-word-en="distant, foreign war" data-word-vn="cuộc chiến xa xôi nơi đất khách" data-pos="cụm danh từ / noun phrase" data-def-en="A conflict taking place far away in an unfamiliar nation." data-def-vn="Một cuộc xung đột diễn ra ở nơi rất xa, tại một quốc gia lạ lẫm." data-context-en="In a distant, foreign war." data-context-vn="Trong một cuộc chiến tranh xa xôi ở xứ người.">distant, foreign war</span>. Now, the war was <span class="vocab" data-word-en="finally over" data-word-vn="cuối cùng cũng kết thúc" data-pos="cụm tính từ / adjective phrase" data-def-en="Concluded at last after a very long delay or duration." data-def-vn="Cuối cùng cũng được khép lại sau một thời gian trì hoãn hoặc kéo dài rất lâu." data-context-en="Now, the war was finally over.">finally over</span>, and Ulysses and his men were <span class="vocab" data-word-en="exhausted" data-word-vn="kiệt sức / mệt lử" data-pos="tính từ / adjective" data-def-en="Extremely tired, depleted of all physical or mental energy." data-def-vn="Cực kỳ mệt mỏi, cạn kiệt toàn bộ năng lượng thể chất hoặc tinh thần." data-context-en="Ulysses and his men were exhausted.">exhausted</span>. They <span class="vocab" data-word-en="wanted nothing more than" data-word-vn="không mong muốn gì hơn ngoài việc" data-pos="cụm động từ / verb phrase" data-def-en="Desired a specific outcome above all other alternative possibilities." data-def-vn="Khao khát một kết quả cụ thể nào đó trên tất cả các khả năng thay thế khác." data-context-en="They wanted nothing more than to return to their homes.">wanted nothing more than</span> to <span class="vocab" data-word-en="return to" data-word-vn="trở về" data-pos="cụm động từ / verb phrase" data-def-en="Go back or come back to a previous place or state." data-def-vn="Đi ngược lại hoặc quay trở lại một địa điểm hoặc trạng thái trước đó." data-context-en="To return to their homes...">return to</span> their homes, their families, and their <span class="vocab" data-word-en="comfortable beds" data-word-vn="những chiếc giường êm ái" data-pos="cụm danh từ / noun phrase" data-def-en="Furniture units for sleeping that provide physical ease and relaxation." data-def-vn="Đồ nội thất dùng để ngủ mang lại sự thư thái và dễ chịu cho cơ thể." data-context-en="And their comfortable beds in Ithaca.">comfortable beds</span> in Ithaca.
+    </p>
+ 
+    <p>
+        <span class="vocab" data-word-en="After days of sailing" data-word-vn="Sau nhiều ngày lênh đênh trên biển" data-pos="cụm giới từ / prepositional phrase" data-def-en="Following a prolonged period of traveling across water in a vessel." data-def-vn="Sau một khoảng thời gian dài di chuyển trên mặt nước bằng một con tàu." data-context-en="After days of sailing through rough seas...">After days of sailing</span> through <span class="vocab" data-word-en="rough seas" data-word-vn="những vùng biển động / sóng dữ" data-pos="cụm danh từ / noun phrase" data-def-en="Turbulent ocean waters characterized by violent waves and wind." data-def-vn="Vùng nước đại dương đầy biến động với những con sóng và ngọn gió dữ dội." data-context-en="After days of sailing through rough seas...">rough seas</span>, they <span class="vocab" data-word-en="saw an island" data-word-vn="nhìn thấy một hòn đảo" data-pos="cụm động từ / verb phrase" data-def-en="Perceived a landmass completely surrounded by water." data-def-vn="Nhìn thấy một vùng đất được bao bọc hoàn toàn bởi nước." data-context-en="They saw an island in the distance.">saw an island</span> <span class="vocab" data-word-en="in the distance" data-word-vn="ở phía xa xăm" data-pos="cụm giới từ / prepositional phrase" data-def-en="Far away but still within the range of human vision." data-def-vn="Ở nơi xa nhưng vẫn nằm trong tầm nhìn của con người." data-context-en="They saw an island in the distance.">in the distance</span>. They <span class="vocab" data-word-en="needed food" data-word-vn="cần lương thực" data-pos="cụm động từ / verb phrase" data-def-en="Required nourishment to sustain life and physical energy." data-def-vn="Yêu cầu chất dinh dưỡng để duy trì sự sống và năng lượng thể chất." data-context-en="They needed food and fresh water.">needed food</span> and <span class="vocab" data-word-en="fresh water" data-word-vn="nước ngọt / nước sạch" data-pos="cụm danh từ / noun phrase" data-def-en="Unsalted water suitable for drinking and human consumption." data-def-vn="Nước không bị nhiễm mặn, thích hợp cho việc ăn uống và tiêu dùng của con người." data-context-en="They needed food and fresh water.">fresh water</span>, so they <span class="vocab" data-word-en="steered their ships toward" data-word-vn="lái những con tàu của họ hướng về" data-pos="cụm động từ / verb phrase" data-def-en="Guided the direction of nautical vessels toward a location." data-def-vn="Điều khiển hướng đi của các phương tiện đường thủy tiến về một địa điểm." data-context-en="They steered their ships toward the shore." data-context-vn="Họ đã lái những con tàu của mình hướng thẳng về phía bờ.">steered their ships toward</span> the <span class="vocab" data-word-en="shore" data-word-vn="bờ biển / bờ đất" data-pos="danh từ / noun" data-def-en="The land along the edge of a sea, lake, or large river." data-def-vn="Vùng đất dọc theo rìa của một vùng biển, hồ hoặc con sông lớn." data-context-en="They steered their ships toward the shore.">shore</span>.
+    </p>
+ 
+    <p>
+        When they <span class="vocab" data-word-en="landed" data-word-vn="đặt chân lên bờ / cập bến" data-pos="động từ / verb (past tense)" data-def-en="Arrived on solid ground from a vessel at sea." data-def-vn="Đến vùng đất liền kiên cố từ một con tàu ngoài khơi." data-context-en="When they landed, Ulysses sent three of his men...">landed</span>, Ulysses <span class="vocab" data-word-en="sent three of his men" data-word-vn="cử ba người đàn ông của mình đi" data-pos="cụm động từ / verb phrase" data-def-en="Dispatched a trio of subordinates to execute a task." data-def-vn="Phái một nhóm gồm ba người cấp dưới đi thực hiện một nhiệm vụ." data-context-en="Ulysses sent three of his men to explore the island.">sent three of his men</span> to <span class="vocab" data-word-en="explore the island" data-word-vn="khám phá / thám thính hòn đảo" data-pos="cụm động từ / verb phrase" data-def-en="Travel through an unfamiliar island to learn about its features." data-def-vn="Đi qua một hòn đảo xa lạ để tìm hiểu về các đặc điểm của nó." data-context-en="Sent three of his men to explore the island.">explore the island</span>. The land was beautiful, <span class="vocab" data-word-en="filled with" data-word-vn="ngập tràn / chứa đầy" data-pos="cụm tính từ / adjective phrase" data-def-en="Occupied completely with specific items or flora." data-def-vn="Bị chiếm trọn hoàn toàn bởi các đồ vật hoặc quần thể thực vật cụ thể." data-context-en="Filled with strange, glowing flowers.">filled with</span> <span class="vocab" data-word-en="strange, glowing flowers" data-word-vn="những bông hoa kỳ lạ và phát sáng" data-pos="cụm danh từ / noun phrase" data-def-en="Unusual blossoms that emit a soft, radiant light source." data-def-vn="Những đóa hoa bất thường phát ra nguồn ánh sáng dịu nhẹ, tỏa rạng." data-context-en="Filled with strange, glowing flowers." data-context-vn="Đầy những bông hoa kỳ lạ, tỏa ra ánh sáng lung linh.">strange, glowing flowers</span>. Soon, the <span class="vocab" data-word-en="scouts" data-word-vn="những người lính trinh sát" data-pos="danh từ / noun (plural)" data-def-en="Personnel sent ahead to gather information or survey territory." data-def-vn="Những nhân sự được phái đi trước để thu thập thông tin hoặc khảo sát lãnh thổ." data-context-en="Soon, the scouts met the local people...">scouts</span> <span class="vocab" data-word-en="met the local people" data-word-vn="gặp gỡ người dân địa phương" data-pos="cụm động từ / verb phrase" data-def-en="Encountered the indigenous inhabitants residing in a specific region." data-def-vn="Gặp gỡ những cư dân bản địa đang sinh sống tại một khu vực cụ thể." data-context-en="The scouts met the local people—the Lotus Eaters." data-context-vn="Những người thám thính đã gặp gỡ người dân địa phương—những Kẻ Ăn Hoa Sen.">met the local people</span>—the Lotus Eaters. They were <span class="vocab" data-word-en="kind, gentle, and peaceful" data-word-vn="tử tế, hiền hòa và hòa nhã" data-pos="cụm tính từ / adjective phrase" data-def-en="Benevolent, mild-mannered, and avoiding any form of conflict." data-def-vn="Nhân từ, tính khí ôn hòa và tránh mọi hình thức xung đột." data-context-en="They were kind, gentle, and peaceful.">kind, gentle, and peaceful</span>. They <span class="vocab" data-word-en="offered" data-word-vn="mời / dâng tặng" data-pos="động từ / verb (past tense)" data-def-en="Presented something so that it may be accepted or rejected." data-def-vn="Đưa ra một cái gì đó để người khác có thể chấp nhận hoặc từ chối." data-context-en="They offered the scouts a mysterious fruit...">offered</span> the scouts a <span class="vocab" data-word-en="mysterious fruit" data-word-vn="thứ trái cây đầy bí ẩn" data-pos="cụm danh từ / noun phrase" data-def-en="An enigmatic and unexplained botanical product or food item." data-def-vn="Một sản phẩm thực vật hoặc món ăn đầy bí ẩn và chưa được giải thích." data-context-en="They offered the scouts a mysterious fruit: the lotus.">mysterious fruit</span>: the lotus.
+    </p>
+ 
+    <p>
+        "Try this," the locals said. "It is <span class="vocab" data-word-en="sweet and refreshing" data-word-vn="ngọt ngào và thanh mát" data-pos="cụm tính từ / adjective phrase" data-def-en="Having a sugary taste and giving a pleasant feeling of vitality." data-def-vn="Có vị đường ngọt và mang lại cảm giác dễ chịu, tràn đầy sức sống." data-context-en='"It is sweet and refreshing."'>sweet and refreshing</span>."
+    </p>
+ 
+    <p>
+        The scouts <span class="vocab" data-word-en="took a bite" data-word-vn="cắn một miếng" data-pos="cụm động từ / verb phrase" data-def-en="Used teeth to cut into a piece of food to taste it." data-def-vn="Sử dụng răng để cắt vào một miếng thức ăn nhằm nếm thử nó." data-context-en="The scouts took a bite.">took a bite</span>. <span class="vocab" data-word-en="Immediately" data-word-vn="Ngay lập tức" data-pos="trạng từ / adverb" data-def-en="At once; instantly and without any delay." data-def-vn="Ngay tức khắc; tức thời và không có bất kỳ sự chậm trễ nào.">Immediately</span>, they felt a <span class="vocab" data-word-en="sense of total tranquility" data-word-vn="cảm giác thanh bình tĩnh lặng tuyệt đối" data-pos="cụm danh từ / noun phrase" data-def-en="A profound feeling of absolute peace and calm." data-def-vn="Một cảm giác sâu sắc về sự hòa bình và bình yên tuyệt đối." data-context-en="They felt a sense of total tranquility." data-context-vn="Họ cảm thấy một sự thanh bình yên ả bao trùm toàn bộ tâm trí.">sense of total tranquility</span>. All their <span class="vocab" data-word-en="worries" data-word-vn="nỗi lo âu / bận lòng" data-pos="danh từ / noun (plural)" data-def-en="Anxieties, fears, or uneasy thoughts about problems." data-def-vn="Sự lo lắng, sợ hãi hoặc những suy nghĩ bất an về các vấn đề." data-context-en="All their worries about the war... vanished.">worries</span> about the war, the dangerous sea, and the <span class="vocab" data-word-en="long journey home" data-word-vn="hành trình dài trở về nhà" data-pos="cụm danh từ / noun phrase" data-def-en="The extensive, exhausting travel back to one's native land." data-def-vn="Chuyến đi kéo dài và mệt mỏi để quay trở về quê cha đất tổ." data-context-en="And the long journey home vanished.">long journey home</span> <span class="vocab" data-word-en="vanished" data-word-vn="tan biến / biến mất hoàn toàn" data-pos="động từ / verb (past tense)" data-def-en="Disappeared completely and suddenly from sight or existence." data-def-vn="Biến mất hoàn toàn và đột ngột khỏi tầm mắt hoặc sự tồn tại." data-context-en="All their worries... vanished." data-context-vn="Mọi nỗi lo âu... thảy đều tan biến sạch sành sanh.">vanished</span>. They didn't want to fight anymore. They didn't want to sail. They only wanted to <span class="vocab" data-word-en="sit in the sun" data-word-vn="ngồi dưới ánh nắng mặt trời" data-pos="cụm động từ / verb phrase" data-def-en="Rest outdoors in a location exposed to direct sunlight." data-def-vn="Nghỉ ngơi ngoài trời tại một địa điểm tiếp xúc trực tiếp với ánh nắng mặt trời." data-context-en="They only wanted to sit in the sun...">sit in the sun</span> and eat more of the sweet flowers. They were <span class="vocab" data-word-en="completely oblivious to" data-word-vn="hoàn toàn không mảy may nhận thức về" data-pos="cụm tính từ / adjective phrase" data-def-en="Totally unaware or unconcerned about things happening around." data-def-vn="Hoàn toàn không biết hoặc không bận tâm về những điều đang diễn ra xung quanh." data-context-en="They were completely oblivious to their responsibilities." data-context-vn="Họ hoàn toàn lãng quên và không mảy may nghĩ đến trách nhiệm của mình.">completely oblivious to</span> their <span class="vocab" data-word-en="responsibilities" data-word-vn="những trách nhiệm / bổn phận" data-pos="danh từ / noun (plural)" data-def-en="Duties or states of being accountable for something required." data-def-vn="Nghĩa vụ hoặc trạng thái phải chịu trách nhiệm về một điều gì đó được yêu cầu." data-context-en="Oblivious to their responsibilities.">responsibilities</span>; they had <span class="vocab" data-word-en="forgotten their mission entirely" data-word-vn="quên sạch hoàn toàn sứ mệnh của họ" data-pos="mệnh đề / clause (past perfect)" data-def-en="Lost all mental memory of their assignment or primary purpose." data-def-vn="Mất đi toàn bộ trí nhớ trong tâm trí về nhiệm vụ hoặc mục đích chính của họ." data-context-en="They had forgotten their mission entirely." data-context-vn="Họ đã quên đi toàn vẹn sứ mệnh của mình không sót một chút gì.">forgotten their mission entirely</span>.
+    </p>
+ 
+    <p>
+        Ulysses <span class="vocab" data-word-en="waited for hours" data-word-vn="chờ đợi suốt nhiều giờ liền" data-pos="cụm động từ / verb phrase" data-def-en="Remained stationary anticipating someone for an extended timeframe." data-def-vn="Giữ nguyên vị trí để mong đợi ai đó trong một khung thời gian dài." data-context-en="Ulysses waited for hours, but his men did not return.">waited for hours</span>, but his men did not return. <span class="vocab" data-word-en="Concerned" data-word-vn="Lo lắng / đầy quan ngại" data-pos="tính từ / adjective" data-def-en="Anxious, worried, or feeling troubled about a situation." data-def-vn="Lo âu, băn khoăn hoặc cảm thấy phiền muộn về một tình huống." data-context-en="Concerned, he went to find them.">Concerned</span>, he went to find them. When he <span class="vocab" data-word-en="reached the camp" data-word-vn="đến được khu trại" data-pos="cụm động từ / verb phrase" data-def-en="Arrived at the temporary outdoor lodging site." data-def-vn="Đến địa điểm lưu trú tạm thời ngoài trời." data-context-en="When he reached the camp, he saw his scouts...">reached the camp</span>, he saw his scouts sitting on the ground, <span class="vocab" data-word-en="smiling with empty eyes" data-word-vn="mỉm cười với đôi mắt trống rỗng" data-pos="cụm động từ / verb phrase (continuous)" data-def-en="Grinning while exhibiting a blank, vacant expression lacking intellect." data-def-vn="Mỉm cười trong khi thể hiện một biểu cảm ngơ ngác, trống rỗng thiếu đi lý trí." data-context-en="He saw his scouts sitting on the ground, smiling with empty eyes." data-context-vn="Ông thấy các trinh sát của mình ngồi trên đất, mỉm cười với ánh mắt vô hồn.">smiling with empty eyes</span>.
+    </p>
+ 
+    <p>
+        "We are not leaving," they whispered. "This life is perfect. Why should we ever go back to the <span class="vocab" data-word-en="struggle" data-word-vn="sự đấu tranh / vật lộn gian khổ" data-pos="danh từ / noun" data-def-en="Strenuous effort, difficulty, or a hard fight to survive." data-def-vn="Nỗ lực gắng gượng, sự khó khăn hoặc một cuộc chiến gian khổ để sinh tồn." data-context-en="Why should we ever go back to the struggle?">struggle</span>?"
+    </p>
+ 
+    <p>
+        Ulysses <span class="vocab" data-word-en="realized" data-word-vn="nhận ra" data-pos="động từ / verb (past tense)" data-def-en="Became fully aware of a fact or truth as a reality." data-def-vn="Trở nên nhận thức đầy đủ về một sự thật hoặc chân lý trong thực tế." data-context-en="Ulysses realized that the lotus was not just food...">realized</span> that the lotus was not just food; it was a <span class="vocab" data-word-en="trap" data-word-vn="một cái bẫy / cạm bẫy" data-pos="danh từ / noun" data-def-en="A trick or scheme intended to catch or deceive individuals." data-def-vn="Một mưu mẹo hoặc kế hoạch nhằm gài bẫy hoặc lừa gạt các cá nhân." data-context-en="It was a trap. It was a beautiful way...">trap</span>. It was a beautiful way to <span class="vocab" data-word-en="abandon their duty" data-word-vn="từ bỏ nghĩa vụ của họ" data-pos="cụm động từ / verb phrase" data-def-en="Cease supporting or fulfilling one's proper responsibilities." data-def-vn="Ngừng hỗ trợ hoặc hoàn thành các trách nhiệm thích đáng của một người." data-context-en="It was a beautiful way to abandon their duty." data-context-vn="Đó là một cách thức mỹ miều để rũ bỏ đi nghĩa vụ của bản thân.">abandon their duty</span>. He had to <span class="vocab" data-word-en="act fast" data-word-vn="hành động nhanh chóng" data-pos="cụm động từ / verb phrase" data-def-en="Take immediate, swift action without hesitation." data-def-vn="Thực hiện hành động ngay lập tức, nhanh chóng mà không hề do dự." data-context-en="He had to act fast.">act fast</span>. He <span class="vocab" data-word-en="dragged them back" data-word-vn="kéo lê họ trở lại" data-pos="cụm động từ / verb phrase" data-def-en="Pulled individuals along forcefully to a previous location." data-def-vn="Dùng lực mạnh kéo các cá nhân đi theo để quay lại vị trí cũ." data-context-en="He grabbed the men, dragged them back to the ship...">dragged them back</span> to the ship, and <span class="vocab" data-word-en="tied them to the benches" data-word-vn="trói họ chặt vào những chiếc ghế băng" data-pos="cụm động từ / verb phrase" data-def-en="Bound individuals firmly to rowers' seating structures with ropes." data-def-vn="Trói chặt các cá nhân vào cấu trúc ghế ngồi của người chèo thuyền bằng dây thừng." data-context-en="And tied them to the benches." data-context-vn="Và trói họ cố định vào các hàng ghế băng trên tàu.">tied them to the benches</span>.
+    </p>
+ 
+    <p>
+        "Do not look back!" he <span class="vocab" data-word-en="commanded the rest of the crew" data-word-vn="ra lệnh cho phần còn lại của thủy thủ đoàn" data-pos="cụm động từ / verb phrase" data-def-en="Ordered the remaining team members forcefully." data-def-vn="Ra lệnh một cách đầy uy quyền cho các thành viên còn lại trong đội ngũ." data-context-en='He commanded the rest of the crew.' data-context-vn='Ông đanh thép ra lệnh cho toàn bộ thủy thủ đoàn còn lại.'>commanded the rest of the crew</span>. "If we stay, we will <span class="vocab" data-word-en="lose ourselves forever" data-word-vn="đánh mất chính mình mãi mãi" data-pos="cụm động từ / verb phrase" data-def-en="Forfeit our identity, purpose, and future permanently." data-def-vn="Đánh mất vĩnh viễn danh tính, mục đích sống và tương lai của chúng ta." data-context-en='"We will lose ourselves forever."'>lose ourselves forever</span>."
+    </p>
+ 
+    <p>
+        As the ships sailed away, the scouts began to cry. They missed the peace of the island, but Ulysses knew the truth: the <span class="vocab" data-word-en="hardest path" data-word-vn="con đường gian nan nhất" data-pos="cụm danh từ / noun phrase" data-def-en="The most difficult, challenging course of action or trajectory." data-def-vn="Lộ trình hành động hoặc quỹ đạo khó khăn, đầy thử thách nhất." data-context-en="The hardest path is often the one that leads us home." data-context-vn="Con đường chông gai nhất thường lại chính là con đường đưa ta về nhà.">hardest path</span> is often the one that leads us home.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">legendary warrior</div>
+        <div class="memory-word">king known for</div>
+        <div class="memory-word">bravery</div>
+        <div class="memory-word">sharp mind</div>
+        <div class="memory-word">duty had called him away</div>
+        <div class="memory-word">beloved home</div>
+        <div class="memory-word">been forced to</div>
+        <div class="memory-word">leave behind</div>
+        <div class="memory-word">beautiful wife</div>
+        <div class="memory-word">young son</div>
+        <div class="memory-word">fight for</div>
+        <div class="memory-word">distant, foreign war</div>
+        <div class="memory-word">finally over</div>
+        <div class="memory-word">exhausted</div>
+        <div class="memory-word">wanted nothing more than</div>
+        <div class="memory-word">return to</div>
+        <div class="memory-word">comfortable beds</div>
+        <div class="memory-word">After days of sailing</div>
+        <div class="memory-word">rough seas</div>
+        <div class="memory-word">saw an island</div>
+        <div class="memory-word">in the distance</div>
+        <div class="memory-word">needed food</div>
+        <div class="memory-word">fresh water</div>
+        <div class="memory-word">steered their ships toward</div>
+        <div class="memory-word">shore</div>
+        <div class="memory-word">landed</div>
+        <div class="memory-word">sent three of his men</div>
+        <div class="memory-word">explore the island</div>
+        <div class="memory-word">filled with</div>
+        <div class="memory-word">strange, glowing flowers</div>
+        <div class="memory-word">scouts</div>
+        <div class="memory-word">met the local people</div>
+        <div class="memory-word">kind, gentle, and peaceful</div>
+        <div class="memory-word">offered</div>
+        <div class="memory-word">mysterious fruit</div>
+        <div class="memory-word">sweet and refreshing</div>
+        <div class="memory-word">took a bite</div>
+        <div class="memory-word">Immediately</div>
+        <div class="memory-word">sense of total tranquility</div>
+        <div class="memory-word">worries</div>
+        <div class="memory-word">long journey home</div>
+        <div class="memory-word">vanished</div>
+        <div class="memory-word">sit in the sun</div>
+        <div class="memory-word">completely oblivious to</div>
+        <div class="memory-word">responsibilities</div>
+        <div class="memory-word">forgotten their mission entirely</div>
+        <div class="memory-word">waited for hours</div>
+        <div class="memory-word">Concerned</div>
+        <div class="memory-word">reached the camp</div>
+        <div class="memory-word">smiling with empty eyes</div>
+        <div class="memory-word">struggle</div>
+        <div class="memory-word">realized</div>
+        <div class="memory-word">trap</div>
+        <div class="memory-word">abandon their duty</div>
+        <div class="memory-word">act fast</div>
+        <div class="memory-word">dragged them back</div>
+        <div class="memory-word">tied them to the benches</div>
+        <div class="memory-word">commanded the rest of the crew</div>
+        <div class="memory-word">lose ourselves forever</div>
+        <div class="memory-word">hardest path</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
