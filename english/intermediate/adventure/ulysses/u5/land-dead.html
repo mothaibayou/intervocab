@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Episode 5: The Land of the Dead</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Episode 5: The Land of the Dead</h1>
+    <h2 class="subtitle">Odyssey Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 5</div>
+        <audio id="audio-player" src="land-dead.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        <span class="vocab" data-word-en="Following Circe’s parting instructions" data-word-vn="Theo những lời chỉ dẫn chia tay của Circe" data-pos="cụm phân từ / participle phrase" data-def-en="Acting in accordance with the final guidance or directions given upon departure." data-def-vn="Hành động theo sự hướng dẫn hoặc chỉ dẫn cuối cùng được đưa ra khi khởi hành." data-context-en="Following Circe’s parting instructions, the ships sailed...">Following Circe’s parting instructions</span>, the ships <span class="vocab" data-word-en="sailed to the absolute edge" data-word-vn="giương buồm đến tận rìa biên giới" data-pos="cụm động từ / verb phrase" data-def-en="Navigated a water vessel to the furthest possible geographical boundary." data-def-vn="Điều khiển tàu thủy đến ranh giới địa lý xa nhất có thể." data-context-en="...the ships sailed to the absolute edge of the living world...">sailed to the absolute edge</span> of the <span class="vocab" data-word-en="living world" data-word-vn="thế giới của những người đang sống" data-pos="cụm danh từ / noun phrase" data-def-en="The biological realm inhabited by mortal, breathing human beings." data-def-vn="Vùng đất sinh học nơi sinh sống của những con người phàm trần, còn đang thở." data-context-en="...the absolute edge of the living world...">living world</span>, where <span class="vocab" data-word-en="perpetual mists" data-word-vn="những làn sương mù vĩnh cửu" data-pos="cụm danh từ / noun phrase" data-def-en="Continuous, never-ending thick vapors that limit visibility." data-def-vn="Những làn hơi nước dày đặc, liên tục và không bao giờ kết thúc làm hạn chế tầm nhìn." data-context-en="...where perpetual mists and dark clouds blocked out the sun...">perpetual mists</span> and dark clouds <span class="vocab" data-word-en="blocked out the sun forever" data-word-vn="che khuất ánh mặt trời mãi mãi" data-pos="mệnh đề / clause" data-def-en="Obstructed or completely hidden solar light for eternity." data-def-vn="Cản trở hoặc che giấu hoàn toàn ánh sáng mặt trời đến vĩnh hằng." data-context-en="...and dark clouds blocked out the sun forever.">blocked out the sun forever</span>. Ulysses <span class="vocab" data-word-en="stepped onto the bleak, frozen shore" data-word-vn="bước lên bờ biển ảm đạm, đóng băng" data-pos="cụm động từ / verb phrase" data-def-en="Placed his feet upon a dismal, cold, and icy coastal landscape." data-def-vn="Đặt chân lên một cảnh quan ven biển ảm đạm, lạnh giá và đầy băng giá." data-context-en="Ulysses stepped onto the bleak, frozen shore of the Underworld...">stepped onto the bleak, frozen shore</span> of the <span class="vocab" data-word-en="Underworld" data-word-vn="Cõi Âm / Âm Phủ" data-pos="danh từ riêng / proper noun" data-def-en="The mythical subterranean kingdom of the dead ruled by Hades." data-def-vn="Vương quốc dưới lòng đất thần thoại của những người chết do Hades cai trị." data-context-en="...the bleak, frozen shore of the Underworld...">Underworld</span>, <span class="vocab" data-word-en="tasked with a terrifying mission" data-word-vn="được giao một nhiệm vụ kinh hoàng" data-pos="cụm phân từ / participle phrase" data-def-en="Assigned a high-stakes duty that inspires extreme fright or dread." data-def-vn="Được giao một nhiệm vụ có rủi ro cao gây ra sự hoảng sợ hoặc khiếp sợ tột độ." data-context-en="...tasked with a terrifying mission: he had to consult...">tasked with a terrifying mission</span>: he had to <span class="vocab" data-word-en="consult the blind prophet Tiresias" data-word-vn="tham vấn nhà tiên tri mù Tiresias" data-pos="cụm động từ / verb phrase" data-def-en="Seek supernatural advice or knowledge from the sightless seer Tiresias." data-def-vn="Tìm kiếm lời khuyên hoặc kiến thức siêu nhiên từ nhà tiên tri không có thị lực Tiresias." data-context-en="...he had to consult the blind prophet Tiresias to discover a way...">consult the blind prophet Tiresias</span> to <span class="vocab" data-word-en="discover a way back to" data-word-vn="tìm ra con đường quay trở về" data-pos="cụm động từ / verb phrase" data-def-en="Uncover a reliable path or method to return to a designated home." data-def-vn="Khám phá ra một con đường hoặc phương pháp đáng tin cậy để trở về ngôi nhà đã định." data-context-en="...to discover a way back to Ithaca.">discover a way back to</span> Ithaca.
+    </p>
+
+    <p>
+        To <span class="vocab" data-word-en="summon the spirits of the deceased" data-word-vn="triệu hồi linh hồn của những người đã khuất" data-pos="cụm động từ / verb phrase (infinitive)" data-def-en="Call forth or invoke the supernatural ghosts of dead individuals." data-def-vn="Kêu gọi hoặc cầu xin những linh hồn siêu nhiên của những người đã chết xuất hiện." data-context-en="To summon the spirits of the deceased, Ulysses dug a trench...">summon the spirits of the deceased</span>, Ulysses <span class="vocab" data-word-en="dug a trench" data-word-vn="đào một chiếc rãnh / hào sâu" data-pos="cụm động từ / verb phrase" data-def-en="Excavated a long, narrow ditch or channel in the ground." data-def-vn="Đào một cái mương hoặc kênh dài và hẹp dưới mặt đất." data-context-en="...Ulysses dug a trench and poured solemn libations...">dug a trench</span> and <span class="vocab" data-word-en="poured solemn libations" data-word-vn="rót những lễ tế rượu trang nghiêm" data-pos="cụm động từ / verb phrase" data-def-en="Spilled ceremonial liquid offerings as a tribute to gods or spirits." data-def-vn="Đổ các chất lỏng cúng tế theo nghi lễ để tỏ lòng kính trọng đối với các vị thần hoặc linh hồn." data-context-en="...and poured solemn libations of milk, honey, and wine...">poured solemn libations</span> of milk, honey, and wine <span class="vocab" data-word-en="into the earth" data-word-vn="vào lòng đất" data-pos="cụm giới từ / prepositional phrase" data-def-en="Down directly into the soil or subterranean terrain." data-def-vn="Xuống trực tiếp vào đất hoặc địa hình dưới lòng đất." data-context-en="...poured solemn libations of milk, honey, and wine into the earth.">into the earth</span>. <span class="vocab" data-word-en="The moment the offerings pooled" data-word-vn="Ngay khoảnh khắc các lễ vật tụ lại thành vũng" data-pos="mệnh đề trạng ngữ / adverbial clause" data-def-en="The precise instant the liquid items gathered together in the pit." data-def-vn="Thời điểm chính xác các chất lỏng cúng tế tập hợp lại với nhau trong hố." data-context-en="The moment the offerings pooled, a swarm of pale...">The moment the offerings pooled</span>, a <span class="vocab" data-word-en="swarm of pale, weeping ghosts" data-word-vn="một bầy ma quỷ nhợt nhạt, khóc lóc" data-pos="cụm danh từ / noun phrase" data-def-en="A large, dense crowd of colorless, mourning apparitions." data-def-vn="Một đám đông lớn, dày đặc các linh hồn không màu sắc, đang than khóc." data-context-en="...a swarm of pale, weeping ghosts surged from the shadows.">swarm of pale, weeping ghosts</span> <span class="vocab" data-word-en="surged from the shadows" data-word-vn="ùa ra từ những bóng tối" data-pos="mệnh đề / clause" data-def-en="Rushed forward violently or poured out from dark, obscured areas." data-def-vn="Lao mạnh về phía trước hoặc tràn ra từ những vùng tối tăm, khuất lấp." data-context-en="...a swarm of pale, weeping ghosts surged from the shadows.">surged from the shadows</span>. Their <span class="vocab" data-word-en="eerie, breathless cries" data-word-vn="tiếng khóc rợn người, hụt hơi" data-pos="cụm danh từ / noun phrase" data-def-en="Strange, frightening vocalizations uttered without standard inhalation." data-def-vn="Những âm thanh rùng rợn, đáng sợ được phát ra mà không có sự hít thở bình thường." data-context-en="Their eerie, breathless cries filled the air...">Their eerie, breathless cries</span> <span class="vocab" data-word-en="filled the air with" data-word-vn="làm tràn ngập không khí một sự..." data-pos="cụm động từ / verb phrase" data-def-en="Occupied the entire atmospheric environment completely with a feeling." data-def-vn="Chiếm trọn hoàn toàn môi trường bầu không khí bằng một cảm giác." data-context-en="...filled the air with a chilling dread...">filled the air with</span> a <span class="vocab" data-word-en="chilling dread" data-word-vn="sự khiếp sợ lạnh sống lưng" data-pos="cụm danh từ / noun phrase" data-def-en="An intense, freezing feeling of profound terror or anxiety." data-def-vn="Một cảm giác mãnh liệt, lạnh giá của sự kinh hoàng hoặc lo lắng sâu sắc." data-context-en="...filled the air with a chilling dread that made his blood run cold.">chilling dread</span> that <span class="vocab" data-word-en="made his blood run cold" data-word-vn="khiến máu ông đông cứng vì sợ hãi" data-pos="mệnh đề / clause (idiom)" data-def-en="Caused him to experience a sudden surge of paralyzing fear." data-def-vn="Khiến ông phải trải qua một làn sóng sợ hãi đột ngột đến tê liệt." data-context-en="...that made his blood run cold.">made his blood run cold</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Among the shadowy figures" data-word-vn="Giữa những bóng người mờ ảo đó" data-pos="cụm giới từ / prepositional phrase" data-def-en="Positioned inside or surrounded by the dark, indistinct outlines." data-def-vn="Vị trí ở bên trong hoặc được bao quanh bởi các phác thảo mờ tối, không rõ ràng." data-context-en="Among the shadowy figures, Ulysses was heartbroken to recognize...">Among the shadowy figures</span>, Ulysses <span class="vocab" data-word-en="was heartbroken to recognize" data-word-vn="đau lòng tột cùng khi nhận ra" data-pos="cụm động từ / verb phrase" data-def-en="Felt deep psychological sorrow upon identifying someone." data-def-vn="Cảm thấy nỗi đau buồn sâu sắc trong lòng khi xác định được một ai đó." data-context-en="...Ulysses was heartbroken to recognize his own mother...">was heartbroken to recognize</span> <span class="vocab" data-word-en="his own mother" data-word-vn="mẹ ruột của chính mình" data-pos="cụm danh từ / noun phrase" data-def-en="His immediate biological female parent." data-def-vn="Người mẹ ruột trực tiếp của ông." data-context-en="...his own mother, who had died of grief...">his own mother</span>, who <span class="vocab" data-word-en="had died of grief" data-word-vn="đã chết vì quá đau buồn" data-pos="mệnh đề / clause" data-def-en="Passed away entirely due to overwhelming emotional sorrow or heartache." data-def-vn="Qua đời hoàn toàn do nỗi đau buồn hoặc đau lòng tột cùng về mặt cảm xúc." data-context-en="...who had died of grief waiting for his return.">had died of grief</span> <span class="vocab" data-word-en="waiting for his return" data-word-vn="trong lúc chờ đợi sự trở về của ông" data-pos="cụm phân từ / participle phrase" data-def-en="Anticipating and longing for his homecoming before passing away." data-def-vn="Chờ đợi và khao khát ngày ông trở về nhà trước khi nhắm mắt xuôi tay." data-context-en="...waiting for his return.">waiting for his return</span>. Though <span class="vocab" data-word-en="desperate to embrace her" data-word-vn="vô cùng khao khát được ôm lấy bà" data-pos="cụm tính từ / adjective phrase" data-def-en="Feeling an intense, frantic longing to hold her closely in his arms." data-def-vn="Cảm thấy một sự khao khát mãnh liệt, điên cuồng được ôm bà chặt vào lòng." data-context-en="Though desperate to embrace her, he had to hold...">Though desperate to embrace her</span>, he had to <span class="vocab" data-word-en="hold her spirit back" data-word-vn="giữ linh hồn của bà lại không cho tiến tới" data-pos="cụm động từ / phrasal verb" data-def-en="Restrain or prevent her ghost from approaching the liquid pit." data-def-vn="Kiềm chế hoặc ngăn cản bóng ma của bà tiếp cận hố chất lỏng." data-context-en="...he had to hold her spirit back with his drawn sword...">hold her spirit back</span> <span class="vocab" data-word-en="with his drawn sword" data-word-vn="bằng thanh gươm đã tuốt vỏ" data-pos="cụm giới từ / prepositional phrase" data-def-en="Utilizing his bare, unsheathed blade weapon as a barrier." data-def-vn="Sử dụng vũ khí lưỡi kiếm trần, chưa đậy bao của mình để làm rào cản." data-context-en="...with his drawn sword until the prophet arrived.">with his drawn sword</span> <span class="vocab" data-word-en="until the prophet arrived" data-word-vn="cho đến khi vị tiên tri xuất hiện" data-pos="mệnh đề trạng ngữ / adverbial clause" data-def-en="Up to the exact time the designated holy seer reached the spot." data-def-vn="Cho đến thời điểm chính xác nhà tiên tri thánh được chỉ định đến địa điểm." data-context-en="...until the prophet arrived.">until the prophet arrived</span>. When Tiresias <span class="vocab" data-word-en="finally stepped forward" data-word-vn="cuối cùng cũng bước tới phía trước" data-pos="mệnh đề / clause" data-def-en="At long last walked out into plain view or proximity." data-def-vn="Sau một thời gian dài cuối cùng cũng bước ra ngoài tầm nhìn rõ ràng hoặc khoảng cách gần." data-context-en="When Tiresias finally stepped forward, he drank from...">finally stepped forward</span>, he <span class="vocab" data-word-en="drank from the offering" data-word-vn="uống một ngụm từ lễ vật tế" data-pos="cụm động từ / verb phrase" data-def-en="Consumed a portion of the ritual liquid poured into the ditch." data-def-vn="Tiêu thụ một phần chất lỏng nghi lễ được đổ vào rãnh." data-context-en="...he drank from the offering and spoke in a hollow...">drank from the offering</span> and <span class="vocab" data-word-en="spoke in a hollow, echoing voice" data-word-vn="nói bằng một giọng trống rỗng, vang vọng" data-pos="cụm động từ / verb phrase" data-def-en="Uttered words with an empty, reverberating tonal quality." data-def-vn="Thốt ra những lời nói có phẩm chất âm thanh trống rỗng, dội lại." data-context-en="...and spoke in a hollow, echoing voice.">spoke in a hollow, echoing voice</span>.
+    </p>
+
+    <p>
+        The prophet <span class="vocab" data-word-en="delivered a grim warning" data-word-vn="đưa ra một lời cảnh báo nghiệt ngã / nghiêm trọng" data-pos="cụm động từ / verb phrase" data-def-en="Proclaimed a serious, dark, and highly threatening prediction." data-def-vn="Tuyên bố một dự đoán nghiêm trọng, đen tối và mang tính đe dọa cao." data-context-en="The prophet delivered a grim warning.">delivered a grim warning</span>. He <span class="vocab" data-word-en="foretold the relentless wrath" data-word-vn="tiên tri về cơn thịnh nộ không ngừng nghỉ" data-pos="cụm động từ / verb phrase" data-def-en="Predicted an unyielding, unforgiving anger or vengeance." data-def-vn="Dự đoán một sự tức giận hoặc báo thù không lay chuyển, không tha thứ." data-context-en="He foretold the relentless wrath of Poseidon...">foretold the relentless wrath</span> of Poseidon and the <span class="vocab" data-word-en="deadly trials still to come" data-word-vn="những thử thách chết chóc vẫn còn phía trước" data-pos="cụm danh từ / noun phrase" data-def-en="Fatal hardships and challenges destined to happen in the future." data-def-vn="Những gian nan, thử thách nguy hiểm đến tính mạng định sẵn sẽ xảy ra trong tương lai." data-context-en="...and the deadly trials still to come—">deadly trials still to come</span>—the <span class="vocab" data-word-en="seductive call of the Sirens" data-word-vn="tiếng gọi quyến rũ chết người của các Siren" data-pos="cụm danh từ / noun phrase" data-def-en="The highly alluring, tempting vocal tunes emitted by the bird-women." data-def-vn="Các giai điệu lôi cuốn, đầy cám dỗ phát ra từ những người phụ nữ chim." data-context-en="...the seductive call of the Sirens, the snapping jaws...">the seductive call of the Sirens</span>, the <span class="vocab" data-word-en="snapping jaws of Scylla" data-word-vn="hàm răng đớp mồi của quái vật Scylla" data-pos="cụm danh từ / noun phrase" data-def-en="The biting, crushing mouth structures of the multi-headed sea beast." data-def-vn="Cấu trúc miệng cắn nát, nghiền nát của con quái vật biển nhiều đầu." data-context-en="...the snapping jaws of Scylla, and the sacred cattle...">the snapping jaws of Scylla</span>, and the <span class="vocab" data-word-en="sacred cattle of the Sun" data-word-vn="đàn bò thiêng liêng của thần Mặt Trời" data-pos="cụm danh từ / noun phrase" data-def-en="The divine, untouchable cows belonging to the solar god Helios." data-def-vn="Những con bò thần thánh, không được phép chạm tới thuộc về thần mặt trời Helios." data-context-en="...and the sacred cattle of the Sun.">sacred cattle of the Sun</span>. Furthermore, he <span class="vocab" data-word-en="revealed that a chaotic mess" data-word-vn="tiết lộ rằng một đống hỗn độn" data-pos="mệnh đề / clause" data-def-en="Disclosed that a completely disorganized, ruinous situation existed." data-def-vn="Tiết lộ rằng một tình huống hoàn toàn vô tổ chức, hủy hoại đang tồn tại." data-context-en="Furthermore, he revealed that a chaotic mess awaited Ulysses...">revealed that a chaotic mess</span> <span class="vocab" data-word-en="awaited Ulysses at home" data-word-vn="đang chờ đợi Ulysses ở quê nhà" data-pos="cụm động từ / verb phrase" data-def-en="Was lying in store or remaining ready for Ulysses's return." data-def-vn="Đang nằm sẵn hoặc chờ đợi sự trở lại của Ulysses." data-context-en="...awaited Ulysses at home, where arrogant suitors...">awaited Ulysses at home</span>, where <span class="vocab" data-word-en="arrogant suitors" data-word-vn="những kẻ cầu hôn kiêu ngạo / hống hách" data-pos="cụm danh từ / noun phrase" data-def-en="Haughty, overbearing men demanding marriage with Penelope." data-def-vn="Những người đàn ông kiêu ngạo, hống hách đòi kết hôn với Penelope." data-context-en="...where arrogant suitors were devouring his wealth...">arrogant suitors</span> were <span class="vocab" data-word-en="devouring his wealth" data-word-vn="đang ngốn sạch / tiêu tán tài sản của ông" data-pos="cụm động từ / verb phrase (continuous)" data-def-en="Gorging on, wasting, or aggressively consuming his household riches." data-def-vn="Ăn uống vô độ, lãng phí hoặc tước đoạt một cách hung hãn của cải gia đình ông." data-context-en="...were devouring his wealth and pursuing his wife.">devouring his wealth</span> and <span class="vocab" data-word-en="pursuing his wife" data-word-vn="và đang đeo đuổi / quấy rối vợ ông" data-pos="cụm động từ / verb phrase (continuous)" data-def-en="Chasing after or trying to win the hand of his married spouse." data-def-vn="Đuổi theo hoặc cố gắng giành lấy bàn tay của người vợ đã kết hôn của ông." data-context-en="...and pursuing his wife.">pursuing his wife</span>.
+    </p>
+
+    <p>
+        Ulysses <span class="vocab" data-word-en="marched back to his ship" data-word-vn="bước nhanh quay trở lại con tàu của mình" data-pos="cụm động từ / verb phrase" data-def-en="Walked resolutely and with heavy strides back to his naval boat." data-def-vn="Bước đi kiên quyết và với những bước chân nặng nề trở lại thuyền hải quân của mình." data-context-en="Ulysses marched back to his ship with a heavy heart...">marched back to his ship</span> <span class="vocab" data-word-en="with a heavy heart" data-word-vn="với một tâm trạng nặng trĩu u sầu" data-pos="cụm giới từ / prepositional phrase (idiom)" data-def-en="Experiencing a profound emotional state of sadness or burden." data-def-vn="Trải qua một trạng thái cảm xúc đau buồn hoặc gánh nặng sâu sắc." data-context-en="...with a heavy heart, leaving the realm of shadows behind.">with a heavy heart</span>, <span class="vocab" data-word-en="leaving the realm of shadows behind" data-word-vn="bỏ lại cõi bóng đêm của những linh hồn ở phía sau" data-pos="cụm phân từ / participle phrase" data-def-en="Departing from the underground kingdom of ghosts completely." data-def-vn="Rời khỏi vương quốc dưới lòng đất của những bóng ma một cách hoàn toàn." data-context-en="...leaving the realm of shadows behind.">leaving the realm of shadows behind</span>. He <span class="vocab" data-word-en="realized that the path home" data-word-vn="nhận ra rằng con đường trở về nhà" data-pos="mệnh đề / clause" data-def-en="Comprehended that the geographic journey back to his land." data-def-vn="Hiểu được rằng hành trình địa lý quay trở lại vùng đất của mình." data-context-en="He realized that the path home would demand more than...">realized that the path home</span> would <span class="vocab" data-word-en="demand more than" data-word-vn="đòi hỏi nhiều hơn là chỉ..." data-pos="cụm động từ / verb phrase" data-def-en="Require an amount or quality exceeding a specific limitation." data-def-vn="Yêu cầu một số lượng hoặc chất lượng vượt quá một giới hạn cụ thể." data-context-en="...would demand more than just physical strength...">demand more than</span> just <span class="vocab" data-word-en="physical strength" data-word-vn="sức mạnh cơ bắp thể chất" data-pos="cụm danh từ / noun phrase" data-def-en="Bodily power, muscular force, or athletic stamina." data-def-vn="Sức mạnh cơ thể, lực cơ bắp hoặc sức bền thể thao." data-context-en="...just physical strength or clever tricks.">physical strength</span> or <span class="vocab" data-word-en="clever tricks" data-word-vn="những mưu mẹo khôn ngoan" data-pos="cụm danh từ / noun phrase" data-def-en="Intelligent ruses, deceptions, or witty strategies." data-def-vn="Những mưu kế thông minh, sự lừa dối hoặc chiến lược dí dỏ." data-context-en="...or clever tricks.">clever tricks</span>. <span class="vocab" data-word-en="To see his homeland again" data-word-vn="Để được nhìn thấy lại quê hương của mình một lần nữa" data-pos="cụm động từ / verb phrase (infinitive)" data-def-en="In order to lay eyes on his native country or place of birth once more." data-def-vn="Để được tận mắt nhìn thấy quốc gia bản xứ hoặc nơi sinh của mình một lần nữa." data-context-en="To see his homeland again, he would have to conquer...">To see his homeland again</span>, he would have to <span class="vocab" data-word-en="conquer his own despair" data-word-vn="chinh phục sự tuyệt vọng của chính bản thân mình" data-pos="cụm động từ / verb phrase" data-def-en="Overcome or defeat his personal feelings of complete hopelessness." data-def-vn="Vượt qua hoặc đánh bại cảm giác cá nhân về sự hoàn toàn vô vọng." data-context-en="...he would have to conquer his own despair...">conquer his own despair</span> and <span class="vocab" data-word-en="wage a brutal battle" data-word-vn="khơi mào một trận chiến tàn khốc" data-pos="cụm động từ / verb phrase" data-def-en="Conduct or engage in an exceptionally harsh and violent conflict." data-def-vn="Tiến hành hoặc tham gia vào một cuộc xung đột đặc biệt gay gắt và bạo lực." data-context-en="...and wage a brutal battle against fate itself.">wage a brutal battle</span> <span class="vocab" data-word-en="against fate itself" data-word-vn="chống lại chính số phận định đoạt" data-pos="cụm giới từ / prepositional phrase" data-def-en="In direct opposition to the pre-determined supernatural destiny." data-def-vn="Đối lập trực tiếp với số phận siêu nhiên đã được định sẵn." data-context-en="...against fate itself.">against fate itself</span>.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">Following Circe’s parting instructions</div>
+        <div class="memory-word">sailed to the absolute edge</div>
+        <div class="memory-word">living world</div>
+        <div class="memory-word">perpetual mists</div>
+        <div class="memory-word">blocked out the sun forever</div>
+        <div class="memory-word">stepped onto the bleak, frozen shore</div>
+        <div class="memory-word">Underworld</div>
+        <div class="memory-word">tasked with a terrifying mission</div>
+        <div class="memory-word">consult the blind prophet Tiresias</div>
+        <div class="memory-word">discover a way back to</div>
+        <div class="memory-word">summon the spirits of the deceased</div>
+        <div class="memory-word">dug a trench</div>
+        <div class="memory-word">poured solemn libations</div>
+        <div class="memory-word">into the earth</div>
+        <div class="memory-word">The moment the offerings pooled</div>
+        <div class="memory-word">swarm of pale, weeping ghosts</div>
+        <div class="memory-word">surged from the shadows</div>
+        <div class="memory-word">Their eerie, breathless cries</div>
+        <div class="memory-word">filled the air with</div>
+        <div class="memory-word">chilling dread</div>
+        <div class="memory-word">made his blood run cold</div>
+        <div class="memory-word">Among the shadowy figures</div>
+        <div class="memory-word">was heartbroken to recognize</div>
+        <div class="memory-word">his own mother</div>
+        <div class="memory-word">had died of grief</div>
+        <div class="memory-word">waiting for his return</div>
+        <div class="memory-word">desperate to embrace her</div>
+        <div class="memory-word">hold her spirit back</div>
+        <div class="memory-word">with his drawn sword</div>
+        <div class="memory-word">until the prophet arrived</div>
+        <div class="memory-word">finally stepped forward</div>
+        <div class="memory-word">drank from the offering</div>
+        <div class="memory-word">spoke in a hollow, echoing voice</div>
+        <div class="memory-word">delivered a grim warning</div>
+        <div class="memory-word">foretold the relentless wrath</div>
+        <div class="memory-word">deadly trials still to come</div>
+        <div class="memory-word">the seductive call of the Sirens</div>
+        <div class="memory-word">the snapping jaws of Scylla</div>
+        <div class="memory-word">the sacred cattle of the Sun</div>
+        <div class="memory-word">revealed that a chaotic mess</div>
+        <div class="memory-word">awaited Ulysses at home</div>
+        <div class="memory-word">arrogant suitors</div>
+        <div class="memory-word">devouring his wealth</div>
+        <div class="memory-word">pursuing his wife</div>
+        <div class="memory-word">marched back to his ship</div>
+        <div class="memory-word">with a heavy heart</div>
+        <div class="memory-word">leaving the realm of shadows behind</div>
+        <div class="memory-word">realized that the path home</div>
+        <div class="memory-word">demand more than</div>
+        <div class="memory-word">physical strength</div>
+        <div class="memory-word">clever tricks</div>
+        <div class="memory-word">To see his homeland again</div>
+        <div class="memory-word">conquer his own despair</div>
+        <div class="memory-word">wage a brutal battle</div>
+        <div class="memory-word">against fate itself</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordEn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
