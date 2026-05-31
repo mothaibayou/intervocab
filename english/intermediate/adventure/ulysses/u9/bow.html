@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Episode 9: The Bow Contest</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Episode 9: The Bow Contest</h1>
+    <h2 class="subtitle">Odyssey Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 9</div>
+        <audio id="audio-player" src="bow.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        The time had come. Penelope <span class="vocab" data-word-en="announced that" data-word-vn="đã tuyên bố rằng" data-pos="cụm động từ / verb phrase" data-def-en="Formally declared or made public a specific decision." data-def-vn="Chính thức tuyên bố hoặc công khai một quyết định cụ thể." data-context-en="Penelope announced that she would marry...">announced that</span> she would marry any man who could <span class="vocab" data-word-en="perform a feat" data-word-vn="thực hiện một kỳ tích" data-pos="cụm động từ / verb phrase" data-def-en="Execute a challenging, skillful, or heroic task." data-def-vn="Thực hiện một nhiệm vụ đầy thách thức, đòi hỏi kỹ năng hoặc mang tính anh hùng." data-context-en="...who could perform a feat only Ulysses...">perform a feat</span> only Ulysses had ever <span class="vocab" data-word-en="accomplished" data-word-vn="hoàn thành / đạt được" data-pos="động từ / verb" data-def-en="Successfully achieved or completed a difficult goal." data-def-vn="Đã thành công đạt được hoặc hoàn thành một mục tiêu khó khăn." data-context-en="...only Ulysses had ever accomplished: stringing his massive, heavy bow and shooting an arrow through the eyes of twelve axe-heads lined in a row.">accomplished</span>: <span class="vocab" data-word-en="stringing his massive, heavy bow" data-word-vn="giương chiếc cung khổng lồ nặng nề của mình" data-pos="cụm động từ / verb phrase" data-def-en="Attaching the bowstring to the ends of the large, powerful weapon." data-def-vn="Gắn dây cung vào hai đầu của loại vũ khí lớn và uy lực." data-context-en="...stringing his massive, heavy bow and shooting...">stringing his massive, heavy bow</span> and <span class="vocab" data-word-en="shooting an arrow through" data-word-vn="bắn một mũi tên xuyên qua" data-pos="cụm động từ / verb phrase" data-def-en="Projecting an arrow precisely through designated targets." data-def-vn="Phóng một mũi tên một cách chính xác xuyên qua các mục tiêu đã định." data-context-en="...and shooting an arrow through the eyes of twelve axe-heads...">shooting an arrow through</span> the <span class="vocab" data-word-en="eyes of twelve axe-heads" data-word-vn="lỗ xỏ cán của mười hai lưỡi rìu" data-pos="cụm danh từ / noun phrase" data-def-en="The small circular openings in the heads of axes." data-def-vn="Các lỗ tròn nhỏ trên phần đầu của các lưỡi rìu." data-context-en="...through the eyes of twelve axe-heads lined in a row.">eyes of twelve axe-heads</span> <span class="vocab" data-word-en="lined in a row" data-word-vn="được xếp thẳng hàng" data-pos="cụm phân từ / participle phrase" data-def-en="Arranged precisely one after another in a straight line." data-def-vn="Được sắp xếp chính xác nối tiếp nhau trên một đường thẳng." data-context-en="...lined in a row.">lined in a row</span>.
+    </p>
+
+    <p>
+        One by one, the <span class="vocab" data-word-en="suitors" data-word-vn="những kẻ cầu hôn" data-pos="danh từ / noun" data-def-en="The men competing for the hand of Penelope." data-def-vn="Những người đàn ông đang cạnh tranh để có được sự đồng ý kết hôn của Penelope." data-context-en="One by one, the suitors tried.">suitors</span> tried. They were strong, <span class="vocab" data-word-en="arrogant men" data-word-vn="những kẻ kiêu ngạo" data-pos="cụm danh từ / noun phrase" data-def-en="Individuals possessing an overbearing sense of pride or superiority." data-def-vn="Những cá nhân sở hữu sự tự hào hoặc cảm giác ưu việt quá mức." data-context-en="They were strong, arrogant men, but they lacked the technique.">arrogant men</span>, but they <span class="vocab" data-word-en="lacked the technique" data-word-vn="thiếu đi kỹ thuật cần thiết" data-pos="cụm động từ / verb phrase" data-def-en="Did not possess the necessary skill or refined method." data-def-vn="Không sở hữu kỹ năng cần thiết hoặc phương pháp tinh tế." data-context-en="...but they lacked the technique.">lacked the technique</span>. They couldn't even <span class="vocab" data-word-en="bend the wood" data-word-vn="uốn cong thân cung" data-pos="cụm động từ / verb phrase" data-def-en="Apply enough physical force to flex the bow." data-def-vn="Sử dụng đủ lực vật lý để làm cong chiếc cung." data-context-en="They couldn't even bend the wood.">bend the wood</span>. The palace filled with laughter as they failed, their faces turning red with <span class="vocab" data-word-en="shame" data-word-vn="sự xấu hổ nhục nhã" data-pos="danh từ / noun" data-def-en="A painful feeling of humiliation or distress caused by consciousness of wrong or foolish behavior." data-def-vn="Cảm giác nhục nhã hoặc đau khổ gây ra bởi sự nhận thức về hành vi sai trái hoặc ngu ngốc." data-context-en="...turning red with shame.">shame</span>. Then, the <span class="vocab" data-word-en="ragged, old beggar" data-word-vn="gã ăn xin già nua rách rưới" data-pos="cụm danh từ / noun phrase" data-def-en="The disguised Ulysses, appearing as an elderly person in torn clothes." data-def-vn="Ulysses trong lớp cải trang, xuất hiện như một người già trong trang phục rách rưới." data-context-en="Then, the ragged, old beggar stepped forward.">ragged, old beggar</span> stepped forward.
+    </p>
+
+    <p>
+        A <span class="vocab" data-word-en="murmur of mockery" data-word-vn="tiếng thì thầm chế nhạo" data-pos="cụm danh từ / noun phrase" data-def-en="A low, indistinct sound of derision and ridicule from the crowd." data-def-vn="Âm thanh thấp, không rõ ràng của sự chế giễu và cười nhạo từ đám đông." data-context-en="A murmur of mockery rippled through the hall...">murmur of mockery</span> rippled through the hall, but Ulysses ignored it. He walked to the bow, <span class="vocab" data-word-en="testing its weight" data-word-vn="thử sức nặng của cây cung" data-pos="cụm động từ / verb phrase" data-def-en="Checking the heaviness and balance of the weapon." data-def-vn="Kiểm tra độ nặng và sự cân bằng của vũ khí." data-context-en="He walked to the bow, testing its weight with a familiarity...">testing its weight</span> with a <span class="vocab" data-word-en="familiarity" data-word-vn="sự quen thuộc gần gũi" data-pos="danh từ / noun" data-def-en="Deep knowledge or intimacy resulting from long experience." data-def-vn="Sự hiểu biết sâu sắc hoặc sự gần gũi xuất phát từ kinh nghiệm lâu dài." data-context-en="...testing its weight with a familiarity that made the suitors freeze.">familiarity</span> that made the suitors <span class="vocab" data-word-en="freeze" data-word-vn="sững sờ bất động" data-pos="động từ / verb" data-def-en="Become motionless out of sudden shock or fear." data-def-vn="Trở nên bất động vì sự sốc hoặc sợ hãi đột ngột." data-context-en="...that made the suitors freeze.">freeze</span>. He wiped the dust from the wood, pulled the string with <span class="vocab" data-word-en="fluid, terrifying grace" data-word-vn="sự uyển chuyển đáng sợ" data-pos="cụm danh từ / noun phrase" data-def-en="Smooth, effortless movement that also carries an intimidating sense of power." data-def-vn="Sự chuyển động mượt mà, không tốn sức nhưng cũng mang theo cảm giác sức mạnh đe dọa." data-context-en="...pulled the string with fluid, terrifying grace, and let the arrow fly.">fluid, terrifying grace</span>, and let the arrow fly. It whistled through the air, <span class="vocab" data-word-en="piercing" data-word-vn="xuyên thủng" data-pos="phân từ / participle" data-def-en="Going through with sharp, penetrating force." data-def-vn="Đi xuyên qua bằng lực đâm xuyên sắc bén." data-context-en="...piercing every single axe-head with a clean, metallic thrum.">piercing</span> every single axe-head with a <span class="vocab" data-word-en="clean, metallic thrum" data-word-vn="tiếng rung đanh gọn của kim loại" data-pos="cụm danh từ / noun phrase" data-def-en="The clear, distinct vibration sound caused by the arrow hitting the metal." data-def-vn="Âm thanh rung động rõ ràng, riêng biệt tạo ra bởi mũi tên va chạm vào kim loại." data-context-en="...with a clean, metallic thrum.">clean, metallic thrum</span>.
+    </p>
+
+    <p>
+        In the sudden, <span class="vocab" data-word-en="suffocating silence" data-word-vn="sự im lặng nghẹt thở" data-pos="cụm danh từ / noun phrase" data-def-en="An intense, oppressive lack of sound that feels stifling to those present." data-def-vn="Sự thiếu vắng âm thanh mãnh liệt, áp bức khiến những người có mặt cảm thấy ngột ngạt." data-context-en="In the sudden, suffocating silence that followed...">suffocating silence</span> that followed, the beggar stood taller. He <span class="vocab" data-word-en="dropped his cloak" data-word-vn="trút bỏ tấm áo choàng" data-pos="cụm động từ / verb phrase" data-def-en="Allowed his outer garment to fall away, revealing his identity." data-def-vn="Để cho lớp áo khoác ngoài rơi xuống, để lộ ra danh tính thực sự." data-context-en="He dropped his cloak, and the light from the torches...">dropped his cloak</span>, and the light from the torches seemed to focus entirely on him. He wasn't a beggar anymore; he was a <span class="vocab" data-word-en="storm waiting to break" data-word-vn="cơn bão chực chờ bùng nổ" data-pos="cụm danh từ / noun phrase (metaphor)" data-def-en="A metaphor for someone about to unleash massive, destructive force." data-def-vn="Ẩn dụ cho một người sắp sửa giải phóng sức mạnh hủy diệt dữ dội." data-context-en="...he was a storm waiting to break.">storm waiting to break</span>. The suitors looked at his face and finally understood. Their <span class="vocab" data-word-en="dread was absolute" data-word-vn="nỗi kinh hoàng là tuyệt đối" data-pos="cụm danh từ + động từ / noun + verb" data-def-en="They were filled with complete, uncontrollable terror." data-def-vn="Họ bị lấp đầy bởi sự sợ hãi hoàn toàn, không thể kiểm soát." data-context-en="Their dread was absolute.">dread was absolute</span>. The king had returned, and there was nowhere left to run.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">announced that</div>
+        <div class="memory-word">perform a feat</div>
+        <div class="memory-word">accomplished</div>
+        <div class="memory-word">stringing his massive, heavy bow</div>
+        <div class="memory-word">shooting an arrow through</div>
+        <div class="memory-word">eyes of twelve axe-heads</div>
+        <div class="memory-word">lined in a row</div>
+        <div class="memory-word">suitors</div>
+        <div class="memory-word">arrogant men</div>
+        <div class="memory-word">lacked the technique</div>
+        <div class="memory-word">bend the wood</div>
+        <div class="memory-word">shame</div>
+        <div class="memory-word">ragged, old beggar</div>
+        <div class="memory-word">murmur of mockery</div>
+        <div class="memory-word">testing its weight</div>
+        <div class="memory-word">familiarity</div>
+        <div class="memory-word">freeze</div>
+        <div class="memory-word">fluid, terrifying grace</div>
+        <div class="memory-word">piercing</div>
+        <div class="memory-word">clean, metallic thrum</div>
+        <div class="memory-word">suffocating silence</div>
+        <div class="memory-word">dropped his cloak</div>
+        <div class="memory-word">storm waiting to break</div>
+        <div class="memory-word">dread was absolute</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordEn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
