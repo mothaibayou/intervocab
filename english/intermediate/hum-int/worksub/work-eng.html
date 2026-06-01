@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Work–Life Balance</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Work–Life Balance</h1>
+    <h2 class="subtitle">Lifestyle Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Audio</div>
+        <audio id="audio-player" src="audio.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        Minh is a <span class="vocab" data-word-en="software engineer" data-word-vn="kỹ sư phần mềm" data-pos="danh từ / noun" data-def-en="A professional who designs, develops, and maintains computer software programs." data-def-vn="Người chuyên thiết kế, phát triển và bảo trì các chương trình phần mềm máy tính." data-context-en="Minh is a software engineer at a technology company...">software engineer</span> at a technology company in Ho Chi Minh City. Every day, he faces pressure from work and constantly <span class="vocab" data-word-en="looming deadlines" data-word-vn="thời hạn gấp rút" data-pos="cụm danh từ / noun phrase" data-def-en="Approaching target dates for completion that cause anxiety or pressure." data-def-vn="Các thời hạn hoàn thành đang đến gần gây ra sự lo lắng hoặc áp lực." data-context-en="...and constantly looming deadlines.">looming deadlines</span>.
+    </p>
+
+    <p>
+        His workplace has a team of twelve people responsible for an important software project. However, the company's <span class="vocab" data-word-en="workforce" data-word-vn="lực lượng lao động" data-pos="danh từ / noun" data-def-en="The total number of people employed by a company or organization." data-def-vn="Tổng số nhân sự được thuê bởi một công ty hoặc tổ chức." data-context-en="...the company's workforce has significantly decreased...">workforce</span> has <span class="vocab" data-word-en="significantly" data-word-vn="đáng kể" data-pos="trạng từ / adverb" data-def-en="To a sufficiently great or important degree." data-def-vn="Ở một mức độ đủ lớn hoặc quan trọng." data-context-en="...workforce has significantly decreased...">significantly</span> decreased after a recent round of <span class="vocab" data-word-en="layoffs" data-word-vn="sa thải" data-pos="danh từ (số nhiều) / noun (plural)" data-def-en="The permanent termination of employment for economic reasons." data-def-vn="Việc chấm dứt hợp đồng lao động vĩnh viễn vì lý do kinh tế." data-context-en="...after a recent round of layoffs.">layoffs</span>.
+    </p>
+
+    <p>
+        As a result, Minh and his colleagues are forced to work many extra hours each week. His schedule is so <span class="vocab" data-word-en="packed" data-word-vn="chật cứng / bận rộn" data-pos="tính từ / adjective" data-def-en="Very crowded or full, leaving no extra time." data-def-vn="Rất đông đúc hoặc đầy ắp, không để lại thời gian dư thừa." data-context-en="His schedule is so packed that he barely has...">packed</span> that he barely has any time left for his personal life. His <span class="vocab" data-word-en="work performance" data-word-vn="hiệu suất công việc" data-pos="cụm danh từ / noun phrase" data-def-en="The quality and quantity of work completed by an individual." data-def-vn="Chất lượng và số lượng công việc được hoàn thành bởi một cá nhân." data-context-en="His work performance remains high...">work performance</span> remains high, but his health has started to <span class="vocab" data-word-en="decline" data-word-vn="suy giảm" data-pos="động từ / verb" data-def-en="To become smaller, fewer, or less effective; to deteriorate." data-def-vn="Trở nên nhỏ hơn, ít hơn hoặc kém hiệu quả hơn; bị suy yếu." data-context-en="...but his health has started to decline.">decline</span>.
+    </p>
+
+    <p>
+        One day, a colleague named Lan suggests that he should <span class="vocab" data-word-en="exercise regularly" data-word-vn="tập thể dục đều đặn" data-pos="cụm động từ / verb phrase" data-def-en="To perform physical activity on a consistent, scheduled basis." data-def-vn="Thực hiện các hoạt động thể chất trên cơ sở nhất quán và có lịch trình." data-context-en="...he should exercise regularly.">exercise regularly</span>. "A <span class="vocab" data-word-en="morning workout" data-word-vn="bài tập buổi sáng" data-pos="cụm danh từ / noun phrase" data-def-en="A session of physical exercise performed in the morning." data-def-vn="Một buổi tập thể dục được thực hiện vào buổi sáng." data-context-en="A morning workout can change your entire workday...">morning workout</span> can change your entire workday," she insists.
+    </p>
+
+    <p>
+        At first, Minh <span class="vocab" data-word-en="hesitates" data-word-vn="do dự" data-pos="động từ / verb" data-def-en="To pause before saying or doing something because of uncertainty." data-def-vn="Tạm dừng trước khi nói hoặc làm điều gì đó vì sự không chắc chắn." data-context-en="At first, Minh hesitates.">hesitates</span>. He worries that spending time exercising will affect his <span class="vocab" data-word-en="work efficiency" data-word-vn="hiệu quả công việc" data-pos="cụm danh từ / noun phrase" data-def-en="The ability to accomplish a job with the least waste of time and effort." data-def-vn="Khả năng hoàn thành công việc với sự lãng phí thời gian và công sức ít nhất." data-context-en="...will affect his work efficiency.">work efficiency</span>. However, Lan convinces him that it's a <span class="vocab" data-word-en="feasible plan" data-word-vn="kế hoạch khả thi" data-pos="cụm danh từ / noun phrase" data-def-en="A plan that is possible and practical to do easily or conveniently." data-def-vn="Một kế hoạch có khả năng thực hiện và thiết thực." data-context-en="...it's a feasible plan if he manages his time properly.">feasible plan</span> if he <span class="vocab" data-word-en="manages his time" data-word-vn="quản lý thời gian" data-pos="cụm động từ / verb phrase" data-def-en="To organize and control how one spends hours to maximize productivity." data-def-vn="Tổ chức và kiểm soát cách sử dụng thời gian để tối đa hóa năng suất." data-context-en="...if he manages his time properly.">manages his time</span> properly.
+    </p>
+
+    <p>
+        Minh decides to give it a try. He begins a <span class="vocab" data-word-en="routine" data-word-vn="thói quen / lịch trình" data-pos="danh từ / noun" data-def-en="A sequence of actions regularly followed." data-def-vn="Một chuỗi các hành động được tuân theo đều đặn." data-context-en="He begins a routine of exercising...">routine</span> of exercising every morning, including jogging and <span class="vocab" data-word-en="strength training" data-word-vn="tập luyện sức mạnh" data-pos="cụm danh từ / noun phrase" data-def-en="Physical exercise specializing in the use of resistance to induce muscular contraction." data-def-vn="Các bài tập thể chất chuyên về sử dụng lực cản để kích thích co cơ." data-context-en="...jogging and strength training.">strength training</span>. At first, the <span class="vocab" data-word-en="intensity" data-word-vn="cường độ" data-pos="danh từ / noun" data-def-en="The measurable amount of force or energy in an activity." data-def-vn="Số lượng có thể đo lường được của lực hoặc năng lượng trong một hoạt động." data-context-en="At first, the intensity of his workouts is quite low...">intensity</span> of his workouts is quite low, but gradually he increases it.
+    </p>
+
+    <p>
+        He also pays attention to <span class="vocab" data-word-en="post-workout recovery" data-word-vn="phục hồi sau tập luyện" data-pos="cụm danh từ / noun phrase" data-def-en="The period required for the body to return to its normal state after exercise." data-def-vn="Khoảng thời gian cần thiết để cơ thể trở lại trạng thái bình thường sau khi tập luyện." data-context-en="He also pays attention to post-workout recovery...">post-workout recovery</span>, especially sleep and <span class="vocab" data-word-en="nutrition" data-word-vn="dinh dưỡng" data-pos="danh từ / noun" data-def-en="The process of providing or obtaining the food necessary for health and growth." data-def-vn="Quá trình cung cấp hoặc lấy thực phẩm cần thiết cho sức khỏe và sự tăng trưởng." data-context-en="...especially sleep and nutrition.">nutrition</span>. After a few weeks, he realizes that his <span class="vocab" data-word-en="work motivation" data-word-vn="động lực làm việc" data-pos="cụm danh từ / noun phrase" data-def-en="The internal or external drive to perform one's professional duties." data-def-vn="Động lực bên trong hoặc bên ngoài để thực hiện các nghĩa vụ chuyên môn." data-context-en="...his work motivation increases significantly...">work motivation</span> increases significantly after each session.
+    </p>
+
+    <p>
+        The <span class="vocab" data-word-en="work environment" data-word-vn="môi trường làm việc" data-pos="cụm danh từ / noun phrase" data-def-en="The surrounding conditions in which an employee operates." data-def-vn="Các điều kiện xung quanh mà một nhân viên hoạt động trong đó." data-context-en="The work environment also begins to change.">work environment</span> also begins to change. Minh shares his experience with the team members, and gradually the whole group starts joining in <span class="vocab" data-word-en="group workouts" data-word-vn="tập luyện nhóm" data-pos="cụm danh từ / noun phrase" data-def-en="Physical exercises performed collectively by a group of people." data-def-vn="Các bài tập thể chất được thực hiện tập thể bởi một nhóm người." data-context-en="...starts joining in group workouts.">group workouts</span>.
+    </p>
+
+    <p>
+        Minh's story proves that work–life balance is not just a <span class="vocab" data-word-en="slogan" data-word-vn="khẩu hiệu" data-pos="danh từ / noun" data-def-en="A short and striking or memorable phrase used in advertising or promotion." data-def-vn="Một cụm từ ngắn gọn, ấn tượng hoặc dễ nhớ được sử dụng trong quảng cáo hoặc khuyến mãi." data-context-en="...is not just a slogan—it's a lifestyle...">slogan</span>—it's a <span class="vocab" data-word-en="lifestyle" data-word-vn="phong cách sống" data-pos="danh từ / noun" data-def-en="The way in which a person or group lives." data-def-vn="Cách thức mà một cá nhân hoặc nhóm người sống." data-context-en="...it's a lifestyle that can be achieved.">lifestyle</span> that can be achieved. When <span class="vocab" data-word-en="work capacity" data-word-vn="năng lực làm việc" data-pos="cụm danh từ / noun phrase" data-def-en="The maximum amount of work that an individual or organization can handle." data-def-vn="Khối lượng công việc tối đa mà một cá nhân hoặc tổ chức có thể xử lý." data-context-en="When work capacity is improved through better health...">work capacity</span> is improved through better health, the entire work environment benefits as well.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory</h2>
+    <div class="memory-grid">
+        <div class="memory-word">software engineer</div>
+        <div class="memory-word">looming deadlines</div>
+        <div class="memory-word">workforce</div>
+        <div class="memory-word">significantly</div>
+        <div class="memory-word">layoffs</div>
+        <div class="memory-word">packed</div>
+        <div class="memory-word">work performance</div>
+        <div class="memory-word">decline</div>
+        <div class="memory-word">exercise regularly</div>
+        <div class="memory-word">morning workout</div>
+        <div class="memory-word">hesitates</div>
+        <div class="memory-word">work efficiency</div>
+        <div class="memory-word">feasible plan</div>
+        <div class="memory-word">manages his time</div>
+        <div class="memory-word">routine</div>
+        <div class="memory-word">strength training</div>
+        <div class="memory-word">intensity</div>
+        <div class="memory-word">post-workout recovery</div>
+        <div class="memory-word">nutrition</div>
+        <div class="memory-word">work motivation</div>
+        <div class="memory-word">work environment</div>
+        <div class="memory-word">group workouts</div>
+        <div class="memory-word">slogan</div>
+        <div class="memory-word">lifestyle</div>
+        <div class="memory-word">work capacity</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordEn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
