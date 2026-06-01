@@ -1,0 +1,562 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>The William Brown: What Price Survival?</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        h3.section-heading {
+            color: #3a1f00;
+            font-size: 1.15rem;
+            margin-top: 28px;
+            margin-bottom: 8px;
+            border-left: 4px solid #7a4e1a;
+            padding-left: 10px;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+            .memory-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>The William Brown</h1>
+    <h2 class="subtitle">Survival and Sacrifice</h2>
+
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to this story</div>
+        <audio id="audio-player" src="overboard.mp3" controls></audio>
+
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        The story of the William Brown is a
+        <span class="vocab" data-word-en="haunting account" data-word-vn="câu chuyện ám ảnh" data-pos="cụm danh từ / noun phrase" data-def-en="A narrative that lingers disturbingly in the mind long after it is heard." data-def-vn="Một câu chuyện bám lấy tâm trí một cách đáng lo ngại mãi sau khi nghe xong." data-context-en="The story of the William Brown is a haunting account of survival.">haunting account</span>
+        of survival and the
+        <span class="vocab" data-word-en="impossible choices" data-word-vn="những lựa chọn không thể nào thực hiện được" data-pos="cụm danh từ / noun phrase" data-def-en="Decisions so morally agonizing that no option can be considered truly acceptable." data-def-vn="Những quyết định đau đớn về mặt đạo đức đến mức không có lựa chọn nào có thể được xem là thực sự chấp nhận được." data-context-en="The impossible choices people face during a disaster.">impossible choices</span>
+        people face during a disaster. It remains one of the most
+        <span class="vocab" data-word-en="famous examples of maritime law" data-word-vn="ví dụ nổi tiếng về luật hàng hải" data-pos="cụm danh từ / noun phrase" data-def-en="A widely known legal case that established or illustrated important principles governing conduct at sea." data-def-vn="Một vụ án pháp lý được biết đến rộng rãi đã thiết lập hoặc minh họa các nguyên tắc quan trọng điều chỉnh hành vi trên biển." data-context-en="It remains one of the most famous examples of maritime law in history.">famous examples of maritime law</span>
+        in history.
+    </p>
+
+    <h3 class="section-heading">The Collision</h3>
+
+    <p>
+        In April 1841, a ship named the William Brown was
+        <span class="vocab" data-word-en="sailing from Liverpool to Philadelphia" data-word-vn="đang hành trình từ Liverpool đến Philadelphia" data-pos="cụm động từ / verb phrase (continuous)" data-def-en="Navigating a sea vessel across the Atlantic Ocean between two specific ports." data-def-vn="Điều khiển một con tàu biển vượt Đại Tây Dương giữa hai cảng cụ thể." data-context-en="A ship named the William Brown was sailing from Liverpool to Philadelphia.">sailing from Liverpool to Philadelphia</span>.
+        It carried
+        <span class="vocab" data-word-en="65 passengers and 17 crew members" data-word-vn="65 hành khách và 17 thành viên thủy thủ đoàn" data-pos="cụm danh từ / noun phrase" data-def-en="The total complement of civilians and professional mariners aboard the vessel." data-def-vn="Tổng số lượng thường dân và thủy thủ chuyên nghiệp trên tàu." data-context-en="It carried 65 passengers and 17 crew members.">65 passengers and 17 crew members</span>.
+        While sailing through
+        <span class="vocab" data-word-en="thick fog" data-word-vn="sương mù dày đặc" data-pos="cụm danh từ / noun phrase" data-def-en="An extremely dense atmospheric mist that severely reduces visibility at sea." data-def-vn="Một làn sương mù khí quyển cực kỳ dày đặc làm giảm tầm nhìn nghiêm trọng trên biển." data-context-en="While sailing through thick fog near Newfoundland.">thick fog</span>
+        near Newfoundland, the ship
+        <span class="vocab" data-word-en="struck an iceberg" data-word-vn="đâm vào một tảng băng trôi" data-pos="cụm động từ / verb phrase" data-def-en="Collided violently with a massive floating mass of ice in the ocean." data-def-vn="Va chạm mạnh với một khối băng khổng lồ đang trôi nổi trên đại dương." data-context-en="The ship struck an iceberg and began to sink rapidly.">struck an iceberg</span>
+        and began to
+        <span class="vocab" data-word-en="sink rapidly" data-word-vn="chìm xuống rất nhanh chóng" data-pos="cụm động từ / verb phrase" data-def-en="Descend beneath the water's surface at a dangerous and alarming speed." data-def-vn="Xuống dưới mặt nước với tốc độ nguy hiểm và đáng báo động." data-context-en="The ship struck an iceberg and began to sink rapidly.">sink rapidly</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Panic broke out" data-word-vn="Cơn hoảng loạn bùng phát" data-pos="mệnh đề / clause" data-def-en="A sudden, uncontrollable state of extreme fear spread rapidly through the people present." data-def-vn="Một trạng thái sợ hãi cực độ bất ngờ, không kiểm soát được lan nhanh trong những người có mặt." data-context-en="Panic broke out because there were only two lifeboats for over 80 people.">Panic broke out</span>
+        because there were only
+        <span class="vocab" data-word-en="two lifeboats" data-word-vn="hai chiếc xuồng cứu sinh" data-pos="cụm danh từ / noun phrase" data-def-en="A dangerously insufficient number of small rescue vessels for the total number of people aboard." data-def-vn="Một số lượng tàu cứu hộ nhỏ nguy hiểm không đủ cho tổng số người trên tàu." data-context-en="There were only two lifeboats for over 80 people.">two lifeboats</span>
+        for over 80 people. The captain and some crew took the
+        <span class="vocab" data-word-en="smaller boat" data-word-vn="chiếc thuyền nhỏ hơn" data-pos="cụm danh từ / noun phrase" data-def-en="The less capacious of the two rescue vessels, which departed with the ship's commander." data-def-vn="Chiếc tàu cứu hộ có sức chứa nhỏ hơn trong hai chiếc, đã rời đi cùng thuyền trưởng của tàu." data-context-en="The captain and some crew took the smaller boat.">smaller boat</span>,
+        while 41 people
+        <span class="vocab" data-word-en="crowded into the longboat" data-word-vn="chen chúc nhau vào xuồng dài" data-pos="cụm động từ / verb phrase" data-def-en="Packed themselves tightly and in dangerously large numbers into the second vessel." data-def-vn="Nhồi nhét bản thân chặt chẽ và với số lượng nguy hiểm vào chiếc tàu thứ hai." data-context-en="41 people crowded into the longboat.">crowded into the longboat</span>.
+        Tragically,
+        <span class="vocab" data-word-en="31 passengers were left behind" data-word-vn="31 hành khách bị bỏ lại phía sau" data-pos="mệnh đề bị động / passive clause" data-def-en="Thirty-one individuals were abandoned on the doomed vessel with no means of rescue." data-def-vn="Ba mươi mốt người bị bỏ lại trên con tàu định mệnh mà không có phương tiện cứu hộ nào." data-context-en="Tragically, 31 passengers were left behind on the sinking ship.">31 passengers were left behind</span>
+        on the sinking ship.
+    </p>
+
+    <h3 class="section-heading">Crisis on the Longboat</h3>
+
+    <p>
+        The longboat was in
+        <span class="vocab" data-word-en="terrible condition" data-word-vn="tình trạng tồi tệ / rất đáng lo ngại" data-pos="cụm danh từ / noun phrase" data-def-en="A state of severe deterioration or dysfunction that posed an imminent threat." data-def-vn="Một tình trạng xuống cấp nghiêm trọng hoặc rối loạn chức năng gây ra mối đe dọa sắp xảy ra." data-context-en="The longboat was in terrible condition.">terrible condition</span>.
+        It was
+        <span class="vocab" data-word-en="leaking" data-word-vn="đang bị rò rỉ nước" data-pos="động từ / verb (continuous)" data-def-en="Allowing water to seep in through cracks or gaps in the hull." data-def-vn="Cho phép nước thấm vào qua các vết nứt hoặc khe hở trong thân tàu." data-context-en="It was leaking, and the weight of 41 people made it sit dangerously low.">leaking</span>,
+        and the weight of 41 people made it
+        <span class="vocab" data-word-en="sit dangerously low" data-word-vn="ngồi thấp ở mức nguy hiểm dưới mặt nước" data-pos="cụm động từ / verb phrase" data-def-en="Rest so deeply in the water that waves could easily flood the vessel at any moment." data-def-vn="Nằm sâu đến mức trong nước đến mức sóng có thể dễ dàng nhấn chìm tàu bất cứ lúc nào." data-context-en="The weight of 41 people made it sit dangerously low in the freezing, stormy water.">sit dangerously low</span>
+        in the
+        <span class="vocab" data-word-en="freezing, stormy water" data-word-vn="vùng nước băng giá và bão tố" data-pos="cụm danh từ / noun phrase" data-def-en="Brutally cold and violently turbulent ocean conditions that threatened survival." data-def-vn="Điều kiện đại dương lạnh khắc nghiệt và đầy bạo lực đe dọa sự sống còn." data-context-en="In the freezing, stormy water.">freezing, stormy water</span>.
+        A sailor named
+        <span class="vocab" data-word-en="Alexander Holmes" data-word-vn="Alexander Holmes" data-pos="danh từ riêng / proper noun" data-def-en="The seaman placed in charge of rowing, who would later face criminal prosecution." data-def-vn="Thủy thủ được giao phụ trách chèo thuyền, người sau này sẽ phải đối mặt với việc bị truy tố hình sự." data-context-en="A sailor named Alexander Holmes was in charge of rowing.">Alexander Holmes</span>
+        was
+        <span class="vocab" data-word-en="in charge of rowing" data-word-vn="chịu trách nhiệm chèo thuyền" data-pos="cụm giới từ / prepositional phrase" data-def-en="Assigned the responsibility of propelling the vessel using oars." data-def-vn="Được giao trách nhiệm đẩy tàu bằng mái chèo." data-context-en="Alexander Holmes was in charge of rowing.">in charge of rowing</span>.
+        He was known as a
+        <span class="vocab" data-word-en="hero" data-word-vn="người anh hùng" data-pos="danh từ / noun" data-def-en="A person admired for great courage and selfless acts of bravery in perilous circumstances." data-def-vn="Một người được ngưỡng mộ vì lòng dũng cảm và những hành động dũng cảm không ích kỷ trong hoàn cảnh nguy hiểm." data-context-en="He was known as a hero because he had risked his life to save a young girl as the ship went down.">hero</span>
+        because he had
+        <span class="vocab" data-word-en="risked his life" data-word-vn="đặt cược tính mạng của mình" data-pos="cụm động từ / verb phrase" data-def-en="Exposed himself to extreme danger with the possibility of death in order to help another." data-def-vn="Tự đặt mình vào nguy hiểm tột cùng với khả năng tử vong để giúp đỡ người khác." data-context-en="He had risked his life to save a young girl as the ship went down.">risked his life</span>
+        to save a young girl as the ship went down.
+    </p>
+
+    <p>
+        However, 24 hours later, a storm began. The boat was
+        <span class="vocab" data-word-en="filling with water" data-word-vn="đang ngập đầy nước" data-pos="cụm động từ / verb phrase (continuous)" data-def-en="Progressively accumulating seawater inside the hull to a critical and fatal level." data-def-vn="Dần dần tích lũy nước biển bên trong thân tàu đến mức nguy kịch và chết người." data-context-en="The boat was filling with water, and everyone was terrified.">filling with water</span>,
+        and everyone was
+        <span class="vocab" data-word-en="terrified" data-word-vn="kinh hoàng / khiếp sợ tột độ" data-pos="tính từ / adjective" data-def-en="Overwhelmed by an intense and paralyzing sense of terror and dread." data-def-vn="Bị choáng ngợp bởi nỗi kinh hoàng và sợ hãi tê liệt dữ dội." data-context-en="The boat was filling with water, and everyone was terrified.">terrified</span>.
+        The officer in charge shouted, "Help me, God! This boat is sinking!" He
+        <span class="vocab" data-word-en="ordered the crew" data-word-vn="ra lệnh cho thủy thủ đoàn" data-pos="cụm động từ / verb phrase" data-def-en="Issued an authoritative command to the seamen under his control." data-def-vn="Ban hành mệnh lệnh có thẩm quyền đối với các thủy thủ dưới quyền kiểm soát của ông." data-context-en="He ordered the crew to lighten the boat.">ordered the crew</span>
+        to
+        <span class="vocab" data-word-en="lighten the boat" data-word-vn="làm cho thuyền nhẹ bớt" data-pos="cụm động từ / verb phrase" data-def-en="Reduce the total weight carried by the vessel, by any means necessary, to prevent it capsizing." data-def-vn="Giảm tổng trọng lượng mà tàu đang chở, bằng mọi cách cần thiết, để tránh bị lật úp." data-context-en="He ordered the crew to lighten the boat, which meant some people had to go.">lighten the boat</span>,
+        which meant some people had to go.
+    </p>
+
+    <h3 class="section-heading">The Sacrifice</h3>
+
+    <p>
+        Alexander Holmes and the other sailors began
+        <span class="vocab" data-word-en="throwing passengers into the ocean" data-word-vn="ném hành khách xuống đại dương" data-pos="cụm động từ / verb phrase (continuous)" data-def-en="Forcibly casting living human beings overboard into the freezing sea." data-def-vn="Ném mạnh những con người còn sống xuống qua mạn tàu vào vùng biển băng giá." data-context-en="Alexander Holmes and the other sailors began throwing passengers into the ocean to prevent the boat from flipping over.">throwing passengers into the ocean</span>
+        to prevent the boat from
+        <span class="vocab" data-word-en="flipping over" data-word-vn="lật úp" data-pos="cụm động từ / phrasal verb" data-def-en="Capsizing completely so that the hull faces upward and the vessel is inverted." data-def-vn="Lật úp hoàn toàn để thân tàu quay lên trên và tàu bị đảo ngược." data-context-en="To prevent the boat from flipping over.">flipping over</span>.
+        They
+        <span class="vocab" data-word-en="focused on single men" data-word-vn="tập trung vào những người đàn ông độc thân" data-pos="cụm động từ / verb phrase" data-def-en="Deliberately targeted unmarried male passengers as the first to be cast overboard." data-def-vn="Cố tình nhắm vào những hành khách nam độc thân là những người đầu tiên bị ném qua mạn tàu." data-context-en="They focused on single men, sparing women and married couples.">focused on single men</span>,
+        <span class="vocab" data-word-en="sparing women and married couples" data-word-vn="tha mạng cho phụ nữ và các cặp vợ chồng" data-pos="cụm động từ / verb phrase" data-def-en="Deliberately exempting female passengers and those with spouses from being thrown overboard." data-def-vn="Cố tình miễn cho hành khách nữ và những người có vợ/chồng khỏi bị ném qua mạn tàu." data-context-en="They focused on single men, sparing women and married couples.">sparing women and married couples</span>.
+        In total,
+        <span class="vocab" data-word-en="16 people were cast into the icy sea" data-word-vn="16 người bị ném xuống vùng biển băng lạnh" data-pos="mệnh đề bị động / passive clause" data-def-en="Sixteen individuals were forcibly thrown into lethally cold ocean waters." data-def-vn="Mười sáu người bị ném mạnh xuống vùng nước đại dương lạnh chết người." data-context-en="In total, 16 people were cast into the icy sea.">16 people were cast into the icy sea</span>.
+        One man
+        <span class="vocab" data-word-en="offered Holmes money" data-word-vn="đưa tiền cho Holmes" data-pos="cụm động từ / verb phrase" data-def-en="Attempted to bribe the sailor with payment in exchange for his own survival." data-def-vn="Cố gắng hối lộ người thủy thủ bằng tiền để đổi lấy sự sống sót của bản thân." data-context-en="One man offered Holmes money to save his life, but Holmes refused.">offered Holmes money</span>
+        to save his life, but Holmes
+        <span class="vocab" data-word-en="refused" data-word-vn="từ chối" data-pos="động từ / verb (past tense)" data-def-en="Declined firmly, believing that accepting would condemn everyone remaining aboard to death." data-def-vn="Từ chối kiên quyết, tin rằng chấp nhận sẽ kết án tử hình tất cả mọi người còn lại trên tàu." data-context-en="Holmes refused, believing that everyone would die if the boat wasn't lightened immediately.">refused</span>,
+        believing that everyone would die if the boat wasn't
+        <span class="vocab" data-word-en="lightened immediately" data-word-vn="được làm nhẹ ngay lập tức" data-pos="cụm động từ / verb phrase (passive)" data-def-en="Reduced in weight without any delay whatsoever." data-def-vn="Giảm trọng lượng mà không có bất kỳ sự chậm trễ nào." data-context-en="Everyone would die if the boat wasn't lightened immediately.">lightened immediately</span>.
+    </p>
+
+    <h3 class="section-heading">The Legal Battle</h3>
+
+    <p>
+        When the
+        <span class="vocab" data-word-en="survivors" data-word-vn="những người sống sót" data-pos="danh từ / noun (plural)" data-def-en="Those who remained alive after the catastrophic maritime disaster." data-def-vn="Những người còn sống sau thảm họa hàng hải thảm khốc." data-context-en="When the survivors were finally rescued and brought to Philadelphia.">survivors</span>
+        were finally
+        <span class="vocab" data-word-en="rescued and brought to Philadelphia" data-word-vn="được cứu và đưa đến Philadelphia" data-pos="cụm động từ / verb phrase (passive)" data-def-en="Saved from peril at sea and transported to safety on American soil." data-def-vn="Được cứu khỏi nguy hiểm trên biển và vận chuyển đến vùng đất an toàn trên đất Mỹ." data-context-en="When the survivors were finally rescued and brought to Philadelphia, the public was shocked.">rescued and brought to Philadelphia</span>,
+        the public was
+        <span class="vocab" data-word-en="shocked" data-word-vn="bàng hoàng / chấn động" data-pos="tính từ / adjective" data-def-en="Profoundly disturbed and horrified upon learning of what had taken place." data-def-vn="Bị xáo trộn sâu sắc và kinh hoàng khi biết được những gì đã xảy ra." data-context-en="The public was shocked.">shocked</span>.
+        Holmes was
+        <span class="vocab" data-word-en="arrested and taken to court" data-word-vn="bị bắt giữ và đưa ra tòa án" data-pos="cụm động từ / verb phrase (passive)" data-def-en="Apprehended by authorities and subjected to formal criminal legal proceedings." data-def-vn="Bị chính quyền bắt giữ và phải chịu các thủ tục pháp lý hình sự chính thức." data-context-en="Holmes was arrested and taken to court.">arrested and taken to court</span>.
+        His lawyers
+        <span class="vocab" data-word-en="argued" data-word-vn="lập luận / tranh biện" data-pos="động từ / verb (past tense)" data-def-en="Presented a formal legal defense with reasoned statements before the court." data-def-vn="Trình bày một biện hộ pháp lý chính thức với những lập luận có lý trước tòa án." data-context-en="His lawyers argued that he acted out of necessity.">argued</span>
+        that he acted out of
+        <span class="vocab" data-word-en="necessity" data-word-vn="sự cần thiết bắt buộc / tình thế cấp bách" data-pos="danh từ / noun" data-def-en="A legal and moral doctrine holding that an unlawful act may be justified when no other option exists to prevent a greater harm." data-def-vn="Một học thuyết pháp lý và đạo đức cho rằng một hành động trái pháp luật có thể được biện minh khi không có lựa chọn nào khác để ngăn chặn hậu quả lớn hơn." data-context-en="His lawyers argued that he acted out of necessity—that it was better for some to die so that others could live.">necessity</span> —
+        that it was better for some to die so that others could live.
+    </p>
+
+    <p>
+        The
+        <span class="vocab" data-word-en="jury" data-word-vn="bồi thẩm đoàn" data-pos="danh từ / noun" data-def-en="A group of citizens assembled to hear evidence and deliver a formal verdict in a court of law." data-def-vn="Một nhóm công dân được triệu tập để nghe bằng chứng và đưa ra phán quyết chính thức tại tòa án." data-context-en="The jury disagreed.">jury</span>
+        <span class="vocab" data-word-en="disagreed" data-word-vn="không đồng ý / phản bác" data-pos="động từ / verb (past tense)" data-def-en="Rejected the defense's argument and came to an opposing conclusion." data-def-vn="Bác bỏ lập luận của bên bào chữa và đưa ra kết luận đối lập." data-context-en="The jury disagreed.">disagreed</span>.
+        They believed that if a sacrifice was necessary, the crew should have
+        <span class="vocab" data-word-en="drawn lots" data-word-vn="bốc thăm" data-pos="cụm động từ / verb phrase" data-def-en="Used a random method of chance to determine fairly who would bear the fatal burden." data-def-vn="Sử dụng phương pháp ngẫu nhiên may rủi để xác định một cách công bằng ai sẽ chịu gánh nặng chết người." data-context-en="The crew should have drawn lots to make the decision fair.">drawn lots</span>
+        to make the decision
+        <span class="vocab" data-word-en="fair" data-word-vn="công bằng / không thiên vị" data-pos="tính từ / adjective" data-def-en="Just and impartial, giving every person an equal chance regardless of status." data-def-vn="Công bằng và không thiên vị, cho mỗi người cơ hội bình đẳng bất kể địa vị." data-context-en="The crew should have drawn lots to make the decision fair.">fair</span>.
+        Holmes was found
+        <span class="vocab" data-word-en="guilty" data-word-vn="có tội" data-pos="tính từ / adjective" data-def-en="Legally determined to have committed a criminal offense by the court." data-def-vn="Được tòa án xác định về mặt pháp lý là đã phạm tội hình sự." data-context-en="Holmes was found guilty of a serious crime.">guilty</span>
+        of a serious crime, though the judge gave him a
+        <span class="vocab" data-word-en="light sentence" data-word-vn="bản án nhẹ" data-pos="cụm danh từ / noun phrase" data-def-en="A punishment significantly less severe than the maximum penalty available under the law." data-def-vn="Một hình phạt ít nghiêm khắc hơn đáng kể so với hình phạt tối đa có thể áp dụng theo pháp luật." data-context-en="The judge gave him a light sentence of six months because of the extreme circumstances.">light sentence</span>
+        of six months because of the
+        <span class="vocab" data-word-en="extreme circumstances" data-word-vn="hoàn cảnh vô cùng cấp bách" data-pos="cụm danh từ / noun phrase" data-def-en="The exceptional and life-threatening conditions that drove the actions in question." data-def-vn="Những điều kiện đặc biệt và đe dọa tính mạng đã thúc đẩy các hành động đang được xem xét." data-context-en="Because of the extreme circumstances.">extreme circumstances</span>.
+    </p>
+
+    <p>
+        Even today, his story is used to teach students about the
+        <span class="vocab" data-word-en="ethics of survival" data-word-vn="đạo đức của sự sống còn" data-pos="cụm danh từ / noun phrase" data-def-en="The moral principles and philosophical questions surrounding what actions are permissible in order to preserve one's own life." data-def-vn="Các nguyên tắc đạo đức và câu hỏi triết học xoay quanh những hành động nào được phép thực hiện để bảo toàn tính mạng của mình." data-context-en="His story is used to teach students about the ethics of survival.">ethics of survival</span>.
+        The
+        <span class="vocab" data-word-en="haunting question" data-word-vn="câu hỏi day dứt ám ảnh" data-pos="cụm danh từ / noun phrase" data-def-en="A deeply disturbing inquiry that refuses to leave the conscience at peace." data-def-vn="Một câu hỏi gây bất an sâu sắc không chịu buông tha lương tâm." data-context-en="The haunting question remains today.">haunting question</span>
+        remains today:
+    </p>
+
+    <p>
+        "<span class="vocab" data-word-en="What would you do to survive?" data-word-vn="Bạn sẽ làm gì để tồn tại?" data-pos="câu hỏi tu từ / rhetorical question" data-def-en="A profound moral challenge asking whether a person could commit an act that harms others in order to preserve their own existence." data-def-vn="Một thách thức đạo đức sâu sắc đặt câu hỏi liệu một người có thể thực hiện một hành động gây hại cho người khác để bảo tồn sự tồn tại của chính họ hay không." data-context-en="What would you do to survive?">What would you do to survive?</span>"
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">haunting account</div>
+        <div class="memory-word">impossible choices</div>
+        <div class="memory-word">famous examples of maritime law</div>
+        <div class="memory-word">sailing from Liverpool to Philadelphia</div>
+        <div class="memory-word">65 passengers and 17 crew members</div>
+        <div class="memory-word">thick fog</div>
+        <div class="memory-word">struck an iceberg</div>
+        <div class="memory-word">sink rapidly</div>
+        <div class="memory-word">Panic broke out</div>
+        <div class="memory-word">two lifeboats</div>
+        <div class="memory-word">smaller boat</div>
+        <div class="memory-word">crowded into the longboat</div>
+        <div class="memory-word">31 passengers were left behind</div>
+        <div class="memory-word">terrible condition</div>
+        <div class="memory-word">leaking</div>
+        <div class="memory-word">sit dangerously low</div>
+        <div class="memory-word">freezing, stormy water</div>
+        <div class="memory-word">Alexander Holmes</div>
+        <div class="memory-word">in charge of rowing</div>
+        <div class="memory-word">hero</div>
+        <div class="memory-word">risked his life</div>
+        <div class="memory-word">filling with water</div>
+        <div class="memory-word">terrified</div>
+        <div class="memory-word">ordered the crew</div>
+        <div class="memory-word">lighten the boat</div>
+        <div class="memory-word">throwing passengers into the ocean</div>
+        <div class="memory-word">flipping over</div>
+        <div class="memory-word">focused on single men</div>
+        <div class="memory-word">sparing women and married couples</div>
+        <div class="memory-word">16 people were cast into the icy sea</div>
+        <div class="memory-word">offered Holmes money</div>
+        <div class="memory-word">refused</div>
+        <div class="memory-word">lightened immediately</div>
+        <div class="memory-word">survivors</div>
+        <div class="memory-word">rescued and brought to Philadelphia</div>
+        <div class="memory-word">shocked</div>
+        <div class="memory-word">arrested and taken to court</div>
+        <div class="memory-word">argued</div>
+        <div class="memory-word">necessity</div>
+        <div class="memory-word">jury</div>
+        <div class="memory-word">disagreed</div>
+        <div class="memory-word">drawn lots</div>
+        <div class="memory-word">fair</div>
+        <div class="memory-word">guilty</div>
+        <div class="memory-word">light sentence</div>
+        <div class="memory-word">extreme circumstances</div>
+        <div class="memory-word">ethics of survival</div>
+        <div class="memory-word">haunting question</div>
+        <div class="memory-word">What would you do to survive?</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+
+                document.getElementById('popup-definition').innerHTML =
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el =>
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
