@@ -1,0 +1,501 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Episode 3: The Bag of Wind</title>
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+        @media (max-width: 600px) {
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Episode 3: The Bag of Wind</h1>
+    <h2 class="subtitle">Odyssey Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 3</div>
+        <audio id="audio-player" src="bag.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        Ulysses was a <span class="vocab" data-word-en="clever man" data-word-vn="người đàn ông mưu trí" data-pos="cụm danh từ / noun phrase" data-def-en="A male individual possessing quick mental facilities, sharpness, and intelligence." data-def-vn="Một cá nhân nam giới có trí tuệ nhạy bén, sắc sảo và khôn ngoan." data-context-en="Ulysses was a clever man.">clever man</span>. He wanted to <span class="vocab" data-word-en="go home to Ithaca" data-word-vn="trở về quê nhà Ithaca" data-pos="cụm động từ / verb phrase" data-def-en="Return to one's native island kingdom or place of birth." data-def-vn="Quay trở lại vương quốc đảo bản xứ hoặc nơi sinh của mình." data-context-en="He wanted to go home to Ithaca...">go home to Ithaca</span> after the <span class="vocab" data-word-en="long war in Troy" data-word-vn="cuộc chiến kéo dài ở thành Troy" data-pos="cụm danh từ / noun phrase" data-def-en="The extended ten-year military conflict inside the city of Troy." data-def-vn="Cuộc xung đột quân sự kéo dài mười năm bên trong thành Troy." data-context-en="After the long war in Troy.">long war in Troy</span>. It was a <span class="vocab" data-word-en="dangerous journey across the sea" data-word-vn="hành trình nguy hiểm vượt đại dương" data-pos="cụm danh từ / noun phrase" data-def-en="A hazardous voyage traversing perilous oceanic waters." data-def-vn="Một chuyến đi biển đầy rủi ro vượt qua những vùng nước đại dương hiểm nguy." data-context-en="It was a dangerous journey across the sea...">dangerous journey across the sea</span>, but the <span class="vocab" data-word-en="gods were watching" data-word-vn="các vị thần đang dõi theo" data-pos="mệnh đề / clause" data-def-en="Deities were observing or keeping guard over human affairs." data-def-vn="Các vị thần linh đang quan sát hoặc canh giữ các công việc của con người." data-context-en="But the gods were watching.">gods were watching</span>.
+    </p>
+
+    <p>
+        One day, his ship <span class="vocab" data-word-en="arrived at a beautiful island" data-word-vn="đến một hòn đảo xinh đẹp" data-pos="cụm động từ / verb phrase" data-def-en="Reached or made landfall on a visually stunning landmass surrounded by water." data-def-vn="Đến hoặc cập bến trên một vùng đất tuyệt đẹp được bao quanh bởi nước." data-context-en="One day, his ship arrived at a beautiful island.">arrived at a beautiful island</span>. The king of this island <span class="vocab" data-word-en="was named Aeolus" data-word-vn="có tên gọi là Aeolus" data-pos="cụm động từ / verb phrase (passive)" data-def-en="Possessed the specific name or designation of Aeolus." data-def-vn="Sở hữu tên gọi hoặc danh xưng cụ thể là Aeolus." data-context-en="The king of this island was named Aeolus.">was named Aeolus</span>. He was the <span class="vocab" data-word-en="keeper of all the winds" data-word-vn="người canh giữ tất cả các ngọn gió" data-pos="cụm danh từ / noun phrase" data-def-en="The divine guardian or master responsible for controlling global currents." data-def-vn="Người bảo hộ thần thánh hoặc bậc thầy chịu trách nhiệm kiểm soát các luồng gió toàn cầu." data-context-en="He was the keeper of all the winds...">keeper of all the winds</span> <span class="vocab" data-word-en="in the world" data-word-vn="trên toàn thế giới" data-pos="cụm giới từ / prepositional phrase" data-def-en="Existing anywhere across the entire planet earth." data-def-vn="Tồn tại ở bất cứ đâu trên khắp toàn bộ hành tinh trái đất." data-context-en="The keeper of all the winds in the world.">in the world</span>. Aeolus <span class="vocab" data-word-en="liked Ulysses very much" data-word-vn="rất quý mến Ulysses" data-pos="cụm động từ / verb phrase" data-def-en="Held an exceptionally high regard and fondness for Ulysses." data-def-vn="Có sự tôn trọng và lòng quý mến đặc biệt cao đối với Ulysses." data-context-en="Aeolus liked Ulysses very much.">liked Ulysses very much</span>. He <span class="vocab" data-word-en="listened to all his stories" data-word-vn="lắng nghe tất cả câu chuyện của ông" data-pos="cụm động từ / verb phrase" data-def-en="Paid close attention to every narrative account spoken by him." data-def-vn="Chú ý lắng nghe từng câu chuyện kể do ông nói ra." data-context-en="He listened to all his stories for many days and nights.">listened to all his stories</span> for <span class="vocab" data-word-en="many days and nights" data-word-vn="nhiều ngày đêm liên tục" data-pos="cụm danh từ / noun phrase" data-def-en="An extensive duration covering multiple daylight and evening cycles." data-def-vn="Một khoảng thời gian dài bao gồm nhiều chu kỳ ban ngày và ban đêm." data-context-en="Listened to all his stories for many days and nights.">many days and nights</span>.
+    </p>
+
+    <p>
+        When it was <span class="vocab" data-word-en="time to leave" data-word-vn="đến giờ phải rời đi" data-pos="cụm từ / phrase" data-def-en="The appropriate moment to depart or set sail on a journey." data-def-vn="Thời điểm thích hợp để khởi hành hoặc giương buồm lên đường." data-context-en="When it was time to leave, Aeolus gave Ulysses...">time to leave</span>, Aeolus gave Ulysses a <span class="vocab" data-word-en="very special gift" data-word-vn="một món quà rất đặc biệt" data-pos="cụm danh từ / noun phrase" data-def-en="An exceptionally unique and meaningful present." data-def-vn="Một món quà vô cùng độc đáo và ý nghĩa." data-context-en="Aeolus gave Ulysses a very special gift...">very special gift</span> — a <span class="vocab" data-word-en="large leather bag" data-word-vn="chiếc túi da lớn" data-pos="cụm danh từ / noun phrase" data-def-en="A substantial container constructed from animal hide material." data-def-vn="Một chiếc hộp đựng lớn được cấu tạo từ chất liệu da động vật." data-context-en="A large leather bag.">large leather bag</span>. <span class="vocab" data-word-en="Inside the bag" data-word-vn="Bên trong chiếc túi" data-pos="cụm giới từ / prepositional phrase" data-def-en="Contained within the interior parameters of the pouch." data-def-vn="Được chứa đựng trong phạm vi không gian nội thất của chiếc túi." data-context-en="Inside the bag were all the bad winds.">Inside the bag</span> were all the <span class="vocab" data-word-en="bad winds" data-word-vn="những luồng gió độc / gió ác" data-pos="cụm danh từ / noun phrase" data-def-en="Perilous, destructive gale currents capable of causing ruin." data-def-vn="Những luồng gió bão nguy hiểm, có sức tàn phá dữ dội có khả năng gây ra đổ nát." data-context-en="Inside the bag were all the bad winds.">bad winds</span>. All the <span class="vocab" data-word-en="storms" data-word-vn="những trận bão" data-pos="danh từ / noun (plural)" data-def-en="Violent disturbances of the atmosphere accompanied by heavy wind or rain." data-def-vn="Những xáo trộn dữ dội của bầu khí quyển kèm theo gió mạnh hoặc mưa lớn." data-context-en="All the storms.">storms</span>. All the <span class="vocab" data-word-en="dangerous gusts" data-word-vn="những cơn gió lốc nguy hiểm" data-pos="cụm danh từ / noun phrase" data-def-en="Sudden, violent rushes of wind that present extreme risk." data-def-vn="Những luồng gió bùng phát đột ngột, dữ dội mang lại rủi ro cực lớn." data-context-en="All the dangerous gusts that could destroy a ship.">dangerous gusts</span> that could <span class="vocab" data-word-en="destroy a ship" data-word-vn="phá hủy một con tàu" data-pos="cụm động từ / verb phrase" data-def-en="Wreck, sink, or completely damage a maritime vessel." data-def-vn="Làm đắm, chìm hoặc làm hư hỏng hoàn toàn một phương tiện thủy." data-context-en="Dangerous gusts that could destroy a ship.">destroy a ship</span>. He <span class="vocab" data-word-en="tied the bag" data-word-vn="buộc chiếc túi lại" data-pos="cụm động từ / verb phrase" data-def-en="Fastened the opening of the leather container using cords." data-def-vn="Buộc chặt miệng của hộp đựng bằng da bằng dây buộc." data-context-en="He tied the bag very, very tightly...">tied the bag</span> <span class="vocab" data-word-en="very, very tightly" data-word-vn="rất, rất chặt" data-pos="cụm trạng từ / adverbial phrase" data-def-en="In an exceptionally secure manner that leaves no gaps for leaks." data-def-vn="Theo một cách đặc biệt an toàn, không để lại kẽ hở nào cho sự rò rỉ." data-context-en="He tied the bag very, very tightly with a silver rope.">very, very tightly</span> with a <span class="vocab" data-word-en="silver rope" data-word-vn="sợi dây thừng bằng bạc" data-pos="cụm danh từ / noun phrase" data-def-en="A strong cord made from or decorated with valuable white-metallic fibers." data-def-vn="Một sợi dây thừng chắc chắn được làm từ hoặc trang trí bằng các sợi kim loại màu trắng quý giá." data-context-en="Tied the bag very, very tightly with a silver rope.">silver rope</span>.
+    </p>
+
+    <p>
+        "This will <span class="vocab" data-word-en="keep you safe" data-word-vn="giữ cho bạn được an toàn" data-pos="cụm động từ / verb phrase" data-def-en="Ensure your protection and preserve you from any form of harm." data-def-vn="Đảm bảo sự bảo vệ của bạn và giữ cho bạn khỏi mọi hình thức tổn hại." data-context-en='"This will keep you safe," said Aeolus.'>"keep you safe</span>," said Aeolus. "I am also <span class="vocab" data-word-en="sending the West Wind" data-word-vn="gửi Gió Tây đến giúp" data-pos="cụm động từ / verb phrase (continuous)" data-def-en="Dispatching the specific favorable breeze from the western horizon." data-def-vn="Phái một luồng gió thuận lợi cụ thể đến từ đường chân trời phía tây." data-context-en='"I am also sending the West Wind to carry you home."'>sending the West Wind</span> to <span class="vocab" data-word-en="carry you home" data-word-vn="đưa bạn về nhà" data-pos="cụm động từ / verb phrase" data-def-en="Transport or guide you directly to your domestic destination." data-def-vn="Vận chuyển hoặc hướng dẫn bạn trực tiếp đến điểm đến nội địa của mình." data-context-en='"To carry you home."'>carry you home</span>."
+    </p>
+
+    <p>
+        Ulysses was <span class="vocab" data-word-en="very happy" data-word-vn="rất đỗi vui mừng / hạnh phúc" data-pos="cụm tính từ / adjective phrase" data-def-en="Feeling or showing an immense degree of pleasure and contentment." data-def-vn="Cảm thấy hoặc thể hiện một mức độ to lớn của sự hài lòng và mãn nguyện." data-context-en="Ulysses was very happy.">very happy</span>. He <span class="vocab" data-word-en="thanked Aeolus" data-word-vn="bày tỏ lòng biết ơn tới Aeolus" data-pos="cụm động từ / verb phrase" data-def-en="Expressed words of gratitude to the ruler of the winds." data-def-vn="Bày tỏ những lời biết ơn đối với người cai trị các vị thần gió." data-context-en="He thanked Aeolus and sailed away.">thanked Aeolus</span> and <span class="vocab" data-word-en="sailed away" data-word-vn="giương buồm ra khơi rời đi" data-pos="cụm động từ / phrasal verb" data-def-en="Departed the harbor area by navigating a ship outward." data-def-vn="Rời khỏi khu vực bến cảng bằng cách điều khiển tàu ra khơi." data-context-en="He thanked Aeolus and sailed away.">sailed away</span>. For <span class="vocab" data-word-en="nine days and nine nights" data-word-vn="suốt chín ngày đêm liên tiếp" data-pos="cụm danh từ / noun phrase" data-def-en="An exact timeframe spanning eighty-four total hours of continuous transit." data-def-vn="Một khoảng thời gian chính xác kéo dài tám mươi tư giờ di chuyển liên tục." data-context-en="For nine days and nine nights, everything was perfect.">nine days and nine nights</span>, everything was <span class="vocab" data-word-en="perfect" data-word-vn="hoàn hảo / không chút tì vết" data-pos="tính từ / adjective" data-def-en="Completely flawless; entirely free from faults or difficulties." data-def-vn="Hoàn toàn không có sai sót; hoàn toàn không có lỗi hoặc khó khăn." data-context-en="Everything was perfect.">perfect</span>. The West Wind <span class="vocab" data-word-en="pushed the ship gently" data-word-vn="đẩy con tàu đi một cách nhẹ nhàng" data-pos="cụm động từ / verb phrase" data-def-en="Propelled the sea vessel with a mild, soft, and non-violent force." data-def-vn="Thúc đẩy con tàu biển bằng một lực nhẹ nhàng, êm ái và không bạo lực." data-context-en="The West Wind pushed the ship gently toward Ithaca.">pushed the ship gently</span> <span class="vocab" data-word-en="toward Ithaca" data-word-vn="hướng thẳng về phía Ithaca" data-pos="cụm giới từ / prepositional phrase" data-def-en="In the exact forward direction of the island of Ithaca." data-def-vn="Theo hướng đi thẳng về phía trước của hòn đảo Ithaca." data-context-en="Pushed the ship gently toward Ithaca.">toward Ithaca</span>. Ulysses could <span class="vocab" data-word-en="almost see his home" data-word-vn="gần như có thể nhìn thấy nhà của mình" data-pos="mệnh đề / clause" data-def-en="Was nearly capable of viewing his residence with human eyes." data-def-vn="Gần như có khả năng quan sát nơi ở của mình bằng mắt người." data-context-en="Ulysses could almost see his home.">almost see his home</span>. He was <span class="vocab" data-word-en="so tired and so happy" data-word-vn="quá đỗi mệt mỏi nhưng quá hạnh phúc" data-pos="cụm tính từ / adjective phrase" data-def-en="Extremely exhausted yet simultaneously filled with immense joy." data-def-vn="Cực kỳ kiệt sức nhưng đồng thời tràn ngập niềm vui sướng vô bờ bến." data-context-en="He was so tired and so happy that he fell asleep.">so tired and so happy</span> that he <span class="vocab" data-word-en="fell asleep" data-word-vn="chìm sâu vào giấc ngủ" data-pos="cụm động từ / phrasal verb" data-def-en="Sank directly into a natural state of slumber or rest." data-def-vn="Chìm trực tiếp vào trạng thái ngủ hoặc nghỉ ngơi tự nhiên." data-context-en="He was so tired and so happy that he fell asleep.">fell asleep</span>.
+    </p>
+
+    <p>
+        This was a <span class="vocab" data-word-en="big mistake" data-word-vn="sai lầm lớn / tai hại" data-pos="cụm danh từ / noun phrase" data-def-en="A major error or lapse in judgment resulting in bad consequences." data-def-vn="Một lỗi lớn hoặc sự lơ là trong phán đoán dẫn đến những hậu quả tồi tệ." data-context-en="This was a big mistake.">big mistake</span>.
+    </p>
+
+    <p>
+        His <span class="vocab" data-word-en="sailors" data-word-vn="những người thủy thủ đoàn" data-pos="danh từ / noun (plural)" data-def-en="The mariners or crew members tasked with operating the boat." data-def-vn="Các thủy thủ hoặc thành viên thủy thủ đoàn được giao nhiệm vụ vận hành thuyền." data-context-en="His sailors looked at the bag.">sailors</span> <span class="vocab" data-word-en="looked at the bag" data-word-vn="nhìn chằm chằm vào chiếc túi" data-pos="cụm động từ / verb phrase" data-def-en="Directed their gaze intentionally at the leather pouch container." data-def-vn="Hướng ánh mắt của họ một cách cố ý vào hộp đựng túi da." data-context-en="His sailors looked at the bag.">looked at the bag</span>. They were <span class="vocab" data-word-en="curious" data-word-vn="tò mò / hiếu kỳ" data-pos="tính từ / adjective" data-def-en="Eager to know or learn about something unknown." data-def-vn="Háo hức muốn biết hoặc tìm hiểu về một điều gì đó chưa biết." data-context-en="They were curious.">curious</span>. They were also a <span class="vocab" data-word-en="little jealous" data-word-vn="hơi ghen tị một chút" data-pos="cụm tính từ / adjective phrase" data-def-en="Feeling a small degree of resentment or envy toward another's fortune." data-def-vn="Cảm thấy một mức độ oán hận hoặc ghen tị nhỏ đối với vận may của người khác." data-context-en="They were also a little jealous.">little jealous</span>.
+    </p>
+
+    <p>
+        "What is inside?" one sailor <span class="vocab" data-word-en="whispered" data-word-vn="thì thầm nhỏ tiếng" data-pos="động từ / verb (past tense)" data-def-en="Spoke using a soft, quiet breath voice to maintain secrecy." data-def-vn="Nói bằng giọng thở khẽ, nhẹ nhàng để giữ bí mật." data-context-en='"What is inside?" one sailor whispered.'>whispered</span>. "Maybe it is <span class="vocab" data-word-en="gold" data-word-vn="vàng bạc" data-pos="danh từ / noun" data-def-en="A precious yellow metal element highly valued as riches." data-def-vn="Một nguyên tố kim loại màu vàng quý giá được đánh giá cao như của cải." data-context-en='"Maybe it is gold."'>gold</span>. Maybe Aeolus gave Ulysses <span class="vocab" data-word-en="treasure" data-word-vn="kho báu / tài sản quý giá" data-pos="danh từ / noun" data-def-en="A concentration of wealth, precious gems, or valuable objects." data-def-vn="Sự tập trung của cải, đá quý hoặc các vật phẩm có giá trị." data-context-en='"Maybe Aeolus gave Ulysses treasure..."'>treasure</span> and <span class="vocab" data-word-en="told him nothing" data-word-vn="không tiết lộ điều gì với ông ấy / giữ kín" data-pos="mệnh đề / clause" data-def-en="Disclosed zero information or verbal details to him regarding the matter." data-def-vn="Không tiết lộ thông tin hoặc chi tiết bằng lời nói cho ông về vấn đề này." data-context-en='And told him nothing!'>told him nothing</span>!"
+    </p>
+
+    <p>
+        The other sailors <span class="vocab" data-word-en="agreed" data-word-vn="đồng tình / nhất trí" data-pos="động từ / verb (past tense)" data-def-en="Shared the same opinion or concurred with the statement." data-def-vn="Chia sẻ cùng một ý kiến hoặc đồng tình với tuyên bố." data-context-en="The other sailors agreed.">agreed</span>. They wanted to <span class="vocab" data-word-en="look inside" data-word-vn="nhìn thử vào bên trong" data-pos="cụm động từ / verb phrase" data-def-en="Peer into the interior contents of the closed area." data-def-vn="Nhìn vào nội dung bên trong của khu vực khép kín." data-context-en="They wanted to look inside.">look inside</span>. So — <span class="vocab" data-word-en="quietly, carefully" data-word-vn="lặng lẽ và đầy cẩn trọng" data-pos="cụm trạng từ / adverb phrase" data-def-en="In a completely silent and cautious manner to avoid notice." data-def-vn="Theo một cách hoàn toàn im lặng và thận trọng để tránh bị chú ý." data-context-en="So — quietly, carefully — they opened the bag.">quietly, carefully</span> — they <span class="vocab" data-word-en="opened the bag" data-word-vn="mở chiếc túi ra" data-pos="cụm động từ / verb phrase" data-def-en="Unfastened or unlocked the mouth of the leather container." data-def-vn="Tháo hoặc mở miệng của hộp đựng bằng da." data-context-en="They opened the bag.">opened the bag</span>.
+    </p>
+
+    <p>
+        Whoooooosh!
+    </p>
+
+    <p>
+        All the winds <span class="vocab" data-word-en="exploded out at once" data-word-vn="đồng loạt bùng nổ vỡ tung ra ngoài" data-pos="mệnh đề / clause" data-def-en="Burst forth violently and simultaneously from confinement." data-def-vn="Đột ngột bùng phát dữ dội và đồng thời ra khỏi sự giam cầm." data-context-en="All the winds exploded out at once.">exploded out at once</span>. A <span class="vocab" data-word-en="terrible storm" data-word-vn="trận bão khủng khiếp / kinh hoàng" data-pos="cụm danh từ / noun phrase" data-def-en="A horrific, extremely violent atmospheric weather disturbance." data-def-vn="Một sự xáo trộn thời tiết khí quyển kinh hoàng, cực kỳ dữ dội." data-context-en="A terrible storm filled the sky.">terrible storm</span> <span class="vocab" data-word-en="filled the sky" data-word-vn="nhuốm đầy cả bầu trời" data-pos="cụm động từ / verb phrase" data-def-en="Occupied the entire horizon and atmosphere completely." data-def-vn="Chiếm trọn toàn bộ đường chân trời và bầu khí quyển." data-context-en="A terrible storm filled the sky.">filled the sky</span>. The sea <span class="vocab" data-word-en="turned black and wild" data-word-vn="trở nên đen kịt và điên cuồng dữ dội" data-pos="mệnh đề / clause" data-def-en="Converted into a dark, turbulent, and uncontrollably violent state." data-def-vn="Chuyển sang trạng thái tối tăm, hỗn loạn và bạo lực không thể kiểm soát." data-context-en="The sea turned black and wild.">turned black and wild</span>. The ship <span class="vocab" data-word-en="spun around and around" data-word-vn="quay cuồng lộn vòng liên tục" data-pos="mệnh đề / clause" data-def-en="Rotated rapidly and repeatedly in circular paths due to gales." data-def-vn="Quay nhanh và lặp đi lặp lại theo đường tròn do gió bão." data-context-en="The ship spun around and around.">spun around and around</span>. When the storm <span class="vocab" data-word-en="finally stopped" data-word-vn="cuối cùng cũng dừng tạnh" data-pos="mệnh đề / clause" data-def-en="Concluded at long last; ceased all violent wind movements." data-def-vn="Cuối cùng cũng kết thúc; chấm dứt mọi chuyển động mạnh của gió." data-context-en="When the storm finally stopped...">finally stopped</span>, Ulysses <span class="vocab" data-word-en="opened his eyes" data-word-vn="mở mắt ra" data-pos="cụm động từ / verb phrase" data-def-en="Awoke or unclosed his eyelids to look at his surroundings." data-def-vn="Thức dậy hoặc mở mí mắt để nhìn xung quanh." data-context-en="Ulysses opened his eyes and looked around.">opened his eyes</span> and looked around.
+    </p>
+
+    <p>
+        He was <span class="vocab" data-word-en="right back where he started" data-word-vn="quay trở lại đúng nơi ông đã bắt đầu" data-pos="cụm từ / phrase" data-def-en="Returned precisely to the original geographic departure point." data-def-vn="Quay trở lại chính xác điểm xuất phát địa lý ban đầu." data-context-en="He was right back where he started.">right back where he started</span>. <span class="vocab" data-word-en="Far, far from home" data-word-vn="Cách xa, thật xa quê hương" data-pos="cụm từ / phrase" data-def-en="An immense, exhausting distance away from one's native home." data-def-vn="Một khoảng cách xa xôi, mệt mỏi cách xa ngôi nhà bản xứ của một người." data-context-en="Far, far from home.">Far, far from home</span>.
+    </p>
+
+    <p>
+        He <span class="vocab" data-word-en="put his head in his hands" data-word-vn="gục đầu vào hai bàn tay" data-pos="cụm động từ / verb phrase" data-def-en="Rested his forehead inside his open palms as a gesture of despair." data-def-vn="Đặt trán vào trong lòng bàn tay mở như một cử chỉ tuyệt vọng." data-context-en="He put his head in his hands.">put his head in his hands</span>. He wanted to cry. He wanted to shout. But he <span class="vocab" data-word-en="said nothing" data-word-vn="không nói một lời nào" data-pos="cụm động từ / verb phrase" data-def-en="Remained entirely silent; uttered zero words or remarks." data-def-vn="Hoàn toàn im lặng; không nói một lời hay lời nhận xét nào." data-context-en="But he said nothing.">said nothing</span>.
+    </p>
+
+    <p>
+        Sometimes, the <span class="vocab" data-word-en="biggest enemy" data-word-vn="kẻ thù lớn nhất" data-pos="cụm danh từ / noun phrase" data-def-en="The most significant adversary or source of hostility faced." data-def-vn="Đối thủ lớn nhất hoặc nguồn gốc của sự thù địch phải đối mặt." data-context-en="Sometimes, the biggest enemy on a long journey is not the storm.">biggest enemy</span> on a <span class="vocab" data-word-en="long journey" data-word-vn="chuyến hành trình dài ngày" data-pos="cụm danh từ / noun phrase" data-def-en="An extensive, protracted voyage from one place to another." data-def-vn="Một chuyến đi kéo dài, lâu dài từ nơi này đến nơi khác." data-context-en="On a long journey is not the storm.">long journey</span> is not the storm.
+    </p>
+
+    <p>
+        It is <span class="vocab" data-word-en="yourself" data-word-vn="chính bản thân bạn" data-pos="đại từ / pronoun" data-def-en="One's own internal identity, ego, flaws, or person." data-def-vn="Danh tính bên trong, cái tôi, khuyết điểm hoặc con người của chính mình." data-context-en="It is yourself.">yourself</span>.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">clever man</div>
+        <div class="memory-word">go home to Ithaca</div>
+        <div class="memory-word">long war in Troy</div>
+        <div class="memory-word">dangerous journey across the sea</div>
+        <div class="memory-word">gods were watching</div>
+        <div class="memory-word">arrived at a beautiful island</div>
+        <div class="memory-word">was named Aeolus</div>
+        <div class="memory-word">keeper of all the winds</div>
+        <div class="memory-word">in the world</div>
+        <div class="memory-word">liked Ulysses very much</div>
+        <div class="memory-word">listened to all his stories</div>
+        <div class="memory-word">many days and nights</div>
+        <div class="memory-word">time to leave</div>
+        <div class="memory-word">very special gift</div>
+        <div class="memory-word">large leather bag</div>
+        <div class="memory-word">Inside the bag</div>
+        <div class="memory-word">bad winds</div>
+        <div class="memory-word">storms</div>
+        <div class="memory-word">dangerous gusts</div>
+        <div class="memory-word">destroy a ship</div>
+        <div class="memory-word">tied the bag</div>
+        <div class="memory-word">very, very tightly</div>
+        <div class="memory-word">silver rope</div>
+        <div class="memory-word">keep you safe</div>
+        <div class="memory-word">sending the West Wind</div>
+        <div class="memory-word">carry you home</div>
+        <div class="memory-word">very happy</div>
+        <div class="memory-word">thanked Aeolus</div>
+        <div class="memory-word">sailed away</div>
+        <div class="memory-word">nine days and nine nights</div>
+        <div class="memory-word">perfect</div>
+        <div class="memory-word">pushed the ship gently</div>
+        <div class="memory-word">toward Ithaca</div>
+        <div class="memory-word">almost see his home</div>
+        <div class="memory-word">so tired and so happy</div>
+        <div class="memory-word">fell asleep</div>
+        <div class="memory-word">big mistake</div>
+        <div class="memory-word">sailors</div>
+        <div class="memory-word">looked at the bag</div>
+        <div class="memory-word">curious</div>
+        <div class="memory-word">little jealous</div>
+        <div class="memory-word">whispered</div>
+        <div class="memory-word">gold</div>
+        <div class="memory-word">treasure</div>
+        <div class="memory-word">told him nothing</div>
+        <div class="memory-word">agreed</div>
+        <div class="memory-word">look inside</div>
+        <div class="memory-word">quietly, carefully</div>
+        <div class="memory-word">opened the bag</div>
+        <div class="memory-word">exploded out at once</div>
+        <div class="memory-word">terrible storm</div>
+        <div class="memory-word">filled the sky</div>
+        <div class="memory-word">turned black and wild</div>
+        <div class="memory-word">spun around and around</div>
+        <div class="memory-word">finally stopped</div>
+        <div class="memory-word">opened his eyes</div>
+        <div class="memory-word">right back where he started</div>
+        <div class="memory-word">Far, far from home</div>
+        <div class="memory-word">put his head in his hands</div>
+        <div class="memory-word">said nothing</div>
+        <div class="memory-word">biggest enemy</div>
+        <div class="memory-word">long journey</div>
+        <div class="memory-word">yourself</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
