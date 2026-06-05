@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Episode 8: The Temple of Whispers</title>
     <style>
         body {
@@ -199,11 +200,25 @@
             background-color: #ffe082 !important;
             transition: background-color 0.2s ease;
         }
-        @media (max-width: 600px) {
-            .memory-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
     </style>
 </head>
 <body>
