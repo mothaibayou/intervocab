@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Visit to YOUME</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align: left;
+        }
+        body {
+            padding: 0;
+        }
+        .page-container {
+            padding: 20px 16px;
+            border-left: none;
+            border-right: none;
+            border-radius: 0;
+            box-shadow: none;
+        }
+        .memory-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+    </style>
+</head>
+<body>
+<div class="page-container">
+    <h1>A Visit to YOUME</h1>
+    <h2 class="subtitle">A story set in Sài Gòn — coffee, traffic, and getting wonderfully lost</h2>
+
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to the story:</div>
+        <audio id="audio-player" controls>
+            <source src="youme.mp3" type="audio/mpeg">
+            Your browser does not support the audio element.
+        </audio>
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime -= 5">⏪ -5s</button>
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime -= 10">⏪ -10s</button>
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime -= 15">⏪ -15s</button>
+        </div>
+        <div class="speed-controls">
+            <button class="speed-btn" data-speed="0.7" onclick="setPlaybackSpeed(0.7)">0.7×</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1×</button>
+            <button class="speed-btn" data-speed="1.2" onclick="setPlaybackSpeed(1.2)">1.2×</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5×</button>
+        </div>
+    </div>
+
+    <p>
+        The <span class="vocab" data-word-en="day" data-word-vn="ngày" data-pos="danh từ / noun" data-def-en="A 24-hour period; here, the morning of the story." data-def-vn="Một khoảng thời gian 24 giờ; ở đây là buổi sáng của câu chuyện." data-context-vn="Ngày hôm đó bắt đầu trong sáng, nóng và ẩm ướt như thường lệ.">day</span> <span class="vocab" data-word-en="dawned" data-word-vn="bắt đầu / hửng sáng" data-pos="động từ / verb (past tense)" data-def-en="Broke as a new day; the sun began to rise." data-def-vn="Khởi đầu như một ngày mới; mặt trời bắt đầu mọc." data-context-vn="Ngày hôm đó hửng sáng trong trẻo, nóng và ẩm ướt.">dawned</span> <span class="vocab" data-word-en="clear" data-word-vn="trong trẻo / quang đãng" data-pos="tính từ / adjective" data-def-en="Free from clouds or haze; bright and open." data-def-vn="Không có mây hay sương mù; sáng sủa và thoáng đãng." data-context-vn="Ngày hửng sáng trong trẻo, nóng và ẩm ướt.">clear</span>, <span class="vocab" data-word-en="hot" data-word-vn="nóng bức" data-pos="tính từ / adjective" data-def-en="Having a high temperature; uncomfortably warm." data-def-vn="Có nhiệt độ cao; nóng đến mức khó chịu." data-context-vn="Nóng và ẩm ướt như thường lệ trong mùa mưa nhiệt đới.">hot</span> and <span class="vocab" data-word-en="humid" data-word-vn="ẩm ướt" data-pos="tính từ / adjective" data-def-en="Having a high level of moisture in the air; muggy." data-def-vn="Có độ ẩm cao trong không khí; ngột ngạt." data-context-vn="Nóng và ẩm ướt như thường lệ trong mùa mưa nhiệt đới.">humid</span> as <span class="vocab" data-word-en="usual" data-word-vn="thường lệ / như mọi khi" data-pos="tính từ / adjective" data-def-en="Happening or done in the way that is normal or typical." data-def-vn="Xảy ra hoặc được thực hiện theo cách bình thường hoặc điển hình." data-context-vn="Nóng và ẩm ướt như thường lệ trong mùa mưa nhiệt đới.">usual</span> during <span class="vocab" data-word-en="rainy" data-word-vn="mưa / mùa mưa" data-pos="tính từ / adjective" data-def-en="Characterized by frequent or heavy rainfall." data-def-vn="Được đặc trưng bởi lượng mưa thường xuyên hoặc lớn." data-context-vn="Như thường lệ trong mùa mưa nhiệt đới ở Sài Gòn.">rainy</span> <span class="vocab" data-word-en="season" data-word-vn="mùa" data-pos="danh từ / noun" data-def-en="One of the divisions of the year marked by particular weather patterns." data-def-vn="Một trong các khoảng thời gian trong năm được đánh dấu bởi các kiểu thời tiết đặc trưng." data-context-vn="Mùa mưa ở vùng nhiệt đới Sài Gòn.">season</span> in <span class="vocab" data-word-en="tropical" data-word-vn="nhiệt đới" data-pos="tính từ / adjective" data-def-en="Relating to the tropics; hot, humid, and near the equator." data-def-vn="Liên quan đến vùng nhiệt đới; nóng, ẩm và gần đường xích đạo." data-context-vn="Mùa mưa ở vùng nhiệt đới Sài Gòn.">tropical</span> Sài Gòn. The <span class="vocab" data-word-en="air" data-word-vn="không khí" data-pos="danh từ / noun" data-def-en="The invisible mixture of gases surrounding us; the atmosphere." data-def-vn="Hỗn hợp khí vô hình bao quanh chúng ta; bầu khí quyển." data-context-vn="Không khí ép xuống tôi như một tấm chăn ướt.">air</span> <span class="vocab" data-word-en="pressed" data-word-vn="ép / đè" data-pos="động từ / verb (past tense)" data-def-en="Applied steady weight or force upon something." data-def-vn="Tác dụng trọng lượng hoặc lực liên tục lên thứ gì đó." data-context-vn="Không khí ép xuống người tôi như một tấm chăn ướt.">pressed</span> down on me like a <span class="vocab" data-word-en="wet" data-word-vn="ướt" data-pos="tính từ / adjective" data-def-en="Covered or soaked with water or another liquid." data-def-vn="Được phủ hoặc thấm nước hoặc chất lỏng khác." data-context-vn="Như một tấm chăn ướt.">wet</span> <span class="vocab" data-word-en="blanket" data-word-vn="tấm chăn" data-pos="danh từ / noun" data-def-en="A large piece of fabric used for warmth; here used as a metaphor for heavy humid air." data-def-vn="Một tấm vải lớn dùng để giữ ấm; ở đây dùng như ẩn dụ cho không khí ẩm nặng nề." data-context-vn="Không khí ép xuống như một tấm chăn ướt.">blanket</span>. A <span class="vocab" data-word-en="friend" data-word-vn="người bạn" data-pos="danh từ / noun" data-def-en="A person one knows well and has affection for." data-def-vn="Một người mà ai đó quen biết và có tình cảm tốt với họ." data-context-vn="Một người bạn tên Linh đã mời tôi thăm quán cà phê của dì cô ấy.">friend</span> <span class="vocab" data-word-en="named" data-word-vn="tên là / có tên" data-pos="động từ / verb (past tense)" data-def-en="Called by a particular name; given that identity." data-def-vn="Được gọi bằng một tên cụ thể; được định danh đó." data-context-vn="Một người bạn tên là Linh đã mời tôi.">named</span> Linh <span class="vocab" data-word-en="invited" data-word-vn="mời" data-pos="động từ / verb (past tense)" data-def-en="Asked someone to come or join an event or place." data-def-vn="Yêu cầu ai đó đến hoặc tham gia một sự kiện hay địa điểm." data-context-vn="Linh mời tôi đến thăm quán cà phê của dì cô ấy.">invited</span> me to <span class="vocab" data-word-en="visit" data-word-vn="thăm / ghé thăm" data-pos="động từ / verb" data-def-en="To go to see a person or place for a period of time." data-def-vn="Đến gặp một người hoặc một địa điểm trong một khoảng thời gian." data-context-vn="Mời tôi ghé thăm quán cà phê của dì cô ấy.">visit</span> her <span class="vocab" data-word-en="aunt's" data-word-vn="của dì / của bác" data-pos="danh từ sở hữu / possessive noun" data-def-en="Belonging to the sister of one's parent." data-def-vn="Thuộc về chị/em gái của cha hoặc mẹ ai đó." data-context-vn="Quán cà phê của dì cô ấy trên đường Nơ Trang Long.">aunt's</span> <span class="vocab" data-word-en="coffee" data-word-vn="cà phê" data-pos="danh từ / noun" data-def-en="A popular hot or cold beverage brewed from roasted coffee beans." data-def-vn="Một loại đồ uống nóng hoặc lạnh phổ biến được pha từ hạt cà phê rang." data-context-vn="Quán cà phê của dì cô ấy trên đường Nơ Trang Long.">coffee</span> <span class="vocab" data-word-en="shop" data-word-vn="quán / cửa hàng" data-pos="danh từ / noun" data-def-en="A small establishment where goods or food and drinks are sold." data-def-vn="Một cơ sở nhỏ nơi hàng hóa hoặc thức ăn và đồ uống được bán." data-context-vn="Quán cà phê của dì cô ấy trên đường Nơ Trang Long.">shop</span> on <span class="vocab" data-word-en="street" data-word-vn="đường / phố" data-pos="danh từ / noun" data-def-en="A public road in a city or town, typically lined with buildings." data-def-vn="Một con đường công cộng trong thành phố hoặc thị trấn, thường có các tòa nhà hai bên." data-context-vn="Trên đường Nơ Trang Long; ít nhất đó là những gì địa chỉ ghi.">street</span>; at least that's what the <span class="vocab" data-word-en="address" data-word-vn="địa chỉ" data-pos="danh từ / noun" data-def-en="The specific details of where a place is located, used to find it." data-def-vn="Chi tiết cụ thể về nơi một địa điểm tọa lạc, dùng để tìm kiếm nó." data-context-vn="Ít nhất đó là những gì địa chỉ ghi.">address</span> said.
+    </p>
+
+    <p>
+        The <span class="vocab" data-word-en="appointment" data-word-vn="cuộc hẹn" data-pos="danh từ / noun" data-def-en="An arrangement to meet someone at a particular time and place." data-def-vn="Một thỏa thuận để gặp ai đó vào một thời điểm và địa điểm cụ thể." data-context-vn="Cuộc hẹn là vào lúc 9 giờ sáng.">appointment</span> was for 9 am. I <span class="vocab" data-word-en="checked" data-word-vn="kiểm tra / xem" data-pos="động từ / verb (past tense)" data-def-en="Looked at or examined something to get information." data-def-vn="Nhìn vào hoặc kiểm tra thứ gì đó để lấy thông tin." data-context-vn="Tôi đã kiểm tra Google Maps.">checked</span> Google Maps and it's only about 2 <span class="vocab" data-word-en="miles" data-word-vn="dặm" data-pos="danh từ / noun (plural)" data-def-en="A unit of distance equal to about 1.6 kilometers." data-def-vn="Đơn vị đo khoảng cách bằng khoảng 1,6 km." data-context-vn="Chỉ khoảng 2 dặm từ nhà tôi.">miles</span> or so from my <span class="vocab" data-word-en="home" data-word-vn="nhà / nơi ở" data-pos="danh từ / noun" data-def-en="The place where one lives; one's residence." data-def-vn="Nơi ai đó sinh sống; nơi cư trú của họ." data-context-vn="Chỉ khoảng 2 dặm từ nhà tôi.">home</span> but I knew <span class="vocab" data-word-en="traffic" data-word-vn="giao thông / lưu lượng xe" data-pos="danh từ / noun" data-def-en="Vehicles moving along a road; the flow of vehicles." data-def-vn="Các phương tiện di chuyển trên đường; luồng phương tiện." data-context-vn="Tôi biết giao thông có khả năng sẽ rất đông.">traffic</span> was likely to be <span class="vocab" data-word-en="heavy" data-word-vn="nặng / dày đặc" data-pos="tính từ / adjective" data-def-en="(Of traffic) dense and slow-moving; congested." data-def-vn="(Về giao thông) đông đúc và di chuyển chậm; tắc nghẽn." data-context-vn="Giao thông có khả năng rất đông đúc.">heavy</span> so I took my <span class="vocab" data-word-en="motorbike" data-word-vn="xe máy" data-pos="danh từ / noun" data-def-en="A two-wheeled motor vehicle; a motorcycle or scooter." data-def-vn="Một loại phương tiện có động cơ hai bánh; xe mô tô hoặc xe tay ga." data-context-vn="Tôi lấy xe máy ra khỏi nhà giữ xe.">motorbike</span> out of the <span class="vocab" data-word-en="parking" data-word-vn="bãi đậu xe / nhà giữ xe" data-pos="danh từ / noun" data-def-en="An area or structure designated for leaving vehicles." data-def-vn="Một khu vực hoặc công trình được chỉ định để đỗ phương tiện." data-context-vn="Lấy xe máy ra khỏi nhà giữ xe.">parking</span> <span class="vocab" data-word-en="garage" data-word-vn="nhà để xe" data-pos="danh từ / noun" data-def-en="A covered building or area used for housing vehicles." data-def-vn="Một tòa nhà hoặc khu vực có mái che dùng để chứa phương tiện." data-context-vn="Lấy xe máy ra khỏi nhà để xe và rời nhà lúc 8:40 sáng.">garage</span> and left home about 8:40 am. Good <span class="vocab" data-word-en="thing" data-word-vn="việc / điều" data-pos="danh từ / noun" data-def-en="A matter, circumstance, or object; here used in 'Good thing!' meaning it was wise to leave early." data-def-vn="Một việc, hoàn cảnh hoặc đồ vật; ở đây dùng trong 'Good thing!' có nghĩa là thật may đã đi sớm." data-context-vn="May quá! Giao thông rất đông đúc.">thing</span>! Traffic was very heavy and "<span class="vocab" data-word-en="gnarly" data-word-vn="rối rắm / hỗn loạn" data-pos="tính từ / adjective (slang)" data-def-en="(American slang) Extremely difficult, chaotic, or unpleasant." data-def-vn="(Tiếng lóng Mỹ) Cực kỳ khó khăn, hỗn loạn hoặc khó chịu." data-context-vn="Giao thông rất đông và 'hỗn loạn' như người Mỹ hay nói.">gnarly</span>" as we say in America. It <span class="vocab" data-word-en="took" data-word-vn="mất / tốn" data-pos="động từ / verb (past tense)" data-def-en="Required a certain amount of time to accomplish something." data-def-vn="Đòi hỏi một khoảng thời gian nhất định để hoàn thành điều gì đó." data-context-vn="Mất hơn hai mươi phút để đi hết hai dặm.">took</span> over <span class="vocab" data-word-en="twenty" data-word-vn="hai mươi" data-pos="số từ / numeral" data-def-en="The number 20." data-def-vn="Số 20." data-context-vn="Mất hơn hai mươi phút.">twenty</span> <span class="vocab" data-word-en="minutes" data-word-vn="phút" data-pos="danh từ / noun (plural)" data-def-en="Units of time equal to sixty seconds each." data-def-vn="Đơn vị thời gian bằng sáu mươi giây mỗi đơn vị." data-context-vn="Mất hơn hai mươi phút để đi hết hai dặm.">minutes</span> to <span class="vocab" data-word-en="cover" data-word-vn="đi qua / vượt qua" data-pos="động từ / verb" data-def-en="To travel a particular distance." data-def-vn="Di chuyển qua một khoảng cách nhất định." data-context-vn="Mất hơn hai mươi phút để đi hết hai dặm.">cover</span> the two miles. The <span class="vocab" data-word-en="route" data-word-vn="tuyến đường / lộ trình" data-pos="danh từ / noun" data-def-en="A way or course taken to get from one place to another." data-def-vn="Một con đường hoặc lộ trình được đi từ nơi này đến nơi khác." data-context-vn="Lộ trình khá thẳng và đơn giản.">route</span> was fairly <span class="vocab" data-word-en="straight" data-word-vn="thẳng / thẳng thắn" data-pos="tính từ / adjective" data-def-en="Extending without a curve or bend; direct." data-def-vn="Kéo dài không có đường cong hay khúc quanh; thẳng thắn." data-context-vn="Lộ trình khá thẳng và đơn giản.">straight</span> <span class="vocab" data-word-en="forward" data-word-vn="về phía trước / đơn giản" data-pos="tính từ / adjective" data-def-en="Easy to understand or do; not complicated." data-def-vn="Dễ hiểu hoặc dễ làm; không phức tạp." data-context-vn="Khá thẳng và đơn giản — cho đến khi tôi đến gần nơi đó.">forward</span> and <span class="vocab" data-word-en="simple" data-word-vn="đơn giản" data-pos="tính từ / adjective" data-def-en="Easily understood or done; not complicated or difficult." data-def-vn="Dễ hiểu hoặc dễ làm; không phức tạp hoặc khó khăn." data-context-vn="Khá thẳng và đơn giản — cho đến khi tôi đến gần.">simple</span> — that is until I got <span class="vocab" data-word-en="close" data-word-vn="gần / đến gần" data-pos="tính từ / adjective" data-def-en="Near in distance; not far away." data-def-vn="Gần về khoảng cách; không xa." data-context-vn="Cho đến khi tôi đến gần nơi đó.">close</span>. Then my <span class="vocab" data-word-en="worst" data-word-vn="tệ nhất / xấu nhất" data-pos="tính từ / adjective (superlative)" data-def-en="The most bad, severe, or undesirable." data-def-vn="Tệ nhất, nghiêm trọng nhất hoặc không mong muốn nhất." data-context-vn="Nỗi sợ hãi tệ nhất của tôi đã được xác nhận.">worst</span> <span class="vocab" data-word-en="fears" data-word-vn="nỗi sợ hãi" data-pos="danh từ / noun (plural)" data-def-en="Feelings of anxiety or dread about possible events." data-def-vn="Cảm giác lo lắng hoặc kinh hãi về các sự kiện có thể xảy ra." data-context-vn="Nỗi sợ hãi tệ nhất của tôi đã được xác nhận.">fears</span> were <span class="vocab" data-word-en="confirmed" data-word-vn="được xác nhận / thành sự thật" data-pos="động từ / verb (past tense, passive)" data-def-en="Established as true; proven to be correct." data-def-vn="Được xác định là đúng; được chứng minh là chính xác." data-context-vn="Nỗi sợ hãi tệ nhất của tôi đã được xác nhận.">confirmed</span>. Like many <span class="vocab" data-word-en="addresses" data-word-vn="địa chỉ" data-pos="danh từ / noun (plural)" data-def-en="Specific location details used to find a building or place." data-def-vn="Chi tiết vị trí cụ thể dùng để tìm một tòa nhà hoặc địa điểm." data-context-vn="Giống như nhiều địa chỉ trên các đường phố chính như Nơ Trang Long.">addresses</span> on <span class="vocab" data-word-en="main" data-word-vn="chính / lớn" data-pos="tính từ / adjective" data-def-en="Most important; the principal or largest of its kind." data-def-vn="Quan trọng nhất; cái chính hoặc lớn nhất thuộc loại đó." data-context-vn="Trên các đường phố chính như Nơ Trang Long, chúng không ở trên 'con đường chính'.">main</span> streets like Nơ Trang Long, they are not on the '<span class="vocab" data-word-en="drag" data-word-vn="con đường chính / mặt tiền" data-pos="danh từ / noun (slang)" data-def-en="(Slang) The main street of a town; the primary thoroughfare." data-def-vn="(Tiếng lóng) Đường phố chính của một thị trấn; đại lộ chính." data-context-vn="Chúng không nằm trên 'con đường chính'.">drag</span>'. If you <span class="vocab" data-word-en="drive" data-word-vn="lái xe / chạy xe" data-pos="động từ / verb" data-def-en="To operate and steer a motor vehicle." data-def-vn="Vận hành và lái một phương tiện có động cơ." data-context-vn="Nếu bạn lái xe dọc đường Nơ Trang Long và vặn cổ tìm kiếm địa chỉ.">drive</span> along Nơ Trang Long street <span class="vocab" data-word-en="craning" data-word-vn="vặn cổ / dướn cổ" data-pos="động từ / verb (participle)" data-def-en="Stretching the neck to see something more clearly." data-def-vn="Vươn cổ ra để nhìn thấy thứ gì đó rõ hơn." data-context-vn="Vừa lái xe vừa vặn cổ tìm địa chỉ.">craning</span> your neck (as well as '<span class="vocab" data-word-en="risking" data-word-vn="mạo hiểm / liều lĩnh" data-pos="động từ / verb (participle)" data-def-en="Putting oneself in danger; exposing oneself to harm." data-def-vn="Đặt bản thân vào nguy hiểm; tự phơi mình trước tổn hại." data-context-vn="Cũng như 'liều cổ') khi tìm kiếm địa chỉ của họ.">risking</span> your neck') looking for their <span class="vocab" data-word-en="address" data-word-vn="địa chỉ" data-pos="danh từ / noun" data-def-en="The specific details of where a place is located." data-def-vn="Chi tiết cụ thể về nơi một địa điểm tọa lạc.">address</span>, you will never <span class="vocab" data-word-en="find" data-word-vn="tìm thấy / tìm ra" data-pos="động từ / verb" data-def-en="To discover or locate something after searching." data-def-vn="Khám phá hoặc xác định vị trí thứ gì đó sau khi tìm kiếm." data-context-vn="Bạn sẽ không bao giờ tìm thấy nó.">find</span> it.
+    </p>
+
+    <p>
+        The coffee shop was <span class="vocab" data-word-en="tucked" data-word-vn="khuất / ẩn mình" data-pos="động từ / verb (past tense, passive)" data-def-en="Hidden away in a sheltered or out-of-the-way position." data-def-vn="Ẩn mình ở một vị trí kín đáo hoặc không thuận tiện." data-context-vn="Quán cà phê khuất sâu trong mê cung những con hẻm nhỏ.">tucked</span> away <span class="vocab" data-word-en="deep" data-word-vn="sâu / sâu tận" data-pos="trạng từ / adverb" data-def-en="Far inside or far down; a considerable distance from the surface or edge." data-def-vn="Sâu bên trong hoặc sâu tận dưới; khoảng cách đáng kể từ bề mặt hoặc mép ngoài." data-context-vn="Khuất sâu trong mê cung những con hẻm nhỏ.">deep</span> in a <span class="vocab" data-word-en="welter" data-word-vn="mê cung / mớ hỗn độn" data-pos="danh từ / noun" data-def-en="A confused or disorderly mass or jumble of things." data-def-vn="Một khối hỗn độn hoặc lộn xộn của các thứ." data-context-vn="Khuất sâu trong mê cung hẻm nhỏ.">welter</span> of <span class="vocab" data-word-en="narrow" data-word-vn="hẹp / nhỏ hẹp" data-pos="tính từ / adjective" data-def-en="Of small width; not wide." data-def-vn="Có chiều rộng nhỏ; không rộng." data-context-vn="Mê cung những con hẻm nhỏ hẹp.">narrow</span> <span class="vocab" data-word-en="side" data-word-vn="bên / phụ" data-pos="tính từ / adjective" data-def-en="Located to one side; branching off a main route." data-def-vn="Nằm ở một bên; rẽ nhánh khỏi tuyến đường chính." data-context-vn="Những con hẻm nhỏ.">side</span> streets that <span class="vocab" data-word-en="amazingly" data-word-vn="thật kỳ lạ / đáng ngạc nhiên thay" data-pos="trạng từ / adverb" data-def-en="In a way that causes surprise or wonder." data-def-vn="Theo một cách gây ngạc nhiên hoặc kinh ngạc." data-context-vn="Thật kỳ lạ, tất cả đều mang địa chỉ 'Nơ Trang Long'.">amazingly</span>, all had the address of 'Nơ Trang Long'. After <span class="vocab" data-word-en="wasting" data-word-vn="lãng phí / phí" data-pos="động từ / verb (participle)" data-def-en="Spending time unprofitably; using time without result." data-def-vn="Dành thời gian vô ích; sử dụng thời gian mà không có kết quả." data-context-vn="Sau khi lãng phí 10–15 phút lùng sục các hẻm này.">wasting</span> 10 or 15 minutes <span class="vocab" data-word-en="scouring" data-word-vn="lùng sục / tìm kiếm khắp nơi" data-pos="động từ / verb (participle)" data-def-en="Searching thoroughly and energetically through an area." data-def-vn="Tìm kiếm kỹ lưỡng và tích cực khắp một khu vực." data-context-vn="Lùng sục khắp các hẻm này.">scouring</span> these 'hẻm's, I finally '<span class="vocab" data-word-en="threw" data-word-vn="ném / từ bỏ" data-pos="động từ / verb (past tense)" data-def-en="(In the idiom 'threw in the towel') gave up; admitted defeat." data-def-vn="(Trong thành ngữ 'threw in the towel') bỏ cuộc; thừa nhận thất bại." data-context-vn="Cuối cùng tôi đã bỏ cuộc và gọi điện cho Linh.">threw</span> in the <span class="vocab" data-word-en="towel" data-word-vn="khăn / khăn tắm" data-pos="danh từ / noun" data-def-en="(In 'threw in the towel') a boxing reference meaning to give up." data-def-vn="(Trong 'threw in the towel') thuật ngữ quyền anh nghĩa là bỏ cuộc." data-context-vn="Bỏ cuộc và gọi điện cho Linh.">towel</span>' and called Linh on the <span class="vocab" data-word-en="phone" data-word-vn="điện thoại" data-pos="danh từ / noun" data-def-en="A device used for speaking to someone in another location." data-def-vn="Thiết bị dùng để nói chuyện với ai đó ở nơi khác." data-context-vn="Gọi điện thoại cho Linh.">phone</span>. I was actually <span class="vocab" data-word-en="close" data-word-vn="gần" data-pos="tính từ / adjective" data-def-en="Near in distance; not far away.">close</span> but Linh had to <span class="vocab" data-word-en="walk" data-word-vn="đi bộ / bước ra" data-pos="động từ / verb" data-def-en="To move on foot; to go somewhere by walking." data-def-vn="Di chuyển bằng chân; đến nơi nào đó bằng cách đi bộ." data-context-vn="Linh phải bước ra đường chính Nơ Trang Long để dẫn tôi vào.">walk</span> out to the <span class="vocab" data-word-en="main" data-word-vn="chính / lớn" data-pos="tính từ / adjective" data-def-en="Most important; principal.">main</span> street of Nơ Trang Long and <span class="vocab" data-word-en="guide" data-word-vn="dẫn đường / hướng dẫn" data-pos="động từ / verb" data-def-en="To lead or direct someone to a destination." data-def-vn="Dẫn dắt hoặc hướng dẫn ai đó đến điểm đến." data-context-vn="Linh hướng dẫn tôi đến một quán cà phê nhỏ xinh tên YOUME.">guide</span> me to a <span class="vocab" data-word-en="cute" data-word-vn="dễ thương / xinh xắn" data-pos="tính từ / adjective" data-def-en="Attractively small or pretty in an endearing way." data-def-vn="Nhỏ nhắn hoặc xinh đẹp một cách đáng yêu." data-context-vn="Một quán cà phê nhỏ xinh tên YOUME.">cute</span> <span class="vocab" data-word-en="little" data-word-vn="nhỏ / nhỏ nhắn" data-pos="tính từ / adjective" data-def-en="Small in size; used here affectionately." data-def-vn="Nhỏ về kích thước; dùng ở đây một cách trìu mến." data-context-vn="Một quán cà phê nhỏ xinh tên YOUME.">little</span> coffee shop called YOUME.
+    </p>
+
+    <p>
+        Linh is a <span class="vocab" data-word-en="student" data-word-vn="sinh viên / học sinh" data-pos="danh từ / noun" data-def-en="A person who is studying at a school or university." data-def-vn="Một người đang học tại trường học hoặc đại học." data-context-vn="Linh là sinh viên, đi xe mười một kilômét đến trường mỗi tuần.">student</span> who <span class="vocab" data-word-en="drives" data-word-vn="chạy xe / lái xe" data-pos="động từ / verb (present tense)" data-def-en="Operates a motor vehicle to travel somewhere." data-def-vn="Điều khiển một phương tiện có động cơ để di chuyển đến đâu đó." data-context-vn="Cô ấy lái xe mười một kilômét đến trường mấy ngày trong tuần.">drives</span> <span class="vocab" data-word-en="eleven" data-word-vn="mười một" data-pos="số từ / numeral" data-def-en="The number 11." data-def-vn="Số 11." data-context-vn="Đi xe mười một kilômét đến trường đại học.">eleven</span> <span class="vocab" data-word-en="kilometers" data-word-vn="kilômét" data-pos="danh từ / noun (plural)" data-def-en="Units of distance equal to 1,000 meters each." data-def-vn="Đơn vị đo khoảng cách bằng 1.000 mét mỗi đơn vị." data-context-vn="Đi xe mười một kilômét đến trường đại học.">kilometers</span> to her <span class="vocab" data-word-en="university" data-word-vn="trường đại học" data-pos="danh từ / noun" data-def-en="An institution of higher education that awards degrees." data-def-vn="Cơ sở giáo dục bậc cao cấp bằng các văn bằng." data-context-vn="Cô ấy lái xe đến trường đại học mấy ngày trong tuần.">university</span> several <span class="vocab" data-word-en="days" data-word-vn="ngày" data-pos="danh từ / noun (plural)" data-def-en="Periods of 24 hours; here meaning specific days of the week." data-def-vn="Các khoảng thời gian 24 giờ; ở đây có nghĩa là các ngày cụ thể trong tuần." data-context-vn="Mấy ngày trong tuần.">days</span> a week. She is from Quảng Ngãi <span class="vocab" data-word-en="city" data-word-vn="thành phố" data-pos="danh từ / noun" data-def-en="A large and permanent human settlement." data-def-vn="Một khu định cư lớn và lâu dài của con người." data-context-vn="Cô ấy đến từ thành phố Quảng Ngãi ở miền Trung Việt Nam.">city</span> in <span class="vocab" data-word-en="central" data-word-vn="miền Trung / trung tâm" data-pos="tính từ / adjective" data-def-en="In or near the center; relating to the middle region of a country." data-def-vn="Ở hoặc gần trung tâm; liên quan đến khu vực trung tâm của một đất nước." data-context-vn="Ở miền Trung Việt Nam.">central</span> Vietnam, which is very <span class="vocab" data-word-en="hot" data-word-vn="nóng bức" data-pos="tính từ / adjective" data-def-en="Having a high temperature; uncomfortably warm.">hot</span> in June, about 40 C. I had a <span class="vocab" data-word-en="delicious" data-word-vn="ngon / thơm ngon" data-pos="tính từ / adjective" data-def-en="Having a very pleasant taste or smell; highly enjoyable to eat or drink." data-def-vn="Có hương vị hoặc mùi thơm rất dễ chịu; rất thích thú khi ăn hoặc uống." data-context-vn="Tôi có một thức uống ngon tuyệt trực tiếp từ một quả dừa.">delicious</span> <span class="vocab" data-word-en="drink" data-word-vn="thức uống / đồ uống" data-pos="danh từ / noun" data-def-en="A liquid consumed for refreshment or nourishment." data-def-vn="Một chất lỏng được tiêu thụ để giải khát hoặc bổ dưỡng." data-context-vn="Một thức uống ngon trực tiếp từ quả dừa.">drink</span> <span class="vocab" data-word-en="directly" data-word-vn="trực tiếp / ngay từ" data-pos="trạng từ / adverb" data-def-en="Without any intermediate step; straight from the source." data-def-vn="Không có bước trung gian nào; thẳng từ nguồn." data-context-vn="Thức uống trực tiếp từ quả dừa.">directly</span> from a <span class="vocab" data-word-en="coconut" data-word-vn="quả dừa" data-pos="danh từ / noun" data-def-en="The large hard fruit of a tropical palm, with sweet white flesh and juice inside." data-def-vn="Quả lớn cứng của cây cọ nhiệt đới, có phần thịt trắng ngọt và nước bên trong." data-context-vn="Uống trực tiếp từ một quả dừa.">coconut</span> and <span class="vocab" data-word-en="met" data-word-vn="gặp gỡ / gặp" data-pos="động từ / verb (past tense)" data-def-en="Encountered or was introduced to someone for the first time." data-def-vn="Gặp hoặc được giới thiệu với ai đó lần đầu tiên." data-context-vn="Gặp gỡ một số hàng xóm địa phương.">met</span> some of the local <span class="vocab" data-word-en="neighbors" data-word-vn="hàng xóm / láng giềng" data-pos="danh từ / noun (plural)" data-def-en="People living nearby; residents of the surrounding area." data-def-vn="Những người sống gần đây; cư dân của khu vực xung quanh." data-context-vn="Gặp gỡ một số hàng xóm địa phương.">neighbors</span>. I was an <span class="vocab" data-word-en="object" data-word-vn="đối tượng / mục tiêu" data-pos="danh từ / noun" data-def-en="A person or thing to which a specified feeling or action is directed." data-def-vn="Một người hoặc thứ mà cảm xúc hoặc hành động cụ thể được hướng đến." data-context-vn="Tôi trở thành đối tượng của sự tò mò rất lớn.">object</span> of great <span class="vocab" data-word-en="curiosity" data-word-vn="sự tò mò / hiếu kỳ" data-pos="danh từ / noun" data-def-en="A strong desire to know or learn about something." data-def-vn="Một mong muốn mạnh mẽ muốn biết hoặc tìm hiểu về điều gì đó." data-context-vn="Tôi là đối tượng của sự tò mò rất lớn vì họ không thấy người nước ngoài ở những khu phố hẻo lánh.">curiosity</span> since they don't get <span class="vocab" data-word-en="foreigners" data-word-vn="người nước ngoài" data-pos="danh từ / noun (plural)" data-def-en="People from other countries; non-locals." data-def-vn="Những người đến từ các quốc gia khác; không phải người địa phương." data-context-vn="Vì họ không thấy người nước ngoài ở những khu phố hẻo lánh.">foreigners</span> in <span class="vocab" data-word-en="neighborhoods" data-word-vn="khu phố / khu dân cư" data-pos="danh từ / noun (plural)" data-def-en="Districts or areas within a city where people live." data-def-vn="Các khu vực hoặc phường trong thành phố nơi mọi người sinh sống." data-context-vn="Ở những khu phố hẻo lánh.">neighborhoods</span> '<span class="vocab" data-word-en="off" data-word-vn="ra ngoài / xa khỏi" data-pos="giới từ / preposition" data-def-en="Away from; at a distance from (in the idiom 'off the beaten path')." data-def-vn="Tránh khỏi; cách xa (trong thành ngữ 'off the beaten path')." data-context-vn="Ở những khu phố hẻo lánh.">off</span> the <span class="vocab" data-word-en="beaten" data-word-vn="mòn / đã đi nhiều" data-pos="tính từ / adjective" data-def-en="(In 'beaten path') a well-used or well-known route; the familiar tourist trail." data-def-vn="(Trong 'beaten path') một tuyến đường đã được sử dụng nhiều hoặc nổi tiếng; con đường du lịch quen thuộc." data-context-vn="Những khu phố hẻo lánh.">beaten</span> <span class="vocab" data-word-en="path" data-word-vn="con đường / lối mòn" data-pos="danh từ / noun" data-def-en="A track or route used for walking; in the idiom, the familiar or popular route." data-def-vn="Một con đường hoặc lộ trình dùng để đi bộ; trong thành ngữ, là tuyến đường quen thuộc hoặc phổ biến." data-context-vn="Ở những khu phố hẻo lánh, xa khỏi lối mòn.">path</span>'. The <span class="vocab" data-word-en="kids" data-word-vn="bọn trẻ / lũ trẻ" data-pos="danh từ / noun (plural)" data-def-en="Children; young people." data-def-vn="Trẻ em; những người trẻ tuổi." data-context-vn="Bọn trẻ rất dễ thương nhưng hơi nhút nhát với người nước ngoài trông lạ lẫm.">kids</span> were very cute but a little <span class="vocab" data-word-en="shy" data-word-vn="nhút nhát / e dè" data-pos="tính từ / adjective" data-def-en="Nervous or timid in the company of other people." data-def-vn="Bồn chồn hoặc nhút nhát khi ở cùng người khác." data-context-vn="Hơi nhút nhát với người nước ngoài trông lạ lẫm.">shy</span> about the <span class="vocab" data-word-en="strange" data-word-vn="lạ lẫm / kỳ lạ" data-pos="tính từ / adjective" data-def-en="Unusual or unfamiliar; not known or seen before." data-def-vn="Khác thường hoặc không quen thuộc; chưa biết hoặc chưa thấy trước đây." data-context-vn="Người nước ngoài trông lạ lẫm.">strange</span>-looking <span class="vocab" data-word-en="foreigner" data-word-vn="người nước ngoài" data-pos="danh từ / noun" data-def-en="A person from another country." data-def-vn="Một người đến từ quốc gia khác." data-context-vn="Người nước ngoài trông lạ lẫm.">foreigner</span>. After an <span class="vocab" data-word-en="enjoyable" data-word-vn="thú vị / vui vẻ" data-pos="tính từ / adjective" data-def-en="Giving delight or pleasure; pleasant." data-def-vn="Mang lại niềm vui hoặc sự thích thú; dễ chịu." data-context-vn="Sau một khoảng thời gian vui vẻ uống và trò chuyện.">enjoyable</span> time <span class="vocab" data-word-en="drinking" data-word-vn="uống / nhâm nhi" data-pos="động từ / verb (participle)" data-def-en="Consuming a liquid beverage." data-def-vn="Tiêu thụ đồ uống dạng lỏng." data-context-vn="Uống và trò chuyện vui vẻ.">drinking</span> and <span class="vocab" data-word-en="chatting" data-word-vn="trò chuyện / tán gẫu" data-pos="động từ / verb (participle)" data-def-en="Talking in an informal and friendly way." data-def-vn="Nói chuyện theo cách không chính thức và thân thiện." data-context-vn="Uống và trò chuyện vui vẻ.">chatting</span>, I got back on my motorbike and <span class="vocab" data-word-en="weaved" data-word-vn="luồn lách / len lỏi" data-pos="động từ / verb (past tense)" data-def-en="Moved in a winding path through obstacles; zigzagged." data-def-vn="Di chuyển theo đường ngoằn ngoèo qua các vật cản; đi ngoằn ngoèo." data-context-vn="Tôi luồn lách qua dòng giao thông dày đặc.">weaved</span> my way through the <span class="vocab" data-word-en="dense" data-word-vn="dày đặc / đông đúc" data-pos="tính từ / adjective" data-def-en="Closely packed together; thick and crowded." data-def-vn="Được đóng gói chặt chẽ với nhau; dày và đông đúc." data-context-vn="Luồn lách qua dòng giao thông dày đặc.">dense</span> traffic until I made it back home, <span class="vocab" data-word-en="grateful" data-word-vn="biết ơn / cảm kích" data-pos="tính từ / adjective" data-def-en="Feeling or showing thanks for something received." data-def-vn="Cảm thấy hoặc bày tỏ lòng biết ơn vì điều gì đó nhận được." data-context-vn="Tôi biết ơn vì đã sống sót qua một chuyến đi nữa trên những con phố tắc nghẽn của Sài Gòn.">grateful</span> to have <span class="vocab" data-word-en="survived" data-word-vn="sống sót / vượt qua" data-pos="động từ / verb (past tense)" data-def-en="Continued to live or exist despite difficulty or danger." data-def-vn="Tiếp tục sống hoặc tồn tại mặc dù có khó khăn hoặc nguy hiểm." data-context-vn="Biết ơn vì đã sống sót qua một chuyến đi nữa.">survived</span> another <span class="vocab" data-word-en="trip" data-word-vn="chuyến đi" data-pos="danh từ / noun" data-def-en="A journey or excursion from one place to another." data-def-vn="Một chuyến hành trình hoặc cuộc đi chơi từ nơi này đến nơi khác." data-context-vn="Sống sót qua một chuyến đi nữa trên những con phố tắc nghẽn của Sài Gòn.">trip</span> on the <span class="vocab" data-word-en="jam-packed" data-word-vn="chật kín / đông nghẹt" data-pos="tính từ / adjective" data-def-en="Extremely crowded or full; packed tightly with people or vehicles." data-def-vn="Cực kỳ đông đúc hoặc đầy ắp; chật kín người hoặc phương tiện." data-context-vn="Trên những con phố đông nghẹt xe của Sài Gòn.">jam-packed</span> streets of Sài Gòn.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">dawned</div>
+        <div class="memory-word">clear</div>
+        <div class="memory-word">humid</div>
+        <div class="memory-word">rainy season</div>
+        <div class="memory-word">tropical</div>
+        <div class="memory-word">wet blanket</div>
+        <div class="memory-word">invited</div>
+        <div class="memory-word">address</div>
+        <div class="memory-word">appointment</div>
+        <div class="memory-word">traffic</div>
+        <div class="memory-word">heavy</div>
+        <div class="memory-word">motorbike</div>
+        <div class="memory-word">parking garage</div>
+        <div class="memory-word">gnarly</div>
+        <div class="memory-word">cover</div>
+        <div class="memory-word">route</div>
+        <div class="memory-word">straight forward</div>
+        <div class="memory-word">fears</div>
+        <div class="memory-word">confirmed</div>
+        <div class="memory-word">main drag</div>
+        <div class="memory-word">craning</div>
+        <div class="memory-word">risking your neck</div>
+        <div class="memory-word">tucked</div>
+        <div class="memory-word">deep</div>
+        <div class="memory-word">welter</div>
+        <div class="memory-word">narrow</div>
+        <div class="memory-word">amazingly</div>
+        <div class="memory-word">wasting</div>
+        <div class="memory-word">scouring</div>
+        <div class="memory-word">threw in the towel</div>
+        <div class="memory-word">guide</div>
+        <div class="memory-word">cute</div>
+        <div class="memory-word">student</div>
+        <div class="memory-word">kilometers</div>
+        <div class="memory-word">university</div>
+        <div class="memory-word">central</div>
+        <div class="memory-word">delicious</div>
+        <div class="memory-word">coconut</div>
+        <div class="memory-word">neighbors</div>
+        <div class="memory-word">curiosity</div>
+        <div class="memory-word">foreigners</div>
+        <div class="memory-word">off the beaten path</div>
+        <div class="memory-word">shy</div>
+        <div class="memory-word">enjoyable</div>
+        <div class="memory-word">chatting</div>
+        <div class="memory-word">weaved</div>
+        <div class="memory-word">dense</div>
+        <div class="memory-word">grateful</div>
+        <div class="memory-word">survived</div>
+        <div class="memory-word">jam-packed</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+
+
+<!-- VOCABULARY DENSITY RULE reminder:
+Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: e.g., tag "quê hương" separately AND "yêu dấu" separately.
+- Tag "trí tuệ" and "sắc bén" as two different spans.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+	               	 -->
