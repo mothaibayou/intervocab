@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>An F1 for Emily</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+	<!-- VOCABULARY DENSITY RULE:  please meticulously follow these instructions:
+     Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: e.g., tag "quê hương" separately AND "yêu dấu" separately.
+- Tag "trí tuệ" and "sắc bén" as two different spans.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+      -->
+			
+		
+</head>
+<body>
+
+<div class="page-container">
+    <h1>An F1 for Emily</h1>
+    <h2 class="subtitle">True Stories Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to the Story</div>
+        <audio id="audio-player" src="emily.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        <span class="vocab" data-word-en="Receiving" data-word-vn="Nhận được" data-pos="verb (gerund)" data-def-en="Getting or being given something." data-def-vn="Được trao hoặc nhận được thứ gì đó." data-context-en="Receiving an F1 student visa to study in America is the 'holy grail' for thousands of high school students in Sài Gòn.">Receiving</span> an
+        <span class="vocab" data-word-en="F1" data-word-vn="F1 (loại visa)" data-pos="noun (proper)" data-def-en="A U.S. student visa category that allows foreigners to study full-time at an accredited institution." data-def-vn="Loại visa du học Mỹ cho phép người nước ngoài theo học toàn thời gian tại cơ sở giáo dục được công nhận." data-context-en="Receiving an F1 student visa to study in America.">F1</span>
+        <span class="vocab" data-word-en="student" data-word-vn="sinh viên / học sinh" data-pos="noun" data-def-en="A person who is studying at a school or college." data-def-vn="Người đang theo học tại một trường học hoặc cao đẳng." data-context-en="An F1 student visa.">student</span>
+        <span class="vocab" data-word-en="visa" data-word-vn="thị thực / visa" data-pos="noun" data-def-en="An official document or stamp that permits entry to or study in a foreign country." data-def-vn="Tài liệu chính thức hoặc con dấu cho phép nhập cảnh hoặc học tập tại nước ngoài." data-context-en="An F1 student visa to study in America.">visa</span>
+        to
+        <span class="vocab" data-word-en="study" data-word-vn="học tập" data-pos="verb" data-def-en="To devote time and effort to acquiring knowledge or education." data-def-vn="Dành thời gian và công sức để tiếp thu kiến thức hoặc học vấn." data-context-en="A visa to study in America.">study</span>
+        in America is the
+        '<span class="vocab" data-word-en="holy" data-word-vn="thiêng liêng / thánh" data-pos="adjective" data-def-en="Sacred; associated with something deeply revered or desired above all else." data-def-vn="Thiêng liêng; gắn liền với điều gì đó được tôn kính hoặc mong muốn hơn tất cả." data-context-en="The 'holy grail' for thousands of high school students.">holy</span>
+        <span class="vocab" data-word-en="grail" data-word-vn="chén thánh / mục tiêu tối thượng" data-pos="noun" data-def-en="Something that is eagerly pursued but difficult to achieve; the ultimate goal." data-def-vn="Điều gì đó được theo đuổi tha thiết nhưng khó đạt được; mục tiêu tối thượng." data-context-en="The 'holy grail' for thousands of high school students in Sài Gòn.">grail</span>'
+        for
+        <span class="vocab" data-word-en="thousands" data-word-vn="hàng ngàn" data-pos="noun (plural)" data-def-en="A very large number; many thousands of people or things." data-def-vn="Một số lượng rất lớn; hàng ngàn người hoặc vật." data-context-en="For thousands of high school students in Sài Gòn.">thousands</span>
+        of
+        <span class="vocab" data-word-en="high" data-word-vn="cấp cao / trung học" data-pos="adjective" data-def-en="Of an advanced or senior level within a school system." data-def-vn="Ở cấp độ nâng cao hoặc cao cấp trong hệ thống trường học." data-context-en="High school students in Sài Gòn.">high</span>
+        <span class="vocab" data-word-en="school" data-word-vn="trường học" data-pos="noun" data-def-en="An educational institution for students, typically ages 6–18." data-def-vn="Cơ sở giáo dục dành cho học sinh, thường từ 6 đến 18 tuổi." data-context-en="High school students in Sài Gòn.">school</span>
+        <span class="vocab" data-word-en="students" data-word-vn="học sinh / sinh viên" data-pos="noun (plural)" data-def-en="People enrolled in school and engaged in learning." data-def-vn="Những người đăng ký học ở trường và tham gia vào việc học tập." data-context-en="Thousands of high school students in Sài Gòn.">students</span>
+        in Sài Gòn. Only a
+        <span class="vocab" data-word-en="small" data-word-vn="nhỏ" data-pos="adjective" data-def-en="Not large in size, degree, or number." data-def-vn="Không lớn về kích thước, mức độ hoặc số lượng." data-context-en="Only a small percentage of them get it.">small</span>
+        <span class="vocab" data-word-en="percentage" data-word-vn="tỉ lệ phần trăm" data-pos="noun" data-def-en="A proportion or share of a whole, expressed as a fraction of 100." data-def-vn="Tỉ lệ hoặc phần của một tổng thể, được biểu thị dưới dạng phần trăm." data-context-en="Only a small percentage of them get it.">percentage</span>
+        of them
+        <span class="vocab" data-word-en="get" data-word-vn="nhận được / đạt được" data-pos="verb" data-def-en="To obtain or receive something." data-def-vn="Để có được hoặc nhận được thứ gì đó." data-context-en="Only a small percentage of them get it.">get</span>
+        it. This is the
+        <span class="vocab" data-word-en="story" data-word-vn="câu chuyện" data-pos="noun" data-def-en="A narrative account of events, real or fictional." data-def-vn="Câu chuyện kể về các sự kiện, có thật hoặc hư cấu." data-context-en="This is the story of one student who did receive it.">story</span>
+        of one student who did
+        <span class="vocab" data-word-en="receive" data-word-vn="nhận được" data-pos="verb" data-def-en="To be given or presented with something." data-def-vn="Được trao cho hoặc trình bày với thứ gì đó." data-context-en="One student who did receive it.">receive</span>
+        it. Her name is Emily and her
+        <span class="vocab" data-word-en="home" data-word-vn="quê nhà / nhà" data-pos="noun" data-def-en="The place where a person was born or where they live." data-def-vn="Nơi một người sinh ra hoặc nơi họ sinh sống." data-context-en="Her home town is Dak Lak.">home</span>
+        <span class="vocab" data-word-en="town" data-word-vn="thị trấn / quê hương" data-pos="noun" data-def-en="A settlement smaller than a city; one's place of origin." data-def-vn="Khu dân cư nhỏ hơn thành phố; nơi xuất thân của một người." data-context-en="Her home town is Dak Lak.">town</span>
+        is Dak Lak. Her story is
+        <span class="vocab" data-word-en="proof" data-word-vn="bằng chứng" data-pos="noun" data-def-en="Evidence that establishes the truth of a fact or claim." data-def-vn="Bằng chứng xác lập sự thật của một sự kiện hoặc khẳng định." data-context-en="Her story is proof that failure is part of success.">proof</span>
+        that instead of being an
+        <span class="vocab" data-word-en="obstacle" data-word-vn="trở ngại / chướng ngại vật" data-pos="noun" data-def-en="Something that blocks or hinders progress toward a goal." data-def-vn="Thứ gì đó cản trở hoặc ngăn chặn sự tiến bộ hướng đến mục tiêu." data-context-en="Instead of being an obstacle to success, failure is part of success.">obstacle</span>
+        to
+        <span class="vocab" data-word-en="success" data-word-vn="thành công" data-pos="noun" data-def-en="The accomplishment of a desired aim or goal." data-def-vn="Sự hoàn thành mục tiêu hoặc mục đích mong muốn." data-context-en="Instead of being an obstacle to success, failure is part of success.">success</span>,
+        <span class="vocab" data-word-en="failure" data-word-vn="thất bại" data-pos="noun" data-def-en="The lack of success; not achieving what was intended." data-def-vn="Sự thiếu thành công; không đạt được điều đã định." data-context-en="Failure is part of success.">failure</span>
+        is
+        <span class="vocab" data-word-en="part" data-word-vn="một phần" data-pos="noun" data-def-en="A portion or component of a larger whole." data-def-vn="Một phần hoặc thành phần của một tổng thể lớn hơn." data-context-en="Failure is part of success.">part</span>
+        of success!
+    </p>
+
+    <p>
+        On her
+        <span class="vocab" data-word-en="first" data-word-vn="đầu tiên" data-pos="adjective / ordinal" data-def-en="Coming before all others in order or time." data-def-vn="Đứng trước tất cả những cái khác về thứ tự hoặc thời gian." data-context-en="On her first attempt the consular officer failed her.">first</span>
+        <span class="vocab" data-word-en="attempt" data-word-vn="lần thử / nỗ lực" data-pos="noun" data-def-en="An effort to accomplish or achieve something." data-def-vn="Nỗ lực để hoàn thành hoặc đạt được điều gì đó." data-context-en="On her first attempt the consular officer failed her.">attempt</span>
+        the
+        <span class="vocab" data-word-en="consular" data-word-vn="lãnh sự" data-pos="adjective" data-def-en="Relating to a consul or the official work of a consulate." data-def-vn="Liên quan đến lãnh sự hoặc công việc chính thức của lãnh sự quán." data-context-en="The consular officer failed her.">consular</span>
+        <span class="vocab" data-word-en="officer" data-word-vn="cán bộ / viên chức" data-pos="noun" data-def-en="An official person holding a position of authority, here at a consulate." data-def-vn="Người có chức vụ nắm giữ vị trí có thẩm quyền, ở đây là tại lãnh sự quán." data-context-en="The consular officer failed her.">officer</span>
+        <span class="vocab" data-word-en="failed" data-word-vn="từ chối / đánh trượt" data-pos="verb (past tense)" data-def-en="Rejected or denied a person, especially in an interview or exam." data-def-vn="Từ chối hoặc không chấp thuận một người, đặc biệt là trong cuộc phỏng vấn hoặc kỳ thi." data-context-en="The consular officer failed her.">failed</span>
+        her. They never give
+        <span class="vocab" data-word-en="reasons" data-word-vn="lý do" data-pos="noun (plural)" data-def-en="Explanations or justifications for an action or decision." data-def-vn="Giải thích hoặc biện minh cho một hành động hoặc quyết định." data-context-en="They never give reasons why the student failed.">reasons</span>
+        why the student failed. The student and his
+        <span class="vocab" data-word-en="family" data-word-vn="gia đình" data-pos="noun" data-def-en="A group of people related by blood or marriage." data-def-vn="Nhóm người có quan hệ huyết thống hoặc hôn nhân." data-context-en="The student and his family must decide whether to try again.">family</span>
+        must
+        <span class="vocab" data-word-en="decide" data-word-vn="quyết định" data-pos="verb" data-def-en="To make a choice after considering options." data-def-vn="Đưa ra lựa chọn sau khi cân nhắc các phương án." data-context-en="Must decide whether to try again.">decide</span>
+        whether to try
+        <span class="vocab" data-word-en="again" data-word-vn="một lần nữa / lại" data-pos="adverb" data-def-en="One more time; returning to a previous action." data-def-vn="Thêm một lần nữa; quay lại hành động trước đó." data-context-en="Whether to try again.">again</span>.
+        This is a
+        <span class="vocab" data-word-en="tough" data-word-vn="khó khăn / nan giải" data-pos="adjective" data-def-en="Difficult; requiring strength or effort to handle." data-def-vn="Khó khăn; đòi hỏi sức mạnh hoặc nỗ lực để xử lý." data-context-en="This is a tough decision.">tough</span>
+        <span class="vocab" data-word-en="decision" data-word-vn="quyết định" data-pos="noun" data-def-en="A conclusion or resolution reached after deliberation." data-def-vn="Kết luận hoặc quyết định đạt được sau khi cân nhắc." data-context-en="This is a tough decision because the interview is not free.">decision</span>
+        because the
+        <span class="vocab" data-word-en="interview" data-word-vn="buổi phỏng vấn" data-pos="noun" data-def-en="A formal meeting in which someone is questioned, especially for a visa or job." data-def-vn="Cuộc gặp chính thức trong đó ai đó bị hỏi, đặc biệt là để xin visa hoặc xin việc." data-context-en="The interview is not free. It costs about two hundred dollars.">interview</span>
+        is not
+        <span class="vocab" data-word-en="free" data-word-vn="miễn phí" data-pos="adjective" data-def-en="Available without charge or payment." data-def-vn="Có sẵn mà không mất phí hay thanh toán." data-context-en="The interview is not free.">free</span>.
+        It
+        <span class="vocab" data-word-en="costs" data-word-vn="tốn / có giá" data-pos="verb" data-def-en="Requires payment of a certain amount of money." data-def-vn="Yêu cầu thanh toán một khoản tiền nhất định." data-context-en="It costs about two hundred dollars.">costs</span>
+        about two
+        <span class="vocab" data-word-en="hundred" data-word-vn="trăm" data-pos="number" data-def-en="The number 100." data-def-vn="Số 100." data-context-en="It costs about two hundred dollars.">hundred</span>
+        <span class="vocab" data-word-en="dollars" data-word-vn="đô la" data-pos="noun (plural)" data-def-en="Units of U.S. currency." data-def-vn="Đơn vị tiền tệ của Mỹ." data-context-en="It costs about two hundred dollars.">dollars</span>.
+        If the student is
+        <span class="vocab" data-word-en="under" data-word-vn="dưới" data-pos="preposition" data-def-en="Below a certain age, level, or number." data-def-vn="Dưới một độ tuổi, mức độ hoặc con số nhất định." data-context-en="If the student is under seventeen years old.">under</span>
+        <span class="vocab" data-word-en="seventeen" data-word-vn="mười bảy" data-pos="number" data-def-en="The number 17." data-def-vn="Số 17." data-context-en="Under seventeen years old.">seventeen</span>
+        years old, a
+        <span class="vocab" data-word-en="parent" data-word-vn="phụ huynh / cha mẹ" data-pos="noun" data-def-en="A father or mother; a legal guardian of a child." data-def-vn="Cha hoặc mẹ; người giám hộ hợp pháp của trẻ." data-context-en="A parent is allowed to accompany him or her.">parent</span>
+        is
+        <span class="vocab" data-word-en="allowed" data-word-vn="được phép" data-pos="verb (past participle / adjective)" data-def-en="Permitted; given official approval to do something." data-def-vn="Được cho phép; được chấp thuận chính thức để làm điều gì đó." data-context-en="A parent is allowed to accompany him or her.">allowed</span>
+        to
+        <span class="vocab" data-word-en="accompany" data-word-vn="đi cùng / tháp tùng" data-pos="verb" data-def-en="To go together with someone to a place." data-def-vn="Đi cùng với ai đó đến một nơi nào đó." data-context-en="A parent is allowed to accompany him or her.">accompany</span>
+        him or her.
+    </p>
+
+    <p>
+        Emily and her family did not give
+        <span class="vocab" data-word-en="up" data-word-vn="lên / bỏ cuộc" data-pos="adverb (phrasal)" data-def-en="To stop trying; to abandon an effort. Used with 'give' to mean quit." data-def-vn="Ngừng cố gắng; từ bỏ nỗ lực. Dùng với 'give' có nghĩa là bỏ cuộc." data-context-en="Emily and her family did not give up.">up</span>.
+        She went back to her home town and kept
+        <span class="vocab" data-word-en="studying" data-word-vn="học tập" data-pos="verb (gerund)" data-def-en="Continuing the act of learning or reviewing academic material." data-def-vn="Tiếp tục hành động học hoặc ôn lại tài liệu học thuật." data-context-en="She kept studying English.">studying</span>
+        <span class="vocab" data-word-en="English" data-word-vn="tiếng Anh" data-pos="noun (proper)" data-def-en="The language originating in England, widely used internationally." data-def-vn="Ngôn ngữ có nguồn gốc từ Anh, được sử dụng rộng rãi trên toàn thế giới." data-context-en="She kept studying English.">English</span>.
+        She also worked
+        <span class="vocab" data-word-en="diligently" data-word-vn="chăm chỉ / cần mẫn" data-pos="adverb" data-def-en="With steady, careful effort; in a hardworking manner." data-def-vn="Với nỗ lực đều đặn, cẩn thận; theo cách chăm chỉ." data-context-en="She also worked diligently with a coach.">diligently</span>
+        with a
+        <span class="vocab" data-word-en="coach" data-word-vn="người hướng dẫn / huấn luyện viên" data-pos="noun" data-def-en="A person who trains or instructs someone to improve skills or prepare for a challenge." data-def-vn="Người huấn luyện hoặc hướng dẫn ai đó cải thiện kỹ năng hoặc chuẩn bị cho một thử thách." data-context-en="She worked diligently with a coach who helped her prepare good answers.">coach</span>
+        who helped her
+        <span class="vocab" data-word-en="prepare" data-word-vn="chuẩn bị" data-pos="verb" data-def-en="To make ready in advance for an event or challenge." data-def-vn="Chuẩn bị sẵn sàng trước cho một sự kiện hoặc thử thách." data-context-en="Who helped her prepare good answers to a wide range of potential questions.">prepare</span>
+        good
+        <span class="vocab" data-word-en="answers" data-word-vn="câu trả lời" data-pos="noun (plural)" data-def-en="Responses given to questions asked by another person." data-def-vn="Các phản hồi được đưa ra cho các câu hỏi của người khác." data-context-en="Prepare good answers to a wide range of potential questions.">answers</span>
+        to a
+        <span class="vocab" data-word-en="wide" data-word-vn="rộng / đa dạng" data-pos="adjective" data-def-en="Covering a large area or variety; extensive." data-def-vn="Bao phủ một khu vực hoặc sự đa dạng lớn; rộng rãi." data-context-en="A wide range of potential questions the officer might ask.">wide</span>
+        <span class="vocab" data-word-en="range" data-word-vn="phạm vi / dải" data-pos="noun" data-def-en="The extent or variety of something." data-def-vn="Phạm vi hoặc sự đa dạng của một thứ gì đó." data-context-en="A wide range of potential questions.">range</span>
+        of
+        <span class="vocab" data-word-en="potential" data-word-vn="tiềm năng / có thể xảy ra" data-pos="adjective" data-def-en="Possible or likely to occur in the future." data-def-vn="Có thể hoặc có khả năng xảy ra trong tương lai." data-context-en="A wide range of potential questions the officer might ask.">potential</span>
+        questions the officer might ask.
+    </p>
+
+    <p>
+        Emily's
+        <span class="vocab" data-word-en="challenge" data-word-vn="thách thức" data-pos="noun" data-def-en="A difficult task or situation that requires effort and determination." data-def-vn="Nhiệm vụ hoặc tình huống khó khăn đòi hỏi nỗ lực và quyết tâm." data-context-en="Emily's challenge was especially difficult.">challenge</span>
+        was
+        <span class="vocab" data-word-en="especially" data-word-vn="đặc biệt" data-pos="adverb" data-def-en="To a greater degree than others; particularly." data-def-vn="Ở mức độ lớn hơn những người khác; đặc biệt là." data-context-en="Emily's challenge was especially difficult.">especially</span>
+        <span class="vocab" data-word-en="difficult" data-word-vn="khó khăn" data-pos="adjective" data-def-en="Hard to do or deal with; requiring much effort." data-def-vn="Khó thực hiện hoặc đối phó; đòi hỏi nhiều nỗ lực." data-context-en="Emily's challenge was especially difficult.">difficult</span>
+        because she was asking to be allowed to
+        <span class="vocab" data-word-en="repeat" data-word-vn="lặp lại / học lại" data-pos="verb" data-def-en="To do or take something again; in education, to redo a year of school." data-def-vn="Làm hoặc thực hiện lại điều gì đó; trong giáo dục, học lại một năm." data-context-en="She was asking to be allowed to repeat her final year of high school.">repeat</span>
+        her
+        <span class="vocab" data-word-en="final" data-word-vn="cuối cùng / cuối khóa" data-pos="adjective" data-def-en="Coming last; the concluding part of a series or process." data-def-vn="Đứng cuối; phần kết thúc của một chuỗi hoặc quá trình." data-context-en="Her final year of high school.">final</span>
+        year of high school. The
+        <span class="vocab" data-word-en="consulate" data-word-vn="lãnh sự quán" data-pos="noun" data-def-en="The office of a consul; a government office in a foreign city that provides visa and citizen services." data-def-vn="Văn phòng của lãnh sự; cơ quan chính phủ ở thành phố nước ngoài cung cấp dịch vụ visa và dịch vụ công dân." data-context-en="The consulate has a general policy.">consulate</span>
+        has a
+        <span class="vocab" data-word-en="general" data-word-vn="chung / tổng quát" data-pos="adjective" data-def-en="Applying broadly to all cases; not specific." data-def-vn="Áp dụng rộng rãi cho tất cả các trường hợp; không cụ thể." data-context-en="The consulate has a general policy.">general</span>
+        <span class="vocab" data-word-en="policy" data-word-vn="chính sách" data-pos="noun" data-def-en="A set of rules or principles adopted by an authority to guide decisions." data-def-vn="Tập hợp các quy tắc hoặc nguyên tắc được cơ quan có thẩm quyền áp dụng để hướng dẫn quyết định." data-context-en="The consulate has a general policy that students must move forward in academic development.">policy</span>
+        that when a student goes to study in the US, he must move
+        <span class="vocab" data-word-en="forward" data-word-vn="tiến về phía trước" data-pos="adverb / adjective" data-def-en="In the direction of progress; advancing to a higher level." data-def-vn="Theo hướng tiến bộ; tiến lên cấp độ cao hơn." data-context-en="He must move forward in his academic development.">forward</span>
+        in his
+        <span class="vocab" data-word-en="academic" data-word-vn="học thuật / học vấn" data-pos="adjective" data-def-en="Relating to education or scholarship at a formal school level." data-def-vn="Liên quan đến giáo dục hoặc học thuật ở cấp trường học chính thức." data-context-en="Forward in his academic development.">academic</span>
+        <span class="vocab" data-word-en="development" data-word-vn="sự phát triển" data-pos="noun" data-def-en="The process of growing, improving, or advancing over time." data-def-vn="Quá trình phát triển, cải thiện hoặc tiến bộ theo thời gian." data-context-en="His academic development.">development</span>.
+        Therefore it
+        <span class="vocab" data-word-en="frowns" data-word-vn="không tán thành / khó chịu" data-pos="verb" data-def-en="To disapprove of something; to view it with disfavor. 'Frowns on' means discourages." data-def-vn="Không tán thành điều gì đó; nhìn nó với sự không chấp thuận. 'Frowns on' có nghĩa là không khuyến khích." data-context-en="Therefore it frowns on students who have graduated from high school repeating grade twelve.">frowns</span>
+        on students who have
+        <span class="vocab" data-word-en="graduated" data-word-vn="tốt nghiệp" data-pos="verb (past tense)" data-def-en="Successfully completed a course of education and received a diploma." data-def-vn="Hoàn thành thành công một khóa học và nhận bằng tốt nghiệp." data-context-en="Students who have graduated from high school repeating grade twelve.">graduated</span>
+        from high school
+        <span class="vocab" data-word-en="repeating" data-word-vn="lặp lại / học lại" data-pos="verb (gerund)" data-def-en="Doing something again; redoing a school year." data-def-vn="Làm lại điều gì đó; học lại một năm học." data-context-en="Repeating grade twelve.">repeating</span>
+        <span class="vocab" data-word-en="grade" data-word-vn="lớp / cấp độ" data-pos="noun" data-def-en="A year level in a school system." data-def-vn="Cấp độ năm học trong hệ thống trường học." data-context-en="Repeating grade twelve.">grade</span>
+        <span class="vocab" data-word-en="twelve" data-word-vn="mười hai" data-pos="number" data-def-en="The number 12; in education, the final year of high school." data-def-vn="Số 12; trong giáo dục, năm cuối cùng của trung học phổ thông." data-context-en="Repeating grade twelve.">twelve</span>.
+        This meant Emily had 'two
+        <span class="vocab" data-word-en="strikes" data-word-vn="điểm bất lợi / cú đánh" data-pos="noun (plural)" data-def-en="Disadvantages or marks against someone; from baseball, meaning chances used up." data-def-vn="Bất lợi hoặc điểm trừ đối với ai đó; từ bóng chày, nghĩa là cơ hội đã dùng hết." data-context-en="Emily had 'two strikes against her' from 'the get-go'.">strikes</span>
+        against her' from 'the
+        <span class="vocab" data-word-en="get-go" data-word-vn="ngay từ đầu" data-pos="noun (idiom)" data-def-en="The very beginning; right from the start." data-def-vn="Ngay từ đầu; ngay từ khi bắt đầu." data-context-en="Two strikes against her from the get-go.">get-go</span>'.
+        Although consulate officers can
+        <span class="vocab" data-word-en="override" data-word-vn="bác bỏ / ghi đè" data-pos="verb" data-def-en="To set aside a rule or decision by using higher authority." data-def-vn="Bác bỏ quy tắc hoặc quyết định bằng cách sử dụng thẩm quyền cao hơn." data-context-en="Consulate officers can override the policy.">override</span>
+        the policy and make an
+        <span class="vocab" data-word-en="exception" data-word-vn="ngoại lệ" data-pos="noun" data-def-en="A case that does not follow the usual rule." data-def-vn="Trường hợp không tuân theo quy tắc thông thường." data-context-en="Make an exception for an especially deserving student.">exception</span>
+        for an especially
+        <span class="vocab" data-word-en="deserving" data-word-vn="xứng đáng" data-pos="adjective" data-def-en="Worthy of receiving a benefit or reward based on merit." data-def-vn="Xứng đáng nhận được lợi ích hoặc phần thưởng dựa trên thành tích." data-context-en="An especially deserving student.">deserving</span>
+        student, it is
+        <span class="vocab" data-word-en="rare" data-word-vn="hiếm khi" data-pos="adjective" data-def-en="Occurring infrequently; not common." data-def-vn="Xảy ra không thường xuyên; không phổ biến." data-context-en="It is rare.">rare</span>.
+        This meant Emily had 'two strikes against her' from 'the get-go'.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Nonetheless" data-word-vn="dù vậy / tuy nhiên" data-pos="adverb (conjunction)" data-def-en="In spite of that; nevertheless; despite the difficulties mentioned." data-def-vn="Mặc dù vậy; tuy nhiên; bất chấp những khó khăn đã đề cập." data-context-en="Nonetheless, she persevered.">Nonetheless</span>,
+        she
+        <span class="vocab" data-word-en="persevered" data-word-vn="kiên trì / bền bỉ" data-pos="verb (past tense)" data-def-en="Continued steadfastly despite difficulty or delay in achieving success." data-def-vn="Tiếp tục kiên định bất chấp khó khăn hoặc chậm trễ trong việc đạt được thành công." data-context-en="Nonetheless, she persevered.">persevered</span>.
+        She 'went back to the
+        <span class="vocab" data-word-en="drawing" data-word-vn="bản vẽ / vạch ra" data-pos="noun / adjective (idiomatic)" data-def-en="In the idiom 'drawing board', refers to the starting point of a plan or design." data-def-vn="Trong thành ngữ 'drawing board', chỉ điểm xuất phát của một kế hoạch hoặc thiết kế." data-context-en="She went back to the drawing board.">drawing</span>
+        <span class="vocab" data-word-en="board" data-word-vn="bảng / bàn thiết kế" data-pos="noun (idiomatic)" data-def-en="In 'back to the drawing board', means starting over from the beginning with a new plan." data-def-vn="Trong 'back to the drawing board', có nghĩa là bắt đầu lại từ đầu với một kế hoạch mới." data-context-en="She went back to the drawing board.">board</span>'.
+        She worked more with her coach on her
+        <span class="vocab" data-word-en="presentation" data-word-vn="sự trình bày / cách thể hiện" data-pos="noun" data-def-en="The way someone speaks, acts, and comes across during a formal meeting or interview." data-def-vn="Cách ai đó nói, hành động và thể hiện trong một cuộc họp hoặc phỏng vấn chính thức." data-context-en="She worked more with her coach on her presentation.">presentation</span>
+        and
+        <span class="vocab" data-word-en="scheduled" data-word-vn="lên lịch / đặt lịch" data-pos="verb (past tense)" data-def-en="Arranged a time for an event or appointment in advance." data-def-vn="Sắp xếp thời gian cho một sự kiện hoặc cuộc hẹn trước." data-context-en="She scheduled another interview at the US Consulate.">scheduled</span>
+        another interview at the US
+        <span class="vocab" data-word-en="Consulate" data-word-vn="Lãnh sự quán" data-pos="noun (proper)" data-def-en="The official U.S. government office in a foreign city that handles visas and citizen affairs." data-def-vn="Văn phòng chính phủ Mỹ chính thức tại một thành phố nước ngoài xử lý visa và công vụ công dân." data-context-en="She scheduled another interview at the US Consulate.">Consulate</span>.
+        She also
+        <span class="vocab" data-word-en="prayed" data-word-vn="cầu nguyện" data-pos="verb (past tense)" data-def-en="Communicated with God through spoken or silent prayer." data-def-vn="Giao tiếp với Chúa thông qua lời cầu nguyện nói ra hoặc thầm lặng." data-context-en="She also prayed for help from God.">prayed</span>
+        for
+        <span class="vocab" data-word-en="help" data-word-vn="sự giúp đỡ" data-pos="noun" data-def-en="Assistance or support given to someone who needs it." data-def-vn="Sự trợ giúp hoặc hỗ trợ dành cho người cần." data-context-en="She prayed for help from God.">help</span>
+        from God.
+    </p>
+
+    <p>
+        When interview
+        <span class="vocab" data-word-en="day" data-word-vn="ngày" data-pos="noun" data-def-en="A specific day designated for an important event." data-def-vn="Một ngày cụ thể được chỉ định cho một sự kiện quan trọng." data-context-en="When interview day came, Emily was quite nervous.">day</span>
+        came, Emily was quite
+        <span class="vocab" data-word-en="nervous" data-word-vn="lo lắng / hồi hộp" data-pos="adjective" data-def-en="Feeling anxious, worried, or uneasy before an important event." data-def-vn="Cảm thấy lo lắng, bất an hoặc bồn chồn trước một sự kiện quan trọng." data-context-en="Emily was quite nervous, but kept her composure.">nervous</span>,
+        but kept her
+        <span class="vocab" data-word-en="composure" data-word-vn="sự bình tĩnh / tự chủ" data-pos="noun" data-def-en="A calm and collected state of mind, especially in a stressful situation." data-def-vn="Trạng thái tâm lý bình tĩnh và tự chủ, đặc biệt trong tình huống căng thẳng." data-context-en="She kept her composure.">composure</span>.
+        This
+        <span class="vocab" data-word-en="time" data-word-vn="lần này" data-pos="noun" data-def-en="A particular occasion or instance." data-def-vn="Một dịp hoặc trường hợp cụ thể." data-context-en="This time the officer approved her visa to America.">time</span>
+        the officer
+        <span class="vocab" data-word-en="approved" data-word-vn="chấp thuận / phê duyệt" data-pos="verb (past tense)" data-def-en="Officially agreed to or accepted a request or application." data-def-vn="Chính thức đồng ý hoặc chấp nhận yêu cầu hoặc đơn xin." data-context-en="The officer approved her visa to America.">approved</span>
+        her visa to America. After the morning interview, her family, her
+        <span class="vocab" data-word-en="pastor" data-word-vn="mục sư / linh mục" data-pos="noun" data-def-en="A minister or leader of a Christian congregation." data-def-vn="Mục sư hoặc người lãnh đạo của một hội thánh Cơ đốc giáo." data-context-en="Her family, her pastor and her coach enjoyed a celebration lunch.">pastor</span>
+        and her coach
+        <span class="vocab" data-word-en="enjoyed" data-word-vn="thưởng thức / tận hưởng" data-pos="verb (past tense)" data-def-en="Took pleasure in; had a good time during an experience." data-def-vn="Lấy niềm vui từ; có thời gian tốt trong một trải nghiệm." data-context-en="Her family, her pastor and her coach enjoyed a celebration lunch.">enjoyed</span>
+        a
+        <span class="vocab" data-word-en="celebration" data-word-vn="lễ kỷ niệm / buổi ăn mừng" data-pos="noun" data-def-en="An occasion to mark a happy event with festive activities." data-def-vn="Dịp đánh dấu một sự kiện vui mừng bằng các hoạt động lễ hội." data-context-en="A celebration lunch at a Dim Sum restaurant.">celebration</span>
+        <span class="vocab" data-word-en="lunch" data-word-vn="bữa trưa" data-pos="noun" data-def-en="A meal eaten in the middle of the day." data-def-vn="Bữa ăn vào giữa ngày." data-context-en="A celebration lunch at a Dim Sum restaurant.">lunch</span>
+        at a
+        <span class="vocab" data-word-en="Dim Sum" data-word-vn="Dim Sum (món ăn)" data-pos="noun (proper)" data-def-en="A style of Chinese cuisine featuring small dishes served traditionally during brunch or lunch." data-def-vn="Phong cách ẩm thực Trung Hoa gồm các món ăn nhỏ phục vụ theo truyền thống vào buổi sáng hoặc trưa." data-context-en="A celebration lunch at a Dim Sum restaurant.">Dim Sum</span>
+        <span class="vocab" data-word-en="restaurant" data-word-vn="nhà hàng" data-pos="noun" data-def-en="A place where meals are prepared and served to paying customers." data-def-vn="Nơi các bữa ăn được chuẩn bị và phục vụ cho khách hàng trả tiền." data-context-en="A Dim Sum restaurant.">restaurant</span>.
+        They had all
+        <span class="vocab" data-word-en="prayed" data-word-vn="cầu nguyện" data-pos="verb (past tense)" data-def-en="Had spoken to God, asking for guidance and blessing." data-def-vn="Đã nói chuyện với Chúa, xin hướng dẫn và phước lành." data-context-en="They had all prayed for her.">prayed</span>
+        for her. Emily is
+        <span class="vocab" data-word-en="ecstatic" data-word-vn="vô cùng hạnh phúc / phấn khích" data-pos="adjective" data-def-en="Feeling overwhelming joy and excitement; in a state of ecstasy." data-def-vn="Cảm thấy niềm vui và sự phấn khích tràn ngập; trong trạng thái vui sướng tột độ." data-context-en="Emily is ecstatic about starting her new life in America.">ecstatic</span>
+        about starting her
+        <span class="vocab" data-word-en="new" data-word-vn="mới" data-pos="adjective" data-def-en="Not existing before; recently beginning." data-def-vn="Chưa tồn tại trước đó; mới bắt đầu gần đây." data-context-en="Starting her new life in America.">new</span>
+        <span class="vocab" data-word-en="life" data-word-vn="cuộc sống / đời sống" data-pos="noun" data-def-en="The way someone lives; one's personal existence and experiences." data-def-vn="Cách ai đó sống; sự tồn tại cá nhân và trải nghiệm của một người." data-context-en="Starting her new life in America.">life</span>
+        in America and
+        <span class="vocab" data-word-en="grateful" data-word-vn="biết ơn" data-pos="adjective" data-def-en="Feeling or showing thankfulness for something received." data-def-vn="Cảm thấy hoặc thể hiện lòng biết ơn vì điều gì đó đã nhận được." data-context-en="Grateful to God.">grateful</span>
+        to God.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">F1 visa</div>
+        <div class="memory-word">holy grail</div>
+        <div class="memory-word">thousands of students</div>
+        <div class="memory-word">Sài Gòn</div>
+        <div class="memory-word">Dak Lak</div>
+        <div class="memory-word">proof</div>
+        <div class="memory-word">obstacle</div>
+        <div class="memory-word">failure</div>
+        <div class="memory-word">success</div>
+        <div class="memory-word">first attempt</div>
+        <div class="memory-word">consular officer</div>
+        <div class="memory-word">failed her</div>
+        <div class="memory-word">reasons</div>
+        <div class="memory-word">tough decision</div>
+        <div class="memory-word">interview</div>
+        <div class="memory-word">two hundred dollars</div>
+        <div class="memory-word">under seventeen</div>
+        <div class="memory-word">parent</div>
+        <div class="memory-word">accompany</div>
+        <div class="memory-word">did not give up</div>
+        <div class="memory-word">studying English</div>
+        <div class="memory-word">diligently</div>
+        <div class="memory-word">coach</div>
+        <div class="memory-word">prepare answers</div>
+        <div class="memory-word">wide range</div>
+        <div class="memory-word">potential questions</div>
+        <div class="memory-word">challenge</div>
+        <div class="memory-word">especially difficult</div>
+        <div class="memory-word">repeat</div>
+        <div class="memory-word">final year</div>
+        <div class="memory-word">consulate</div>
+        <div class="memory-word">general policy</div>
+        <div class="memory-word">academic development</div>
+        <div class="memory-word">frowns on</div>
+        <div class="memory-word">graduated</div>
+        <div class="memory-word">grade twelve</div>
+        <div class="memory-word">two strikes</div>
+        <div class="memory-word">get-go</div>
+        <div class="memory-word">override</div>
+        <div class="memory-word">exception</div>
+        <div class="memory-word">deserving</div>
+        <div class="memory-word">rare</div>
+        <div class="memory-word">nonetheless</div>
+        <div class="memory-word">persevered</div>
+        <div class="memory-word">drawing board</div>
+        <div class="memory-word">presentation</div>
+        <div class="memory-word">scheduled</div>
+        <div class="memory-word">prayed</div>
+        <div class="memory-word">nervous</div>
+        <div class="memory-word">composure</div>
+        <div class="memory-word">approved</div>
+        <div class="memory-word">pastor</div>
+        <div class="memory-word">celebration lunch</div>
+        <div class="memory-word">Dim Sum</div>
+        <div class="memory-word">ecstatic</div>
+        <div class="memory-word">grateful</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the story:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordEn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+
+
+<!-- VOCABULARY DENSITY RULE reminder:
+Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: e.g., tag "quê hương" separately AND "yêu dấu" separately.
+- Tag "trí tuệ" and "sắc bén" as two different spans.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+	               	 -->
