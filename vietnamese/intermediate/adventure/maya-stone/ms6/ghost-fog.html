@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tập 6: Bóng ma trong màn sương</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+	<!-- VOCABULARY DENSITY RULE:  please meticulously follow these instructions:
+     Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: e.g., tag "quê hương" separately AND "yêu dấu" separately.
+- Tag "trí tuệ" and "sắc bén" as two different spans.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+      -->
+			
+
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Tập 6: Bóng ma trong màn sương</h1>
+    <h2 class="subtitle">Series: Thanh Ngọc Long</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Tập 6</div>
+        <audio id="audio-player" src="ghost-fog.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        <span class="vocab" data-word-vn="không khí" data-word-en="air" data-pos="danh từ / noun" data-def-en="The invisible mixture of gases surrounding us; atmosphere." data-def-vn="Hỗn hợp khí vô hình bao quanh chúng ta; bầu khí quyển." data-context-vn="Không khí lạnh giá và đầy sương mù.">Không khí</span> <span class="vocab" data-word-vn="lạnh giá" data-word-en="freezing cold" data-pos="tính từ / adjective" data-def-en="Extremely cold; at or below freezing temperature." data-def-vn="Cực kỳ lạnh; ở mức hoặc dưới nhiệt độ đóng băng." data-context-vn="Không khí lạnh giá và đầy sương mù.">lạnh giá</span> và đầy <span class="vocab" data-word-vn="sương mù" data-word-en="fog" data-pos="danh từ / noun" data-def-en="A thick cloud of tiny water droplets suspended in the air near the ground, reducing visibility." data-def-vn="Một đám mây dày đặc gồm các giọt nước nhỏ lơ lửng trong không khí gần mặt đất, làm giảm tầm nhìn." data-context-vn="Không khí lạnh giá và đầy sương mù.">sương mù</span>. Khi <span class="vocab" data-word-vn="đoàn tàu" data-word-en="train" data-pos="danh từ / noun" data-def-en="A series of connected railway carriages moving together." data-def-vn="Một dãy toa xe lửa được kết nối với nhau di chuyển cùng nhau." data-context-vn="Khi đoàn tàu bắt đầu chuyển bánh trở lại.">đoàn tàu</span> <span class="vocab" data-word-vn="bắt đầu" data-word-en="began" data-pos="động từ / verb (past tense)" data-def-en="Started; commenced an action." data-def-vn="Bắt đầu; khởi động một hành động." data-context-vn="Khi đoàn tàu bắt đầu chuyển bánh trở lại.">bắt đầu</span> <span class="vocab" data-word-vn="chuyển bánh" data-word-en="move / roll" data-pos="động từ / verb phrase" data-def-en="To begin moving; said of a train starting to roll on the tracks." data-def-vn="Bắt đầu di chuyển; nói về đoàn tàu bắt đầu lăn bánh trên đường ray." data-context-vn="Khi đoàn tàu bắt đầu chuyển bánh trở lại.">chuyển bánh</span> trở lại, tiếng <span class="vocab" data-word-vn="gió" data-word-en="wind" data-pos="danh từ / noun" data-def-en="Moving air; a natural current of air blowing in a direction." data-def-vn="Không khí đang chuyển động; luồng không khí tự nhiên thổi theo một hướng." data-context-vn="Tiếng gió rít qua tai Maya.">gió</span> <span class="vocab" data-word-vn="rít" data-word-en="whistled / shrieked" data-pos="động từ / verb" data-def-en="Made a high-pitched, sharp sound, as wind rushing past." data-def-vn="Phát ra âm thanh sắc và cao vút, như gió thổi qua." data-context-vn="Tiếng gió rít qua tai Maya.">rít</span> qua tai Maya. "Nhìn <span class="vocab" data-word-vn="kìa" data-word-en="there / look there" data-pos="thán từ / exclamation" data-def-en="An exclamation pointing out something noteworthy in the distance." data-def-vn="Một thán từ chỉ ra điều gì đó đáng chú ý ở phía xa." data-context-vn="Nhìn kìa!">kìa</span>!" cô <span class="vocab" data-word-vn="hét" data-word-en="shouted / screamed" data-pos="động từ / verb" data-def-en="Cried out loudly; yelled." data-def-vn="Kêu to; la hét." data-context-vn="Cô hét lên, chỉ tay về phía toa tàu tiếp theo.">hét</span> lên, <span class="vocab" data-word-vn="chỉ" data-word-en="pointed" data-pos="động từ / verb" data-def-en="Directed a finger toward something to draw attention to it." data-def-vn="Hướng ngón tay về phía điều gì đó để thu hút sự chú ý." data-context-vn="Chỉ tay về phía toa tàu tiếp theo.">chỉ</span> tay về phía <span class="vocab" data-word-vn="toa tàu" data-word-en="train car / carriage" data-pos="danh từ / noun" data-def-en="A single railway vehicle or compartment that forms part of a train." data-def-vn="Một toa xe lửa hoặc khoang riêng lẻ tạo nên một phần của đoàn tàu." data-context-vn="Chỉ tay về phía toa tàu tiếp theo.">toa tàu</span> tiếp theo. Một người <span class="vocab" data-word-vn="đàn ông" data-word-en="man" data-pos="danh từ / noun" data-def-en="An adult male human being." data-def-vn="Một người đàn ông trưởng thành." data-context-vn="Một người đàn ông đang đu mình từ trên nóc xe.">đàn ông</span> đang <span class="vocab" data-word-vn="đu" data-word-en="hanging / swinging" data-pos="động từ / verb" data-def-en="Clinging and swinging while suspended from above." data-def-vn="Bám và đu người trong khi lơ lửng từ trên cao." data-context-vn="Một người đàn ông đang đu mình từ trên nóc xe.">đu</span> mình từ trên <span class="vocab" data-word-vn="nóc" data-word-en="roof / top" data-pos="danh từ / noun" data-def-en="The top surface or covering of a vehicle or structure." data-def-vn="Bề mặt trên cùng hoặc phần che phủ của xe hoặc công trình." data-context-vn="Đu mình từ trên nóc xe.">nóc</span> xe, <span class="vocab" data-word-vn="tiến" data-word-en="advancing / moving forward" data-pos="động từ / verb" data-def-en="Moving steadily forward toward a target." data-def-vn="Di chuyển đều đặn về phía trước hướng đến mục tiêu." data-context-vn="Tiến về phía họ với ánh mắt đầy sát khí.">tiến</span> về phía họ với <span class="vocab" data-word-vn="ánh mắt" data-word-en="gaze / eyes" data-pos="danh từ / noun" data-def-en="The expression in a person's eyes; a look directed at something." data-def-vn="Biểu cảm trong mắt một người; ánh nhìn hướng về phía điều gì đó." data-context-vn="Tiến về phía họ với ánh mắt đầy sát khí.">ánh mắt</span> đầy <span class="vocab" data-word-vn="sát khí" data-word-en="murderous intent / killing aura" data-pos="danh từ / noun" data-def-en="A deadly, violent aura or look that signals intent to kill." data-def-vn="Một khí thế hoặc ánh nhìn chết chóc, hung bạo báo hiệu ý định giết người." data-context-vn="Ánh mắt đầy sát khí.">sát khí</span>.
+    </p>
+
+    <p>
+        "<span class="vocab" data-word-vn="Nhảy" data-word-en="Jump" data-pos="động từ / verb (imperative)" data-def-en="To propel oneself off a surface into the air; used here as a command." data-def-vn="Tự bật người lên khỏi bề mặt vào không khí; dùng ở đây như một mệnh lệnh." data-context-vn="Nhảy đi!">Nhảy</span> đi!" Jack hét <span class="vocab" data-word-vn="lớn" data-word-en="loudly" data-pos="trạng từ / adverb" data-def-en="With a great volume of sound; at high volume." data-def-vn="Với âm lượng lớn; ở mức âm lượng cao." data-context-vn="Jack hét lớn.">lớn</span>.
+    </p>
+
+    <p>
+        Họ <span class="vocab" data-word-vn="nhảy" data-word-en="jumped" data-pos="động từ / verb (past tense)" data-def-en="Leaped through the air from one place to another." data-def-vn="Nhảy qua không khí từ nơi này sang nơi khác." data-context-vn="Họ nhảy qua khoảng trống giữa hai toa tàu.">nhảy</span> qua <span class="vocab" data-word-vn="khoảng trống" data-word-en="gap / empty space" data-pos="danh từ / noun" data-def-en="An open, empty space between two things." data-def-vn="Một khoảng trống mở giữa hai vật thể." data-context-vn="Nhảy qua khoảng trống giữa hai toa tàu.">khoảng trống</span> giữa hai toa tàu ngay khi đoàn tàu tiến vào một <span class="vocab" data-word-vn="đường hầm" data-word-en="tunnel" data-pos="danh từ / noun" data-def-en="An underground or enclosed passage through a hill or mountain." data-def-vn="Một lối đi ngầm dưới đất hoặc có mái che qua đồi hay núi." data-context-vn="Đoàn tàu tiến vào một đường hầm dài và tối tăm.">đường hầm</span> <span class="vocab" data-word-vn="dài" data-word-en="long" data-pos="tính từ / adjective" data-def-en="Of great length; extending far from one end to the other." data-def-vn="Có độ dài lớn; kéo dài xa từ đầu này đến đầu kia." data-context-vn="Một đường hầm dài và tối tăm.">dài</span> và <span class="vocab" data-word-vn="tối tăm" data-word-en="dark / pitch-black" data-pos="tính từ / adjective" data-def-en="Deeply dark; with little or no light, creating a gloomy atmosphere." data-def-vn="Tối sâm; ít hoặc không có ánh sáng, tạo ra bầu không khí u ám." data-context-vn="Một đường hầm dài và tối tăm.">tối tăm</span>. Maya <span class="vocab" data-word-vn="cảm nhận" data-word-en="felt / sensed" data-pos="động từ / verb" data-def-en="Perceived through the senses; became aware of something physically or emotionally." data-def-vn="Cảm nhận qua các giác quan; nhận thức được điều gì đó về mặt thể chất hoặc cảm xúc." data-context-vn="Maya cảm nhận được những bức tường đá lạnh lẽo của đường hầm lướt qua.">cảm nhận</span> được những <span class="vocab" data-word-vn="bức tường" data-word-en="walls" data-pos="danh từ / noun (plural)" data-def-en="The vertical structures forming the sides of a room, tunnel, or building." data-def-vn="Các cấu trúc thẳng đứng tạo thành các mặt của một phòng, đường hầm hoặc tòa nhà." data-context-vn="Những bức tường đá lạnh lẽo của đường hầm lướt qua.">bức tường</span> <span class="vocab" data-word-vn="đá" data-word-en="stone / rock" data-pos="danh từ / noun" data-def-en="Hard mineral material forming the tunnel walls." data-def-vn="Vật liệu khoáng cứng tạo thành tường đường hầm." data-context-vn="Những bức tường đá lạnh lẽo của đường hầm.">đá</span> <span class="vocab" data-word-vn="lạnh lẽo" data-word-en="cold / chilly" data-pos="tính từ / adjective" data-def-en="Uncomfortably cold; giving a sensation of chill." data-def-vn="Lạnh không dễ chịu; tạo cảm giác ớn lạnh." data-context-vn="Những bức tường đá lạnh lẽo của đường hầm.">lạnh lẽo</span> của đường hầm <span class="vocab" data-word-vn="lướt qua" data-word-en="swept past / flashed past" data-pos="động từ / verb phrase" data-def-en="Passed by very quickly and closely." data-def-vn="Đi ngang qua rất nhanh và gần." data-context-vn="Những bức tường đá lạnh lẽo của đường hầm lướt qua chỉ cách đầu cô vài inch.">lướt qua</span> chỉ cách <span class="vocab" data-word-vn="đầu" data-word-en="head" data-pos="danh từ / noun" data-def-en="The upper part of the human body containing the brain and face." data-def-vn="Phần trên của cơ thể người chứa não và mặt." data-context-vn="Chỉ cách đầu cô vài inch.">đầu</span> cô vài inch. Khi họ ra khỏi <span class="vocab" data-word-vn="đầu" data-word-en="end / opening" data-pos="danh từ / noun" data-def-en="The far end or exit point of a tunnel." data-def-vn="Đầu xa hoặc điểm thoát của một đường hầm." data-context-vn="Khi họ ra khỏi đầu bên kia.">đầu</span> bên kia, người đàn ông đã <span class="vocab" data-word-vn="biến mất" data-word-en="disappeared / vanished" data-pos="động từ / verb (past tense)" data-def-en="Ceased to be visible; went out of sight suddenly." data-def-vn="Không còn nhìn thấy nữa; đột nhiên khuất khỏi tầm mắt." data-context-vn="Người đàn ông đã biến mất.">biến mất</span>. Hắn ta đã <span class="vocab" data-word-vn="tan biến" data-word-en="dissolved / melted away" data-pos="động từ / verb (past tense)" data-def-en="Faded and disappeared completely, as if absorbed into surroundings." data-def-vn="Mờ dần và biến mất hoàn toàn, như thể bị hòa tan vào môi trường xung quanh." data-context-vn="Hắn ta đã tan biến vào trong màn sương.">tan biến</span> vào trong <span class="vocab" data-word-vn="màn sương" data-word-en="the mist / the veil of fog" data-pos="danh từ / noun" data-def-en="A curtain-like layer of mist or fog obscuring what lies beyond." data-def-vn="Một lớp sương mù như tấm màn che khuất những gì ở phía sau." data-context-vn="Hắn ta đã tan biến vào trong màn sương.">màn sương</span>.
+    </p>
+
+    <p>
+        "<span class="vocab" data-word-vn="Ai" data-word-en="Who" data-pos="đại từ / pronoun (interrogative)" data-def-en="A question word asking for a person's identity." data-def-vn="Một từ hỏi để tìm hiểu danh tính của một người." data-context-vn="Ai vậy?">Ai</span> vậy?" Maya <span class="vocab" data-word-vn="hổn hển" data-word-en="gasped / panted" data-pos="động từ / verb" data-def-en="Breathed with difficulty in short, quick breaths due to exertion or shock." data-def-vn="Thở khó khăn bằng những hơi thở ngắn, nhanh do gắng sức hoặc sốc." data-context-vn="Maya hổn hển, lồng ngực bỏng rát vì không khí lạnh.">hổn hển</span>, <span class="vocab" data-word-vn="lồng ngực" data-word-en="chest" data-pos="danh từ / noun" data-def-en="The part of the body between the neck and the abdomen; the thorax." data-def-vn="Phần cơ thể giữa cổ và bụng; lồng ngực." data-context-vn="Lồng ngực bỏng rát vì không khí lạnh.">lồng ngực</span> <span class="vocab" data-word-vn="bỏng rát" data-word-en="burning / stinging" data-pos="tính từ / adjective" data-def-en="Feeling an intense burning or stinging sensation." data-def-vn="Cảm thấy cảm giác bỏng rát hoặc nhói buốt dữ dội." data-context-vn="Lồng ngực bỏng rát vì không khí lạnh.">bỏng rát</span> vì không khí lạnh.
+    </p>
+
+    <p>
+        "Một <span class="vocab" data-word-vn="tên" data-word-en="guy / character (derogatory)" data-pos="danh từ / noun" data-def-en="A person, used here with a dismissive or negative connotation." data-def-vn="Một người, được dùng ở đây với hàm ý coi thường hoặc tiêu cực." data-context-vn="Một tên lính đánh thuê.">tên</span> <span class="vocab" data-word-vn="lính" data-word-en="soldier / fighter" data-pos="danh từ / noun" data-def-en="A person who serves in a military or combat role." data-def-vn="Một người phục vụ trong vai trò quân sự hoặc chiến đấu." data-context-vn="Một tên lính đánh thuê.">lính</span> <span class="vocab" data-word-vn="đánh thuê" data-word-en="mercenary" data-pos="danh từ / noun" data-def-en="A professional soldier hired to fight for pay rather than loyalty or principle." data-def-vn="Một lính chuyên nghiệp được thuê chiến đấu vì tiền thay vì lòng trung thành hay nguyên tắc." data-context-vn="Một tên lính đánh thuê.">đánh thuê</span>," Jack <span class="vocab" data-word-vn="trả lời" data-word-en="replied / answered" data-pos="động từ / verb" data-def-en="Gave a spoken or written response to a question or statement." data-def-vn="Đưa ra câu trả lời nói hoặc viết cho một câu hỏi hoặc tuyên bố." data-context-vn="Jack trả lời, vẻ mặt đầy lo lắng.">trả lời</span>, <span class="vocab" data-word-vn="vẻ mặt" data-word-en="expression / face" data-pos="danh từ / noun" data-def-en="The look on a person's face that conveys their feelings or mood." data-def-vn="Vẻ mặt của một người thể hiện cảm xúc hoặc tâm trạng của họ." data-context-vn="Vẻ mặt đầy lo lắng.">vẻ mặt</span> đầy <span class="vocab" data-word-vn="lo lắng" data-word-en="worried / anxious" data-pos="tính từ / adjective" data-def-en="Feeling or showing concern and anxiety about a possible problem." data-def-vn="Cảm thấy hoặc thể hiện sự lo ngại và lo lắng về một vấn đề có thể xảy ra." data-context-vn="Vẻ mặt đầy lo lắng.">lo lắng</span>. "<span class="vocab" data-word-vn="Thorne" data-word-en="Thorne" data-pos="danh từ riêng / proper noun" data-def-en="The name of the antagonist who is pursuing them." data-def-vn="Tên của kẻ phản diện đang truy đuổi họ." data-context-vn="Thorne đã hết kiên nhẫn rồi.">Thorne</span> đã <span class="vocab" data-word-vn="hết" data-word-en="run out of / exhausted" data-pos="động từ / verb" data-def-en="Used up all of something; nothing remaining." data-def-vn="Dùng hết tất cả một thứ gì đó; không còn gì nữa." data-context-vn="Thorne đã hết kiên nhẫn rồi.">hết</span> <span class="vocab" data-word-vn="kiên nhẫn" data-word-en="patience" data-pos="danh từ / noun" data-def-en="The capacity to accept or tolerate delay or difficulty without anger." data-def-vn="Khả năng chấp nhận hoặc chịu đựng sự chậm trễ hoặc khó khăn mà không tức giận." data-context-vn="Thorne đã hết kiên nhẫn rồi.">kiên nhẫn</span> rồi. Hắn đang <span class="vocab" data-word-vn="cử" data-word-en="sending / dispatching" data-pos="động từ / verb" data-def-en="Ordering someone to go somewhere for a purpose; deploying." data-def-vn="Ra lệnh cho ai đó đến một nơi nào đó vì một mục đích; triển khai." data-context-vn="Hắn đang cử những kẻ chuyên nghiệp đến.">cử</span> những <span class="vocab" data-word-vn="kẻ" data-word-en="individuals / agents (negative)" data-pos="danh từ / noun" data-def-en="Persons, used here with a negative connotation implying dangerous or undesirable people." data-def-vn="Những người, được dùng ở đây với hàm ý tiêu cực ngụ ý những người nguy hiểm hoặc không mong muốn." data-context-vn="Hắn đang cử những kẻ chuyên nghiệp đến.">kẻ</span> <span class="vocab" data-word-vn="chuyên nghiệp" data-word-en="professional / expert" data-pos="tính từ / adjective" data-def-en="Highly skilled and trained in a particular field; expert-level." data-def-vn="Có kỹ năng cao và được đào tạo trong một lĩnh vực cụ thể; cấp độ chuyên gia." data-context-vn="Hắn đang cử những kẻ chuyên nghiệp đến.">chuyên nghiệp</span> đến".
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">không khí</div>
+        <div class="memory-word">lạnh giá</div>
+        <div class="memory-word">sương mù</div>
+        <div class="memory-word">đoàn tàu</div>
+        <div class="memory-word">bắt đầu</div>
+        <div class="memory-word">chuyển bánh</div>
+        <div class="memory-word">gió</div>
+        <div class="memory-word">rít</div>
+        <div class="memory-word">kìa</div>
+        <div class="memory-word">hét</div>
+        <div class="memory-word">chỉ</div>
+        <div class="memory-word">toa tàu</div>
+        <div class="memory-word">đàn ông</div>
+        <div class="memory-word">đu</div>
+        <div class="memory-word">nóc</div>
+        <div class="memory-word">tiến</div>
+        <div class="memory-word">ánh mắt</div>
+        <div class="memory-word">sát khí</div>
+        <div class="memory-word">Nhảy</div>
+        <div class="memory-word">lớn</div>
+        <div class="memory-word">khoảng trống</div>
+        <div class="memory-word">đường hầm</div>
+        <div class="memory-word">dài</div>
+        <div class="memory-word">tối tăm</div>
+        <div class="memory-word">cảm nhận</div>
+        <div class="memory-word">bức tường</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">lạnh lẽo</div>
+        <div class="memory-word">lướt qua</div>
+        <div class="memory-word">đầu</div>
+        <div class="memory-word">biến mất</div>
+        <div class="memory-word">tan biến</div>
+        <div class="memory-word">màn sương</div>
+        <div class="memory-word">Ai</div>
+        <div class="memory-word">hổn hển</div>
+        <div class="memory-word">lồng ngực</div>
+        <div class="memory-word">bỏng rát</div>
+        <div class="memory-word">tên</div>
+        <div class="memory-word">lính</div>
+        <div class="memory-word">đánh thuê</div>
+        <div class="memory-word">trả lời</div>
+        <div class="memory-word">vẻ mặt</div>
+        <div class="memory-word">lo lắng</div>
+        <div class="memory-word">Thorne</div>
+        <div class="memory-word">hết</div>
+        <div class="memory-word">kiên nhẫn</div>
+        <div class="memory-word">cử</div>
+        <div class="memory-word">kẻ</div>
+        <div class="memory-word">chuyên nghiệp</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordVn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
+
+
+<!-- VOCABULARY DENSITY RULE reminder:
+Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: e.g., tag "quê hương" separately AND "yêu dấu" separately.
+- Tag "trí tuệ" and "sắc bén" as two different spans.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+	               	 -->
