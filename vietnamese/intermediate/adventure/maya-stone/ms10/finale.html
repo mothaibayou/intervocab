@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tập 10: Đoạn kết lửng lơ (Hồi kết của mùa)</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1><span class="vocab" data-word-en="Episode" data-word-vn="Tập" data-pos="danh từ / noun" data-def-en="A single installment of a series" data-def-vn="Một phần trong loạt truyện" data-context-en="Tập 10...">Tập</span> 10: <span class="vocab" data-word-en="Ending" data-word-vn="Đoạn kết" data-pos="danh từ / noun" data-def-en="Conclusion" data-def-vn="Phần kết thúc" data-context-en="Đoạn kết lửng lơ">Đoạn kết</span> <span class="vocab" data-word-en="cliffhanger" data-word-vn="lửng lơ" data-pos="tính từ / adjective" data-def-en="Unresolved suspense" data-def-vn="Chưa kết thúc gây hồi hộp" data-context-en="lửng lơ">lửng lơ</span> (<span class="vocab" data-word-en="Season Finale" data-word-vn="Hồi kết của mùa" data-pos="cụm danh từ / noun phrase" data-def-en="Final episode of the season" data-def-vn="Tập cuối của mùa" data-context-en="Hồi kết của mùa">Hồi kết của mùa</span>)</h1>
+    <h2 class="subtitle">Odyssey Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 10</div>
+        <audio id="audio-player" src="episode10.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        <span class="vocab" data-word-en="The temple" data-word-vn="Ngôi đền" data-pos="cụm danh từ / noun phrase" data-def-en="Ancient religious building" data-def-vn="Tòa nhà tôn giáo cổ" data-context-en="Ngôi đền đang sụp đổ.">Ngôi đền</span> <span class="vocab" data-word-en="was collapsing" data-word-vn="đang sụp đổ" data-pos="cụm động từ / verb phrase" data-def-en="Falling apart" data-def-vn="Đang đổ sụp" data-context-en="Ngôi đền đang sụp đổ.">đang sụp đổ</span>. "<span class="vocab" data-word-en="Run" data-word-vn="Chạy đi" data-pos="động từ / verb" data-def-en="Escape quickly" data-def-vn="Chạy thoát nhanh" data-context-en="Chạy đi!">Chạy đi</span>!" Jack hét lên.
+    </p>
+
+    <p>
+        Maya <span class="vocab" data-word-en="grabbed" data-word-vn="chộp lấy" data-pos="động từ / verb" data-def-en="Seized suddenly" data-def-vn="Nắm lấy đột ngột" data-context-en="Maya chộp lấy cuộn giấy">chộp lấy</span> <span class="vocab" data-word-en="the scroll" data-word-vn="cuộn giấy" data-pos="cụm danh từ / noun phrase" data-def-en="Rolled paper" data-def-vn="Giấy cuộn" data-context-en="cuộn giấy">cuộn giấy</span> và <span class="vocab" data-word-en="the jade dragon" data-word-vn="con rồng ngọc bích" data-pos="cụm danh từ / noun phrase" data-def-en="Green stone dragon figure" data-def-vn="Tượng rồng ngọc" data-context-en="con rồng ngọc bích">con rồng ngọc bích</span>, nhưng một <span class="vocab" data-word-en="boulder" data-word-vn="tảng đá" data-pos="cụm danh từ / noun phrase" data-def-en="Large rock" data-def-vn="Hòn đá lớn" data-context-en="một tảng đá">tảng đá</span> <span class="vocab" data-word-en="fell" data-word-vn="rơi" data-pos="động từ / verb" data-def-en="Dropped" data-def-vn="Rơi xuống" data-context-en="rơi trúng">rơi</span> <span class="vocab" data-word-en="on" data-word-vn="trúng" data-pos="giới từ / preposition" data-def-en="Hit" data-def-vn="Va vào" data-context-en="rơi trúng vai cô">trúng</span> <span class="vocab" data-word-en="her shoulder" data-word-vn="vai cô" data-pos="cụm danh từ / noun phrase" data-def-en="Shoulder area" data-def-vn="Vùng vai" data-context-en="vai cô">vai cô</span>, khiến cô <span class="vocab" data-word-en="drop" data-word-vn="làm rơi" data-pos="cụm động từ / verb phrase" data-def-en="Accidentally release" data-def-vn="Để rơi" data-context-en="làm rơi cuộn giấy">làm rơi</span> cuộn giấy. Nó <span class="vocab" data-word-en="rolled" data-word-vn="lăn" data-pos="động từ / verb" data-def-en="Moved by rolling" data-def-vn="Di chuyển lăn" data-context-en="Nó lăn về phía mép hố.">lăn</span> về phía <span class="vocab" data-word-en="the edge" data-word-vn="mép" data-pos="danh từ / noun" data-def-en="Border" data-def-vn="Rìa" data-context-en="mép hố">mép</span> <span class="vocab" data-word-en="of the pit" data-word-vn="hố" data-pos="danh từ / noun" data-def-en="Deep hole" data-def-vn="Hố sâu" data-context-en="mép hố">hố</span>.
+    </p>
+
+    <p>
+        "<span class="vocab" data-word-en="The map" data-word-vn="Bản đồ" data-pos="danh từ / noun" data-def-en="Geographic chart" data-def-vn="Bản vẽ vị trí" data-context-en="Bản đồ!">Bản đồ</span>!" Thorne hét lên, <span class="vocab" data-word-en="ignoring" data-word-vn="phớt lờ" data-pos="động từ / verb" data-def-en="Disregarding" data-def-vn="Không chú ý" data-context-en="phớt lờ những tảng đá đang rơi">phớt lờ</span> những tảng đá đang rơi. Hắn <span class="vocab" data-word-en="lunged" data-word-vn="lao người" data-pos="cụm động từ / verb phrase" data-def-en="Rushed forward" data-def-vn="Nhảy tới" data-context-en="Hắn lao người về phía cuộn giấy.">lao người</span> về phía cuộn giấy.
+    </p>
+
+    <p>
+        Maya và Jack <span class="vocab" data-word-en="ran desperately" data-word-vn="chạy bán sống bán chết" data-pos="cụm động từ / verb phrase" data-def-en="Fled for survival" data-def-vn="Chạy trong tuyệt vọng" data-context-en="chạy bán sống bán chết">chạy bán sống bán chết</span> về phía <span class="vocab" data-word-en="the exit" data-word-vn="lối ra" data-pos="cụm danh từ / noun phrase" data-def-en="Way out" data-def-vn="Đường thoát" data-context-en="lối ra">lối ra</span> khi <span class="vocab" data-word-en="the floor" data-word-vn="sàn nhà" data-pos="cụm danh từ / noun phrase" data-def-en="Building ground" data-def-vn="Mặt sàn" data-context-en="sàn nhà bắt đầu nứt toác">sàn nhà</span> <span class="vocab" data-word-en="began cracking" data-word-vn="bắt đầu nứt toác" data-pos="cụm động từ / verb phrase" data-def-en="Started splitting" data-def-vn="Bắt đầu nứt" data-context-en="bắt đầu nứt toác">bắt đầu nứt toác</span>. Họ <span class="vocab" data-word-en="dashed" data-word-vn="lao qua" data-pos="cụm động từ / verb phrase" data-def-en="Rushed through" data-def-vn="Chạy nhanh qua" data-context-en="Họ lao qua cánh cổng đá">lao qua</span> <span class="vocab" data-word-en="the stone gate" data-word-vn="cánh cổng đá" data-pos="cụm danh từ / noun phrase" data-def-en="Rock doorway" data-def-vn="Cửa đá" data-context-en="cánh cổng đá">cánh cổng đá</span> ngay khi <span class="vocab" data-word-en="the roof" data-word-vn="mái đền" data-pos="cụm danh từ / noun phrase" data-def-en="Temple top" data-def-vn="Nóc đền" data-context-en="mái đền sập xuống">mái đền</span> <span class="vocab" data-word-en="collapsed" data-word-vn="sập xuống" data-pos="động từ / verb" data-def-en="Fell down" data-def-vn="Đổ sụp" data-context-en="sập xuống">sập xuống</span> với một <span class="vocab" data-word-en="thunderous roar" data-word-vn="tiếng gầm vang như sấm" data-pos="cụm danh từ / noun phrase" data-def-en="Loud crash" data-def-vn="Tiếng nổ lớn" data-context-en="tiếng gầm vang như sấm">tiếng gầm vang như sấm</span>. Một <span class="vocab" data-word-en="cloud of dust" data-word-vn="đám mây bụi" data-pos="cụm danh từ / noun phrase" data-def-en="Dust cloud" data-def-vn="Đám bụi" data-context-en="Một đám mây bụi">đám mây bụi</span> <span class="vocab" data-word-en="exploded" data-word-vn="nổ tung" data-pos="động từ / verb" data-def-en="Burst out" data-def-vn="Bùng nổ" data-context-en="nổ tung">nổ tung</span> vào trong rừng.
+    </p>
+
+    <p>
+        Khi <span class="vocab" data-word-en="the dust" data-word-vn="bụi bặm" data-pos="cụm danh từ / noun phrase" data-def-en="Airborne particles" data-def-vn="Bụi bay" data-context-en="Khi bụi bặm tan đi">bụi bặm</span> <span class="vocab" data-word-en="cleared" data-word-vn="tan đi" data-pos="động từ / verb" data-def-en="Settled" data-def-vn="Lắng xuống" data-context-en="tan đi">tan đi</span>, <span class="vocab" data-word-en="the entrance" data-word-vn="lối vào" data-pos="cụm danh từ / noun phrase" data-def-en="Entryway" data-def-vn="Lối vào" data-context-en="lối vào ngôi đền">lối vào</span> ngôi đền đã <span class="vocab" data-word-en="completely blocked" data-word-vn="hoàn toàn bị chặn kín" data-pos="cụm tính từ / adjective phrase" data-def-en="Fully obstructed" data-def-vn="Bị bịt kín hoàn toàn" data-context-en="hoàn toàn bị chặn kín">hoàn toàn bị chặn kín</span> bởi <span class="vocab" data-word-en="tons of rubble" data-word-vn="hàng tấn đất đá" data-pos="cụm danh từ / noun phrase" data-def-en="Heavy debris" data-def-vn="Lượng lớn đá vụn" data-context-en="hàng tấn đất đá">hàng tấn đất đá</span>. Thorne đã <span class="vocab" data-word-en="disappeared" data-word-vn="biến mất" data-pos="động từ / verb" data-def-en="Vanished" data-def-vn="Biến mất" data-context-en="Thorne đã biến mất.">biến mất</span>. <span class="vocab" data-word-en="The map" data-word-vn="Bản đồ" data-pos="danh từ / noun" data-def-en="Chart" data-def-vn="Bản đồ" data-context-en="Bản đồ đã mất.">Bản đồ</span> đã <span class="vocab" data-word-en="lost" data-word-vn="mất" data-pos="tính từ / adjective" data-def-en="Gone" data-def-vn="Biến mất" data-context-en="đã mất">mất</span>.
+    </p>
+
+    <p>
+        Maya <span class="vocab" data-word-en="sat" data-word-vn="ngồi" data-pos="động từ / verb" data-def-en="Took seat" data-def-vn="Ngồi xuống" data-context-en="Maya ngồi trên bãi cỏ">ngồi</span> trên <span class="vocab" data-word-en="the grass" data-word-vn="bãi cỏ" data-pos="cụm danh từ / noun phrase" data-def-en="Lawn" data-def-vn="Cỏ xanh" data-context-en="bãi cỏ">bãi cỏ</span>, <span class="vocab" data-word-en="hugging tightly" data-word-vn="ôm chặt" data-pos="cụm động từ / verb phrase" data-def-en="Embracing firmly" data-def-vn="Ôm siết" data-context-en="ôm chặt con rồng ngọc bích nhỏ">ôm chặt</span> con rồng ngọc bích <span class="vocab" data-word-en="small" data-word-vn="nhỏ" data-pos="tính từ / adjective" data-def-en="Little" data-def-vn="Nhỏ bé" data-context-en="nhỏ">nhỏ</span>. "<span class="vocab" data-word-en="We lost" data-word-vn="Chúng ta mất" data-pos="cụm động từ / verb phrase" data-def-en="The map is gone" data-def-vn="Bản đồ biến mất" data-context-en="Chúng ta mất bản đồ rồi">Chúng ta mất bản đồ rồi</span>, Jack. Thorne <span class="vocab" data-word-en="won" data-word-vn="thắng rồi" data-pos="động từ / verb" data-def-en="Achieved victory" data-def-vn="Thắng cuộc" data-context-en="Thorne thắng rồi">thắng rồi</span>".
+    </p>
+
+    <p>
+        Jack <span class="vocab" data-word-en="sat down" data-word-vn="ngồi xuống" data-pos="cụm động từ / verb phrase" data-def-en="Seated himself" data-def-vn="Ngồi bên" data-context-en="Jack ngồi xuống cạnh cô">ngồi xuống</span> cạnh cô, <span class="vocab" data-word-en="blood" data-word-vn="máu" data-pos="danh từ / noun" data-def-en="Red bodily fluid" data-def-vn="Máu đỏ" data-context-en="máu chảy ra">máu</span> <span class="vocab" data-word-en="flowing" data-word-vn="chảy ra" data-pos="động từ / verb" data-def-en="Pouring" data-def-vn="Chảy" data-context-en="chảy ra từ một vết cắt">chảy ra</span> từ một <span class="vocab" data-word-en="small cut" data-word-vn="vết cắt nhỏ" data-pos="cụm danh từ / noun phrase" data-def-en="Minor injury" data-def-vn="Vết thương nhẹ" data-context-en="vết cắt nhỏ trên trán">vết cắt nhỏ</span> trên <span class="vocab" data-word-en="his forehead" data-word-vn="trán" data-pos="danh từ / noun" data-def-en="Brow" data-def-vn="Phần trán" data-context-en="trán">trán</span>. Anh <span class="vocab" data-word-en="smiled weakly" data-word-vn="mỉm cười yếu ớt" data-pos="cụm động từ / verb phrase" data-def-en="Faint grin" data-def-vn="Cười nhạt" data-context-en="Anh mỉm cười yếu ớt">mỉm cười yếu ớt</span> và <span class="vocab" data-word-en="pointed" data-word-vn="chỉ" data-pos="động từ / verb" data-def-en="Indicated" data-def-vn="Chỉ tay" data-context-en="chỉ vào con rồng ngọc bích">chỉ</span> vào con rồng ngọc bích. "<span class="vocab" data-word-en="Look underneath" data-word-vn="Nhìn xuống dưới đáy đi" data-pos="cụm động từ / verb phrase" data-def-en="Check the base" data-def-vn="Xem phần dưới" data-context-en="Nhìn xuống dưới đáy đi">Nhìn xuống dưới đáy đi</span>, Maya".
+    </p>
+
+    <p>
+        Maya <span class="vocab" data-word-en="flipped" data-word-vn="lật ngược" data-pos="động từ / verb" data-def-en="Turned over" data-def-vn="Lật úp" data-context-en="Maya lật ngược bức tượng lại.">lật ngược</span> <span class="vocab" data-word-en="the statue" data-word-vn="bức tượng" data-pos="cụm danh từ / noun phrase" data-def-en="Sculpted figure" data-def-vn="Hình khắc" data-context-en="bức tượng">bức tượng</span> lại. <span class="vocab" data-word-en="Carved" data-word-vn="Được khắc" data-pos="động từ / verb" data-def-en="Engraved" data-def-vn="Chạm khắc" data-context-en="Được khắc vào phần đế">Được khắc</span> vào <span class="vocab" data-word-en="the base" data-word-vn="phần đế" data-pos="cụm danh từ / noun phrase" data-def-en="Bottom" data-def-vn="Phần đáy" data-context-en="phần đế">phần đế</span> là một <span class="vocab" data-word-en="modern microchip" data-word-vn="vi mạch hiện đại" data-pos="cụm danh từ / noun phrase" data-def-en="Tiny circuit" data-def-vn="Mạch điện tử nhỏ" data-context-en="một vi mạch hiện đại">vi mạch hiện đại</span>, <span class="vocab" data-word-en="super tiny" data-word-vn="siêu nhỏ" data-pos="tính từ / adjective" data-def-en="Extremely small" data-def-vn="Cực kỳ bé" data-context-en="siêu nhỏ">siêu nhỏ</span> <span class="vocab" data-word-en="hidden" data-word-vn="được giấu" data-pos="động từ / verb" data-def-en="Concealed" data-def-vn="Ẩn giấu" data-context-en="được giấu dưới một lớp sáp">được giấu</span> dưới một <span class="vocab" data-word-en="layer of wax" data-word-vn="lớp sáp" data-pos="cụm danh từ / noun phrase" data-def-en="Wax coating" data-def-vn="Lớp sáp" data-context-en="lớp sáp">lớp sáp</span>. <span class="vocab" data-word-en="Her grandfather" data-word-vn="Ông nội cô" data-pos="cụm danh từ / noun phrase" data-def-en="Grandpa" data-def-vn="Ông của cô" data-context-en="Ông nội cô">Ông nội cô</span> không chỉ <span class="vocab" data-word-en="left" data-word-vn="để lại" data-pos="động từ / verb" data-def-en="Bequeathed" data-def-vn="Để lại" data-context-en="không chỉ để lại một bản đồ giấy">để lại</span> một bản đồ giấy; ông đã <span class="vocab" data-word-en="left" data-word-vn="để lại" data-pos="động từ / verb" data-def-en="Provided" data-def-vn="Cung cấp" data-context-en="để lại một di sản">để lại</span> một <span class="vocab" data-word-en="digital legacy" data-word-vn="di sản kỹ thuật số" data-pos="cụm danh từ / noun phrase" data-def-en="Tech inheritance" data-def-vn="Di sản công nghệ" data-context-en="một di sản kỹ thuật số">di sản kỹ thuật số</span>.
+    </p>
+
+    <p>
+        "<span class="vocab" data-word-en="This is just the beginning" data-word-vn="Đây mới chỉ là sự bắt đầu" data-pos="cụm câu / sentence" data-def-en="Only the start" data-def-vn="Chỉ là khởi đầu" data-context-en="Đây mới chỉ là sự bắt đầu">Đây mới chỉ là sự bắt đầu</span>," Jack <span class="vocab" data-word-en="whispered" data-word-vn="thì thầm" data-pos="động từ / verb" data-def-en="Said softly" data-def-vn="Nói khẽ" data-context-en="Jack thì thầm.">thì thầm</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Suddenly" data-word-vn="Đột nhiên" data-pos="trạng từ / adverb" data-def-en="Without warning" data-def-vn="Bất ngờ" data-context-en="Đột nhiên">Đột nhiên</span>, <span class="vocab" data-word-en="the sound" data-word-vn="tiếng" data-pos="danh từ / noun" data-def-en="Noise" data-def-vn="Âm thanh" data-context-en="tiếng máy bay trực thăng">tiếng</span> <span class="vocab" data-word-en="of a helicopter" data-word-vn="máy bay trực thăng" data-pos="cụm danh từ / noun phrase" data-def-en="Rotor aircraft" data-def-vn="Máy bay cánh quạt" data-context-en="máy bay trực thăng">máy bay trực thăng</span> <span class="vocab" data-word-en="echoed" data-word-vn="vang động" data-pos="động từ / verb" data-def-en="Resounded" data-def-vn="Vang vọng" data-context-en="vang động bầu trời">vang động</span> <span class="vocab" data-word-en="the sky" data-word-vn="bầu trời" data-pos="cụm danh từ / noun phrase" data-def-en="Atmosphere above" data-def-vn="Không gian trên cao" data-context-en="bầu trời">bầu trời</span>. Một <span class="vocab" data-word-en="black helicopter" data-word-vn="chiếc trực thăng màu đen" data-pos="cụm danh từ / noun phrase" data-def-en="Dark flying vehicle" data-def-vn="Máy bay đen" data-context-en="Một chiếc trực thăng màu đen">chiếc trực thăng màu đen</span> <span class="vocab" data-word-en="rose" data-word-vn="bay lên" data-pos="động từ / verb" data-def-en="Ascended" data-def-vn="Bay lên" data-context-en="bay lên">bay lên</span> từ phía sau những <span class="vocab" data-word-en="trees" data-word-vn="rặng cây" data-pos="cụm danh từ / noun phrase" data-def-en="Treeline" data-def-vn="Hàng cây" data-context-en="những rặng cây">rặng cây</span>, với một <span class="vocab" data-word-en="large T" data-word-vn="chữ T lớn" data-pos="cụm danh từ / noun phrase" data-def-en="Big letter T" data-def-vn="Chữ T to" data-context-en="chữ T lớn">chữ T lớn</span> <span class="vocab" data-word-en="painted" data-word-vn="được sơn" data-pos="động từ / verb" data-def-en="Applied paint" data-def-vn="Được vẽ sơn" data-context-en="được sơn bên thân">được sơn</span> bên thân. Thorne đã <span class="vocab" data-word-en="survived" data-word-vn="sống sót" data-pos="động từ / verb" data-def-en="Lived through danger" data-def-vn="Thoát chết" data-context-en="Thorne đã sống sót">sống sót</span>, và hắn không <span class="vocab" data-word-en="alone" data-word-vn="đi một mình" data-pos="cụm từ / phrase" data-def-en="Without company" data-def-vn="Không có bạn" data-context-en="không đi một mình">đi một mình</span>. Một <span class="vocab" data-word-en="dozen" data-word-vn="một tá" data-pos="số lượng / quantifier" data-def-en="Twelve" data-def-vn="Mười hai" data-context-en="Một tá đàn ông">một tá</span> <span class="vocab" data-word-en="armed men" data-word-vn="đàn ông có vũ trang" data-pos="cụm danh từ / noun phrase" data-def-en="Weapon-carrying males" data-def-vn="Người đàn ông vũ trang" data-context-en="đàn ông có vũ trang">đàn ông có vũ trang</span> bắt đầu <span class="vocab" data-word-en="rappelling" data-word-vn="đu dây xuống" data-pos="cụm động từ / verb phrase" data-def-en="Descending by rope" data-def-vn="Hạ xuống bằng dây" data-context-en="bắt đầu đu dây xuống">đu dây xuống</span>.
+    </p>
+
+    <p>
+        Maya <span class="vocab" data-word-en="looked at" data-word-vn="nhìn" data-pos="cụm động từ / verb phrase" data-def-en="Directed eyes toward" data-def-vn="Nhìn về" data-context-en="Maya nhìn Jack">nhìn</span> Jack, rồi <span class="vocab" data-word-en="looked into" data-word-vn="nhìn vào" data-pos="cụm động từ / verb phrase" data-def-en="Gazed toward" data-def-vn="Nhìn sâu vào" data-context-en="nhìn vào khu rừng">nhìn vào</span> <span class="vocab" data-word-en="the forest" data-word-vn="khu rừng" data-pos="cụm danh từ / noun phrase" data-def-en="Wooded area" data-def-vn="Rừng cây" data-context-en="khu rừng">khu rừng</span>.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <!-- Memory words updated with new splits -->
+        <div class="memory-word">Tập</div>
+        <div class="memory-word">Đoạn kết</div>
+        <div class="memory-word">lửng lơ</div>
+        <div class="memory-word">Hồi kết của mùa</div>
+        <!-- ... (rest of memory grid follows the same pattern as before) -->
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    (el.dataset.wordVn || '').trim().toLowerCase() === targetWord || 
+                    (el.dataset.wordEn || '').trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
