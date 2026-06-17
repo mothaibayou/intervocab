@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Episode 4: Nữ Phù Thủy Circe</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+	<!-- VOCABULARY DENSITY RULE:  please meticulously follow these instructions:
+     Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: e.g., tag "quê hương" separately AND "yêu dấu" separately.
+- Tag "trí tuệ" and "sắc bén" as two different spans.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+      -->
+			
+		
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Episode 4: Nữ Phù Thủy Circe</h1>
+    <h2 class="subtitle">Odyssey Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Episode 4</div>
+        <audio id="audio-player" src="circe.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        <span class="vocab" data-word-en="The ships" data-word-vn="Những con tàu" data-pos="cụm danh từ / noun phrase" data-def-en="The vessels used for sea travel." data-def-vn="Những phương tiện thủy dùng để di chuyển trên biển." data-context-en="The ships found shelter...">Những con tàu</span> <span class="vocab" data-word-en="found shelter" data-word-vn="tìm được nơi trú ẩn" data-pos="cụm động từ / verb phrase" data-def-en="Discovered a place of refuge or safety." data-def-vn="Tìm thấy một nơi trú ngụ an toàn." data-context-en="found shelter on the island...">tìm được nơi trú ẩn</span> trên <span class="vocab" data-word-en="the island" data-word-vn="hòn đảo" data-pos="cụm danh từ / noun phrase" data-def-en="A landmass surrounded by water." data-def-vn="Một vùng đất được bao quanh bởi nước." data-context-en="on the island Aeaea...">hòn đảo</span> Aeaea <span class="vocab" data-word-en="green and mysterious" data-word-vn="xanh tươi và đầy bí ẩn" data-pos="cụm tính từ / adjective phrase" data-def-en="Lush with vegetation and full of enigma." data-def-vn="Xanh mướt và tràn đầy sự bí ẩn." data-context-en="Aeaea green and mysterious.">xanh tươi và đầy bí ẩn</span>.
+    </p>
+
+    <p>
+        Ulysses <span class="vocab" data-word-en="sent" data-word-vn="cử" data-pos="động từ / verb" data-def-en="Dispatched or ordered to go." data-def-vn="Gửi đi hoặc ra lệnh đi." data-context-en="Ulysses sent a scouting group...">cử</span> một <span class="vocab" data-word-en="scouting group" data-word-vn="nhóm do thám" data-pos="cụm danh từ / noun phrase" data-def-en="A team sent to explore." data-def-vn="Một nhóm được cử đi khám phá." data-context-en="a scouting group...">nhóm do thám</span> đi <span class="vocab" data-word-en="explore" data-word-vn="khám phá" data-pos="động từ / verb" data-def-en="To investigate or discover." data-def-vn="Điều tra hoặc tìm hiểu." data-context-en="to explore...">khám phá</span>, nhưng chẳng bao lâu sau họ <span class="vocab" data-word-en="accidentally discovered" data-word-vn="tình cờ phát hiện" data-pos="cụm động từ / verb phrase" data-def-en="Found by chance." data-def-vn="Tìm thấy một cách ngẫu nhiên." data-context-en="they accidentally discovered...">tình cờ phát hiện</span> một <span class="vocab" data-word-en="palace" data-word-vn="cung điện" data-pos="danh từ / noun" data-def-en="A grand residence." data-def-vn="Một ngôi nhà nguy nga." data-context-en="a palace of marble...">cung điện</span> bằng <span class="vocab" data-word-en="marble" data-word-vn="đá cẩm thạch" data-pos="danh từ / noun" data-def-en="A type of stone." data-def-vn="Một loại đá." data-context-en="made of marble...">đá cẩm thạch</span> <span class="vocab" data-word-en="hidden" data-word-vn="ẩn" data-pos="tính từ / adjective" data-def-en="Concealed from view." data-def-vn="Ẩn giấu khỏi tầm nhìn." data-context-en="hidden in the forest...">ẩn</span> trong <span class="vocab" data-word-en="the clearing" data-word-vn="khoảng trống" data-pos="cụm danh từ / noun phrase" data-def-en="An open space." data-def-vn="Một khoảng không gian mở." data-context-en="in the clearing between the forest.">khoảng trống</span> giữa <span class="vocab" data-word-en="the forest" data-word-vn="khu rừng" data-pos="cụm danh từ / noun phrase" data-def-en="A wooded area." data-def-vn="Một khu vực có cây cối." data-context-en="between the forest.">khu rừng</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="The air" data-word-vn="Không khí" data-pos="cụm danh từ / noun phrase" data-def-en="The atmosphere." data-def-vn="Không gian xung quanh." data-context-en="The air carried...">Không khí</span> <span class="vocab" data-word-en="wafted" data-word-vn="thoang thoảng" data-pos="động từ / verb" data-def-en="Drifted gently." data-def-vn="Lan tỏa nhẹ nhàng." data-context-en="wafted the smell...">thoang thoảng</span> <span class="vocab" data-word-en="the smell" data-word-vn="mùi" data-pos="danh từ / noun" data-def-en="An odor." data-def-vn="Một mùi hương." data-context-en="the smell of...">mùi</span> <span class="vocab" data-word-en="perfume" data-word-vn="nước hoa" data-pos="danh từ / noun" data-def-en="Fragrance." data-def-vn="Hương thơm." data-context-en="perfume and roasted meat.">nước hoa</span> và <span class="vocab" data-word-en="roasted meat" data-word-vn="thịt nướng" data-pos="cụm danh từ / noun phrase" data-def-en="Cooked meat." data-def-vn="Thịt được nướng." data-context-en="and roasted meat.">thịt nướng</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Inside" data-word-vn="Bên trong" data-pos="giới từ / preposition" data-def-en="Within." data-def-vn="Ở bên trong." data-context-en="Inside, the goddess Circe...">Bên trong</span>, <span class="vocab" data-word-en="goddess" data-word-vn="nữ thần" data-pos="danh từ / noun" data-def-en="Female deity." data-def-vn="Nữ thần linh." data-context-en="goddess Circe...">nữ thần</span> Circe đang ngồi bên <span class="vocab" data-word-en="golden loom" data-word-vn="khung cửi vàng" data-pos="cụm danh từ / noun phrase" data-def-en="A weaving device made of gold." data-def-vn="Thiết bị dệt vải bằng vàng." data-context-en="golden loom...">khung cửi vàng</span>, <span class="vocab" data-word-en="singing" data-word-vn="cất tiếng hát" data-pos="động từ / verb" data-def-en="Producing musical sounds with voice." data-def-vn="Phát ra âm thanh nhạc bằng giọng." data-context-en="singing a melody...">cất tiếng hát</span> một <span class="vocab" data-word-en="melody" data-word-vn="giai điệu" data-pos="danh từ / noun" data-def-en="A tune." data-def-vn="Một giai điệu." data-context-en="a melody so beautiful...">giai điệu</span> <span class="vocab" data-word-en="beautiful" data-word-vn="đẹp" data-pos="tính từ / adjective" data-def-en="Aesthetically pleasing." data-def-vn="Đẹp đẽ." data-context-en="beautiful to the point...">đẹp</span> đến mức <span class="vocab" data-word-en="as if" data-word-vn="dường như" data-pos="liên từ / conjunction" data-def-en="Seeming like." data-def-vn="Có vẻ như." data-context-en="as if time stopped.">dường như</span> khiến <span class="vocab" data-word-en="time" data-word-vn="thời gian" data-pos="danh từ / noun" data-def-en="The passage of moments." data-def-vn="Sự trôi qua của thời khắc." data-context-en="time stopped.">thời gian</span> <span class="vocab" data-word-en="stopped" data-word-vn="ngừng trôi" data-pos="động từ / verb" data-def-en="Ceased moving." data-def-vn="Dừng lại." data-context-en="stopped.">ngừng trôi</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="She" data-word-vn="Bà" data-pos="đại từ / pronoun" data-def-en="Referring to Circe." data-def-vn="Chỉ nữ thần Circe." data-context-en="She welcomed them...">Bà</span> <span class="vocab" data-word-en="welcomed" data-word-vn="chào đón" data-pos="động từ / verb" data-def-en="Greeted warmly." data-def-vn="Tiếp đãi nồng hậu." data-context-en="welcomed them with...">chào đón</span> họ bằng <span class="vocab" data-word-en="wine" data-word-vn="rượu" data-pos="danh từ / noun" data-def-en="Alcoholic beverage." data-def-vn="Đồ uống có cồn." data-context-en="wine and food...">rượu</span> và <span class="vocab" data-word-en="food" data-word-vn="thức ăn" data-pos="danh từ / noun" data-def-en="Edibles." data-def-vn="Đồ ăn." data-context-en="food dipped in honey.">thức ăn</span> <span class="vocab" data-word-en="dipped in honey" data-word-vn="tẩm mật ong" data-pos="cụm động từ / verb phrase" data-def-en="Coated with honey." data-def-vn="Được ngâm trong mật ong." data-context-en="dipped in honey.">tẩm mật ong</span>.
+    </p>
+
+    <p>
+        Nhưng ngay khi những người đàn ông <span class="vocab" data-word-en="drank" data-word-vn="uống" data-pos="động từ / verb" data-def-en="Consumed liquid." data-def-vn="Uống." data-context-en="drank and finished...">uống</span> xong, bà <span class="vocab" data-word-en="waved" data-word-vn="vung" data-pos="động từ / verb" data-def-en="Moved in a sweeping motion." data-def-vn="Vung tay." data-context-en="waved her magic wand...">vung</span> <span class="vocab" data-word-en="magic wand" data-word-vn="cây đũa phép" data-pos="cụm danh từ / noun phrase" data-def-en="A tool for casting spells." data-def-vn="Công cụ để thi triển phép thuật." data-context-en="magic wand towards them.">cây đũa phép</span> về phía họ.
+    </p>
+
+    <p>
+        Trong một <span class="vocab" data-word-en="horrifying transformation" data-word-vn="sự biến đổi kinh hoàng" data-pos="cụm danh từ / noun phrase" data-def-en="A terrifying change in form." data-def-vn="Một sự thay đổi hình dạng kinh hoàng." data-context-en="In a horrifying transformation...">sự biến đổi kinh hoàng</span>, <span class="vocab" data-word-en="their voices" data-word-vn="giọng nói của họ" data-pos="cụm danh từ / noun phrase" data-def-en="The sounds they produced." data-def-vn="Âm thanh họ phát ra." data-context-en="their voices turned...">giọng nói của họ</span> <span class="vocab" data-word-en="turned into" data-word-vn="biến thành" data-pos="cụm động từ / verb phrase" data-def-en="Changed into." data-def-vn="Thay đổi thành." data-context-en="turned into grunting...">biến thành</span> <span class="vocab" data-word-en="grunting" data-word-vn="tiếng khụt khịt" data-pos="danh từ / noun" data-def-en="Pig-like sounds." data-def-vn="Âm thanh giống heo." data-context-en="grunting sounds...">tiếng khụt khịt</span>, <span class="vocab" data-word-en="their skin" data-word-vn="làn da" data-pos="cụm danh từ / noun phrase" data-def-en="The outer covering of body." data-def-vn="Lớp da bên ngoài." data-context-en="their skin thickened...">làn da</span> <span class="vocab" data-word-en="thickened" data-word-vn="dày lên" data-pos="động từ / verb" data-def-en="Became thicker." data-def-vn="Trở nên dày hơn." data-context-en="thickened into...">dày lên</span> thành <span class="vocab" data-word-en="layer of stiff bristles" data-word-vn="lớp lông cứng" data-pos="cụm danh từ / noun phrase" data-def-en="A covering of hard hair." data-def-vn="Lớp lông cứng." data-context-en="layer of stiff bristles...">lớp lông cứng</span>, và họ bị <span class="vocab" data-word-en="trapped" data-word-vn="mắc kẹt" data-pos="động từ / verb" data-def-en="Caught or stuck." data-def-vn="Bị kẹt lại." data-context-en="trapped in the body...">mắc kẹt</span> trong <span class="vocab" data-word-en="the body" data-word-vn="thân xác" data-pos="cụm danh từ / noun phrase" data-def-en="Physical form." data-def-vn="Hình thể vật lý." data-context-en="in the body of pigs.">thân xác</span> <span class="vocab" data-word-en="of pigs" data-word-vn="loài heo" data-pos="cụm danh từ / noun phrase" data-def-en="Swine animals." data-def-vn="Động vật heo." data-context-en="of pigs.">loài heo</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Inside" data-word-vn="Bên trong" data-pos="giới từ / preposition" data-def-en="Within them." data-def-vn="Bên trong họ." data-context-en="Inside they were still...">Bên trong</span> họ vẫn là <span class="vocab" data-word-en="humans" data-word-vn="con người" data-pos="danh từ / noun" data-def-en="People." data-def-vn="Loài người." data-context-en="humans...">con người</span>, vẫn có thể <span class="vocab" data-word-en="cry" data-word-vn="khóc" data-pos="động từ / verb" data-def-en="Shed tears." data-def-vn="Đổ nước mắt." data-context-en="cry and feel fear...">khóc</span> và <span class="vocab" data-word-en="feel" data-word-vn="cảm thấy" data-pos="động từ / verb" data-def-en="Experience emotion." data-def-vn="Trải nghiệm cảm xúc." data-context-en="feel fear...">cảm thấy</span> <span class="vocab" data-word-en="fear" data-word-vn="sợ hãi" data-pos="danh từ / noun" data-def-en="Terror." data-def-vn="Sự hoảng sợ." data-context-en="fear, but trapped...">sợ hãi</span>, nhưng bị <span class="vocab" data-word-en="locked" data-word-vn="khóa chặt" data-pos="động từ / verb" data-def-en="Secured tightly." data-def-vn="Bị khóa chặt." data-context-en="locked in animal form.">khóa chặt</span> trong <span class="vocab" data-word-en="animal form" data-word-vn="hình dạng động vật" data-pos="cụm danh từ / noun phrase" data-def-en="Shape of an animal." data-def-vn="Hình dạng của động vật." data-context-en="in animal form.">hình dạng động vật</span>.
+    </p>
+
+    <p>
+        Khi những người do thám không <span class="vocab" data-word-en="returned" data-word-vn="quay trở lại" data-pos="động từ / verb" data-def-en="Came back." data-def-vn="Trở về." data-context-en="did not return...">quay trở lại</span>, Ulysses một mình <span class="vocab" data-word-en="advanced" data-word-vn="tiến đến" data-pos="động từ / verb" data-def-en="Moved forward." data-def-vn="Di chuyển tới." data-context-en="advanced to the palace.">tiến đến</span> <span class="vocab" data-word-en="the palace" data-word-vn="cung điện" data-pos="cụm danh từ / noun phrase" data-def-en="The grand building." data-def-vn="Ngôi nhà nguy nga." data-context-en="the palace.">cung điện</span>.
+    </p>
+
+    <p>
+        Trên <span class="vocab" data-word-en="the way" data-word-vn="đường đi" data-pos="cụm danh từ / noun phrase" data-def-en="The path." data-def-vn="Con đường." data-context-en="On the way...">đường đi</span>, ông bị Hermes — vị thần đưa tin — <span class="vocab" data-word-en="stopped" data-word-vn="chặn lại" data-pos="động từ / verb" data-def-en="Halted." data-def-vn="Dừng lại." data-context-en="stopped him.">chặn lại</span>.
+    </p>
+
+    <p>
+        Hermes <span class="vocab" data-word-en="gave" data-word-vn="đưa cho" data-pos="động từ / verb" data-def-en="Handed over." data-def-vn="Trao cho." data-context-en="gave him a...">đưa cho</span> ông một loại <span class="vocab" data-word-en="magical herb" data-word-vn="thảo mộc thần kỳ" data-pos="cụm danh từ / noun phrase" data-def-en="A wondrous plant." data-def-vn="Một loại cây cỏ kỳ diệu." data-context-en="magical herb...">thảo mộc thần kỳ</span> để <span class="vocab" data-word-en="protect" data-word-vn="bảo vệ" data-pos="động từ / verb" data-def-en="Shield from harm." data-def-vn="Che chở khỏi tổn hại." data-context-en="to protect him...">bảo vệ</span> ông khỏi <span class="vocab" data-word-en="the magic" data-word-vn="phép thuật" data-pos="cụm danh từ / noun phrase" data-def-en="Sorcery." data-def-vn="Phép phù thủy." data-context-en="the magic of the witch.">phép thuật</span> của <span class="vocab" data-word-en="the witch" data-word-vn="nữ phù thủy" data-pos="cụm danh từ / noun phrase" data-def-en="Female sorceress." data-def-vn="Người phụ nữ có phép thuật." data-context-en="of the witch.">nữ phù thủy</span>.
+    </p>
+
+    <p>
+        Khi Circe đưa cho ông <span class="vocab" data-word-en="the poisoned cup" data-word-vn="ly rượu bị đầu độc" data-pos="cụm danh từ / noun phrase" data-def-en="A cup with toxin." data-def-vn="Chiếc cốc chứa độc." data-context-en="the poisoned cup...">ly rượu bị đầu độc</span>, ông <span class="vocab" data-word-en="drank" data-word-vn="uống" data-pos="động từ / verb" data-def-en="Consumed it." data-def-vn="Uống nó." data-context-en="he drank it...">uống</span> nó nhưng <span class="vocab" data-word-en="unaffected" data-word-vn="không hề hấn gì" data-pos="cụm tính từ / adjective phrase" data-def-en="Not harmed." data-def-vn="Không bị ảnh hưởng." data-context-en="but unaffected.">không hề hấn gì</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Drawing" data-word-vn="Rút" data-pos="động từ / verb" data-def-en="Pulling out." data-def-vn="Kéo ra." data-context-en="Drawing his sword...">Rút</span> <span class="vocab" data-word-en="sword" data-word-vn="kiếm" data-pos="danh từ / noun" data-def-en="A bladed weapon." data-def-vn="Vũ khí lưỡi sắc." data-context-en="sword...">kiếm</span> ra, ông <span class="vocab" data-word-en="forced" data-word-vn="buộc" data-pos="động từ / verb" data-def-en="Compelled." data-def-vn="Ép buộc." data-context-en="forced her...">buộc</span> bà phải <span class="vocab" data-word-en="reverse" data-word-vn="đảo ngược" data-pos="động từ / verb" data-def-en="Undo." data-def-vn="Làm ngược lại." data-context-en="reverse the transformation.">đảo ngược</span> <span class="vocab" data-word-en="the transformation" data-word-vn="phép biến đổi" data-pos="cụm danh từ / noun phrase" data-def-en="The spell change." data-def-vn="Phép biến hình." data-context-en="the transformation.">phép biến đổi</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="What happened next" data-word-vn="Điều xảy ra tiếp theo" data-pos="cụm danh từ / noun phrase" data-def-en="The subsequent events." data-def-vn="Những sự kiện tiếp theo." data-context-en="What happened next...">Điều xảy ra tiếp theo</span> khiến ông <span class="vocab" data-word-en="surprised" data-word-vn="ngạc nhiên" data-pos="tính từ / adjective" data-def-en="Amazed." data-def-vn="Bất ngờ." data-context-en="surprised him.">ngạc nhiên</span>.
+    </p>
+
+    <p>
+        Circe không chỉ là một <span class="vocab" data-word-en="monster" data-word-vn="quái vật" data-pos="danh từ / noun" data-def-en="A beastly creature." data-def-vn="Sinh vật quái dị." data-context-en="a monster...">quái vật</span>; bà còn <span class="vocab" data-word-en="lonely" data-word-vn="cô đơn" data-pos="tính từ / adjective" data-def-en="Isolated." data-def-vn="Cô lập." data-context-en="lonely and...">cô đơn</span> và <span class="vocab" data-word-en="extremely intelligent" data-word-vn="vô cùng thông minh" data-pos="cụm tính từ / adjective phrase" data-def-en="Very smart." data-def-vn="Rất thông minh." data-context-en="extremely intelligent.">vô cùng thông minh</span>.
+    </p>
+
+    <p>
+        Bà <span class="vocab" data-word-en="offered" data-word-vn="đề nghị" data-pos="động từ / verb" data-def-en="Proposed." data-def-vn="Đề xuất." data-context-en="offered him...">đề nghị</span> cho ông một <span class="vocab" data-word-en="life" data-word-vn="cuộc sống" data-pos="danh từ / noun" data-def-en="Existence." data-def-vn="Cuộc sống." data-context-en="a life full of...">cuộc sống</span> đầy <span class="vocab" data-word-en="comfort" data-word-vn="tiện nghi" data-pos="danh từ / noun" data-def-en="Luxury and ease." data-def-vn="Sự thoải mái." data-context-en="comfort, immortality...">tiện nghi</span>, <span class="vocab" data-word-en="immortality" data-word-vn="bất tử" data-pos="danh từ / noun" data-def-en="Eternal life." data-def-vn="Sống mãi mãi." data-context-en="immortality and pleasure.">bất tử</span> và <span class="vocab" data-word-en="pleasure" data-word-vn="khoái lạc" data-pos="danh từ / noun" data-def-en="Enjoyment." data-def-vn="Sự khoái cảm." data-context-en="pleasure.">khoái lạc</span>.
+    </p>
+
+    <p>
+        Suốt một năm, <span class="vocab" data-word-en="the crew" data-word-vn="thủy thủ đoàn" data-pos="cụm danh từ / noun phrase" data-def-en="The sailors." data-def-vn="Nhóm thủy thủ." data-context-en="the crew lived...">thủy thủ đoàn</span> sống trong sự <span class="vocab" data-word-en="luxury" data-word-vn="xa hoa" data-pos="danh từ / noun" data-def-en="Opulence." data-def-vn="Sự xa xỉ." data-context-en="luxury of hers...">xa hoa</span> của bà, <span class="vocab" data-word-en="memories" data-word-vn="ký ức" data-pos="danh từ / noun" data-def-en="Recollections." data-def-vn="Những kỷ niệm." data-context-en="memories of home...">ký ức</span> về <span class="vocab" data-word-en="homeland" data-word-vn="quê nhà" data-pos="danh từ / noun" data-def-en="Native land." data-def-vn="Quê hương." data-context-en="homeland gradually...">quê nhà</span> dần <span class="vocab" data-word-en="faded" data-word-vn="trở nên mờ nhạt" data-pos="cụm động từ / verb phrase" data-def-en="Became dim." data-def-vn="Mờ dần." data-context-en="faded.">trở nên mờ nhạt</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="However" data-word-vn="Thế nhưng" data-pos="liên từ / conjunction" data-def-en="But." data-def-vn="Nhưng." data-context-en="However every evening...">Thế nhưng</span> mỗi buổi tối, Ulysses vẫn ngồi bên <span class="vocab" data-word-en="the seashore" data-word-vn="bờ biển" data-pos="cụm danh từ / noun phrase" data-def-en="The beach." data-def-vn="Ven biển." data-context-en="the seashore...">bờ biển</span>, <span class="vocab" data-word-en="staring" data-word-vn="nhìn chằm chằm" data-pos="động từ / verb" data-def-en="Gazing fixedly." data-def-vn="Nhìn chằm chằm." data-context-en="staring towards the horizon.">nhìn chằm chằm</span> về phía <span class="vocab" data-word-en="the horizon" data-word-vn="chân trời" data-pos="cụm danh từ / noun phrase" data-def-en="The distant sky line." data-def-vn="Đường chân trời." data-context-en="the horizon.">chân trời</span>.
+    </p>
+
+    <p>
+        Ông <span class="vocab" data-word-en="realized" data-word-vn="nhận ra" data-pos="động từ / verb" data-def-en="Became aware." data-def-vn="Nhận thức được." data-context-en="realized that...">nhận ra</span> rằng một <span class="vocab" data-word-en="life" data-word-vn="cuộc sống" data-pos="danh từ / noun" data-def-en="Way of living." data-def-vn="Cách sống." data-context-en="a life of only...">cuộc sống</span> chỉ toàn <span class="vocab" data-word-en="indulgence" data-word-vn="hưởng thụ" data-pos="danh từ / noun" data-def-en="Pleasurable consumption." data-def-vn="Sự tận hưởng." data-context-en="indulgence easy...">hưởng thụ</span> <span class="vocab" data-word-en="easy" data-word-vn="dễ dàng" data-pos="tính từ / adjective" data-def-en="Without difficulty." data-def-vn="Không khó khăn." data-context-en="easy usually...">dễ dàng</span> thường chỉ là một <span class="vocab" data-word-en="kind of prison" data-word-vn="kiểu nhà tù" data-pos="cụm danh từ / noun phrase" data-def-en="A form of confinement." data-def-vn="Một dạng giam cầm." data-context-en="a kind of prison.">kiểu nhà tù</span> khác.
+    </p>
+
+    <p>
+        Ông nói với Circe rằng mình phải <span class="vocab" data-word-en="leave" data-word-vn="rời đi" data-pos="động từ / verb" data-def-en="Depart." data-def-vn="Rời bỏ." data-context-en="must leave...">rời đi</span>; ông <span class="vocab" data-word-en="would rather" data-word-vn="thà" data-pos="cụm động từ / verb phrase" data-def-en="Prefer." data-def-vn="Thà chọn." data-context-en="would rather face...">thà</span> <span class="vocab" data-word-en="face" data-word-vn="đối mặt" data-pos="động từ / verb" data-def-en="Confront." data-def-vn="Đối diện." data-context-en="face death...">đối mặt</span> với cái chết trên <span class="vocab" data-word-en="homeland" data-word-vn="quê hương" data-pos="danh từ / noun" data-def-en="Native place." data-def-vn="Quê nhà." data-context-en="on his homeland...">quê hương</span> mình còn hơn sống mãi trong một chiếc <span class="vocab" data-word-en="golden cage" data-word-vn="lồng vàng" data-pos="cụm danh từ / noun phrase" data-def-en="A luxurious prison." data-def-vn="Ngục tù xa hoa." data-context-en="golden cage...">lồng vàng</span> không thuộc về mình.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">Những con tàu</div>
+        <div class="memory-word">tìm được nơi trú ẩn</div>
+        <div class="memory-word">hòn đảo</div>
+        <div class="memory-word">xanh tươi và đầy bí ẩn</div>
+        <div class="memory-word">cử</div>
+        <div class="memory-word">nhóm do thám</div>
+        <div class="memory-word">khám phá</div>
+        <div class="memory-word">tình cờ phát hiện</div>
+        <div class="memory-word">cung điện</div>
+        <div class="memory-word">đá cẩm thạch</div>
+        <div class="memory-word">ẩn</div>
+        <div class="memory-word">khoảng trống</div>
+        <div class="memory-word">khu rừng</div>
+        <div class="memory-word">Không khí</div>
+        <div class="memory-word">thoang thoảng</div>
+        <div class="memory-word">mùi</div>
+        <div class="memory-word">nước hoa</div>
+        <div class="memory-word">thịt nướng</div>
+        <div class="memory-word">Bên trong</div>
+        <div class="memory-word">nữ thần</div>
+        <div class="memory-word">khung cửi vàng</div>
+        <div class="memory-word">cất tiếng hát</div>
+        <div class="memory-word">giai điệu</div>
+        <div class="memory-word">đẹp</div>
+        <div class="memory-word">dường như</div>
+        <div class="memory-word">thời gian</div>
+        <div class="memory-word">ngừng trôi</div>
+        <div class="memory-word">Bà</div>
+        <div class="memory-word">chào đón</div>
+        <div class="memory-word">rượu</div>
+        <div class="memory-word">thức ăn</div>
+        <div class="memory-word">tẩm mật ong</div>
+        <div class="memory-word">uống</div>
+        <div class="memory-word">vung</div>
+        <div class="memory-word">cây đũa phép</div>
+        <div class="memory-word">sự biến đổi kinh hoàng</div>
+        <div class="memory-word">giọng nói của họ</div>
+        <div class="memory-word">biến thành</div>
+        <div class="memory-word">tiếng khụt khịt</div>
+        <div class="memory-word">làn da</div>
+        <div class="memory-word">dày lên</div>
+        <div class="memory-word">lớp lông cứng</div>
+        <div class="memory-word">mắc kẹt</div>
+        <div class="memory-word">thân xác</div>
+        <div class="memory-word">loài heo</div>
+        <div class="memory-word">con người</div>
+        <div class="memory-word">khóc</div>
+        <div class="memory-word">cảm thấy</div>
+        <div class="memory-word">sợ hãi</div>
+        <div class="memory-word">khóa chặt</div>
+        <div class="memory-word">hình dạng động vật</div>
+        <div class="memory-word">quay trở lại</div>
+        <div class="memory-word">tiến đến</div>
+        <div class="memory-word">đường đi</div>
+        <div class="memory-word">chặn lại</div>
+        <div class="memory-word">đưa cho</div>
+        <div class="memory-word">thảo mộc thần kỳ</div>
+        <div class="memory-word">bảo vệ</div>
+        <div class="memory-word">phép thuật</div>
+        <div class="memory-word">nữ phù thủy</div>
+        <div class="memory-word">ly rượu bị đầu độc</div>
+        <div class="memory-word">không hề hấn gì</div>
+        <div class="memory-word">Rút</div>
+        <div class="memory-word">kiếm</div>
+        <div class="memory-word">buộc</div>
+        <div class="memory-word">đảo ngược</div>
+        <div class="memory-word">phép biến đổi</div>
+        <div class="memory-word">Điều xảy ra tiếp theo</div>
+        <div class="memory-word">ngạc nhiên</div>
+        <div class="memory-word">quái vật</div>
+        <div class="memory-word">cô đơn</div>
+        <div class="memory-word">vô cùng thông minh</div>
+        <div class="memory-word">đề nghị</div>
+        <div class="memory-word">cuộc sống</div>
+        <div class="memory-word">tiện nghi</div>
+        <div class="memory-word">bất tử</div>
+        <div class="memory-word">khoái lạc</div>
+        <div class="memory-word">thủy thủ đoàn</div>
+        <div class="memory-word">xa hoa</div>
+        <div class="memory-word">ký ức</div>
+        <div class="memory-word">quê nhà</div>
+        <div class="memory-word">trở nên mờ nhạt</div>
+        <div class="memory-word">Thế nhưng</div>
+        <div class="memory-word">bờ biển</div>
+        <div class="memory-word">nhìn chằm chằm</div>
+        <div class="memory-word">chân trời</div>
+        <div class="memory-word">nhận ra</div>
+        <div class="memory-word">hưởng thụ</div>
+        <div class="memory-word">dễ dàng</div>
+        <div class="memory-word">kiểu nhà tù</div>
+        <div class="memory-word">rời đi</div>
+        <div class="memory-word">thà</div>
+        <div class="memory-word">đối mặt</div>
+        <div class="memory-word">quê hương</div>
+        <div class="memory-word">lồng vàng</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordVn.trim().toLowerCase() === targetWord || 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
