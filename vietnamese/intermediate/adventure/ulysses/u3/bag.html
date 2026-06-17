@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tập 3: Chiếc Túi Gió</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+	<!-- VOCABULARY DENSITY RULE:  please meticulously follow these instructions:
+     Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: tag each word separately.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+- Popup title = English (opposite of Vietnamese input); subtitle = Vietnamese.
+      -->
+			
+		
+</head>
+<body>
+
+<div class="page-container">
+    <h1><span class="vocab" data-word-vn="episode / volume" data-word-en="Tập" data-pos="danh từ / noun" data-def-en="A single installment or numbered part of a longer series." data-def-vn="Một phần riêng lẻ hoặc đoạn được đánh số của một loạt dài hơn." data-context-en="Episode 3: The Bag of Wind.">Tập</span> 3: <span class="vocab" data-word-vn="bag / pouch" data-word-en="Chiếc Túi" data-pos="danh từ / noun" data-def-en="A container made of flexible material, used for carrying things." data-def-vn="Một vật chứa làm từ vật liệu mềm, dùng để mang theo đồ vật." data-context-en="The Bag of Wind.">Chiếc Túi</span> <span class="vocab" data-word-vn="wind" data-word-en="Gió" data-pos="danh từ / noun" data-def-en="The natural movement of air, especially a current of it blowing." data-def-vn="Sự di chuyển tự nhiên của không khí, đặc biệt là một luồng khí đang thổi." data-context-en="The Bag of Wind.">Gió</span></h1>
+    <h2 class="subtitle"><span class="vocab" data-word-vn="series / batch" data-word-en="Loạt" data-pos="danh từ / noun" data-def-en="A series or batch of related items presented in sequence." data-def-vn="Một loạt hoặc nhóm các mục liên quan được trình bày theo thứ tự." data-context-en="Odyssey Series.">Loạt</span> <span class="vocab" data-word-vn="tale (in series title)" data-word-en="Truyện" data-pos="danh từ / noun" data-def-en="A narrative or fictional account, often a tale or novel." data-def-vn="Một câu chuyện hoặc bài tường thuật hư cấu, thường là một truyện kể hoặc tiểu thuyết." data-context-en="Odyssey Series.">Truyện</span> Odyssey</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Nghe Tập 3</div>
+        <audio id="audio-player" src="tui_gio.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Bắt đầu</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 giây</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 giây</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 giây</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Tốc độ:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        Ulysses là một <span class="vocab" data-word-vn="a/one" data-word-en="một" data-pos="số từ / numeral" data-def-en="Used to indicate a single, unspecified instance of a noun." data-def-vn="Dùng để chỉ một trường hợp không xác định, duy nhất của một danh từ." data-context-en="Ulysses was a clever man.">một</span> <span class="vocab" data-word-vn="person" data-word-en="người" data-pos="danh từ / noun" data-def-en="A human being considered as an individual." data-def-vn="Một con người được xem xét như một cá thể riêng lẻ." data-context-en="Ulysses was a person.">người</span> đàn ông <span class="vocab" data-word-vn="intelligent" data-word-en="thông minh" data-pos="tính từ / adjective" data-def-en="Having a high level of mental capability and quick understanding." data-def-vn="Có mức độ năng lực trí tuệ cao và khả năng hiểu nhanh." data-context-en="Ulysses was an intelligent man.">thông minh</span>. <span class="vocab" data-word-vn="after" data-word-en="sau" data-pos="giới từ / preposition" data-def-en="Following in time or sequence; subsequent to." data-def-vn="Diễn ra sau về thời gian hoặc trình tự; tiếp sau một việc khác." data-context-en="After the long war in Troy.">Sau</span> <span class="vocab" data-word-vn="battle / war" data-word-en="cuộc chiến" data-pos="danh từ / noun phrase" data-def-en="An armed conflict or military struggle between opposing sides." data-def-vn="Một cuộc xung đột vũ trang hoặc đấu tranh quân sự giữa các bên đối lập." data-context-en="After the long war in Troy.">cuộc chiến</span> <span class="vocab" data-word-vn="long" data-word-en="dài" data-pos="tính từ / adjective" data-def-en="Extending over a great distance or duration of time." data-def-vn="Kéo dài trong một khoảng thời gian hoặc khoảng cách lớn." data-context-en="The long war.">dài</span> <span class="vocab" data-word-vn="at / in" data-word-en="ở" data-pos="giới từ / preposition" data-def-en="Indicates the location where an event takes place." data-def-vn="Chỉ ra vị trí nơi một sự việc diễn ra." data-context-en="The war in Troy.">ở</span> Troy, ông <span class="vocab" data-word-vn="want" data-word-en="muốn" data-pos="động từ / verb" data-def-en="To desire or wish for something to happen." data-def-vn="Mong muốn hoặc ước ao một điều gì đó xảy ra." data-context-en="He wanted to go home.">muốn</span> <span class="vocab" data-word-vn="return" data-word-en="trở về" data-pos="động từ / verb" data-def-en="To go back to a previous place, especially one's home." data-def-vn="Quay trở lại một nơi trước đây, đặc biệt là quê nhà." data-context-en="He wanted to return to his homeland.">trở về</span> <span class="vocab" data-word-vn="homeland" data-word-en="quê hương" data-pos="danh từ / noun" data-def-en="One's native country or place of origin." data-def-vn="Đất nước hoặc nơi sinh ra của một người." data-context-en="He wanted to return to his homeland Ithaca.">quê hương</span> Ithaca. <span class="vocab" data-word-vn="that" data-word-en="đó" data-pos="đại từ / pronoun" data-def-en="Used to refer to something previously mentioned or identified." data-def-vn="Dùng để chỉ một điều đã được đề cập hoặc xác định trước đó." data-context-en="That was a dangerous journey.">Đó</span> <span class="vocab" data-word-vn="is" data-word-en="là" data-pos="động từ / verb (to be)" data-def-en="Used to state identity or describe the nature of a subject." data-def-vn="Dùng để khẳng định danh tính hoặc mô tả bản chất của một chủ thể." data-context-en="That is a dangerous journey.">là</span> một <span class="vocab" data-word-vn="journey" data-word-en="hành trình" data-pos="danh từ / noun" data-def-en="A long and often difficult trip from one place to another." data-def-vn="Một chuyến đi dài và thường gian khổ từ một nơi đến nơi khác." data-context-en="It was a dangerous journey.">hành trình</span> <span class="vocab" data-word-vn="dangerous" data-word-en="nguy hiểm" data-pos="tính từ / adjective" data-def-en="Likely to cause harm or injury; risky." data-def-vn="Có khả năng gây hại hoặc tổn thương; đầy rủi ro." data-context-en="A dangerous journey across the sea.">nguy hiểm</span> <span class="vocab" data-word-vn="crossing" data-word-en="vượt" data-pos="động từ / verb" data-def-en="To travel across or pass over a space or barrier." data-def-vn="Di chuyển qua hoặc vượt qua một không gian hay vật cản." data-context-en="A journey crossing the sea.">vượt</span> <span class="vocab" data-word-vn="sea" data-word-en="biển" data-pos="danh từ / noun" data-def-en="A large body of salt water, smaller than an ocean." data-def-vn="Một vùng nước mặn lớn, nhỏ hơn đại dương." data-context-en="A dangerous journey crossing the sea.">biển</span>, <span class="vocab" data-word-vn="but" data-word-en="nhưng" data-pos="liên từ / conjunction" data-def-en="Used to introduce a contrasting idea to what was just stated." data-def-vn="Dùng để giới thiệu một ý tưởng đối lập với điều vừa được nêu ra." data-context-en="But the gods were watching.">nhưng</span> <span class="vocab" data-word-vn="the" data-word-en="các" data-pos="từ chỉ định số nhiều / plural marker" data-def-en="A word used to indicate a plural, general group of nouns." data-def-vn="Một từ dùng để chỉ một nhóm danh từ chung, ở dạng số nhiều." data-context-en="The gods were watching.">các</span> <span class="vocab" data-word-vn="god" data-word-en="vị thần" data-pos="danh từ / noun" data-def-en="A divine or supernatural being worshipped as having power over nature." data-def-vn="Một thực thể thần thánh hoặc siêu nhiên được tôn thờ vì có quyền năng đối với tự nhiên." data-context-en="The gods were watching.">vị thần</span> <span class="vocab" data-word-vn="still" data-word-en="vẫn" data-pos="trạng từ / adverb" data-def-en="Continuing as before, without change, up to the present." data-def-vn="Tiếp tục như trước, không thay đổi, cho đến hiện tại." data-context-en="The gods still watched.">vẫn</span> <span class="vocab" data-word-vn="always" data-word-en="luôn" data-pos="trạng từ / adverb" data-def-en="At all times; on every occasion, without exception." data-def-vn="Vào mọi thời điểm; trong mọi trường hợp, không có ngoại lệ." data-context-en="The gods always watched.">luôn</span> <span class="vocab" data-word-vn="watch over" data-word-en="dõi theo" data-pos="động từ / verb" data-def-en="To observe closely, often with a protective or attentive purpose." data-def-vn="Quan sát kỹ lưỡng, thường với mục đích bảo vệ hoặc chú ý." data-context-en="The gods were watching over him.">dõi theo</span>.
+    </p>
+
+    <p>
+        Một <span class="vocab" data-word-vn="day" data-word-en="ngày" data-pos="danh từ / noun" data-def-en="A period of twenty-four hours; a specific point in time." data-def-vn="Một khoảng thời gian hai mươi bốn giờ; một thời điểm cụ thể." data-context-en="One day, his ship arrived.">ngày</span> <span class="vocab" data-word-vn="(particle indicating 'one day, at some point')" data-word-en="nọ" data-pos="trợ từ / particle" data-def-en="A particle used after a time noun to mean 'a certain' or 'some.'" data-def-vn="Một trợ từ dùng sau danh từ chỉ thời gian để nghĩa là 'một, nào đó'." data-context-en="One certain day.">nọ</span>, con <span class="vocab" data-word-vn="ship" data-word-en="tàu" data-pos="danh từ / noun" data-def-en="A large vessel used for traveling on water." data-def-vn="Một phương tiện lớn dùng để di chuyển trên mặt nước." data-context-en="His ship arrived at an island.">tàu</span> của ông <span class="vocab" data-word-vn="arrive / dock" data-word-en="cập" data-pos="động từ / verb" data-def-en="To arrive at or pull alongside a shore or dock." data-def-vn="Đến hoặc tiến vào gần một bờ hay cầu cảng." data-context-en="His ship docked at an island.">cập</span> <span class="vocab" data-word-vn="into / at" data-word-en="vào" data-pos="giới từ / preposition" data-def-en="Indicates movement toward the interior or arrival at a place." data-def-vn="Chỉ sự di chuyển vào bên trong hoặc đến một nơi nào đó." data-context-en="Docked at an island.">vào</span> một <span class="vocab" data-word-vn="island" data-word-en="hòn đảo" data-pos="danh từ / noun" data-def-en="A piece of land completely surrounded by water." data-def-vn="Một vùng đất hoàn toàn được bao quanh bởi nước." data-context-en="His ship docked at a beautiful island.">hòn đảo</span> <span class="vocab" data-word-vn="beautiful" data-word-en="xinh đẹp" data-pos="tính từ / adjective" data-def-en="Pleasing to look at; possessing great visual appeal." data-def-vn="Dễ nhìn; có vẻ đẹp thị giác lớn." data-context-en="A beautiful island.">xinh đẹp</span>. <span class="vocab" data-word-vn="king" data-word-en="vua" data-pos="danh từ / noun" data-def-en="The male ruler of a kingdom or nation." data-def-vn="Người cai trị nam giới của một vương quốc hoặc quốc gia." data-context-en="The king of this island was named Aeolus.">Vua</span> của hòn đảo <span class="vocab" data-word-vn="this" data-word-en="này" data-pos="đại từ chỉ định / demonstrative pronoun" data-def-en="Used to indicate something close in space or recently mentioned." data-def-vn="Dùng để chỉ một điều gần về không gian hoặc vừa được đề cập." data-context-en="This island.">này</span> <span class="vocab" data-word-vn="name (to be named)" data-word-en="tên" data-pos="danh từ / noun" data-def-en="The word or words by which a person is identified." data-def-vn="Từ hoặc các từ dùng để xác định một người." data-context-en="The king's name was Aeolus.">tên</span> là Aeolus. Ông <span class="vocab" data-word-vn="is (to be)" data-word-en="là" data-pos="động từ / verb (to be)" data-def-en="Used to state identity or describe the nature of a subject." data-def-vn="Dùng để khẳng định danh tính hoặc mô tả bản chất của một chủ thể." data-context-en="He was the keeper of all the winds.">là</span> <span class="vocab" data-word-vn="person who manages" data-word-en="người cai quản" data-pos="danh từ / noun phrase" data-def-en="A person responsible for governing, controlling, or overseeing something." data-def-vn="Một người chịu trách nhiệm cai trị, kiểm soát hoặc giám sát một điều gì đó." data-context-en="He was the person who manages all the winds.">người cai quản</span> <span class="vocab" data-word-vn="all" data-word-en="tất cả" data-pos="đại từ / pronoun" data-def-en="The whole quantity or extent of something." data-def-vn="Toàn bộ số lượng hoặc phạm vi của một điều gì đó." data-context-en="All the winds in the world.">tất cả</span> <span class="vocab" data-word-vn="current / stream" data-word-en="luồng" data-pos="danh từ / noun (classifier)" data-def-en="A classifier word used for currents or streams, such as of wind." data-def-vn="Một từ loại dùng cho các luồng hoặc dòng chảy, ví dụ như gió." data-context-en="All the currents of wind.">các luồng</span> gió <span class="vocab" data-word-vn="on / at" data-word-en="trên" data-pos="giới từ / preposition" data-def-en="Indicates a position above or covering an area." data-def-vn="Chỉ một vị trí ở trên hoặc bao trùm một khu vực." data-context-en="On the whole world.">trên</span> <span class="vocab" data-word-vn="the whole" data-word-en="thế giới" data-pos="danh từ / noun" data-def-en="The earth, along with all its countries and peoples." data-def-vn="Trái đất, cùng với tất cả các quốc gia và con người trên đó." data-context-en="All the winds on the whole world.">thế giới</span>. Aeolus <span class="vocab" data-word-vn="very" data-word-en="rất" data-pos="trạng từ / adverb" data-def-en="To a high degree; extremely." data-def-vn="Ở một mức độ cao; vô cùng." data-context-en="Aeolus liked Ulysses very much.">rất</span> <span class="vocab" data-word-vn="fond of / appreciate" data-word-en="quý mến" data-pos="động từ / verb" data-def-en="To have warm regard or affection for someone." data-def-vn="Có sự quý trọng hoặc tình cảm ấm áp dành cho ai đó." data-context-en="Aeolus was very fond of Ulysses.">quý mến</span> Ulysses. Ông <span class="vocab" data-word-vn="listen" data-word-en="lắng nghe" data-pos="động từ / verb" data-def-en="To give attention with the ears in order to hear something." data-def-vn="Chú ý bằng tai để nghe một điều gì đó." data-context-en="He listened to every story.">lắng nghe</span> <span class="vocab" data-word-vn="every" data-word-en="mọi" data-pos="đại từ / pronoun" data-def-en="Used to refer to each individual member of a group without exception." data-def-vn="Dùng để chỉ từng thành viên riêng lẻ của một nhóm, không có ngoại lệ." data-context-en="Every story Ulysses told.">mọi</span> <span class="vocab" data-word-vn="story" data-word-en="câu chuyện" data-pos="danh từ / noun" data-def-en="An account or narrative of events, whether true or fictional." data-def-vn="Một bài kể hoặc tường thuật về các sự kiện, có thể là thật hoặc tưởng tượng." data-context-en="He listened to every story.">câu chuyện</span> của Ulysses <span class="vocab" data-word-vn="throughout / for the duration of" data-word-en="suốt" data-pos="giới từ / preposition" data-def-en="Throughout the entire duration of a period of time." data-def-vn="Trong toàn bộ khoảng thời gian của một giai đoạn." data-context-en="Throughout many days and nights.">suốt</span> <span class="vocab" data-word-vn="many" data-word-en="nhiều" data-pos="tính từ / adjective" data-def-en="A large number of; a great quantity of." data-def-vn="Một số lượng lớn của; một lượng đáng kể." data-context-en="Many days and nights.">nhiều</span> ngày <span class="vocab" data-word-vn="night" data-word-en="đêm" data-pos="danh từ / noun" data-def-en="The period of darkness between sunset and sunrise." data-def-vn="Khoảng thời gian tối từ lúc hoàng hôn đến rạng đông." data-context-en="Many days and nights.">đêm</span>.
+    </p>
+
+    <p>
+        Khi <span class="vocab" data-word-vn="arrive at the moment / time comes" data-word-en="đến lúc" data-pos="cụm từ / phrase" data-def-en="The point in time at which something is supposed to happen." data-def-vn="Thời điểm mà một điều gì đó được cho là sẽ xảy ra." data-context-en="When the time came to say goodbye.">đến lúc</span> <span class="vocab" data-word-vn="say goodbye / part ways" data-word-en="chia tay" data-pos="động từ / verb" data-def-en="To separate from someone, especially after a relationship or visit." data-def-vn="Tách rời khỏi ai đó, đặc biệt là sau một mối quan hệ hoặc cuộc viếng thăm." data-context-en="When the time came to part ways.">chia tay</span>, Aeolus <span class="vocab" data-word-vn="give (as a gift)" data-word-en="tặng" data-pos="động từ / verb" data-def-en="To give something to someone as a present." data-def-vn="Cho ai đó một thứ gì đó như một món quà." data-context-en="Aeolus gave Ulysses a gift.">tặng</span> Ulysses một <span class="vocab" data-word-vn="item / thing" data-word-en="món" data-pos="danh từ / noun (classifier)" data-def-en="A classifier word for an item, especially a gift or dish." data-def-vn="Một từ loại dùng cho một vật, đặc biệt là quà tặng hoặc món ăn." data-context-en="A gift item.">món</span> <span class="vocab" data-word-vn="gift / present" data-word-en="quà" data-pos="danh từ / noun" data-def-en="Something given to someone without payment, as a token of esteem." data-def-vn="Một thứ được cho ai đó mà không cần thanh toán, như một dấu hiệu của sự quý trọng." data-context-en="A special gift.">quà</span> <span class="vocab" data-word-vn="special" data-word-en="đặc biệt" data-pos="tính từ / adjective" data-def-en="Distinguished by some unusual or unique quality." data-def-vn="Được phân biệt bởi một số tính chất khác thường hoặc độc đáo." data-context-en="A very special gift.">đặc biệt</span> — một chiếc túi <span class="vocab" data-word-vn="leather" data-word-en="da" data-pos="danh từ / noun" data-def-en="The tanned skin of an animal, used as a durable material." data-def-vn="Da động vật đã qua thuộc, dùng làm vật liệu bền chắc." data-context-en="A leather bag.">da</span> <span class="vocab" data-word-vn="large" data-word-en="lớn" data-pos="tính từ / adjective" data-def-en="Of considerable or great size; big in scale." data-def-vn="Có kích thước đáng kể hoặc lớn; có quy mô lớn." data-context-en="A large leather bag.">lớn</span>. <span class="vocab" data-word-vn="inside" data-word-en="bên trong" data-pos="giới từ / preposition" data-def-en="Within the interior space of something." data-def-vn="Ở trong không gian nội thất của một thứ gì đó." data-context-en="Inside was all the bad winds.">Bên trong</span> là tất cả những <span class="vocab" data-word-vn="gust / current of wind" data-word-en="cơn gió" data-pos="danh từ / noun" data-def-en="A sudden, strong rush or current of moving air." data-def-vn="Một luồng khí mạnh, đột ngột chuyển động." data-context-en="All the bad winds.">cơn gió</span> <span class="vocab" data-word-vn="bad" data-word-en="xấu" data-pos="tính từ / adjective" data-def-en="Of poor quality; unpleasant or harmful in nature." data-def-vn="Có chất lượng kém; mang tính khó chịu hoặc gây hại." data-context-en="All the bad winds.">xấu</span>. Tất cả <span class="vocab" data-word-vn="storm" data-word-en="bão tố" data-pos="danh từ / noun" data-def-en="A violent disturbance of the atmosphere with strong winds and rain." data-def-vn="Một sự xáo trộn dữ dội của khí quyển kèm theo gió mạnh và mưa." data-context-en="All the storms.">bão tố</span>. Tất cả những luồng gió <span class="vocab" data-word-vn="fierce / violent" data-word-en="dữ" data-pos="tính từ / adjective" data-def-en="Showing intense or aggressive energy; violent." data-def-vn="Thể hiện năng lượng mạnh mẽ hoặc hung hãn; dữ dội." data-context-en="Violent winds.">dữ</span> <span class="vocab" data-word-vn="can / be able to" data-word-en="có thể" data-pos="động từ / verb (modal)" data-def-en="Expresses possibility or capability of doing something." data-def-vn="Diễn đạt khả năng hoặc năng lực thực hiện một điều gì đó." data-context-en="Could destroy ships.">có thể</span> <span class="vocab" data-word-vn="destroy" data-word-en="phá hủy" data-pos="động từ / verb" data-def-en="To damage something so severely that it no longer exists or works." data-def-vn="Gây hư hại nghiêm trọng đến mức một thứ không còn tồn tại hoặc hoạt động." data-context-en="Could destroy ships.">phá hủy</span> tàu <span class="vocab" data-word-vn="boat / vessel" data-word-en="thuyền" data-pos="danh từ / noun" data-def-en="A small vessel for traveling on water." data-def-vn="Một phương tiện nhỏ dùng để di chuyển trên mặt nước." data-context-en="Ships and boats.">thuyền</span>. Ông <span class="vocab" data-word-vn="tie / fasten" data-word-en="buộc" data-pos="động từ / verb" data-def-en="To fasten or secure something with a cord or rope." data-def-vn="Cố định hoặc giữ chặt một thứ gì đó bằng dây." data-context-en="He tied the bag tightly.">buộc</span> chiếc túi <span class="vocab" data-word-vn="really / truly" data-word-en="thật" data-pos="trạng từ / adverb" data-def-en="Used to emphasize the degree of an adjective; genuinely." data-def-vn="Dùng để nhấn mạnh mức độ của một tính từ; một cách chân thật." data-context-en="Tied it really tightly.">thật</span> <span class="vocab" data-word-vn="tight" data-word-en="chặt" data-pos="tính từ / adjective" data-def-en="Fixed or fastened firmly; not loose." data-def-vn="Được cố định hoặc buộc chắc chắn; không bị lỏng." data-context-en="Tied it tightly.">chặt</span> <span class="vocab" data-word-vn="with / by means of" data-word-en="bằng" data-pos="giới từ / preposition" data-def-en="Using a particular instrument or material to perform an action." data-def-vn="Sử dụng một công cụ hoặc vật liệu cụ thể để thực hiện hành động." data-context-en="Tied with a silver rope.">bằng</span> một <span class="vocab" data-word-vn="strand / string" data-word-en="sợi" data-pos="danh từ / noun (classifier)" data-def-en="A classifier word for a single thread, strand, or string-like object." data-def-vn="Một từ loại dùng cho một sợi, dây hoặc vật giống dây." data-context-en="A strand of rope.">sợi</span> <span class="vocab" data-word-vn="rope / cord" data-word-en="dây" data-pos="danh từ / noun" data-def-en="A length of strong cord made of twisted fibers." data-def-vn="Một đoạn dây chắc chắn được làm từ các sợi xoắn lại." data-context-en="A silver rope.">dây</span> <span class="vocab" data-word-vn="silver" data-word-en="bạc" data-pos="danh từ / noun" data-def-en="A precious, shiny, whitish-gray metal." data-def-vn="Một kim loại quý, sáng, có màu xám trắng." data-context-en="A silver rope.">bạc</span>.
+    </p>
+
+    <p>
+        “<span class="vocab" data-word-vn="thing / item" data-word-en="thứ" data-pos="danh từ / noun" data-def-en="An object or matter being referred to, often unspecified." data-def-vn="Một vật hoặc điều đang được nói đến, thường không xác định." data-context-en="This thing will keep you safe.">Thứ</span> này <span class="vocab" data-word-vn="will" data-word-en="sẽ" data-pos="trợ động từ / auxiliary verb" data-def-en="Used to indicate a future action or intention." data-def-vn="Dùng để chỉ một hành động hoặc ý định trong tương lai." data-context-en="This will keep you safe.">sẽ</span> <span class="vocab" data-word-vn="keep / maintain" data-word-en="giữ" data-pos="động từ / verb" data-def-en="To cause something to remain in a particular state or condition." data-def-vn="Làm cho một thứ gì đó duy trì ở một trạng thái hoặc tình trạng cụ thể." data-context-en="This will keep you safe.">giữ</span> <span class="vocab" data-word-vn="safe" data-word-en="an toàn" data-pos="tính từ / adjective" data-def-en="Protected from danger or risk; not likely to be harmed." data-def-vn="Được bảo vệ khỏi nguy hiểm hoặc rủi ro; không có khả năng bị tổn hại." data-context-en="This will keep you safe.">an toàn</span> cho <span class="vocab" data-word-vn="you (plural/formal)" data-word-en="các ngươi" data-pos="đại từ / pronoun" data-def-en="A pronoun used to address a group of people, often in an old or formal tone." data-def-vn="Một đại từ dùng để gọi một nhóm người, thường mang giọng điệu cổ hoặc trang trọng." data-context-en="This will keep you all safe.">các ngươi</span>,” Aeolus <span class="vocab" data-word-vn="say" data-word-en="nói" data-pos="động từ / verb" data-def-en="To express something in words; to speak." data-def-vn="Diễn đạt điều gì đó bằng lời; phát ngôn." data-context-en="Aeolus said.">nói</span>. “<span class="vocab" data-word-vn="I (formal/respectful)" data-word-en="ta" data-pos="đại từ / pronoun" data-def-en="A first-person pronoun used in a formal, authoritative, or old-fashioned tone." data-def-vn="Đại từ ngôi thứ nhất dùng với giọng điệu trang trọng, uy quyền hoặc cổ xưa." data-context-en="I will also send the West Wind.">Ta</span> <span class="vocab" data-word-vn="also" data-word-en="cũng" data-pos="trạng từ / adverb" data-def-en="In addition; as well; likewise." data-def-vn="Thêm vào đó; cũng như vậy; tương tự." data-context-en="I will also send the West Wind.">cũng</span> sẽ <span class="vocab" data-word-vn="send" data-word-en="gửi" data-pos="động từ / verb" data-def-en="To cause something to go or be transmitted to a destination." data-def-vn="Làm cho một thứ gì đó đi đến hoặc được truyền đến một nơi." data-context-en="I will send the West Wind.">gửi</span> Gió Tây để <span class="vocab" data-word-vn="bring / deliver" data-word-en="đưa" data-pos="động từ / verb" data-def-en="To take or guide someone or something to a place." data-def-vn="Mang hoặc dẫn ai đó hoặc thứ gì đó đến một nơi." data-context-en="To bring you home.">đưa</span> các ngươi <span class="vocab" data-word-vn="return / go back" data-word-en="về" data-pos="động từ / verb" data-def-en="To go back toward a place, especially home." data-def-vn="Quay trở lại một nơi nào đó, đặc biệt là nhà." data-context-en="To bring you back home.">về</span> <span class="vocab" data-word-vn="home / house" data-word-en="nhà" data-pos="danh từ / noun" data-def-en="The place where one lives; a residence." data-def-vn="Nơi mà một người sinh sống; chỗ ở." data-context-en="To bring you home.">nhà</span>.”
+    </p>
+
+    <p>
+        Ulysses <span class="vocab" data-word-vn="infinitely / extremely" data-word-en="vô cùng" data-pos="trạng từ / adverb" data-def-en="To an extreme or boundless degree." data-def-vn="Ở một mức độ cực kỳ hoặc không có giới hạn." data-context-en="Ulysses was extremely happy.">vô cùng</span> <span class="vocab" data-word-vn="happy" data-word-en="hạnh phúc" data-pos="tính từ / adjective" data-def-en="Feeling or showing pleasure and contentment." data-def-vn="Cảm thấy hoặc thể hiện sự hài lòng và mãn nguyện." data-context-en="Ulysses was extremely happy.">hạnh phúc</span>. Ông <span class="vocab" data-word-vn="thank" data-word-en="cảm ơn" data-pos="động từ / verb" data-def-en="To express gratitude toward someone." data-def-vn="Bày tỏ lòng biết ơn đối với ai đó." data-context-en="He thanked Aeolus.">cảm ơn</span> Aeolus <span class="vocab" data-word-vn="then / afterwards" data-word-en="rồi" data-pos="liên từ / conjunction" data-def-en="Used to indicate the next event in a sequence; afterward." data-def-vn="Dùng để chỉ sự việc tiếp theo trong một chuỗi; sau đó." data-context-en="He thanked Aeolus then sailed away.">rồi</span> <span class="vocab" data-word-vn="sail / hoist sail" data-word-en="dong buồm" data-pos="động từ / verb" data-def-en="To raise the sails of a ship in order to set off on a voyage." data-def-vn="Kéo cánh buồm của một con tàu lên để khởi hành một chuyến đi." data-context-en="He hoisted the sail and left.">dong buồm</span> <span class="vocab" data-word-vn="leave / depart" data-word-en="rời đi" data-pos="động từ / verb" data-def-en="To go away from a place; to depart." data-def-vn="Đi khỏi một nơi; khởi hành đi nơi khác." data-context-en="He left.">rời đi</span>. Suốt <span class="vocab" data-word-vn="nine" data-word-en="chín" data-pos="số từ / numeral" data-def-en="The number equal to one more than eight; 9." data-def-vn="Số bằng tám cộng một; số 9." data-context-en="Nine days and nine nights.">chín</span> ngày chín đêm, <span class="vocab" data-word-vn="everything" data-word-en="mọi thứ" data-pos="đại từ / pronoun" data-def-en="All things considered as a whole; every item or aspect." data-def-vn="Tất cả mọi vật được xem như một tổng thể; mọi khía cạnh hoặc vật." data-context-en="Everything was perfect.">mọi thứ</span> đều <span class="vocab" data-word-vn="perfect / flawless" data-word-en="hoàn hảo" data-pos="tính từ / adjective" data-def-en="Completely flawless; entirely free from faults or defects." data-def-vn="Hoàn toàn không có sai sót; hoàn toàn không có lỗi hoặc khuyết điểm." data-context-en="Everything was perfect.">hoàn hảo</span>. Gió Tây <span class="vocab" data-word-vn="gentle / light" data-word-en="nhẹ nhàng" data-pos="trạng từ / adverb" data-def-en="In a mild, soft, and non-violent manner." data-def-vn="Theo cách nhẹ nhàng, êm ái và không bạo lực." data-context-en="The West Wind gently pushed the ship.">nhẹ nhàng</span> <span class="vocab" data-word-vn="push" data-word-en="đẩy" data-pos="động từ / verb" data-def-en="To exert force against something in order to move it forward." data-def-vn="Tác dụng lực vào một vật để di chuyển nó về phía trước." data-context-en="The West Wind pushed the ship.">đẩy</span> con tàu về <span class="vocab" data-word-vn="direction / side" data-word-en="phía" data-pos="danh từ / noun" data-def-en="A particular direction relative to a point of reference." data-def-vn="Một hướng cụ thể tương đối với một điểm quy chiếu." data-context-en="Toward Ithaca.">phía</span> Ithaca. Ulysses <span class="vocab" data-word-vn="nearly / almost" data-word-en="gần như" data-pos="trạng từ / adverb" data-def-en="Very close to being or doing something; not quite." data-def-vn="Rất gần với việc là hoặc làm một điều gì đó; chưa hoàn toàn." data-context-en="He could almost see home.">gần như</span> có thể <span class="vocab" data-word-vn="see" data-word-en="nhìn thấy" data-pos="động từ / verb" data-def-en="To perceive something with the eyes." data-def-vn="Nhận biết một thứ gì đó bằng mắt." data-context-en="He could almost see his home.">nhìn thấy</span> quê nhà. Ông <span class="vocab" data-word-vn="too / excessively" data-word-en="quá" data-pos="trạng từ / adverb" data-def-en="To an excessive degree; more than is necessary." data-def-vn="Ở một mức độ quá mức; hơn mức cần thiết." data-context-en="He was too tired.">quá</span> <span class="vocab" data-word-vn="tired" data-word-en="mệt" data-pos="tính từ / adjective" data-def-en="In need of rest; lacking energy." data-def-vn="Cần được nghỉ ngơi; thiếu năng lượng." data-context-en="He was too tired.">mệt</span> và quá <span class="vocab" data-word-vn="joyful" data-word-en="vui" data-pos="tính từ / adjective" data-def-en="Feeling or expressing happiness and delight." data-def-vn="Cảm thấy hoặc thể hiện sự vui sướng và hân hoan." data-context-en="He was too joyful.">vui</span> nên đã <span class="vocab" data-word-vn="sleep / doze off" data-word-en="ngủ thiếp đi" data-pos="động từ / verb" data-def-en="To fall into sleep gradually or unintentionally." data-def-vn="Rơi vào trạng thái ngủ một cách dần dần hoặc không chủ ý." data-context-en="He dozed off.">ngủ thiếp đi</span>.
+    </p>
+
+    <p>
+        Đó là một <span class="vocab" data-word-vn="mistake / error" data-word-en="sai lầm" data-pos="danh từ / noun" data-def-en="An action or judgment that is incorrect or unwise." data-def-vn="Một hành động hoặc phán đoán không đúng hoặc thiếu khôn ngoan." data-context-en="That was a big mistake.">sai lầm</span> <span class="vocab" data-word-vn="big / great" data-word-en="lớn" data-pos="tính từ / adjective" data-def-en="Of considerable size, extent, or importance." data-def-vn="Có kích thước, phạm vi hoặc mức độ quan trọng đáng kể." data-context-en="A big mistake.">lớn</span>.
+    </p>
+
+    <p>
+        Các <span class="vocab" data-word-vn="sailor" data-word-en="thủy thủ" data-pos="danh từ / noun" data-def-en="A person who works as a member of a ship's crew." data-def-vn="Một người làm việc như một thành viên của thủy thủ đoàn." data-context-en="The sailors looked at the bag.">thủy thủ</span> <span class="vocab" data-word-vn="look at" data-word-en="nhìn" data-pos="động từ / verb" data-def-en="To direct one's eyes in order to see something." data-def-vn="Hướng mắt mình để nhìn thấy một thứ gì đó." data-context-en="The sailors looked at the bag.">nhìn</span> chiếc túi. Họ <span class="vocab" data-word-vn="curious" data-word-en="tò mò" data-pos="tính từ / adjective" data-def-en="Eager to know or learn about something." data-def-vn="Háo hức muốn biết hoặc tìm hiểu về điều gì đó." data-context-en="They were curious.">tò mò</span>. Họ <span class="vocab" data-word-vn="also / too" data-word-en="cũng" data-pos="trạng từ / adverb" data-def-en="In addition; as well; likewise." data-def-vn="Thêm vào đó; cũng như vậy; tương tự." data-context-en="They were also a bit jealous.">cũng</span> <span class="vocab" data-word-vn="somewhat / a bit" data-word-en="hơi" data-pos="trạng từ / adverb" data-def-en="To a slight or small degree; somewhat." data-def-vn="Ở một mức độ nhỏ hoặc nhẹ; phần nào." data-context-en="A bit jealous.">hơi</span> <span class="vocab" data-word-vn="jealous / envious" data-word-en="ghen tị" data-pos="tính từ / adjective" data-def-en="Feeling resentment toward someone because of their fortune or possessions." data-def-vn="Cảm thấy oán hận đối với ai đó vì vận may hoặc tài sản của họ." data-context-en="A bit jealous.">ghen tị</span>.
+    </p>
+
+    <p>
+        “Bên trong có <span class="vocab" data-word-vn="what" data-word-en="gì" data-pos="đại từ nghi vấn / interrogative pronoun" data-def-en="Used to ask about the identity or nature of a thing." data-def-vn="Dùng để hỏi về danh tính hoặc bản chất của một vật." data-context-en="What is inside?">gì</span> <span class="vocab" data-word-vn="like that / in that manner" data-word-en="vậy" data-pos="trợ từ / particle" data-def-en="A particle used at the end of a question for emphasis." data-def-vn="Một trợ từ dùng ở cuối câu hỏi để nhấn mạnh." data-context-en="What is inside there?">vậy</span>?” một thủy thủ <span class="vocab" data-word-vn="whisper" data-word-en="thì thầm" data-pos="động từ / verb" data-def-en="To speak very softly using one's breath rather than vocal cords." data-def-vn="Nói rất nhỏ bằng hơi thở thay vì dùng dây thanh âm." data-context-en="A sailor whispered.">thì thầm</span>. “Có <span class="vocab" data-word-vn="perhaps / maybe" data-word-en="lẽ" data-pos="trạng từ / adverb (part of 'có lẽ')" data-def-en="Part of the expression 'có lẽ' meaning perhaps or maybe." data-def-vn="Một phần của cụm từ 'có lẽ' nghĩa là có thể, có lẽ." data-context-en="Maybe it is gold.">lẽ</span> là <span class="vocab" data-word-vn="gold" data-word-en="vàng" data-pos="danh từ / noun" data-def-en="A precious yellow metal highly valued as riches." data-def-vn="Một kim loại màu vàng quý giá được đánh giá cao như của cải." data-context-en="Maybe it is gold.">vàng</span>. Có lẽ Aeolus đã <span class="vocab" data-word-vn="give" data-word-en="cho" data-pos="động từ / verb" data-def-en="To transfer possession of something to someone." data-def-vn="Chuyển quyền sở hữu của một thứ gì đó cho ai đó." data-context-en="Aeolus gave Ulysses treasure.">cho</span> Ulysses <span class="vocab" data-word-vn="treasure" data-word-en="kho báu" data-pos="danh từ / noun" data-def-en="A quantity of precious metals, gems, or other valuable objects." data-def-vn="Một lượng kim loại quý, đá quý hoặc các vật phẩm có giá trị khác." data-context-en="Gave Ulysses treasure.">kho báu</span> mà <span class="vocab" data-word-vn="not" data-word-en="không" data-pos="trạng từ phủ định / negation adverb" data-def-en="Used to express the negative of a statement." data-def-vn="Dùng để diễn đạt sự phủ định của một câu nói." data-context-en="Without telling us.">không</span> <span class="vocab" data-word-vn="say / tell" data-word-en="nói" data-pos="động từ / verb" data-def-en="To express something in words; to speak." data-def-vn="Diễn đạt điều gì đó bằng lời; phát ngôn." data-context-en="Without telling us.">nói</span> cho chúng ta <span class="vocab" data-word-vn="know" data-word-en="biết" data-pos="động từ / verb" data-def-en="To have information or knowledge about something." data-def-vn="Có thông tin hoặc kiến thức về một điều gì đó." data-context-en="Without letting us know!">biết</span>!”
+    </p>
+
+    <p>
+        Những thủy thủ <span class="vocab" data-word-vn="other" data-word-en="khác" data-pos="tính từ / adjective" data-def-en="Different from the one or ones already mentioned." data-def-vn="Khác với cái hoặc những cái đã được nêu ra." data-context-en="The other sailors.">khác</span> <span class="vocab" data-word-vn="agree" data-word-en="đồng ý" data-pos="động từ / verb" data-def-en="To share the same opinion as someone else; to concur." data-def-vn="Có cùng quan điểm với người khác; tán thành." data-context-en="The other sailors agreed.">đồng ý</span>. Họ muốn nhìn vào bên trong. Thế là — <span class="vocab" data-word-vn="quietly / silently" data-word-en="lặng lẽ" data-pos="trạng từ / adverb" data-def-en="In a quiet and unobtrusive manner; silently." data-def-vn="Theo cách yên tĩnh và không gây chú ý; im lặng." data-context-en="Quietly, carefully.">lặng lẽ</span>, <span class="vocab" data-word-vn="carefully" data-word-en="cẩn thận" data-pos="trạng từ / adverb" data-def-en="In a way that takes care to avoid mistakes or harm." data-def-vn="Theo cách chú ý để tránh sai sót hoặc tổn hại." data-context-en="Quietly, carefully.">cẩn thận</span> — họ <span class="vocab" data-word-vn="open" data-word-en="mở" data-pos="động từ / verb" data-def-en="To move something from a closed position to allow access." data-def-vn="Di chuyển một thứ gì đó từ trạng thái đóng để cho phép tiếp cận." data-context-en="They opened the bag.">mở</span> chiếc túi <span class="vocab" data-word-vn="out" data-word-en="ra" data-pos="trạng từ / adverb (directional particle)" data-def-en="A directional particle indicating outward motion." data-def-vn="Một trợ từ chỉ hướng diễn tả sự di chuyển ra ngoài." data-context-en="They opened the bag out.">ra</span>.
+    </p>
+
+    <p>
+        Vùuuuuuu!
+    </p>
+
+    <p>
+        Tất cả các luồng gió <span class="vocab" data-word-vn="explode" data-word-en="bùng nổ" data-pos="động từ / verb" data-def-en="To burst forth suddenly and violently." data-def-vn="Bùng phát một cách đột ngột và dữ dội." data-context-en="All the winds exploded.">bùng nổ</span> <span class="vocab" data-word-vn="simultaneously / at the same time" data-word-en="cùng lúc" data-pos="trạng từ / adverb" data-def-en="Happening at the same moment as something else." data-def-vn="Xảy ra cùng một lúc với một việc khác." data-context-en="Exploded simultaneously.">cùng lúc</span>. Một cơn bão <span class="vocab" data-word-vn="horrible / terrifying" data-word-en="khủng khiếp" data-pos="tính từ / adjective" data-def-en="Causing great fear, horror, or shock." data-def-vn="Gây ra sự sợ hãi, kinh hoàng hoặc sốc lớn." data-context-en="A terrifying storm.">khủng khiếp</span> <span class="vocab" data-word-vn="cover / engulf" data-word-en="bao trùm" data-pos="động từ / verb" data-def-en="To completely cover or envelop something." data-def-vn="Che phủ hoặc bao bọc hoàn toàn một thứ gì đó." data-context-en="Engulfed the sky.">bao trùm</span> <span class="vocab" data-word-vn="sky" data-word-en="bầu trời" data-pos="danh từ / noun" data-def-en="The region of the atmosphere visible from the earth's surface." data-def-vn="Vùng khí quyển có thể nhìn thấy từ bề mặt trái đất." data-context-en="Engulfed the sky.">bầu trời</span>. Biển cả <span class="vocab" data-word-vn="become" data-word-en="trở nên" data-pos="động từ / verb" data-def-en="To come to be in a particular state." data-def-vn="Trở thành một trạng thái cụ thể." data-context-en="The sea became dark and wild.">trở nên</span> <span class="vocab" data-word-vn="dark / black" data-word-en="đen tối" data-pos="tính từ / adjective" data-def-en="Lacking light; dark in color or mood." data-def-vn="Thiếu ánh sáng; có màu tối hoặc tâm trạng tối tăm." data-context-en="Dark and wild.">đen tối</span> và <span class="vocab" data-word-vn="wild / frenzied" data-word-en="điên cuồng" data-pos="tính từ / adjective" data-def-en="Uncontrolled and intensely energetic; frenzied." data-def-vn="Không kiểm soát và năng lượng mãnh liệt; cuồng loạn." data-context-en="Dark and wild.">điên cuồng</span>. Con tàu <span class="vocab" data-word-vn="spin / turn" data-word-en="quay" data-pos="động từ / verb" data-def-en="To turn around an axis or center point." data-def-vn="Xoay quanh một trục hoặc điểm trung tâm." data-context-en="The ship spun around.">quay</span> <span class="vocab" data-word-vn="round and round" data-word-en="vòng vòng" data-pos="trạng từ / adverb" data-def-en="Repeatedly in circles; round and round." data-def-vn="Lặp đi lặp lại theo hình tròn; vòng tròn liên tục." data-context-en="Spun round and round.">vòng vòng</span> <span class="vocab" data-word-vn="uncontrolled" data-word-en="không kiểm soát" data-pos="cụm từ / phrase" data-def-en="Not restrained or managed; out of control." data-def-vn="Không bị kiềm chế hoặc quản lý; mất kiểm soát." data-context-en="Spun uncontrolled.">không kiểm soát</span>. Khi cơn bão <span class="vocab" data-word-vn="finally" data-word-en="cuối cùng" data-pos="trạng từ / adverb" data-def-en="After a long time or process; at last." data-def-vn="Sau một thời gian hoặc quá trình dài; sau cùng." data-context-en="When the storm finally ended.">cuối cùng</span> cũng <span class="vocab" data-word-vn="end / stop" data-word-en="kết thúc" data-pos="động từ / verb" data-def-en="To come to an end; to stop." data-def-vn="Đi đến hồi kết; dừng lại." data-context-en="The storm finally ended.">kết thúc</span>, Ulysses mở <span class="vocab" data-word-vn="eye" data-word-en="mắt" data-pos="danh từ / noun" data-def-en="The organ of sight in humans and animals." data-def-vn="Bộ phận của thị giác ở người và động vật." data-context-en="Opened his eyes.">mắt</span> <span class="vocab" data-word-vn="look around" data-word-en="nhìn quanh" data-pos="động từ / verb" data-def-en="To look in various directions around oneself." data-def-vn="Nhìn theo nhiều hướng khác nhau xung quanh mình." data-context-en="Looked around.">nhìn quanh</span>.
+    </p>
+
+    <p>
+        Ông đã quay trở lại <span class="vocab" data-word-vn="correct / exact" data-word-en="đúng" data-pos="tính từ / adjective" data-def-en="Free from error; exact or precise." data-def-vn="Không có sai sót; chính xác." data-context-en="The exact place.">đúng</span> <span class="vocab" data-word-vn="place" data-word-en="nơi" data-pos="danh từ / noun" data-def-en="A particular position, point, or location." data-def-vn="Một vị trí, điểm hoặc địa điểm cụ thể." data-context-en="The exact place where he started.">nơi</span> mình <span class="vocab" data-word-vn="set out / depart" data-word-en="xuất phát" data-pos="động từ / verb" data-def-en="To begin a journey from a particular starting point." data-def-vn="Bắt đầu một chuyến đi từ một điểm khởi đầu cụ thể." data-context-en="Where he set out from.">xuất phát</span>. Rất, rất <span class="vocab" data-word-vn="far" data-word-en="xa" data-pos="tính từ / adjective" data-def-en="A great distance away; not close." data-def-vn="Cách một khoảng cách lớn; không gần." data-context-en="Very, very far from home.">xa</span> quê nhà.
+    </p>
+
+    <p>
+        Ông <span class="vocab" data-word-vn="hug / embrace" data-word-en="ôm" data-pos="động từ / verb" data-def-en="To hold something closely with one's arms." data-def-vn="Giữ một thứ gì đó chặt bằng cánh tay của mình." data-context-en="He held his head in his hands.">ôm</span> đầu trong tay. Ông muốn <span class="vocab" data-word-vn="cry / weep" data-word-en="khóc" data-pos="động từ / verb" data-def-en="To shed tears, typically from sadness or pain." data-def-vn="Rơi nước mắt, thường vì buồn bã hoặc đau khổ." data-context-en="He wanted to cry.">khóc</span>. Ông muốn <span class="vocab" data-word-vn="shout / scream" data-word-en="hét lên" data-pos="động từ / verb" data-def-en="To shout loudly, often from strong emotion." data-def-vn="Hét lớn tiếng, thường vì cảm xúc mạnh mẽ." data-context-en="He wanted to shout.">hét lên</span>. Nhưng ông không nói <span class="vocab" data-word-vn="anything / something" data-word-en="gì" data-pos="đại từ / pronoun" data-def-en="Used to refer to an unspecified thing in a negative context." data-def-vn="Dùng để chỉ một thứ không xác định trong ngữ cảnh phủ định." data-context-en="He said nothing.">gì</span>.
+    </p>
+
+    <p>
+        Đôi khi, <span class="vocab" data-word-vn="enemy" data-word-en="kẻ thù" data-pos="danh từ / noun" data-def-en="A person or thing that is actively opposed or hostile." data-def-vn="Một người hoặc vật đang chủ động đối đầu hoặc thù địch." data-context-en="The biggest enemy.">kẻ thù</span> <span class="vocab" data-word-vn="biggest / greatest" data-word-en="lớn nhất" data-pos="tính từ / adjective (superlative)" data-def-en="The greatest in size or degree among a group." data-def-vn="Lớn nhất về kích thước hoặc mức độ trong một nhóm." data-context-en="The biggest enemy.">lớn nhất</span> trên hành trình dài không phải là cơn bão.
+    </p>
+
+    <p>
+        Mà là <span class="vocab" data-word-vn="precisely / exactly" data-word-en="chính" data-pos="trạng từ / adverb" data-def-en="Used to emphasize exactness or precision; precisely." data-def-vn="Dùng để nhấn mạnh sự chính xác; đúng là." data-context-en="It is precisely yourself.">chính</span> <span class="vocab" data-word-vn="self / oneself" data-word-en="bản thân" data-pos="danh từ / noun" data-def-en="One's own person, identity, or self." data-def-vn="Con người, danh tính hoặc chính mình của một người." data-context-en="Yourself.">bản thân</span> <span class="vocab" data-word-vn="you" data-word-en="bạn" data-pos="đại từ / pronoun" data-def-en="Used to refer to the person being addressed." data-def-vn="Dùng để chỉ người đang được nói đến." data-context-en="It is yourself.">bạn</span>.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Quay Lại Danh Mục</button></a>
+    </div>
+
+    <h2 class="memory-heading"><span class="vocab" data-word-vn="check / test" data-word-en="Kiểm Tra" data-pos="động từ / verb" data-def-en="To examine something in order to assess or verify it." data-def-vn="Xem xét một điều gì đó để đánh giá hoặc kiểm chứng." data-context-en="Test Your Memory.">Kiểm Tra</span> <span class="vocab" data-word-vn="memory" data-word-en="Trí Nhớ" data-pos="danh từ / noun" data-def-en="The faculty by which the mind stores and recalls information." data-def-vn="Khả năng mà tâm trí lưu trữ và nhớ lại thông tin." data-context-en="Test Your Memory.">Trí Nhớ</span> <span class="vocab" data-word-vn="belonging to / of" data-word-en="Của" data-pos="giới từ / preposition" data-def-en="Indicates possession or belonging." data-def-vn="Chỉ sự sở hữu hoặc thuộc về." data-context-en="Test Your Memory.">Của</span> Bạn — Sau <span class="vocab" data-word-vn="each / every" data-word-en="mỗi" data-pos="đại từ / pronoun" data-def-en="Used to refer to every individual one of a group, taken separately." data-def-vn="Dùng để chỉ từng cá nhân riêng lẻ của một nhóm." data-context-en="After each pass.">mỗi</span> <span class="vocab" data-word-vn="time / turn" data-word-en="lần" data-pos="danh từ / noun (classifier)" data-def-en="A classifier word indicating an occurrence or instance of an action." data-def-vn="Một từ loại chỉ một lần xảy ra hoặc một lượt thực hiện hành động." data-context-en="Each pass through the content.">lần</span> <span class="vocab" data-word-vn="read through / go over" data-word-en="đọc lại" data-pos="động từ / verb" data-def-en="To read something again from start to finish." data-def-vn="Đọc lại một điều gì đó từ đầu đến cuối." data-context-en="Read through the content.">đọc lại</span> <span class="vocab" data-word-vn="content" data-word-en="nội dung" data-pos="danh từ / noun" data-def-en="The substance or material contained within something, such as a text." data-def-vn="Nội dung hoặc tài liệu chứa đựng trong một thứ gì đó, như một văn bản." data-context-en="Read through the content.">nội dung</span>, <span class="vocab" data-word-vn="try" data-word-en="hãy thử" data-pos="động từ / verb" data-def-en="To make an attempt at doing something." data-def-vn="Cố gắng thực hiện một điều gì đó." data-context-en="Try to remember the meaning.">hãy thử</span> <span class="vocab" data-word-vn="remember" data-word-en="nhớ lại" data-pos="động từ / verb" data-def-en="To recall information from memory." data-def-vn="Gợi lại thông tin từ trí nhớ." data-context-en="Try to remember the meaning.">nhớ lại</span> <span class="vocab" data-word-vn="meaning" data-word-en="nghĩa" data-pos="danh từ / noun" data-def-en="The sense or significance conveyed by a word or phrase." data-def-vn="Ý nghĩa hoặc tầm quan trọng được truyền đạt bởi một từ hoặc cụm từ." data-context-en="Remember the meaning.">nghĩa</span> và <span class="vocab" data-word-vn="position / location" data-word-en="vị trí" data-pos="danh từ / noun" data-def-en="The place or location where something is situated." data-def-vn="Nơi hoặc địa điểm mà một thứ gì đó được đặt hoặc xuất hiện." data-context-en="Where each word appeared.">vị trí</span> <span class="vocab" data-word-vn="appear / occur" data-word-en="xuất hiện" data-pos="động từ / verb" data-def-en="To come into view or take place." data-def-vn="Hiện ra hoặc xảy ra." data-context-en="Where each word appeared.">xuất hiện</span> của <span class="vocab" data-word-vn="each (individual)" data-word-en="từng" data-pos="đại từ / pronoun" data-def-en="Used to refer to each one individually within a group." data-def-vn="Dùng để chỉ từng cái một trong một nhóm." data-context-en="Each word appeared.">từng</span> <span class="vocab" data-word-vn="word" data-word-en="từ" data-pos="danh từ / noun" data-def-en="A single unit of language that conveys meaning." data-def-vn="Một đơn vị ngôn ngữ đơn lẻ mang ý nghĩa." data-context-en="Where each word appeared.">từ</span> <span class="vocab" data-word-vn="in / inside" data-word-en="trong" data-pos="giới từ / preposition" data-def-en="Indicates being within the boundaries of something." data-def-vn="Chỉ việc nằm trong phạm vi của một thứ gì đó." data-context-en="In the story.">trong</span> câu chuyện.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">episode / volume</div>
+        <div class="memory-word">bag / pouch</div>
+        <div class="memory-word">wind</div>
+        <div class="memory-word">series / batch</div>
+        <div class="memory-word">tale (in series title)</div>
+        <div class="memory-word">check / test</div>
+        <div class="memory-word">memory</div>
+        <div class="memory-word">belonging to / of</div>
+        <div class="memory-word">you</div>
+        <div class="memory-word">after</div>
+        <div class="memory-word">each / every</div>
+        <div class="memory-word">time / turn</div>
+        <div class="memory-word">read through / go over</div>
+        <div class="memory-word">content</div>
+        <div class="memory-word">try</div>
+        <div class="memory-word">remember</div>
+        <div class="memory-word">meaning</div>
+        <div class="memory-word">position / location</div>
+        <div class="memory-word">appear / occur</div>
+        <div class="memory-word">each (individual)</div>
+        <div class="memory-word">word</div>
+        <div class="memory-word">in / inside</div>
+        <div class="memory-word">a/one</div>
+        <div class="memory-word">person</div>
+        <div class="memory-word">intelligent</div>
+        <div class="memory-word">battle / war</div>
+        <div class="memory-word">long</div>
+        <div class="memory-word">at / in</div>
+        <div class="memory-word">want</div>
+        <div class="memory-word">return</div>
+        <div class="memory-word">homeland</div>
+        <div class="memory-word">that</div>
+        <div class="memory-word">is</div>
+        <div class="memory-word">journey</div>
+        <div class="memory-word">dangerous</div>
+        <div class="memory-word">crossing</div>
+        <div class="memory-word">sea</div>
+        <div class="memory-word">but</div>
+        <div class="memory-word">the</div>
+        <div class="memory-word">god</div>
+        <div class="memory-word">still</div>
+        <div class="memory-word">always</div>
+        <div class="memory-word">watch over</div>
+        <div class="memory-word">day</div>
+        <div class="memory-word">(particle indicating 'one day, at some point')</div>
+        <div class="memory-word">ship</div>
+        <div class="memory-word">arrive / dock</div>
+        <div class="memory-word">into / at</div>
+        <div class="memory-word">island</div>
+        <div class="memory-word">beautiful</div>
+        <div class="memory-word">king</div>
+        <div class="memory-word">this</div>
+        <div class="memory-word">name (to be named)</div>
+        <div class="memory-word">is (to be)</div>
+        <div class="memory-word">person who manages</div>
+        <div class="memory-word">all</div>
+        <div class="memory-word">current / stream</div>
+        <div class="memory-word">on / at</div>
+        <div class="memory-word">the whole</div>
+        <div class="memory-word">very</div>
+        <div class="memory-word">fond of / appreciate</div>
+        <div class="memory-word">listen</div>
+        <div class="memory-word">every</div>
+        <div class="memory-word">story</div>
+        <div class="memory-word">throughout / for the duration of</div>
+        <div class="memory-word">many</div>
+        <div class="memory-word">night</div>
+        <div class="memory-word">arrive at the moment / time comes</div>
+        <div class="memory-word">say goodbye / part ways</div>
+        <div class="memory-word">give (as a gift)</div>
+        <div class="memory-word">item / thing</div>
+        <div class="memory-word">gift / present</div>
+        <div class="memory-word">special</div>
+        <div class="memory-word">leather</div>
+        <div class="memory-word">large</div>
+        <div class="memory-word">inside</div>
+        <div class="memory-word">gust / current of wind</div>
+        <div class="memory-word">bad</div>
+        <div class="memory-word">storm</div>
+        <div class="memory-word">fierce / violent</div>
+        <div class="memory-word">can / be able to</div>
+        <div class="memory-word">destroy</div>
+        <div class="memory-word">boat / vessel</div>
+        <div class="memory-word">tie / fasten</div>
+        <div class="memory-word">really / truly</div>
+        <div class="memory-word">tight</div>
+        <div class="memory-word">with / by means of</div>
+        <div class="memory-word">strand / string</div>
+        <div class="memory-word">rope / cord</div>
+        <div class="memory-word">silver</div>
+        <div class="memory-word">thing / item</div>
+        <div class="memory-word">will</div>
+        <div class="memory-word">keep / maintain</div>
+        <div class="memory-word">safe</div>
+        <div class="memory-word">you (plural/formal)</div>
+        <div class="memory-word">say</div>
+        <div class="memory-word">I (formal/respectful)</div>
+        <div class="memory-word">also</div>
+        <div class="memory-word">send</div>
+        <div class="memory-word">bring / deliver</div>
+        <div class="memory-word">return / go back</div>
+        <div class="memory-word">home / house</div>
+        <div class="memory-word">infinitely / extremely</div>
+        <div class="memory-word">happy</div>
+        <div class="memory-word">thank</div>
+        <div class="memory-word">then / afterwards</div>
+        <div class="memory-word">sail / hoist sail</div>
+        <div class="memory-word">leave / depart</div>
+        <div class="memory-word">nine</div>
+        <div class="memory-word">everything</div>
+        <div class="memory-word">perfect / flawless</div>
+        <div class="memory-word">gentle / light</div>
+        <div class="memory-word">push</div>
+        <div class="memory-word">direction / side</div>
+        <div class="memory-word">nearly / almost</div>
+        <div class="memory-word">see</div>
+        <div class="memory-word">too / excessively</div>
+        <div class="memory-word">tired</div>
+        <div class="memory-word">joyful</div>
+        <div class="memory-word">sleep / doze off</div>
+        <div class="memory-word">mistake / error</div>
+        <div class="memory-word">big / great</div>
+        <div class="memory-word">sailor</div>
+        <div class="memory-word">look at</div>
+        <div class="memory-word">curious</div>
+        <div class="memory-word">also / too</div>
+        <div class="memory-word">somewhat / a bit</div>
+        <div class="memory-word">jealous / envious</div>
+        <div class="memory-word">what</div>
+        <div class="memory-word">like that / in that manner</div>
+        <div class="memory-word">whisper</div>
+        <div class="memory-word">perhaps / maybe</div>
+        <div class="memory-word">gold</div>
+        <div class="memory-word">give</div>
+        <div class="memory-word">treasure</div>
+        <div class="memory-word">not</div>
+        <div class="memory-word">say / tell</div>
+        <div class="memory-word">know</div>
+        <div class="memory-word">other</div>
+        <div class="memory-word">agree</div>
+        <div class="memory-word">quietly / silently</div>
+        <div class="memory-word">carefully</div>
+        <div class="memory-word">open</div>
+        <div class="memory-word">out</div>
+        <div class="memory-word">explode</div>
+        <div class="memory-word">simultaneously / at the same time</div>
+        <div class="memory-word">horrible / terrifying</div>
+        <div class="memory-word">cover / engulf</div>
+        <div class="memory-word">sky</div>
+        <div class="memory-word">become</div>
+        <div class="memory-word">dark / black</div>
+        <div class="memory-word">wild / frenzied</div>
+        <div class="memory-word">spin / turn</div>
+        <div class="memory-word">round and round</div>
+        <div class="memory-word">uncontrolled</div>
+        <div class="memory-word">finally</div>
+        <div class="memory-word">end / stop</div>
+        <div class="memory-word">eye</div>
+        <div class="memory-word">look around</div>
+        <div class="memory-word">correct / exact</div>
+        <div class="memory-word">place</div>
+        <div class="memory-word">set out / depart</div>
+        <div class="memory-word">far</div>
+        <div class="memory-word">hug / embrace</div>
+        <div class="memory-word">cry / weep</div>
+        <div class="memory-word">shout / scream</div>
+        <div class="memory-word">anything / something</div>
+        <div class="memory-word">enemy</div>
+        <div class="memory-word">biggest / greatest</div>
+        <div class="memory-word">precisely / exactly</div>
+        <div class="memory-word">self / oneself</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the text:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordVn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
