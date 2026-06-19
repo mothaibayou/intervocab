@@ -1,72 +1,60 @@
 <!DOCTYPE html>
-<html lang="vi"><head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>"Mất Trí Thật Rồi" — Tam Giác Tình Yêu Kỳ Quái Của Phi Hành Gia</title>
-<style>
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: #2b2b2b;
-    font-family: Arial, sans-serif;
-    font-size: 17px;
-    color: #2a1500;
-    user-select: none;
-  }
-  .page {
-    background: #f0e6c8;
-    max-width: 820px;
-    margin: 32px auto;
-    padding: 36px 44px 44px 44px;
-    border: 2px solid #a0845a;
-    border-radius: 4px;
-    position: relative;
-  }
-  h1 {
-    font-family: Arial, sans-serif;
-    color: #3a1f00;
-    font-size: 1.5rem;
-    border-bottom: 2px solid #7a4e1a;
-    padding-bottom: 10px;
-    margin-bottom: 6px;
-  }
-  .subtitle {
-    color: #3a1f00;
-    font-size: 1.1rem;
-    font-style: italic;
-    margin-bottom: 24px;
-    border-bottom: 1px solid #7a4e1a;
-    padding-bottom: 12px;
-  }
-  p { margin-bottom: 16px; line-height: 1.75; }
-  .section-heading {
-    font-family: Arial, sans-serif;
-    color: #3a1f00;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-bottom: 1px solid #7a4e1a;
-    padding-bottom: 6px;
-    margin: 28px 0 14px 0;
-  }
-  .vocab {
-    border-bottom: 2.5px dotted #1a5c20;
-    cursor: pointer;
-  }
-  /* Correction styles */
-  .corrected {
-    background: #fff3e0;
-    color: #c04a00;
-    font-weight: bold;
-    border-radius: 2px;
-    padding: 0 2px;
-  }
-  .original-word {
-    text-decoration: line-through;
-    color: #aaa;
-    font-size: 0.82rem;
-    margin-left: 2px;
-    font-style: italic;
-  }
-    .audio-section {
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Episode 1: Vùng Đất Của Những Người Ăn Hoa Sen</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
             margin-bottom: 30px;
             background: rgba(122, 78, 26, 0.05);
             padding: 15px;
@@ -116,130 +104,127 @@
             font-weight: bold;
             border-color: #2e1f0a;
         }
-  #download-btn:hover { background: #3e2f1a; }
-  /* Popup card */
-  #popup-card {
-    display: none;
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    background: #f0e6c8;
-    border: 2px solid #a0845a;
-    border-radius: 6px;
-    padding: 20px 24px;
-    max-width: 380px;
-    width: 90vw;
-    z-index: 1000;
-    box-shadow: 0 6px 32px rgba(0,0,0,0.45);
-  }
-  #popup-card .pop-word-en {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: #2a1500;
-    margin-bottom: 3px;
-  }
-  #popup-card .pop-word-vn {
-    font-size: 0.95rem;
-    font-style: italic;
-    color: #7a4e1a;
-    margin-bottom: 6px;
-  }
-  #popup-card .pop-pos {
-    font-size: 0.95rem;
-    color: #5a3a10;
-    margin-bottom: 10px;
-  }
-  #popup-card .pop-def {
-    font-size: 1rem;
-    color: #2a1500;
-    margin-bottom: 10px;
-    line-height: 1.5;
-  }
-  #popup-card .pop-context-label {
-    font-size: 0.95rem;
-    color: #7a4e1a;
-    font-weight: bold;
-    margin-bottom: 3px;
-  }
-  #popup-card .pop-context {
-    font-size: 0.95rem;
-    color: #4a2a00;
-    font-style: italic;
-    line-height: 1.5;
-  }
-  #popup-overlay {
-    display: none;
-    position: fixed;
-    top:0; left:0; right:0; bottom:0;
-    z-index: 999;
-  }
-  /* Memory grid */
-  #memory-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 7px 12px;
-    margin-top: 12px;
-  }
-  .memory-word {
-    border-bottom: 1.5px dotted #7a4e1a;
-    cursor: pointer;
-    font-size: 0.97rem;
-    color: #2a1500;
-    padding: 2px 0;
-  }
-  .memory-word:hover { color: #1a5c20; }
-  .back-btn-wrap { margin: 28px 0 10px 0; }
-  .back-btn {
-    background: #2e1f0a;
-    color: #f0d9a0;
-    border: 1px solid #7a4e1a;
-    padding: 6px 16px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: Arial, sans-serif;
-    font-size: 0.93rem;
-    text-decoration: none;
-    display: inline-block;
-  }
-  .back-btn:hover { background: #3e2f1a; }
-  /* Transcription notes */
-  .transcription-notes {
-    margin-top: 32px;
-    border-top: 1px solid #7a4e1a;
-    padding-top: 16px;
-  }
-  .transcription-notes table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.93rem;
-  }
-  .transcription-notes th, .transcription-notes td {
-    border: 1px solid #a0845a;
-    padding: 6px 10px;
-    text-align: left;
-    color: #2a1500;
-  }
-  .transcription-notes th { background: #e0cfaa; }
-  .skip-notes {
-    margin-top: 24px;
-    border-top: 1px solid #7a4e1a;
-    padding-top: 14px;
-    font-size: 0.88rem;
-    color: #7a4e1a;
-  }
-  .highlight-scroll {
-    background: #ffe082 !important;
-    transition: background 0.3s;
-  }
-  blockquote {
-    border-left: 3px solid #7a4e1a;
-    margin: 12px 0 12px 12px;
-    padding-left: 14px;
-    font-style: italic;
-    color: #3a1f00;
-  }
-  @media (max-width: 600px) {
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
           p {
                   text-align:  left;
  }
@@ -257,21 +242,29 @@
         grid-template-columns: repeat(2, 1fr);
     }
 }
-</style>
+    </style>
+	<!-- VOCABULARY DENSITY RULE:  please meticulously follow these instructions:
+     Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: e.g., tag "quê hương" separately AND "yêu dấu" separately.
+- Tag "trí tuệ" and "sắc bén" as two different spans.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+      -->
+			
+		
 </head>
 <body>
-<div class="page">
-  
 
-  <!-- AUDIO PLAYER -->
-   <div class="page-container">
-    <h1>Tập 1: Bí mật trên gác mái</h1>
-    <h2 class="subtitle">Phần 1: Thanh Ngọc Long vùng Đà Lạt</h2>
-
+<div class="page-container">
+    <h1>Episode 1: Vùng Đất Của Những Người Ăn Hoa Sen</h1>
+    <h2 class="subtitle">Odyssey Series</h2>
+    
     <div class="audio-section">
-        <div class="audio-label">🎧 Nghe Tập 1</div>
-        <audio id="audio-player" src="astronaut.mp3" controls></audio>
-
+        <div class="audio-label">🎧 Listen to Episode 1</div>
+        <audio id="audio-player" src="lotus.mp3" controls></audio>
+        
         <div class="audio-controls">
             <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
             <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
@@ -290,6 +283,7 @@
             <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
         </div>
     </div>
+
 
   <!-- TITLE -->
   <h1><span class="vocab" data-word-en="Lost one's mind / Gone crazy" data-word-vn="Mất trí" data-pos="động từ / verb" data-def-en="To lose one's sanity; to go mad or act irrationally." data-def-vn="Mất đi lý trí, hành động điên rồ hoặc phi lý." data-context-en="Used in the title to describe the astronaut's shocking breakdown and criminal behavior." data-context-vn="Dùng trong tiêu đề để mô tả sự sụp đổ và hành vi phạm pháp gây sốc của phi hành gia.">Mất trí</span> <span class="vocab" data-word-en="truly / really" data-word-vn="thật rồi" data-pos="trạng từ / adverb" data-def-en="Truly; it has really happened — used for emphasis or disbelief." data-def-vn="Thực sự rồi — dùng để nhấn mạnh hoặc bày tỏ sự không tin." data-context-en="Combined with 'mất trí' to intensify the sense of disbelief: 'she has truly lost her mind.'" data-context-vn="Kết hợp với 'mất trí' để nhấn mạnh sự không thể tin được: 'cô ấy đã thật sự mất trí rồi.'">thật rồi</span>"</h1>
