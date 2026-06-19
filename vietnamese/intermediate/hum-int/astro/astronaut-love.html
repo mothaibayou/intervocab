@@ -66,55 +66,56 @@
     margin-left: 2px;
     font-style: italic;
   }
-  /* Audio player */
-  .audio-section {
-    margin-bottom: 28px;
-    padding: 14px 16px;
-    border: 1px solid #a0845a;
-    border-radius: 4px;
-    background: #e8d9b0;
-  }
-  .audio-label {
-    color: #7a4e1a;
-    font-size: 0.95rem;
-    margin-bottom: 8px;
-  }
-  audio#audio-player {
-    width: 100%;
-    margin-bottom: 10px;
-    accent-color: #c8a060;
-  }
-  .audio-controls {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    margin-top: 6px;
-  }
-  .rewind-btn {
-    background: #2e1f0a;
-    color: #f0d9a0;
-    border: 1px solid #7a4e1a;
-    padding: 5px 13px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: Arial, sans-serif;
-    font-size: 0.93rem;
-  }
-  .rewind-btn:hover { background: #3e2f1a; }
-  /* Download button */
-  #download-btn {
-    position: absolute;
-    top: 14px;
-    right: 14px;
-    background: #2e1f0a;
-    color: #f0d9a0;
-    border: 1px solid #7a4e1a;
-    padding: 6px 12px;
-    border-radius: 3px;
-    cursor: pointer;
-    font-family: Arial, sans-serif;
-    font-size: 0.88rem;
-  }
+    .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
   #download-btn:hover { background: #3e2f1a; }
   /* Popup card */
   #popup-card {
@@ -263,21 +264,32 @@
   
 
   <!-- AUDIO PLAYER -->
-  <div class="audio-section">
-    <div class="audio-label">🎧 Listen to the text</div>
-    <audio id="audio-player" controls="">
-      <source src="astronaut.mp3" type="audio/mpeg">
-      Your browser does not support the audio element.
-    </audio>
-    <div class="audio-controls">
-      <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
-      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-2);">↺ 5 sec</button>
-      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-3);">↺ 10 sec</button>
-      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 15sec</button>
-      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
-      <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+   <div class="page-container">
+    <h1>Tập 1: Bí mật trên gác mái</h1>
+    <h2 class="subtitle">Phần 1: Thanh Ngọc Long vùng Đà Lạt</h2>
+
+    <div class="audio-section">
+        <div class="audio-label">🎧 Nghe Tập 1</div>
+        <audio id="audio-player" src="tap1_bi_mat_gac_mai.mp3" controls></audio>
+
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
     </div>
-  </div>
 
   <!-- TITLE -->
   <h1><span class="vocab" data-word-en="Lost one's mind / Gone crazy" data-word-vn="Mất trí" data-pos="động từ / verb" data-def-en="To lose one's sanity; to go mad or act irrationally." data-def-vn="Mất đi lý trí, hành động điên rồ hoặc phi lý." data-context-en="Used in the title to describe the astronaut's shocking breakdown and criminal behavior." data-context-vn="Dùng trong tiêu đề để mô tả sự sụp đổ và hành vi phạm pháp gây sốc của phi hành gia.">Mất trí</span> <span class="vocab" data-word-en="truly / really" data-word-vn="thật rồi" data-pos="trạng từ / adverb" data-def-en="Truly; it has really happened — used for emphasis or disbelief." data-def-vn="Thực sự rồi — dùng để nhấn mạnh hoặc bày tỏ sự không tin." data-context-en="Combined with 'mất trí' to intensify the sense of disbelief: 'she has truly lost her mind.'" data-context-vn="Kết hợp với 'mất trí' để nhấn mạnh sự không thể tin được: 'cô ấy đã thật sự mất trí rồi.'">thật rồi</span>"</h1>
