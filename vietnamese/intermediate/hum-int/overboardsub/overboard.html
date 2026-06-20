@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The William Brown</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+			
+		
+</head>
+<body>
+
+<div class="page-container">
+    <h1>The William Brown</h1>
+    <h2 class="subtitle">Câu chuyện sinh tồn trên biển</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to the Story</div>
+        <audio id="audio-player" src="william-brown.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        The <span class="vocab" data-word-en="story" data-word-vn="câu chuyện" data-pos="danh từ / noun" data-def-en="An account of events." data-def-vn="Một câu chuyện kể về các sự kiện." data-context-en="The story of the William Brown is a haunting account...">story</span> of the William Brown is a <span class="vocab" data-word-en="haunting" data-word-vn="ám ảnh" data-pos="tính từ / adjective" data-def-en="Disturbing and memorable." data-def-vn="Gây ám ảnh và khó quên." data-context-en="a haunting account of survival...">haunting</span> <span class="vocab" data-word-en="account" data-word-vn="lời kể" data-pos="danh từ / noun" data-def-en="Narrative description." data-def-vn="Lời kể hoặc mô tả." data-context-en="haunting account of survival...">account</span> of <span class="vocab" data-word-en="survival" data-word-vn="sống sót" data-pos="danh từ / noun" data-def-en="Continuing to live." data-def-vn="Tiếp tục sống sót." data-context-en="of survival and the impossible choices...">survival</span> and the <span class="vocab" data-word-en="impossible" data-word-vn="không thể" data-pos="tính từ / adjective" data-def-en="Not possible." data-def-vn="Không thể thực hiện." data-context-en="the impossible choices people face...">impossible</span> <span class="vocab" data-word-en="choices" data-word-vn="lựa chọn" data-pos="danh từ / noun" data-def-en="Decisions." data-def-vn="Các lựa chọn." data-context-en="impossible choices people face during a disaster.">choices</span> <span class="vocab" data-word-en="people" data-word-vn="con người" data-pos="danh từ / noun" data-def-en="Humans." data-def-vn="Con người." data-context-en="choices people face during a disaster.">people</span> <span class="vocab" data-word-en="face" data-word-vn="đối mặt" data-pos="động từ / verb" data-def-en="Confront." data-def-vn="Đối mặt." data-context-en="people face during a disaster.">face</span> during a <span class="vocab" data-word-en="disaster" data-word-vn="thảm họa" data-pos="danh từ / noun" data-def-en="Catastrophe." data-def-vn="Thảm họa." data-context-en="during a disaster.">disaster</span>. It <span class="vocab" data-word-en="remains" data-word-vn="vẫn là" data-pos="động từ / verb" data-def-en="Continues to be." data-def-vn="Vẫn tồn tại." data-context-en="It remains one of the most famous...">remains</span> one of the most <span class="vocab" data-word-en="famous" data-word-vn="nổi tiếng" data-pos="tính từ / adjective" data-def-en="Well-known." data-def-vn="Nổi tiếng." data-context-en="most famous examples of maritime law...">famous</span> <span class="vocab" data-word-en="examples" data-word-vn="ví dụ" data-pos="danh từ / noun" data-def-en="Instances." data-def-vn="Ví dụ." data-context-en="famous examples of maritime law in history.">examples</span> of <span class="vocab" data-word-en="maritime" data-word-vn="hàng hải" data-pos="tính từ / adjective" data-def-en="Related to sea." data-def-vn="Liên quan đến biển." data-context-en="of maritime law in history.">maritime</span> <span class="vocab" data-word-en="law" data-word-vn="luật" data-pos="danh từ / noun" data-def-en="Legal rules." data-def-vn="Luật pháp." data-context-en="maritime law in history.">law</span> in <span class="vocab" data-word-en="history" data-word-vn="lịch sử" data-pos="danh từ / noun" data-def-en="Past events." data-def-vn="Lịch sử." data-context-en="in history.">history</span>.
+    </p>
+
+    <p>
+        The <span class="vocab" data-word-en="collision" data-word-vn="va chạm" data-pos="danh từ / noun" data-def-en="Impact." data-def-vn="Va chạm." data-context-en="The Collision">collision</span>
+    </p>
+
+    <p>
+        In <span class="vocab" data-word-en="April" data-word-vn="tháng Tư" data-pos="danh từ / noun" data-def-en="Fourth month." data-def-vn="Tháng thứ tư." data-context-en="In April 1841...">April</span> <span class="vocab" data-word-en="1841" data-word-vn="1841" data-pos="số / number" data-def-en="Year." data-def-vn="Năm." data-context-en="In April 1841...">1841</span>, a <span class="vocab" data-word-en="ship" data-word-vn="con tàu" data-pos="danh từ / noun" data-def-en="Large vessel." data-def-vn="Phương tiện thủy lớn." data-context-en="a ship named the William Brown...">ship</span> <span class="vocab" data-word-en="named" data-word-vn="được gọi" data-pos="động từ / verb" data-def-en="Called." data-def-vn="Được đặt tên." data-context-en="named the William Brown...">named</span> the William Brown was <span class="vocab" data-word-en="sailing" data-word-vn="đang đi" data-pos="động từ / verb" data-def-en="Traveling by sea." data-def-vn="Di chuyển trên biển." data-context-en="was sailing from Liverpool...">sailing</span> from <span class="vocab" data-word-en="Liverpool" data-word-vn="Liverpool" data-pos="danh từ riêng / proper noun" data-def-en="City in England." data-def-vn="Thành phố ở Anh." data-context-en="from Liverpool to Philadelphia.">Liverpool</span> to <span class="vocab" data-word-en="Philadelphia" data-word-vn="Philadelphia" data-pos="danh từ riêng / proper noun" data-def-en="City in America." data-def-vn="Thành phố ở Mỹ." data-context-en="to Philadelphia.">Philadelphia</span>. It <span class="vocab" data-word-en="carried" data-word-vn="chở" data-pos="động từ / verb" data-def-en="Transported." data-def-vn="Chở theo." data-context-en="It carried 65 passengers...">carried</span> <span class="vocab" data-word-en="65" data-word-vn="65" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="65 passengers...">65</span> <span class="vocab" data-word-en="passengers" data-word-vn="hành khách" data-pos="danh từ / noun" data-def-en="Travelers." data-def-vn="Hành khách." data-context-en="passengers and 17 crew members.">passengers</span> and <span class="vocab" data-word-en="17" data-word-vn="17" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="and 17 crew members.">17</span> <span class="vocab" data-word-en="crew" data-word-vn="thủy thủ" data-pos="danh từ / noun" data-def-en="Ship workers." data-def-vn="Thủy thủ đoàn." data-context-en="crew members.">crew</span> <span class="vocab" data-word-en="members" data-word-vn="thành viên" data-pos="danh từ / noun" data-def-en="People in group." data-def-vn="Thành viên." data-context-en="crew members.">members</span>. While <span class="vocab" data-word-en="sailing" data-word-vn="đi" data-pos="động từ / verb" data-def-en="Traveling." data-def-vn="Di chuyển." data-context-en="While sailing through thick fog...">sailing</span> through <span class="vocab" data-word-en="thick" data-word-vn="dày đặc" data-pos="tính từ / adjective" data-def-en="Dense." data-def-vn="Dày đặc." data-context-en="through thick fog...">thick</span> <span class="vocab" data-word-en="fog" data-word-vn="sương mù" data-pos="danh từ / noun" data-def-en="Mist." data-def-vn="Sương mù." data-context-en="thick fog near Newfoundland...">fog</span> near <span class="vocab" data-word-en="Newfoundland" data-word-vn="Newfoundland" data-pos="danh từ riêng / proper noun" data-def-en="Region in Canada." data-def-vn="Vùng ở Canada." data-context-en="near Newfoundland...">Newfoundland</span>, the ship <span class="vocab" data-word-en="struck" data-word-vn="đụng" data-pos="động từ / verb" data-def-en="Hit." data-def-vn="Va phải." data-context-en="the ship struck an iceberg...">struck</span> an <span class="vocab" data-word-en="iceberg" data-word-vn="núi băng" data-pos="danh từ / noun" data-def-en="Floating ice mass." data-def-vn="Khối băng nổi." data-context-en="struck an iceberg...">iceberg</span> and <span class="vocab" data-word-en="began" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Started." data-def-vn="Bắt đầu." data-context-en="began to sink rapidly.">began</span> to <span class="vocab" data-word-en="sink" data-word-vn="chìm" data-pos="động từ / verb" data-def-en="Go down." data-def-vn="Chìm xuống." data-context-en="to sink rapidly.">sink</span> <span class="vocab" data-word-en="rapidly" data-word-vn="nhanh chóng" data-pos="trạng từ / adverb" data-def-en="Quickly." data-def-vn="Nhanh chóng." data-context-en="sink rapidly.">rapidly</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="panic" data-word-vn="hoảng loạn" data-pos="danh từ / noun" data-def-en="Sudden fear." data-def-vn="Sự hoảng loạn." data-context-en="Panic broke out...">panic</span> <span class="vocab" data-word-en="broke" data-word-vn="bùng nổ" data-pos="động từ / verb" data-def-en="Occurred suddenly." data-def-vn="Xảy ra đột ngột." data-context-en="Panic broke out...">broke</span> <span class="vocab" data-word-en="out" data-word-vn="ra" data-pos="trạng từ / adverb" data-def-en="Emerged." data-def-vn="Bùng phát." data-context-en="broke out...">out</span> because there were only two <span class="vocab" data-word-en="lifeboats" data-word-vn="xuồng cứu hộ" data-pos="danh từ / noun" data-def-en="Rescue boats." data-def-vn="Xuồng cứu người." data-context-en="only two lifeboats...">lifeboats</span> for over <span class="vocab" data-word-en="80" data-word-vn="80" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="over 80 people.">80</span> <span class="vocab" data-word-en="people" data-word-vn="người" data-pos="danh từ / noun" data-def-en="Individuals." data-def-vn="Con người." data-context-en="80 people.">people</span>. The <span class="vocab" data-word-en="captain" data-word-vn="thuyền trưởng" data-pos="danh từ / noun" data-def-en="Ship leader." data-def-vn="Thuyền trưởng." data-context-en="The captain and some crew...">captain</span> and some <span class="vocab" data-word-en="crew" data-word-vn="thủy thủ" data-pos="danh từ / noun" data-def-en="Sailors." data-def-vn="Thủy thủ." data-context-en="and some crew...">crew</span> took the <span class="vocab" data-word-en="smaller" data-word-vn="nhỏ hơn" data-pos="tính từ / adjective" data-def-en="Less big." data-def-vn="Nhỏ hơn." data-context-en="the smaller boat...">smaller</span> <span class="vocab" data-word-en="boat" data-word-vn="xuồng" data-pos="danh từ / noun" data-def-en="Small vessel." data-def-vn="Xuồng." data-context-en="smaller boat...">boat</span>, while <span class="vocab" data-word-en="41" data-word-vn="41" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="while 41 people...">41</span> <span class="vocab" data-word-en="people" data-word-vn="người" data-pos="danh từ / noun" data-def-en="Persons." data-def-vn="Người." data-context-en="41 people crowded...">people</span> <span class="vocab" data-word-en="crowded" data-word-vn="chen chúc" data-pos="động từ / verb" data-def-en="Packed tightly." data-def-vn="Chen chúc." data-context-en="crowded into the longboat.">crowded</span> into the <span class="vocab" data-word-en="longboat" data-word-vn="xuồng dài" data-pos="danh từ / noun" data-def-en="Large lifeboat." data-def-vn="Xuồng cứu hộ lớn." data-context-en="the longboat.">longboat</span>. <span class="vocab" data-word-en="tragically" data-word-vn="bi thảm" data-pos="trạng từ / adverb" data-def-en="Sadly." data-def-vn="Một cách bi thảm." data-context-en="Tragically, 31 passengers...">tragically</span>, <span class="vocab" data-word-en="31" data-word-vn="31" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="31 passengers...">31</span> <span class="vocab" data-word-en="passengers" data-word-vn="hành khách" data-pos="danh từ / noun" data-def-en="Travelers." data-def-vn="Hành khách." data-context-en="31 passengers were left...">passengers</span> were <span class="vocab" data-word-en="left" data-word-vn="bị bỏ lại" data-pos="động từ / verb" data-def-en="Abandoned." data-def-vn="Bị bỏ lại." data-context-en="were left behind...">left</span> <span class="vocab" data-word-en="behind" data-word-vn="phía sau" data-pos="trạng từ / adverb" data-def-en="In the rear." data-def-vn="Phía sau." data-context-en="left behind on the sinking ship.">behind</span> on the <span class="vocab" data-word-en="sinking" data-word-vn="đang chìm" data-pos="tính từ / adjective" data-def-en="Going down." data-def-vn="Đang chìm." data-context-en="on the sinking ship.">sinking</span> <span class="vocab" data-word-en="ship" data-word-vn="con tàu" data-pos="danh từ / noun" data-def-en="Vessel." data-def-vn="Con tàu." data-context-en="sinking ship.">ship</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="crisis" data-word-vn="khủng hoảng" data-pos="danh từ / noun" data-def-en="Emergency." data-def-vn="Tình trạng khẩn cấp." data-context-en="Crisis on the Longboat">crisis</span> on the Longboat
+    </p>
+
+    <p>
+        The <span class="vocab" data-word-en="longboat" data-word-vn="xuồng dài" data-pos="danh từ / noun" data-def-en="Large boat." data-def-vn="Xuồng lớn." data-context-en="The longboat was in terrible condition.">longboat</span> was in <span class="vocab" data-word-en="terrible" data-word-vn="tồi tệ" data-pos="tính từ / adjective" data-def-en="Very bad." data-def-vn="Rất xấu." data-context-en="in terrible condition.">terrible</span> <span class="vocab" data-word-en="condition" data-word-vn="tình trạng" data-pos="danh từ / noun" data-def-en="State." data-def-vn="Tình trạng." data-context-en="terrible condition.">condition</span>. It was <span class="vocab" data-word-en="leaking" data-word-vn="rò rỉ" data-pos="động từ / verb" data-def-en="Letting water in." data-def-vn="Rò nước." data-context-en="It was leaking...">leaking</span>, and the <span class="vocab" data-word-en="weight" data-word-vn="trọng lượng" data-pos="danh từ / noun" data-def-en="Mass." data-def-vn="Trọng lượng." data-context-en="the weight of 41 people...">weight</span> of <span class="vocab" data-word-en="41" data-word-vn="41" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="41 people...">41</span> <span class="vocab" data-word-en="people" data-word-vn="người" data-pos="danh từ / noun" data-def-en="Persons." data-def-vn="Người." data-context-en="41 people made it...">people</span> made it <span class="vocab" data-word-en="sit" data-word-vn="ngồi" data-pos="động từ / verb" data-def-en="Rest low." data-def-vn="Ngồi thấp." data-context-en="made it sit dangerously low...">sit</span> <span class="vocab" data-word-en="dangerously" data-word-vn="nguy hiểm" data-pos="trạng từ / adverb" data-def-en="In a risky way." data-def-vn="Một cách nguy hiểm." data-context-en="sit dangerously low...">dangerously</span> <span class="vocab" data-word-en="low" data-word-vn="thấp" data-pos="tính từ / adjective" data-def-en="Not high." data-def-vn="Thấp." data-context-en="low in the freezing...">low</span> in the <span class="vocab" data-word-en="freezing" data-word-vn="lạnh giá" data-pos="tính từ / adjective" data-def-en="Extremely cold." data-def-vn="Lạnh buốt." data-context-en="freezing, stormy water.">freezing</span>, <span class="vocab" data-word-en="stormy" data-word-vn="bão tố" data-pos="tính từ / adjective" data-def-en="With storms." data-def-vn="Có bão." data-context-en="stormy water.">stormy</span> <span class="vocab" data-word-en="water" data-word-vn="nước" data-pos="danh từ / noun" data-def-en="Sea." data-def-vn="Nước biển." data-context-en="stormy water.">water</span>. A <span class="vocab" data-word-en="sailor" data-word-vn="thủy thủ" data-pos="danh từ / noun" data-def-en="Seaman." data-def-vn="Thủy thủ." data-context-en="A sailor named Alexander Holmes...">sailor</span> <span class="vocab" data-word-en="named" data-word-vn="tên" data-pos="động từ / verb" data-def-en="Called." data-def-vn="Tên là." data-context-en="named Alexander Holmes...">named</span> Alexander Holmes was in <span class="vocab" data-word-en="charge" data-word-vn="chỉ huy" data-pos="danh từ / noun" data-def-en="Command." data-def-vn="Chỉ huy." data-context-en="was in charge of rowing.">charge</span> of <span class="vocab" data-word-en="rowing" data-word-vn="chèo" data-pos="động từ / verb" data-def-en="Using oars." data-def-vn="Chèo thuyền." data-context-en="of rowing.">rowing</span>. He was <span class="vocab" data-word-en="known" data-word-vn="được biết" data-pos="động từ / verb" data-def-en="Recognized." data-def-vn="Được biết đến." data-context-en="He was known as a hero...">known</span> as a <span class="vocab" data-word-en="hero" data-word-vn="anh hùng" data-pos="danh từ / noun" data-def-en="Brave person." data-def-vn="Anh hùng." data-context-en="as a hero...">hero</span> because he had <span class="vocab" data-word-en="risked" data-word-vn="liều" data-pos="động từ / verb" data-def-en="Endangered." data-def-vn="Liều lĩnh." data-context-en="had risked his life...">risked</span> his <span class="vocab" data-word-en="life" data-word-vn="mạng sống" data-pos="danh từ / noun" data-def-en="Existence." data-def-vn="Mạng sống." data-context-en="risked his life to save...">life</span> to <span class="vocab" data-word-en="save" data-word-vn="cứu" data-pos="động từ / verb" data-def-en="Rescue." data-def-vn="Cứu." data-context-en="to save a young girl...">save</span> a <span class="vocab" data-word-en="young" data-word-vn="trẻ" data-pos="tính từ / adjective" data-def-en="Youthful." data-def-vn="Trẻ tuổi." data-context-en="a young girl...">young</span> <span class="vocab" data-word-en="girl" data-word-vn="cô gái" data-pos="danh từ / noun" data-def-en="Female child." data-def-vn="Cô gái." data-context-en="young girl as the ship...">girl</span> as the ship went <span class="vocab" data-word-en="down" data-word-vn="chìm" data-pos="động từ / verb" data-def-en="Sank." data-def-vn="Chìm." data-context-en="as the ship went down.">down</span>.
+    </p>
+
+    <p>
+        However, <span class="vocab" data-word-en="24" data-word-vn="24" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="24 hours later...">24</span> <span class="vocab" data-word-en="hours" data-word-vn="giờ" data-pos="danh từ / noun" data-def-en="Time units." data-def-vn="Giờ." data-context-en="hours later...">hours</span> <span class="vocab" data-word-en="later" data-word-vn="sau" data-pos="trạng từ / adverb" data-def-en="Afterward." data-def-vn="Sau đó." data-context-en="later, a storm...">later</span>, a <span class="vocab" data-word-en="storm" data-word-vn="cơn bão" data-pos="danh từ / noun" data-def-en="Bad weather." data-def-vn="Cơn bão." data-context-en="a storm began.">storm</span> <span class="vocab" data-word-en="began" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Started." data-def-vn="Bắt đầu." data-context-en="a storm began.">began</span>. The <span class="vocab" data-word-en="boat" data-word-vn="xuồng" data-pos="danh từ / noun" data-def-en="Vessel." data-def-vn="Xuồng." data-context-en="The boat was filling...">boat</span> was <span class="vocab" data-word-en="filling" data-word-vn="đầy" data-pos="động từ / verb" data-def-en="Becoming full." data-def-vn="Đầy nước." data-context-en="was filling with water...">filling</span> with <span class="vocab" data-word-en="water" data-word-vn="nước" data-pos="danh từ / noun" data-def-en="Liquid." data-def-vn="Nước." data-context-en="with water...">water</span>, and <span class="vocab" data-word-en="everyone" data-word-vn="mọi người" data-pos="đại từ / pronoun" data-def-en="All persons." data-def-vn="Mọi người." data-context-en="everyone was terrified.">everyone</span> was <span class="vocab" data-word-en="terrified" data-word-vn="hoảng sợ" data-pos="tính từ / adjective" data-def-en="Very scared." data-def-vn="Hoảng sợ." data-context-en="was terrified.">terrified</span>. The <span class="vocab" data-word-en="officer" data-word-vn="sĩ quan" data-pos="danh từ / noun" data-def-en="Leader." data-def-vn="Sĩ quan." data-context-en="The officer in charge...">officer</span> in <span class="vocab" data-word-en="charge" data-word-vn="chỉ huy" data-pos="danh từ / noun" data-def-en="Command." data-def-vn="Chỉ huy." data-context-en="in charge shouted...">charge</span> <span class="vocab" data-word-en="shouted" data-word-vn="hét" data-pos="động từ / verb" data-def-en="Yelled." data-def-vn="Hét lớn." data-context-en="shouted...">shouted</span>, "Help me, God! This <span class="vocab" data-word-en="boat" data-word-vn="xuồng" data-pos="danh từ / noun" data-def-en="Vessel." data-def-vn="Xuồng." data-context-en="This boat is sinking!">boat</span> is <span class="vocab" data-word-en="sinking" data-word-vn="chìm" data-pos="động từ / verb" data-def-en="Going down." data-def-vn="Đang chìm." data-context-en="is sinking!">sinking</span>! " He <span class="vocab" data-word-en="ordered" data-word-vn="ra lệnh" data-pos="động từ / verb" data-def-en="Commanded." data-def-vn="Ra lệnh." data-context-en="He ordered the crew...">ordered</span> the <span class="vocab" data-word-en="crew" data-word-vn="thủy thủ" data-pos="danh từ / noun" data-def-en="Sailors." data-def-vn="Thủy thủ." data-context-en="the crew to lighten...">crew</span> to <span class="vocab" data-word-en="lighten" data-word-vn="làm nhẹ" data-pos="động từ / verb" data-def-en="Reduce weight." data-def-vn="Làm nhẹ bớt." data-context-en="to lighten the boat...">lighten</span> the <span class="vocab" data-word-en="boat" data-word-vn="xuồng" data-pos="danh từ / noun" data-def-en="Vessel." data-def-vn="Xuồng." data-context-en="lighten the boat...">boat</span>, which <span class="vocab" data-word-en="meant" data-word-vn="nghĩa là" data-pos="động từ / verb" data-def-en="Signified." data-def-vn="Nghĩa là." data-context-en="which meant some people...">meant</span> some <span class="vocab" data-word-en="people" data-word-vn="người" data-pos="danh từ / noun" data-def-en="Persons." data-def-vn="Người." data-context-en="some people had to go.">people</span> had to <span class="vocab" data-word-en="go" data-word-vn="ra đi" data-pos="động từ / verb" data-def-en="Leave." data-def-vn="Ra đi." data-context-en="had to go.">go</span>.
+    </p>
+
+    <p>
+        The <span class="vocab" data-word-en="sacrifice" data-word-vn="hy sinh" data-pos="danh từ / noun" data-def-en="Giving up lives." data-def-vn="Sự hy sinh." data-context-en="The Sacrifice">sacrifice</span>
+    </p>
+
+    <p>
+        Alexander Holmes and the other <span class="vocab" data-word-en="sailors" data-word-vn="thủy thủ" data-pos="danh từ / noun" data-def-en="Seamen." data-def-vn="Thủy thủ." data-context-en="sailors began throwing...">sailors</span> <span class="vocab" data-word-en="began" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Started." data-def-vn="Bắt đầu." data-context-en="began throwing passengers...">began</span> <span class="vocab" data-word-en="throwing" data-word-vn="ném" data-pos="động từ / verb" data-def-en="Casting out." data-def-vn="Ném ra." data-context-en="throwing passengers into the ocean...">throwing</span> <span class="vocab" data-word-en="passengers" data-word-vn="hành khách" data-pos="danh từ / noun" data-def-en="Travelers." data-def-vn="Hành khách." data-context-en="passengers into the ocean...">passengers</span> into the <span class="vocab" data-word-en="ocean" data-word-vn="đại dương" data-pos="danh từ / noun" data-def-en="Sea." data-def-vn="Đại dương." data-context-en="into the ocean...">ocean</span> to <span class="vocab" data-word-en="prevent" data-word-vn="ngăn" data-pos="động từ / verb" data-def-en="Stop." data-def-vn="Ngăn chặn." data-context-en="to prevent the boat...">prevent</span> the <span class="vocab" data-word-en="boat" data-word-vn="xuồng" data-pos="danh từ / noun" data-def-en="Vessel." data-def-vn="Xuồng." data-context-en="the boat from flipping...">boat</span> from <span class="vocab" data-word-en="flipping" data-word-vn="lật" data-pos="động từ / verb" data-def-en="Overturning." data-def-vn="Lật úp." data-context-en="from flipping over.">flipping</span> <span class="vocab" data-word-en="over" data-word-vn="ngược" data-pos="trạng từ / adverb" data-def-en="Upside down." data-def-vn="Ngược lại." data-context-en="flipping over.">over</span>. They <span class="vocab" data-word-en="focused" data-word-vn="tập trung" data-pos="động từ / verb" data-def-en="Concentrated." data-def-vn="Tập trung." data-context-en="They focused on single men...">focused</span> on <span class="vocab" data-word-en="single" data-word-vn="độc thân" data-pos="tính từ / adjective" data-def-en="Unmarried." data-def-vn="Độc thân." data-context-en="on single men...">single</span> <span class="vocab" data-word-en="men" data-word-vn="đàn ông" data-pos="danh từ / noun" data-def-en="Males." data-def-vn="Đàn ông." data-context-en="single men...">men</span>, <span class="vocab" data-word-en="sparing" data-word-vn="tha" data-pos="động từ / verb" data-def-en="Saving." data-def-vn="Tha cho." data-context-en="sparing women and married couples.">sparing</span> <span class="vocab" data-word-en="women" data-word-vn="phụ nữ" data-pos="danh từ / noun" data-def-en="Females." data-def-vn="Phụ nữ." data-context-en="sparing women...">women</span> and <span class="vocab" data-word-en="married" data-word-vn="đã kết hôn" data-pos="tính từ / adjective" data-def-en="Wedded." data-def-vn="Đã kết hôn." data-context-en="married couples.">married</span> <span class="vocab" data-word-en="couples" data-word-vn="cặp đôi" data-pos="danh từ / noun" data-def-en="Pairs." data-def-vn="Cặp đôi." data-context-en="married couples.">couples</span>. In <span class="vocab" data-word-en="total" data-word-vn="tổng cộng" data-pos="danh từ / noun" data-def-en="Altogether." data-def-vn="Tổng số." data-context-en="In total, 16 people...">total</span>, <span class="vocab" data-word-en="16" data-word-vn="16" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="16 people were cast...">16</span> <span class="vocab" data-word-en="people" data-word-vn="người" data-pos="danh từ / noun" data-def-en="Persons." data-def-vn="Người." data-context-en="16 people were cast...">people</span> were <span class="vocab" data-word-en="cast" data-word-vn="ném" data-pos="động từ / verb" data-def-en="Thrown." data-def-vn="Bị ném." data-context-en="were cast into the icy sea.">cast</span> into the <span class="vocab" data-word-en="icy" data-word-vn="lạnh buốt" data-pos="tính từ / adjective" data-def-en="Frozen." data-def-vn="Lạnh giá." data-context-en="into the icy sea.">icy</span> <span class="vocab" data-word-en="sea" data-word-vn="biển" data-pos="danh từ / noun" data-def-en="Ocean." data-def-vn="Biển." data-context-en="icy sea.">sea</span>. One <span class="vocab" data-word-en="man" data-word-vn="người đàn ông" data-pos="danh từ / noun" data-def-en="Male person." data-def-vn="Người đàn ông." data-context-en="One man offered...">man</span> <span class="vocab" data-word-en="offered" data-word-vn="đưa" data-pos="động từ / verb" data-def-en="Gave." data-def-vn="Đưa ra." data-context-en="offered Holmes money...">offered</span> Holmes <span class="vocab" data-word-en="money" data-word-vn="tiền" data-pos="danh từ / noun" data-def-en="Currency." data-def-vn="Tiền bạc." data-context-en="money to save his life...">money</span> to <span class="vocab" data-word-en="save" data-word-vn="cứu" data-pos="động từ / verb" data-def-en="Rescue." data-def-vn="Cứu." data-context-en="to save his life...">save</span> his <span class="vocab" data-word-en="life" data-word-vn="mạng sống" data-pos="danh từ / noun" data-def-en="Existence." data-def-vn="Mạng sống." data-context-en="save his life...">life</span>, but Holmes <span class="vocab" data-word-en="refused" data-word-vn="từ chối" data-pos="động từ / verb" data-def-en="Declined." data-def-vn="Từ chối." data-context-en="but Holmes refused...">refused</span>, <span class="vocab" data-word-en="believing" data-word-vn="tin" data-pos="động từ / verb" data-def-en="Thinking." data-def-vn="Tin rằng." data-context-en="believing that everyone...">believing</span> that <span class="vocab" data-word-en="everyone" data-word-vn="mọi người" data-pos="đại từ / pronoun" data-def-en="All." data-def-vn="Mọi người." data-context-en="everyone would die...">everyone</span> would <span class="vocab" data-word-en="die" data-word-vn="chết" data-pos="động từ / verb" data-def-en="Perish." data-def-vn="Chết." data-context-en="would die if the boat...">die</span> if the <span class="vocab" data-word-en="boat" data-word-vn="xuồng" data-pos="danh từ / noun" data-def-en="Vessel." data-def-vn="Xuồng." data-context-en="if the boat wasn't lightened...">boat</span> wasn't <span class="vocab" data-word-en="lightened" data-word-vn="làm nhẹ" data-pos="động từ / verb" data-def-en="Made lighter." data-def-vn="Được làm nhẹ." data-context-en="wasn't lightened immediately.">lightened</span> <span class="vocab" data-word-en="immediately" data-word-vn="ngay lập tức" data-pos="trạng từ / adverb" data-def-en="At once." data-def-vn="Ngay lập tức." data-context-en="lightened immediately.">immediately</span>.
+    </p>
+
+    <p>
+        The <span class="vocab" data-word-en="legal" data-word-vn="pháp lý" data-pos="tính từ / adjective" data-def-en="Related to law." data-def-vn="Liên quan đến luật." data-context-en="The Legal Battle">legal</span> <span class="vocab" data-word-en="battle" data-word-vn="cuộc chiến" data-pos="danh từ / noun" data-def-en="Conflict." data-def-vn="Cuộc tranh đấu." data-context-en="The Legal Battle">battle</span>
+    </p>
+
+    <p>
+        When the <span class="vocab" data-word-en="survivors" data-word-vn="người sống sót" data-pos="danh từ / noun" data-def-en="Those who lived." data-def-vn="Những người sống sót." data-context-en="When the survivors were finally...">survivors</span> were <span class="vocab" data-word-en="finally" data-word-vn="cuối cùng" data-pos="trạng từ / adverb" data-def-en="At last." data-def-vn="Cuối cùng." data-context-en="were finally rescued...">finally</span> <span class="vocab" data-word-en="rescued" data-word-vn="cứu" data-pos="động từ / verb" data-def-en="Saved." data-def-vn="Được cứu." data-context-en="rescued and brought...">rescued</span> and <span class="vocab" data-word-en="brought" data-word-vn="đưa" data-pos="động từ / verb" data-def-en="Taken." data-def-vn="Đưa đến." data-context-en="brought to Philadelphia...">brought</span> to <span class="vocab" data-word-en="Philadelphia" data-word-vn="Philadelphia" data-pos="danh từ riêng / proper noun" data-def-en="City." data-def-vn="Thành phố." data-context-en="to Philadelphia...">Philadelphia</span>, the <span class="vocab" data-word-en="public" data-word-vn="công chúng" data-pos="danh từ / noun" data-def-en="People." data-def-vn="Công chúng." data-context-en="the public was shocked.">public</span> was <span class="vocab" data-word-en="shocked" data-word-vn="sốc" data-pos="tính từ / adjective" data-def-en="Surprised badly." data-def-vn="Sốc." data-context-en="was shocked.">shocked</span>. Holmes was <span class="vocab" data-word-en="arrested" data-word-vn="bị bắt" data-pos="động từ / verb" data-def-en="Taken by police." data-def-vn="Bị bắt giữ." data-context-en="Holmes was arrested...">arrested</span> and <span class="vocab" data-word-en="taken" data-word-vn="đưa" data-pos="động từ / verb" data-def-en="Brought." data-def-vn="Đưa đến." data-context-en="and taken to court.">taken</span> to <span class="vocab" data-word-en="court" data-word-vn="tòa án" data-pos="danh từ / noun" data-def-en="Law place." data-def-vn="Tòa án." data-context-en="to court.">court</span>. His <span class="vocab" data-word-en="lawyers" data-word-vn="luật sư" data-pos="danh từ / noun" data-def-en="Legal representatives." data-def-vn="Luật sư." data-context-en="His lawyers argued...">lawyers</span> <span class="vocab" data-word-en="argued" data-word-vn="lập luận" data-pos="động từ / verb" data-def-en="Claimed." data-def-vn="Lập luận." data-context-en="argued that he acted...">argued</span> that he <span class="vocab" data-word-en="acted" data-word-vn="hành động" data-pos="động từ / verb" data-def-en="Did." data-def-vn="Hành động." data-context-en="he acted out of necessity...">acted</span> out of <span class="vocab" data-word-en="necessity" data-word-vn="sự cần thiết" data-pos="danh từ / noun" data-def-en="Need." data-def-vn="Sự cần thiết." data-context-en="out of necessity...">necessity</span>—that it was <span class="vocab" data-word-en="better" data-word-vn="tốt hơn" data-pos="tính từ / adjective" data-def-en="Preferable." data-def-vn="Tốt hơn." data-context-en="better for some to die...">better</span> for some to <span class="vocab" data-word-en="die" data-word-vn="chết" data-pos="động từ / verb" data-def-en="Perish." data-def-vn="Chết." data-context-en="some to die so...">die</span> so that <span class="vocab" data-word-en="others" data-word-vn="những người khác" data-pos="đại từ / pronoun" data-def-en="Remaining people." data-def-vn="Những người khác." data-context-en="so that others could live.">others</span> could <span class="vocab" data-word-en="live" data-word-vn="sống" data-pos="động từ / verb" data-def-en="Survive." data-def-vn="Sống." data-context-en="others could live.">live</span>.
+    </p>
+
+    <p>
+        The <span class="vocab" data-word-en="jury" data-word-vn="ban bồi thẩm" data-pos="danh từ / noun" data-def-en="Decision group." data-def-vn="Ban bồi thẩm." data-context-en="The jury disagreed.">jury</span> <span class="vocab" data-word-en="disagreed" data-word-vn="không đồng ý" data-pos="động từ / verb" data-def-en="Had different opinion." data-def-vn="Không đồng ý." data-context-en="disagreed.">disagreed</span>. They <span class="vocab" data-word-en="believed" data-word-vn="tin" data-pos="động từ / verb" data-def-en="Thought." data-def-vn="Tin rằng." data-context-en="They believed that...">believed</span> that if a <span class="vocab" data-word-en="sacrifice" data-word-vn="hy sinh" data-pos="danh từ / noun" data-def-en="Giving up." data-def-vn="Hy sinh." data-context-en="if a sacrifice was necessary...">sacrifice</span> was <span class="vocab" data-word-en="necessary" data-word-vn="cần thiết" data-pos="tính từ / adjective" data-def-en="Required." data-def-vn="Cần thiết." data-context-en="was necessary...">necessary</span>, the <span class="vocab" data-word-en="crew" data-word-vn="thủy thủ" data-pos="danh từ / noun" data-def-en="Sailors." data-def-vn="Thủy thủ." data-context-en="the crew should have...">crew</span> should have <span class="vocab" data-word-en="drawn" data-word-vn="rút" data-pos="động từ / verb" data-def-en="Selected by chance." data-def-vn="Rút thăm." data-context-en="drawn lots...">drawn</span> <span class="vocab" data-word-en="lots" data-word-vn="thăm" data-pos="danh từ / noun" data-def-en="Chance method." data-def-vn="Thăm." data-context-en="drawn lots...">lots</span> (a <span class="vocab" data-word-en="game" data-word-vn="trò chơi" data-pos="danh từ / noun" data-def-en="Activity." data-def-vn="Trò chơi." data-context-en="a game of chance...">game</span> of <span class="vocab" data-word-en="chance" data-word-vn="may rủi" data-pos="danh từ / noun" data-def-en="Luck." data-def-vn="May rủi." data-context-en="of chance...">chance</span>) to make the <span class="vocab" data-word-en="decision" data-word-vn="quyết định" data-pos="danh từ / noun" data-def-en="Choice." data-def-vn="Quyết định." data-context-en="make the decision fair.">decision</span> <span class="vocab" data-word-en="fair" data-word-vn="công bằng" data-pos="tính từ / adjective" data-def-en="Just." data-def-vn="Công bằng." data-context-en="decision fair.">fair</span>. Holmes was <span class="vocab" data-word-en="found" data-word-vn="bị" data-pos="động từ / verb" data-def-en="Declared." data-def-vn="Bị tuyên." data-context-en="Holmes was found guilty...">found</span> <span class="vocab" data-word-en="guilty" data-word-vn="có tội" data-pos="tính từ / adjective" data-def-en="Responsible for crime." data-def-vn="Có tội." data-context-en="found guilty of a serious crime...">guilty</span> of a <span class="vocab" data-word-en="serious" data-word-vn="nghiêm trọng" data-pos="tính từ / adjective" data-def-en="Severe." data-def-vn="Nghiêm trọng." data-context-en="serious crime...">serious</span> <span class="vocab" data-word-en="crime" data-word-vn="tội ác" data-pos="danh từ / noun" data-def-en="Offense." data-def-vn="Tội phạm." data-context-en="serious crime...">crime</span>, though the <span class="vocab" data-word-en="judge" data-word-vn="thẩm phán" data-pos="danh từ / noun" data-def-en="Court official." data-def-vn="Thẩm phán." data-context-en="the judge gave him...">judge</span> gave him a <span class="vocab" data-word-en="light" data-word-vn="nhẹ" data-pos="tính từ / adjective" data-def-en="Mild." data-def-vn="Nhẹ." data-context-en="a light sentence...">light</span> <span class="vocab" data-word-en="sentence" data-word-vn="án phạt" data-pos="danh từ / noun" data-def-en="Punishment." data-def-vn="Án phạt." data-context-en="light sentence of six months...">sentence</span> of <span class="vocab" data-word-en="six" data-word-vn="sáu" data-pos="số / number" data-def-en="Number." data-def-vn="Sáu." data-context-en="six months...">six</span> <span class="vocab" data-word-en="months" data-word-vn="tháng" data-pos="danh từ / noun" data-def-en="Time periods." data-def-vn="Tháng." data-context-en="six months...">months</span> because of the <span class="vocab" data-word-en="extreme" data-word-vn="cực đoan" data-pos="tính từ / adjective" data-def-en="Severe." data-def-vn="Cực kỳ." data-context-en="extreme circumstances.">extreme</span> <span class="vocab" data-word-en="circumstances" data-word-vn="hoàn cảnh" data-pos="danh từ / noun" data-def-en="Conditions." data-def-vn="Hoàn cảnh." data-context-en="extreme circumstances.">circumstances</span>. <span class="vocab" data-word-en="even" data-word-vn="ngay cả" data-pos="trạng từ / adverb" data-def-en="Also." data-def-vn="Ngay cả." data-context-en="Even today...">even</span> <span class="vocab" data-word-en="today" data-word-vn="ngày nay" data-pos="trạng từ / adverb" data-def-en="Now." data-def-vn="Ngày nay." data-context-en="Even today...">today</span>, his <span class="vocab" data-word-en="story" data-word-vn="câu chuyện" data-pos="danh từ / noun" data-def-en="Narrative." data-def-vn="Câu chuyện." data-context-en="his story is used...">story</span> is <span class="vocab" data-word-en="used" data-word-vn="được dùng" data-pos="động từ / verb" data-def-en="Employed." data-def-vn="Được sử dụng." data-context-en="is used to teach...">used</span> to <span class="vocab" data-word-en="teach" data-word-vn="dạy" data-pos="động từ / verb" data-def-en="Instruct." data-def-vn="Dạy." data-context-en="to teach students...">teach</span> <span class="vocab" data-word-en="students" data-word-vn="học sinh" data-pos="danh từ / noun" data-def-en="Learners." data-def-vn="Học sinh." data-context-en="teach students about...">students</span> about the <span class="vocab" data-word-en="ethics" data-word-vn="đạo đức" data-pos="danh từ / noun" data-def-en="Moral principles." data-def-vn="Đạo đức." data-context-en="about the ethics of survival.">ethics</span> of <span class="vocab" data-word-en="survival" data-word-vn="sống sót" data-pos="danh từ / noun" data-def-en="Living through crisis." data-def-vn="Sống sót." data-context-en="ethics of survival.">survival</span>. The <span class="vocab" data-word-en="haunting" data-word-vn="ám ảnh" data-pos="tính từ / adjective" data-def-en="Disturbing." data-def-vn="Ám ảnh." data-context-en="The haunting question...">haunting</span> <span class="vocab" data-word-en="question" data-word-vn="câu hỏi" data-pos="danh từ / noun" data-def-en="Inquiry." data-def-vn="Câu hỏi." data-context-en="question remains today...">question</span> <span class="vocab" data-word-en="remains" data-word-vn="vẫn còn" data-pos="động từ / verb" data-def-en="Stays." data-def-vn="Vẫn còn." data-context-en="remains today...">remains</span> <span class="vocab" data-word-en="today" data-word-vn="ngày nay" data-pos="trạng từ / adverb" data-def-en="Now." data-def-vn="Ngày nay." data-context-en="remains today...">today</span>, "What would you do to <span class="vocab" data-word-en="survive" data-word-vn="sống sót" data-pos="động từ / verb" data-def-en="Stay alive." data-def-vn="Sống sót." data-context-en="to survive?">survive</span>?"
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">story</div>
+        <div class="memory-word">haunting</div>
+        <div class="memory-word">account</div>
+        <div class="memory-word">survival</div>
+        <div class="memory-word">impossible</div>
+        <div class="memory-word">choices</div>
+        <div class="memory-word">people</div>
+        <div class="memory-word">face</div>
+        <div class="memory-word">disaster</div>
+        <div class="memory-word">remains</div>
+        <div class="memory-word">famous</div>
+        <div class="memory-word">examples</div>
+        <div class="memory-word">maritime</div>
+        <div class="memory-word">law</div>
+        <div class="memory-word">history</div>
+        <div class="memory-word">collision</div>
+        <div class="memory-word">april</div>
+        <div class="memory-word">ship</div>
+        <div class="memory-word">named</div>
+        <div class="memory-word">sailing</div>
+        <div class="memory-word">carried</div>
+        <div class="memory-word">passengers</div>
+        <div class="memory-word">crew</div>
+        <div class="memory-word">members</div>
+        <div class="memory-word">thick</div>
+        <div class="memory-word">fog</div>
+        <div class="memory-word">struck</div>
+        <div class="memory-word">iceberg</div>
+        <div class="memory-word">began</div>
+        <div class="memory-word">sink</div>
+        <div class="memory-word">rapidly</div>
+        <div class="memory-word">panic</div>
+        <div class="memory-word">broke</div>
+        <div class="memory-word">out</div>
+        <div class="memory-word">lifeboats</div>
+        <div class="memory-word">captain</div>
+        <div class="memory-word">smaller</div>
+        <div class="memory-word">boat</div>
+        <div class="memory-word">crowded</div>
+        <div class="memory-word">longboat</div>
+        <div class="memory-word">tragically</div>
+        <div class="memory-word">left</div>
+        <div class="memory-word">behind</div>
+        <div class="memory-word">sinking</div>
+        <div class="memory-word">crisis</div>
+        <div class="memory-word">condition</div>
+        <div class="memory-word">leaking</div>
+        <div class="memory-word">weight</div>
+        <div class="memory-word">sit</div>
+        <div class="memory-word">dangerously</div>
+        <div class="memory-word">low</div>
+        <div class="memory-word">freezing</div>
+        <div class="memory-word">stormy</div>
+        <div class="memory-word">water</div>
+        <div class="memory-word">sailor</div>
+        <div class="memory-word">charge</div>
+        <div class="memory-word">rowing</div>
+        <div class="memory-word">known</div>
+        <div class="memory-word">hero</div>
+        <div class="memory-word">risked</div>
+        <div class="memory-word">life</div>
+        <div class="memory-word">save</div>
+        <div class="memory-word">young</div>
+        <div class="memory-word">girl</div>
+        <div class="memory-word">down</div>
+        <div class="memory-word">hours</div>
+        <div class="memory-word">later</div>
+        <div class="memory-word">storm</div>
+        <div class="memory-word">filling</div>
+        <div class="memory-word">everyone</div>
+        <div class="memory-word">terrified</div>
+        <div class="memory-word">officer</div>
+        <div class="memory-word">shouted</div>
+        <div class="memory-word">sinking</div>
+        <div class="memory-word">ordered</div>
+        <div class="memory-word">lighten</div>
+        <div class="memory-word">meant</div>
+        <div class="memory-word">go</div>
+        <div class="memory-word">sacrifice</div>
+        <div class="memory-word">sailors</div>
+        <div class="memory-word">throwing</div>
+        <div class="memory-word">ocean</div>
+        <div class="memory-word">prevent</div>
+        <div class="memory-word">flipping</div>
+        <div class="memory-word">over</div>
+        <div class="memory-word">focused</div>
+        <div class="memory-word">single</div>
+        <div class="memory-word">men</div>
+        <div class="memory-word">sparing</div>
+        <div class="memory-word">women</div>
+        <div class="memory-word">married</div>
+        <div class="memory-word">couples</div>
+        <div class="memory-word">total</div>
+        <div class="memory-word">cast</div>
+        <div class="memory-word">icy</div>
+        <div class="memory-word">sea</div>
+        <div class="memory-word">man</div>
+        <div class="memory-word">offered</div>
+        <div class="memory-word">money</div>
+        <div class="memory-word">refused</div>
+        <div class="memory-word">believing</div>
+        <div class="memory-word">die</div>
+        <div class="memory-word">immediately</div>
+        <div class="memory-word">legal</div>
+        <div class="memory-word">battle</div>
+        <div class="memory-word">survivors</div>
+        <div class="memory-word">finally</div>
+        <div class="memory-word">rescued</div>
+        <div class="memory-word">brought</div>
+        <div class="memory-word">public</div>
+        <div class="memory-word">shocked</div>
+        <div class="memory-word">arrested</div>
+        <div class="memory-word">taken</div>
+        <div class="memory-word">court</div>
+        <div class="memory-word">lawyers</div>
+        <div class="memory-word">argued</div>
+        <div class="memory-word">acted</div>
+        <div class="memory-word">necessity</div>
+        <div class="memory-word">better</div>
+        <div class="memory-word">others</div>
+        <div class="memory-word">live</div>
+        <div class="memory-word">jury</div>
+        <div class="memory-word">disagreed</div>
+        <div class="memory-word">believed</div>
+        <div class="memory-word">sacrifice</div>
+        <div class="memory-word">necessary</div>
+        <div class="memory-word">drawn</div>
+        <div class="memory-word">lots</div>
+        <div class="memory-word">game</div>
+        <div class="memory-word">chance</div>
+        <div class="memory-word">decision</div>
+        <div class="memory-word">fair</div>
+        <div class="memory-word">found</div>
+        <div class="memory-word">guilty</div>
+        <div class="memory-word">serious</div>
+        <div class="memory-word">crime</div>
+        <div class="memory-word">judge</div>
+        <div class="memory-word">light</div>
+        <div class="memory-word">sentence</div>
+        <div class="memory-word">six</div>
+        <div class="memory-word">months</div>
+        <div class="memory-word">extreme</div>
+        <div class="memory-word">circumstances</div>
+        <div class="memory-word">even</div>
+        <div class="memory-word">today</div>
+        <div class="memory-word">used</div>
+        <div class="memory-word">teach</div>
+        <div class="memory-word">students</div>
+        <div class="memory-word">ethics</div>
+        <div class="memory-word">question</div>
+        <div class="memory-word">survive</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    (el.dataset.wordEn || '').trim().toLowerCase() === targetWord || 
+                    (el.dataset.wordVn || '').trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
