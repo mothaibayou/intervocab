@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hiện Tượng Kickboxing Mona Kimura</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+			
+		
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Hiện Tượng Kickboxing Mona Kimura</h1>
+    <h2 class="subtitle">Nữ võ sĩ đá đặc biệt</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to the Story</div>
+        <audio id="audio-player" src="mona-kimura.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        Trong những <span class="vocab" data-word-en="month" data-word-vn="tháng" data-pos="danh từ / noun" data-def-en="Time period." data-def-vn="Tháng." data-context-en="Trong những tháng gần đây...">tháng</span> gần <span class="vocab" data-word-en="recent" data-word-vn="gần" data-pos="tính từ / adjective" data-def-en="Not long ago." data-def-vn="Gần đây." data-context-en="gần đây...">gần</span> <span class="vocab" data-word-en="recent" data-word-vn="đây" data-pos="trạng từ / adverb" data-def-en="Now." data-def-vn="Đây." data-context-en="gần đây...">đây</span>, một <span class="vocab" data-word-en="name" data-word-vn="cái" data-pos="danh từ / noun" data-def-en="Title." data-def-vn="Tên." data-context-en="một cái tên mới...">cái</span> <span class="vocab" data-word-en="name" data-word-vn="tên" data-pos="danh từ / noun" data-def-en="Designation." data-def-vn="Tên." data-context-en="cái tên mới...">tên</span> <span class="vocab" data-word-en="new" data-word-vn="mới" data-pos="tính từ / adjective" data-def-en="Fresh." data-def-vn="Mới." data-context-en="tên mới...">mới</span> đã <span class="vocab" data-word-en="attract" data-word-vn="thu" data-pos="động từ / verb" data-def-en="Draw." data-def-vn="Thu hút." data-context-en="đã thu hút sự chú ý...">thu</span> <span class="vocab" data-word-en="attract" data-word-vn="hút" data-pos="động từ / verb" data-def-en="Pull." data-def-vn="Hút." data-context-en="thu hút...">hút</span> sự <span class="vocab" data-word-en="attention" data-word-vn="chú" data-pos="danh từ / noun" data-def-en="Focus." data-def-vn="Chú ý." data-context-en="sự chú ý...">chú</span> <span class="vocab" data-word-en="attention" data-word-vn="ý" data-pos="danh từ / noun" data-def-en="Notice." data-def-vn="Ý." data-context-en="chú ý...">ý</span> trong <span class="vocab" data-word-en="village" data-word-vn="làng" data-pos="danh từ / noun" data-def-en="Community." data-def-vn="Làng." data-context-en="trong làng kickboxing...">làng</span> kickboxing: Mona Kimura. <span class="vocab" data-word-en="female" data-word-vn="nữ" data-pos="tính từ / adjective" data-def-en="Woman." data-def-vn="Nữ." data-context-en="Nữ võ sĩ trẻ...">nữ</span> <span class="vocab" data-word-en="fighter" data-word-vn="võ" data-pos="danh từ / noun" data-def-en="Combatant." data-def-vn="Võ sĩ." data-context-en="võ sĩ trẻ...">võ</span> <span class="vocab" data-word-en="fighter" data-word-vn="sĩ" data-pos="danh từ / noun" data-def-en="Athlete." data-def-vn="Sĩ." data-context-en="võ sĩ...">sĩ</span> <span class="vocab" data-word-en="young" data-word-vn="trẻ" data-pos="tính từ / adjective" data-def-en="Youthful." data-def-vn="Trẻ." data-context-en="trẻ người Nhật Bản...">trẻ</span> <span class="vocab" data-word-en="person" data-word-vn="người" data-pos="danh từ / noun" data-def-en="Individual." data-def-vn="Người." data-context-en="người Nhật Bản...">người</span> <span class="vocab" data-word-en="Japan" data-word-vn="Nhật" data-pos="danh từ riêng / proper noun" data-def-en="Country." data-def-vn="Nhật Bản." data-context-en="Nhật Bản...">Nhật</span> <span class="vocab" data-word-en="Japan" data-word-vn="Bản" data-pos="danh từ riêng / proper noun" data-def-en="Country." data-def-vn="Bản." data-context-en="Nhật Bản...">Bản</span> này <span class="vocab" data-word-en="become" data-word-vn="trở" data-pos="động từ / verb" data-def-en="Turn into." data-def-vn="Trở thành." data-context-en="trở nên nổi tiếng...">trở</span> <span class="vocab" data-word-en="become" data-word-vn="nên" data-pos="động từ / verb" data-def-en="Grow." data-def-vn="Nên." data-context-en="trở nên...">nên</span> <span class="vocab" data-word-en="famous" data-word-vn="nổi" data-pos="tính từ / adjective" data-def-en="Well-known." data-def-vn="Nổi tiếng." data-context-en="nổi tiếng...">nổi</span> <span class="vocab" data-word-en="famous" data-word-vn="tiếng" data-pos="tính từ / adjective" data-def-en="Renowned." data-def-vn="Tiếng." data-context-en="nổi tiếng...">tiếng</span> vì một <span class="vocab" data-word-en="reason" data-word-vn="lý" data-pos="danh từ / noun" data-def-en="Cause." data-def-vn="Lý do." data-context-en="vì một lý do...">lý</span> <span class="vocab" data-word-en="reason" data-word-vn="do" data-pos="danh từ / noun" data-def-en="Motivation." data-def-vn="Do." data-context-en="lý do...">do</span> khá <span class="vocab" data-word-en="unusual" data-word-vn="khác" data-pos="tính từ / adjective" data-def-en="Not common." data-def-vn="Khác thường." data-context-en="khác thường.">khác</span> <span class="vocab" data-word-en="unusual" data-word-vn="thường" data-pos="tính từ / adjective" data-def-en="Rare." data-def-vn="Thường." data-context-en="khác thường.">thường</span>.
+    </p>
+
+    <p>
+        Trong khi <span class="vocab" data-word-en="most" data-word-vn="hầu" data-pos="tính từ / adjective" data-def-en="Majority." data-def-vn="Hầu hết." data-context-en="hầu hết các võ sĩ...">hầu</span> <span class="vocab" data-word-en="most" data-word-vn="hết" data-pos="tính từ / adjective" data-def-en="Almost all." data-def-vn="Hết." data-context-en="hầu hết...">hết</span> các <span class="vocab" data-word-en="fighter" data-word-vn="võ" data-pos="danh từ / noun" data-def-en="Combatant." data-def-vn="Võ sĩ." data-context-en="võ sĩ kickboxing...">võ</span> <span class="vocab" data-word-en="fighter" data-word-vn="sĩ" data-pos="danh từ / noun" data-def-en="Athlete." data-def-vn="Sĩ." data-context-en="võ sĩ...">sĩ</span> kickboxing <span class="vocab" data-word-en="use" data-word-vn="sử" data-pos="động từ / verb" data-def-en="Employ." data-def-vn="Sử dụng." data-context-en="sử dụng sự kết hợp...">sử</span> <span class="vocab" data-word-en="use" data-word-vn="dụng" data-pos="động từ / verb" data-def-en="Apply." data-def-vn="Dụng." data-context-en="sử dụng...">dụng</span> sự <span class="vocab" data-word-en="combination" data-word-vn="kết" data-pos="danh từ / noun" data-def-en="Mix." data-def-vn="Kết hợp." data-context-en="kết hợp cân bằng...">kết</span> <span class="vocab" data-word-en="combination" data-word-vn="hợp" data-pos="danh từ / noun" data-def-en="Blend." data-def-vn="Hợp." data-context-en="kết hợp...">hợp</span> <span class="vocab" data-word-en="balance" data-word-vn="cân" data-pos="danh từ / noun" data-def-en="Equilibrium." data-def-vn="Cân bằng." data-context-en="cân bằng...">cân</span> <span class="vocab" data-word-en="balance" data-word-vn="bằng" data-pos="danh từ / noun" data-def-en="Harmony." data-def-vn="Bằng." data-context-en="cân bằng...">bằng</span> giữa <span class="vocab" data-word-en="punch" data-word-vn="đấm" data-pos="danh từ / noun" data-def-en="Fist strike." data-def-vn="Cú đấm." data-context-en="đấm và đá...">đấm</span> và <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="danh từ / noun" data-def-en="Foot strike." data-def-vn="Cú đá." data-context-en="và đá...">đá</span>, Kimura lại <span class="vocab" data-word-en="rely" data-word-vn="dựa" data-pos="động từ / verb" data-def-en="Depend." data-def-vn="Dựa vào." data-context-en="lại dựa vào...">dựa</span> vào các <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="danh từ / noun" data-def-en="Foot strike." data-def-vn="Cú đá." data-context-en="các đòn đá...">đá</span> cho gần <span class="vocab" data-word-en="90" data-word-vn="90" data-pos="số / number" data-def-en="Number." data-def-vn="Số." data-context-en="gần 90%...">90</span> <span class="vocab" data-word-en="percent" data-word-vn="phần" data-pos="danh từ / noun" data-def-en="Portion." data-def-vn="Phần trăm." data-context-en="90% các đợt...">phần</span> <span class="vocab" data-word-en="percent" data-word-vn="trăm" data-pos="danh từ / noun" data-def-en="Hundredth." data-def-vn="Trăm." data-context-en="phần trăm...">trăm</span> các <span class="vocab" data-word-en="attack" data-word-vn="đợt" data-pos="danh từ / noun" data-def-en="Offensive move." data-def-vn="Đợt tấn công." data-context-en="các đợt tấn công...">đợt</span> <span class="vocab" data-word-en="attack" data-word-vn="tấn" data-pos="danh từ / noun" data-def-en="Assault." data-def-vn="Tấn công." data-context-en="đợt tấn công...">tấn</span> <span class="vocab" data-word-en="attack" data-word-vn="công" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Công." data-context-en="tấn công...">công</span> của mình.
+    </p>
+
+    <p>
+        Người <span class="vocab" data-word-en="fan" data-word-vn="hâm" data-pos="danh từ / noun" data-def-en="Supporter." data-def-vn="Người hâm mộ." data-context-en="Người hâm mộ...">hâm</span> <span class="vocab" data-word-en="fan" data-word-vn="mộ" data-pos="danh từ / noun" data-def-en="Admirer." data-def-vn="Mộ." data-context-en="hâm mộ...">mộ</span> đã <span class="vocab" data-word-en="give" data-word-vn="đặt" data-pos="động từ / verb" data-def-en="Assign." data-def-vn="Đặt." data-context-en="đã đặt cho cô...">đặt</span> cho cô <span class="vocab" data-word-en="nickname" data-word-vn="biệt" data-pos="danh từ / noun" data-def-en="Alias." data-def-vn="Biệt danh." data-context-en="biệt danh...">biệt</span> <span class="vocab" data-word-en="nickname" data-word-vn="danh" data-pos="danh từ / noun" data-def-en="Title." data-def-vn="Danh." data-context-en="biệt danh...">danh</span> "Cơn <span class="vocab" data-word-en="storm" data-word-vn="lốc" data-pos="danh từ / noun" data-def-en="Whirlwind." data-def-vn="Lốc." data-context-en="Cơn Lốc...">lốc</span>" vì cô <span class="vocab" data-word-en="seem" data-word-vn="dường" data-pos="động từ / verb" data-def-en="Appear." data-def-vn="Dường như." data-context-en="dường như luôn...">dường</span> <span class="vocab" data-word-en="seem" data-word-vn="như" data-pos="động từ / verb" data-def-en="Like." data-def-vn="Như." data-context-en="dường như...">như</span> luôn <span class="vocab" data-word-en="move" data-word-vn="di" data-pos="động từ / verb" data-def-en="Travel." data-def-vn="Di chuyển." data-context-en="luôn di chuyển...">di</span> <span class="vocab" data-word-en="move" data-word-vn="chuyển" data-pos="động từ / verb" data-def-en="Shift." data-def-vn="Chuyển." data-context-en="di chuyển...">chuyển</span> <span class="vocab" data-word-en="not" data-word-vn="không" data-pos="phó từ / adverb" data-def-en="Negative." data-def-vn="Không." data-context-en="không ngừng.">không</span> <span class="vocab" data-word-en="stop" data-word-vn="ngừng" data-pos="động từ / verb" data-def-en="Cease." data-def-vn="Ngừng." data-context-en="không ngừng.">ngừng</span>. Trong một <span class="vocab" data-word-en="match" data-word-vn="trận" data-pos="danh từ / noun" data-def-en="Contest." data-def-vn="Trận đấu." data-context-en="Trong một trận đấu...">trận</span> <span class="vocab" data-word-en="match" data-word-vn="đấu" data-pos="danh từ / noun" data-def-en="Fight." data-def-vn="Đấu." data-context-en="trận đấu...">đấu</span>, cô <span class="vocab" data-word-en="continuously" data-word-vn="liên" data-pos="trạng từ / adverb" data-def-en="Without break." data-def-vn="Liên tục." data-context-en="liên tục di chuyển...">liên</span> <span class="vocab" data-word-en="continuously" data-word-vn="tục" data-pos="trạng từ / adverb" data-def-en="Ongoing." data-def-vn="Tục." data-context-en="liên tục...">tục</span> di chuyển <span class="vocab" data-word-en="around" data-word-vn="vòng" data-pos="trạng từ / adverb" data-def-en="Surrounding." data-def-vn="Vòng quanh." data-context-en="vòng quanh đối thủ...">vòng</span> <span class="vocab" data-word-en="around" data-word-vn="quanh" data-pos="trạng từ / adverb" data-def-en="Circling." data-def-vn="Quanh." data-context-en="vòng quanh...">quanh</span> <span class="vocab" data-word-en="opponent" data-word-vn="đối" data-pos="danh từ / noun" data-def-en="Rival." data-def-vn="Đối thủ." data-context-en="đối thủ...">đối</span> <span class="vocab" data-word-en="opponent" data-word-vn="thủ" data-pos="danh từ / noun" data-def-en="Adversary." data-def-vn="Thủ." data-context-en="đối thủ...">thủ</span> để <span class="vocab" data-word-en="search" data-word-vn="tìm" data-pos="động từ / verb" data-def-en="Look for." data-def-vn="Tìm kiếm." data-context-en="tìm kiếm sơ hở.">tìm</span> <span class="vocab" data-word-en="search" data-word-vn="kiếm" data-pos="động từ / verb" data-def-en="Seek." data-def-vn="Kiếm." data-context-en="tìm kiếm...">kiếm</span> <span class="vocab" data-word-en="gap" data-word-vn="sơ" data-pos="danh từ / noun" data-def-en="Opening." data-def-vn="Sơ hở." data-context-en="sơ hở.">sơ</span> <span class="vocab" data-word-en="gap" data-word-vn="hở" data-pos="danh từ / noun" data-def-en="Weakness." data-def-vn="Hở." data-context-en="sơ hở.">hở</span>. Rồi <span class="vocab" data-word-en="sudden" data-word-vn="bất" data-pos="trạng từ / adverb" data-def-en="Unexpected." data-def-vn="Bất ngờ." data-context-en="bất ngờ...">bất</span> <span class="vocab" data-word-en="sudden" data-word-vn="ngờ" data-pos="trạng từ / adverb" data-def-en="Abrupt." data-def-vn="Ngờ." data-context-en="bất ngờ...">ngờ</span>, một <span class="vocab" data-word-en="kick" data-word-vn="cú" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Cú." data-context-en="một cú đá...">cú</span> <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="danh từ / noun" data-def-en="Foot strike." data-def-vn="Đá." data-context-en="cú đá...">đá</span> sẽ <span class="vocab" data-word-en="rush" data-word-vn="lao" data-pos="động từ / verb" data-def-en="Charge." data-def-vn="Lao tới." data-context-en="lao tới...">lao</span> <span class="vocab" data-word-en="rush" data-word-vn="tới" data-pos="động từ / verb" data-def-en="Advance." data-def-vn="Tới." data-context-en="lao tới...">tới</span> <span class="vocab" data-word-en="foot" data-word-vn="chân" data-pos="danh từ / noun" data-def-en="Leg." data-def-vn="Chân." data-context-en="chân, sườn...">chân</span>, <span class="vocab" data-word-en="side" data-word-vn="sườn" data-pos="danh từ / noun" data-def-en="Body part." data-def-vn="Sườn." data-context-en="sườn...">sườn</span> hoặc <span class="vocab" data-word-en="head" data-word-vn="đầu" data-pos="danh từ / noun" data-def-en="Skull." data-def-vn="Đầu." data-context-en="đầu của đối phương.">đầu</span> của <span class="vocab" data-word-en="opponent" data-word-vn="đối" data-pos="danh từ / noun" data-def-en="Rival." data-def-vn="Đối thủ." data-context-en="đối phương.">đối</span> <span class="vocab" data-word-en="opponent" data-word-vn="phương" data-pos="danh từ / noun" data-def-en="Adversary." data-def-vn="Phương." data-context-en="đối phương.">phương</span>. Các <span class="vocab" data-word-en="opponent" data-word-vn="đối" data-pos="danh từ / noun" data-def-en="Rival." data-def-vn="Đối thủ." data-context-en="Các đối thủ...">đối</span> <span class="vocab" data-word-en="opponent" data-word-vn="thủ" data-pos="danh từ / noun" data-def-en="Adversary." data-def-vn="Thủ." data-context-en="đối thủ...">thủ</span> thường <span class="vocab" data-word-en="meet" data-word-vn="gặp" data-pos="động từ / verb" data-def-en="Encounter." data-def-vn="Gặp." data-context-en="thường gặp khó khăn...">gặp</span> <span class="vocab" data-word-en="difficulty" data-word-vn="khó" data-pos="tính từ / adjective" data-def-en="Hard." data-def-vn="Khó khăn." data-context-en="khó khăn...">khó</span> <span class="vocab" data-word-en="difficulty" data-word-vn="khăn" data-pos="tính từ / adjective" data-def-en="Trouble." data-def-vn="Khăn." data-context-en="khó khăn...">khăn</span> trong việc <span class="vocab" data-word-en="guess" data-word-vn="đoán" data-pos="động từ / verb" data-def-en="Predict." data-def-vn="Đoán." data-context-en="đoán được...">đoán</span> được <span class="vocab" data-word-en="strike" data-word-vn="đòn" data-pos="danh từ / noun" data-def-en="Attack." data-def-vn="Đòn." data-context-en="đòn tấn công...">đòn</span> <span class="vocab" data-word-en="attack" data-word-vn="tấn" data-pos="danh từ / noun" data-def-en="Assault." data-def-vn="Tấn công." data-context-en="tấn công tiếp theo...">tấn</span> <span class="vocab" data-word-en="attack" data-word-vn="công" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Công." data-context-en="tấn công...">công</span> <span class="vocab" data-word-en="next" data-word-vn="tiếp" data-pos="tính từ / adjective" data-def-en="Following." data-def-vn="Tiếp theo." data-context-en="tiếp theo...">tiếp</span> <span class="vocab" data-word-en="next" data-word-vn="theo" data-pos="tính từ / adjective" data-def-en="Coming." data-def-vn="Theo." data-context-en="tiếp theo...">theo</span> sẽ <span class="vocab" data-word-en="come" data-word-vn="xuất" data-pos="động từ / verb" data-def-en="Originate." data-def-vn="Xuất phát." data-context-en="sẽ xuất phát...">xuất</span> <span class="vocab" data-word-en="come" data-word-vn="phát" data-pos="động từ / verb" data-def-en="Emerge." data-def-vn="Phát." data-context-en="xuất phát...">phát</span> từ <span class="vocab" data-word-en="where" data-word-vn="đâu" data-pos="trạng từ / adverb" data-def-en="Which place." data-def-vn="Đâu." data-context-en="từ đâu.">đâu</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="journey" data-word-vn="hành" data-pos="danh từ / noun" data-def-en="Path." data-def-vn="Hành trình." data-context-en="Hành trình của Kimura...">hành</span> <span class="vocab" data-word-en="journey" data-word-vn="trình" data-pos="danh từ / noun" data-def-en="Course." data-def-vn="Trình." data-context-en="hành trình...">trình</span> của Kimura <span class="vocab" data-word-en="begin" data-word-vn="bắt" data-pos="động từ / verb" data-def-en="Start." data-def-vn="Bắt đầu." data-context-en="bắt đầu khi...">bắt</span> <span class="vocab" data-word-en="begin" data-word-vn="đầu" data-pos="động từ / verb" data-def-en="Commence." data-def-vn="Đầu." data-context-en="bắt đầu...">đầu</span> khi cô <span class="vocab" data-word-en="new" data-word-vn="mới" data-pos="tính từ / adjective" data-def-en="Young." data-def-vn="Mới." data-context-en="mới tám tuổi.">mới</span> <span class="vocab" data-word-en="eight" data-word-vn="tám" data-pos="số / number" data-def-en="Number." data-def-vn="Tám." data-context-en="tám tuổi.">tám</span> <span class="vocab" data-word-en="age" data-word-vn="tuổi" data-pos="danh từ / noun" data-def-en="Years." data-def-vn="Tuổi." data-context-en="tuổi.">tuổi</span>. <span class="vocab" data-word-en="father" data-word-vn="cha" data-pos="danh từ / noun" data-def-en="Dad." data-def-vn="Cha." data-context-en="Cha cô...">cha</span> cô, một <span class="vocab" data-word-en="person" data-word-vn="người" data-pos="danh từ / noun" data-def-en="Individual." data-def-vn="Người." data-context-en="một người đam mê...">người</span> <span class="vocab" data-word-en="passion" data-word-vn="đam" data-pos="danh từ / noun" data-def-en="Enthusiasm." data-def-vn="Đam mê." data-context-en="đam mê võ thuật...">đam</span> <span class="vocab" data-word-en="passion" data-word-vn="mê" data-pos="danh từ / noun" data-def-en="Love." data-def-vn="Mê." data-context-en="đam mê...">mê</span> <span class="vocab" data-word-en="martial" data-word-vn="võ" data-pos="danh từ / noun" data-def-en="Combat." data-def-vn="Võ." data-context-en="võ thuật...">võ</span> <span class="vocab" data-word-en="martial" data-word-vn="thuật" data-pos="danh từ / noun" data-def-en="Art." data-def-vn="Thuật." data-context-en="võ thuật...">thuật</span>, đã <span class="vocab" data-word-en="encourage" data-word-vn="khuyến" data-pos="động từ / verb" data-def-en="Motivate." data-def-vn="Khuyến khích." data-context-en="đã khuyến khích...">khuyến</span> <span class="vocab" data-word-en="encourage" data-word-vn="khích" data-pos="động từ / verb" data-def-en="Urge." data-def-vn="Khích lệ." data-context-en="khuyến khích...">khích</span> cô <span class="vocab" data-word-en="try" data-word-vn="thử" data-pos="động từ / verb" data-def-en="Attempt." data-def-vn="Thử." data-context-en="thử học...">thử</span> <span class="vocab" data-word-en="learn" data-word-vn="học" data-pos="động từ / verb" data-def-en="Study." data-def-vn="Học." data-context-en="học karate.">học</span> karate. <span class="vocab" data-word-en="initial" data-word-vn="ban" data-pos="tính từ / adjective" data-def-en="At first." data-def-vn="Ban đầu." data-context-en="Ban đầu...">ban</span> <span class="vocab" data-word-en="initial" data-word-vn="đầu" data-pos="tính từ / adjective" data-def-en="Beginning." data-def-vn="Đầu." data-context-en="ban đầu...">đầu</span>, cô khá <span class="vocab" data-word-en="shy" data-word-vn="nhút" data-pos="tính từ / adjective" data-def-en="Timid." data-def-vn="Nhút nhát." data-context-en="nhút nhát...">nhút</span> <span class="vocab" data-word-en="shy" data-word-vn="nhát" data-pos="tính từ / adjective" data-def-en="Bashful." data-def-vn="Nhát." data-context-en="nhút nhát...">nhát</span> và <span class="vocab" data-word-en="little" data-word-vn="ít" data-pos="tính từ / adjective" data-def-en="Small amount." data-def-vn="Ít." data-context-en="ít nói.">ít</span> <span class="vocab" data-word-en="speak" data-word-vn="nói" data-pos="động từ / verb" data-def-en="Talk." data-def-vn="Nói." data-context-en="ít nói.">nói</span>. Tuy nhiên, cô <span class="vocab" data-word-en="quick" data-word-vn="nhanh" data-pos="trạng từ / adverb" data-def-en="Fast." data-def-vn="Nhanh." data-context-en="nhanh chóng...">nhanh</span> <span class="vocab" data-word-en="quick" data-word-vn="chóng" data-pos="trạng từ / adverb" data-def-en="Rapidly." data-def-vn="Chóng." data-context-en="nhanh chóng...">chóng</span> <span class="vocab" data-word-en="discover" data-word-vn="phát" data-pos="động từ / verb" data-def-en="Find." data-def-vn="Phát hiện." data-context-en="phát hiện rằng...">phát</span> <span class="vocab" data-word-en="discover" data-word-vn="hiện" data-pos="động từ / verb" data-def-en="Realize." data-def-vn="Hiện." data-context-en="phát hiện...">hiện</span> rằng mình có <span class="vocab" data-word-en="ability" data-word-vn="khả" data-pos="danh từ / noun" data-def-en="Skill." data-def-vn="Khả năng." data-context-en="khả năng giữ...">khả</span> <span class="vocab" data-word-en="ability" data-word-vn="năng" data-pos="danh từ / noun" data-def-en="Capacity." data-def-vn="Năng." data-context-en="khả năng...">năng</span> <span class="vocab" data-word-en="keep" data-word-vn="giữ" data-pos="động từ / verb" data-def-en="Maintain." data-def-vn="Giữ." data-context-en="giữ thăng bằng...">giữ</span> <span class="vocab" data-word-en="balance" data-word-vn="thăng" data-pos="danh từ / noun" data-def-en="Stability." data-def-vn="Thăng bằng." data-context-en="thăng bằng...">thăng</span> <span class="vocab" data-word-en="balance" data-word-vn="bằng" data-pos="danh từ / noun" data-def-en="Equilibrium." data-def-vn="Bằng." data-context-en="thăng bằng...">bằng</span> và <span class="vocab" data-word-en="flexibility" data-word-vn="độ" data-pos="danh từ / noun" data-def-en="Suppleness." data-def-vn="Độ." data-context-en="độ dẻo dai...">độ</span> <span class="vocab" data-word-en="flexibility" data-word-vn="dẻo" data-pos="danh từ / noun" data-def-en="Bendability." data-def-vn="Dẻo." data-context-en="dẻo dai...">dẻo</span> <span class="vocab" data-word-en="flexibility" data-word-vn="dai" data-pos="danh từ / noun" data-def-en="Elasticity." data-def-vn="Dai." data-context-en="dẻo dai...">dai</span> <span class="vocab" data-word-en="special" data-word-vn="đặc" data-pos="tính từ / adjective" data-def-en="Unique." data-def-vn="Đặc biệt." data-context-en="đặc biệt.">đặc</span> <span class="vocab" data-word-en="special" data-word-vn="biệt" data-pos="tính từ / adjective" data-def-en="Distinct." data-def-vn="Biệt." data-context-en="đặc biệt.">biệt</span>. Các <span class="vocab" data-word-en="coach" data-word-vn="huấn" data-pos="danh từ / noun" data-def-en="Trainer." data-def-vn="Huấn luyện viên." data-context-en="các huấn luyện viên...">huấn</span> <span class="vocab" data-word-en="coach" data-word-vn="luyện" data-pos="danh từ / noun" data-def-en="Instructor." data-def-vn="Luyện." data-context-en="huấn luyện viên...">luyện</span> <span class="vocab" data-word-en="coach" data-word-vn="viên" data-pos="danh từ / noun" data-def-en="Trainer." data-def-vn="Viên." data-context-en="huấn luyện viên...">viên</span> <span class="vocab" data-word-en="notice" data-word-vn="nhận" data-pos="động từ / verb" data-def-en="Observe." data-def-vn="Nhận thấy." data-context-en="nhận thấy...">nhận</span> <span class="vocab" data-word-en="notice" data-word-vn="thấy" data-pos="động từ / verb" data-def-en="See." data-def-vn="Thấy." data-context-en="nhận thấy...">thấy</span> những <span class="vocab" data-word-en="kick" data-word-vn="cú" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Cú." data-context-en="cú đá...">cú</span> <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="danh từ / noun" data-def-en="Foot strike." data-def-vn="Đá." data-context-en="cú đá...">đá</span> của cô <span class="vocab" data-word-en="fast" data-word-vn="nhanh" data-pos="tính từ / adjective" data-def-en="Quick." data-def-vn="Nhanh." data-context-en="nhanh hơn...">nhanh</span> <span class="vocab" data-word-en="fast" data-word-vn="hơn" data-pos="trạng từ / adverb" data-def-en="More." data-def-vn="Hơn." data-context-en="nhanh hơn...">hơn</span> và <span class="vocab" data-word-en="strong" data-word-vn="mạnh" data-pos="tính từ / adjective" data-def-en="Powerful." data-def-vn="Mạnh." data-context-en="mạnh hơn...">mạnh</span> <span class="vocab" data-word-en="strong" data-word-vn="hơn" data-pos="trạng từ / adverb" data-def-en="More." data-def-vn="Hơn." data-context-en="mạnh hơn...">hơn</span> những <span class="vocab" data-word-en="student" data-word-vn="học" data-pos="danh từ / noun" data-def-en="Learner." data-def-vn="Học viên." data-context-en="học viên khác...">học</span> <span class="vocab" data-word-en="student" data-word-vn="viên" data-pos="danh từ / noun" data-def-en="Pupil." data-def-vn="Viên." data-context-en="học viên...">viên</span> <span class="vocab" data-word-en="other" data-word-vn="khác" data-pos="tính từ / adjective" data-def-en="Different." data-def-vn="Khác." data-context-en="khác cùng...">khác</span> cùng <span class="vocab" data-word-en="age" data-word-vn="độ" data-pos="danh từ / noun" data-def-en="Years." data-def-vn="Độ tuổi." data-context-en="cùng độ tuổi.">độ</span> <span class="vocab" data-word-en="age" data-word-vn="tuổi" data-pos="danh từ / noun" data-def-en="Age." data-def-vn="Tuổi." data-context-en="độ tuổi.">tuổi</span>.
+    </p>
+
+    <p>
+        Khi <span class="vocab" data-word-en="step" data-word-vn="bước" data-pos="động từ / verb" data-def-en="Enter." data-def-vn="Bước vào." data-context-en="Khi bước vào...">bước</span> <span class="vocab" data-word-en="step" data-word-vn="vào" data-pos="động từ / verb" data-def-en="Into." data-def-vn="Vào." data-context-en="bước vào...">vào</span> <span class="vocab" data-word-en="teen" data-word-vn="thiếu" data-pos="danh từ / noun" data-def-en="Adolescent." data-def-vn="Thiếu niên." data-context-en="tuổi thiếu niên...">thiếu</span> <span class="vocab" data-word-en="teen" data-word-vn="niên" data-pos="danh từ / noun" data-def-en="Youth." data-def-vn="Niên." data-context-en="thiếu niên...">niên</span>, Kimura <span class="vocab" data-word-en="change" data-word-vn="chuyển" data-pos="động từ / verb" data-def-en="Switch." data-def-vn="Chuyển." data-context-en="chuyển sang...">chuyển</span> <span class="vocab" data-word-en="change" data-word-vn="sang" data-pos="động từ / verb" data-def-en="To." data-def-vn="Sang." data-context-en="chuyển sang...">sang</span> <span class="vocab" data-word-en="practice" data-word-vn="tập" data-pos="động từ / verb" data-def-en="Train." data-def-vn="Tập." data-context-en="tập kickboxing.">tập</span> kickboxing. Các <span class="vocab" data-word-en="coach" data-word-vn="huấn" data-pos="danh từ / noun" data-def-en="Trainer." data-def-vn="Huấn luyện viên." data-context-en="các huấn luyện viên...">huấn</span> <span class="vocab" data-word-en="coach" data-word-vn="luyện" data-pos="danh từ / noun" data-def-en="Instructor." data-def-vn="Luyện." data-context-en="huấn luyện viên...">luyện</span> <span class="vocab" data-word-en="coach" data-word-vn="viên" data-pos="danh từ / noun" data-def-en="Trainer." data-def-vn="Viên." data-context-en="huấn luyện viên...">viên</span> <span class="vocab" data-word-en="immediately" data-word-vn="ngay" data-pos="trạng từ / adverb" data-def-en="At once." data-def-vn="Ngay." data-context-en="ngay lập tức...">ngay</span> <span class="vocab" data-word-en="immediately" data-word-vn="lập" data-pos="trạng từ / adverb" data-def-en="Straightaway." data-def-vn="Lập tức." data-context-en="ngay lập tức...">lập</span> <span class="vocab" data-word-en="immediately" data-word-vn="tức" data-pos="trạng từ / adverb" data-def-en="Promptly." data-def-vn="Tức." data-context-en="ngay lập tức...">tức</span> <span class="vocab" data-word-en="try" data-word-vn="cố" data-pos="động từ / verb" data-def-en="Attempt." data-def-vn="Cố gắng." data-context-en="cố gắng cải thiện...">cố</span> <span class="vocab" data-word-en="try" data-word-vn="gắng" data-pos="động từ / verb" data-def-en="Endeavor." data-def-vn="Gắng." data-context-en="cố gắng...">gắng</span> <span class="vocab" data-word-en="improve" data-word-vn="cải" data-pos="động từ / verb" data-def-en="Enhance." data-def-vn="Cải thiện." data-context-en="cải thiện kỹ năng...">cải</span> <span class="vocab" data-word-en="improve" data-word-vn="thiện" data-pos="động từ / verb" data-def-en="Better." data-def-vn="Thiện." data-context-en="cải thiện...">thiện</span> <span class="vocab" data-word-en="skill" data-word-vn="kỹ" data-pos="danh từ / noun" data-def-en="Ability." data-def-vn="Kỹ năng." data-context-en="kỹ năng đấm...">kỹ</span> <span class="vocab" data-word-en="skill" data-word-vn="năng" data-pos="danh từ / noun" data-def-en="Technique." data-def-vn="Năng." data-context-en="kỹ năng...">năng</span> <span class="vocab" data-word-en="punch" data-word-vn="đấm" data-pos="danh từ / noun" data-def-en="Fist." data-def-vn="Đấm." data-context-en="kỹ năng đấm...">đấm</span> của cô vì họ cho rằng cô <span class="vocab" data-word-en="depend" data-word-vn="phụ" data-pos="động từ / verb" data-def-en="Rely." data-def-vn="Phụ thuộc." data-context-en="phụ thuộc quá nhiều...">phụ</span> <span class="vocab" data-word-en="depend" data-word-vn="thuộc" data-pos="động từ / verb" data-def-en="Rely on." data-def-vn="Thuộc." data-context-en="phụ thuộc...">thuộc</span> quá nhiều vào các <span class="vocab" data-word-en="kick" data-word-vn="đòn" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Đòn." data-context-en="các đòn đá.">đòn</span> <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="danh từ / noun" data-def-en="Foot strike." data-def-vn="Đá." data-context-en="đòn đá.">đá</span>. Nhưng Kimura lại có một <span class="vocab" data-word-en="thought" data-word-vn="suy" data-pos="danh từ / noun" data-def-en="Idea." data-def-vn="Suy nghĩ." data-context-en="một suy nghĩ khác.">suy</span> <span class="vocab" data-word-en="thought" data-word-vn="nghĩ" data-pos="danh từ / noun" data-def-en="Opinion." data-def-vn="Nghĩ." data-context-en="suy nghĩ...">nghĩ</span> <span class="vocab" data-word-en="different" data-word-vn="khác" data-pos="tính từ / adjective" data-def-en="Not same." data-def-vn="Khác." data-context-en="khác.">khác</span>.
+    </p>
+
+    <p>
+        “Ai cũng <span class="vocab" data-word-en="expect" data-word-vn="mong" data-pos="động từ / verb" data-def-en="Anticipate." data-def-vn="Mong đợi." data-context-en="Ai cũng mong đợi...">mong</span> <span class="vocab" data-word-en="expect" data-word-vn="đợi" data-pos="động từ / verb" data-def-en="Await." data-def-vn="Đợi." data-context-en="mong đợi...">đợi</span> một <span class="vocab" data-word-en="fighter" data-word-vn="võ" data-pos="danh từ / noun" data-def-en="Combatant." data-def-vn="Võ sĩ." data-context-en="võ sĩ kickboxing...">võ</span> <span class="vocab" data-word-en="fighter" data-word-vn="sĩ" data-pos="danh từ / noun" data-def-en="Athlete." data-def-vn="Sĩ." data-context-en="võ sĩ...">sĩ</span> kickboxing sẽ <span class="vocab" data-word-en="use" data-word-vn="sử" data-pos="động từ / verb" data-def-en="Employ." data-def-vn="Sử dụng." data-context-en="sẽ sử dụng...">sử</span> <span class="vocab" data-word-en="use" data-word-vn="dụng" data-pos="động từ / verb" data-def-en="Apply." data-def-vn="Dụng." data-context-en="sử dụng...">dụng</span> các <span class="vocab" data-word-en="punch" data-word-vn="cú" data-pos="danh từ / noun" data-def-en="Fist." data-def-vn="Cú." data-context-en="các cú đấm.">cú</span> <span class="vocab" data-word-en="punch" data-word-vn="đấm" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Đấm." data-context-en="cú đấm.">đấm</span>,” cô <span class="vocab" data-word-en="once" data-word-vn="từng" data-pos="trạng từ / adverb" data-def-en="Formerly." data-def-vn="Từng." data-context-en="cô từng nói...">từng</span> <span class="vocab" data-word-en="say" data-word-vn="nói" data-pos="động từ / verb" data-def-en="Speak." data-def-vn="Nói." data-context-en="nói với...">nói</span> với một <span class="vocab" data-word-en="reporter" data-word-vn="phóng" data-pos="danh từ / noun" data-def-en="Journalist." data-def-vn="Phóng viên." data-context-en="phóng viên.">phóng</span> <span class="vocab" data-word-en="reporter" data-word-vn="viên" data-pos="danh từ / noun" data-def-en="Journalist." data-def-vn="Viên." data-context-en="phóng viên.">viên</span>. “Nếu tôi có thể <span class="vocab" data-word-en="become" data-word-vn="trở" data-pos="động từ / verb" data-def-en="Turn." data-def-vn="Trở thành." data-context-en="trở thành người...">trở</span> <span class="vocab" data-word-en="become" data-word-vn="thành" data-pos="động từ / verb" data-def-en="Grow into." data-def-vn="Thành." data-context-en="trở thành...">thành</span> người <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="động từ / verb" data-def-en="Foot strike." data-def-vn="Đá." data-context-en="người đá giỏi...">đá</span> <span class="vocab" data-word-en="best" data-word-vn="giỏi" data-pos="tính từ / adjective" data-def-en="Top." data-def-vn="Giỏi nhất." data-context-en="giỏi nhất...">giỏi</span> <span class="vocab" data-word-en="best" data-word-vn="nhất" data-pos="tính từ / adjective" data-def-en="Supreme." data-def-vn="Nhất." data-context-en="giỏi nhất...">nhất</span> <span class="vocab" data-word-en="sport" data-word-vn="môn" data-pos="danh từ / noun" data-def-en="Discipline." data-def-vn="Môn." data-context-en="môn thể thao...">môn</span> <span class="vocab" data-word-en="sport" data-word-vn="thể" data-pos="danh từ / noun" data-def-en="Activity." data-def-vn="Thể." data-context-en="môn thể thao...">thể</span> <span class="vocab" data-word-en="sport" data-word-vn="thao" data-pos="danh từ / noun" data-def-en="Athletics." data-def-vn="Thao." data-context-en="thể thao...">thao</span> này, tôi có thể <span class="vocab" data-word-en="create" data-word-vn="tạo" data-pos="động từ / verb" data-def-en="Make." data-def-vn="Tạo ra." data-context-en="tạo ra phong cách...">tạo</span> <span class="vocab" data-word-en="create" data-word-vn="ra" data-pos="động từ / verb" data-def-en="Produce." data-def-vn="Ra." data-context-en="tạo ra...">ra</span> <span class="vocab" data-word-en="style" data-word-vn="phong" data-pos="danh từ / noun" data-def-en="Approach." data-def-vn="Phong cách." data-context-en="phong cách...">phong</span> <span class="vocab" data-word-en="style" data-word-vn="cách" data-pos="danh từ / noun" data-def-en="Method." data-def-vn="Cách." data-context-en="phong cách...">cách</span> của <span class="vocab" data-word-en="own" data-word-vn="riêng" data-pos="tính từ / adjective" data-def-en="Personal." data-def-vn="Riêng." data-context-en="của riêng mình.">riêng</span> <span class="vocab" data-word-en="own" data-word-vn="mình" data-pos="đại từ / pronoun" data-def-en="Self." data-def-vn="Mình." data-context-en="riêng mình.">mình</span>.”
+    </p>
+
+    <p>
+        Nhiều <span class="vocab" data-word-en="expert" data-word-vn="chuyên" data-pos="danh từ / noun" data-def-en="Specialist." data-def-vn="Chuyên gia." data-context-en="Nhiều chuyên gia...">chuyên</span> <span class="vocab" data-word-en="expert" data-word-vn="gia" data-pos="danh từ / noun" data-def-en="Professional." data-def-vn="Gia." data-context-en="chuyên gia...">gia</span> đã <span class="vocab" data-word-en="doubt" data-word-vn="nghi" data-pos="động từ / verb" data-def-en="Question." data-def-vn="Nghi ngờ." data-context-en="nghi ngờ chiến lược...">nghi</span> <span class="vocab" data-word-en="doubt" data-word-vn="ngờ" data-pos="động từ / verb" data-def-en="Suspect." data-def-vn="Ngờ." data-context-en="nghi ngờ...">ngờ</span> <span class="vocab" data-word-en="strategy" data-word-vn="chiến" data-pos="danh từ / noun" data-def-en="Plan." data-def-vn="Chiến lược." data-context-en="chiến lược của cô.">chiến</span> <span class="vocab" data-word-en="strategy" data-word-vn="lược" data-pos="danh từ / noun" data-def-en="Tactic." data-def-vn="Lược." data-context-en="chiến lược...">lược</span> của cô. Họ cho rằng những <span class="vocab" data-word-en="opponent" data-word-vn="đối" data-pos="danh từ / noun" data-def-en="Rival." data-def-vn="Đối thủ." data-context-en="đối thủ giàu...">đối</span> <span class="vocab" data-word-en="opponent" data-word-vn="thủ" data-pos="danh từ / noun" data-def-en="Adversary." data-def-vn="Thủ." data-context-en="đối thủ...">thủ</span> <span class="vocab" data-word-en="rich" data-word-vn="giàu" data-pos="tính từ / adjective" data-def-en="Experienced." data-def-vn="Giàu." data-context-en="giàu kinh nghiệm...">giàu</span> <span class="vocab" data-word-en="experience" data-word-vn="kinh" data-pos="danh từ / noun" data-def-en="Knowledge." data-def-vn="Kinh nghiệm." data-context-en="kinh nghiệm...">kinh</span> <span class="vocab" data-word-en="experience" data-word-vn="nghiệm" data-pos="danh từ / noun" data-def-en="Expertise." data-def-vn="Nghiệm." data-context-en="kinh nghiệm...">nghiệm</span> <span class="vocab" data-word-en="final" data-word-vn="cuối" data-pos="tính từ / adjective" data-def-en="Last." data-def-vn="Cuối." data-context-en="cuối cùng...">cuối</span> <span class="vocab" data-word-en="final" data-word-vn="cùng" data-pos="tính từ / adjective" data-def-en="Ultimate." data-def-vn="Cùng." data-context-en="cuối cùng...">cùng</span> sẽ <span class="vocab" data-word-en="find" data-word-vn="tìm" data-pos="động từ / verb" data-def-en="Discover." data-def-vn="Tìm." data-context-en="tìm ra cách...">tìm</span> <span class="vocab" data-word-en="find" data-word-vn="ra" data-pos="động từ / verb" data-def-en="Locate." data-def-vn="Ra." data-context-en="tìm ra...">ra</span> <span class="vocab" data-word-en="way" data-word-vn="cách" data-pos="danh từ / noun" data-def-en="Method." data-def-vn="Cách." data-context-en="cách hóa giải...">cách</span> <span class="vocab" data-word-en="solve" data-word-vn="hóa" data-pos="động từ / verb" data-def-en="Counter." data-def-vn="Hóa giải." data-context-en="hóa giải...">hóa</span> <span class="vocab" data-word-en="solve" data-word-vn="giải" data-pos="động từ / verb" data-def-en="Resolve." data-def-vn="Giải." data-context-en="hóa giải...">giải</span> các <span class="vocab" data-word-en="attack" data-word-vn="đòn" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Đòn." data-context-en="các đòn tấn công...">đòn</span> <span class="vocab" data-word-en="attack" data-word-vn="tấn" data-pos="danh từ / noun" data-def-en="Offensive." data-def-vn="Tấn công." data-context-en="đòn tấn công...">tấn</span> <span class="vocab" data-word-en="attack" data-word-vn="công" data-pos="danh từ / noun" data-def-en="Move." data-def-vn="Công." data-context-en="tấn công...">công</span> của cô. <span class="vocab" data-word-en="but" data-word-vn="thế" data-pos="liên từ / conjunction" data-def-en="However." data-def-vn="Thế nhưng." data-context-en="Thế nhưng...">thế</span> <span class="vocab" data-word-en="but" data-word-vn="nhưng" data-pos="liên từ / conjunction" data-def-en="Yet." data-def-vn="Nhưng." data-context-en="thế nhưng...">nhưng</span>, <span class="vocab" data-word-en="end" data-word-vn="hết" data-pos="động từ / verb" data-def-en="Finish." data-def-vn="Hết." data-context-en="hết trận này...">hết</span> <span class="vocab" data-word-en="end" data-word-vn="trận" data-pos="danh từ / noun" data-def-en="Match." data-def-vn="Trận." data-context-en="trận này...">trận</span> này đến <span class="vocab" data-word-en="end" data-word-vn="trận" data-pos="danh từ / noun" data-def-en="Match." data-def-vn="Trận." data-context-en="đến trận khác...">trận</span> <span class="vocab" data-word-en="other" data-word-vn="khác" data-pos="tính từ / adjective" data-def-en="Different." data-def-vn="Khác." data-context-en="khác...">khác</span>, Kimura vẫn <span class="vocab" data-word-en="continue" data-word-vn="tiếp" data-pos="động từ / verb" data-def-en="Keep." data-def-vn="Tiếp tục." data-context-en="vẫn tiếp tục...">tiếp</span> <span class="vocab" data-word-en="continue" data-word-vn="tục" data-pos="động từ / verb" data-def-en="Proceed." data-def-vn="Tục." data-context-en="tiếp tục...">tục</span> <span class="vocab" data-word-en="win" data-word-vn="giành" data-pos="động từ / verb" data-def-en="Victory." data-def-vn="Giành." data-context-en="giành chiến thắng.">giành</span> <span class="vocab" data-word-en="win" data-word-vn="chiến" data-pos="danh từ / noun" data-def-en="Victory." data-def-vn="Chiến thắng." data-context-en="chiến thắng.">chiến</span> <span class="vocab" data-word-en="win" data-word-vn="thắng" data-pos="danh từ / noun" data-def-en="Triumph." data-def-vn="Thắng." data-context-en="chiến thắng.">thắng</span>. Những <span class="vocab" data-word-en="kick" data-word-vn="cú" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Cú." data-context-en="cú đá xoay...">cú</span> <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="danh từ / noun" data-def-en="Foot strike." data-def-vn="Đá." data-context-en="cú đá...">đá</span> <span class="vocab" data-word-en="spin" data-word-vn="xoay" data-pos="động từ / verb" data-def-en="Rotate." data-def-vn="Xoay." data-context-en="xoay gót...">xoay</span> <span class="vocab" data-word-en="heel" data-word-vn="gót" data-pos="danh từ / noun" data-def-en="Back of foot." data-def-vn="Gót chân." data-context-en="gót ra sau...">gót</span> <span class="vocab" data-word-en="after" data-word-vn="ra" data-pos="trạng từ / adverb" data-def-en="Backward." data-def-vn="Ra sau." data-context-en="ra sau...">ra</span> <span class="vocab" data-word-en="after" data-word-vn="sau" data-pos="trạng từ / adverb" data-def-en="Following." data-def-vn="Sau." data-context-en="ra sau...">sau</span> của cô <span class="vocab" data-word-en="special" data-word-vn="đặc" data-pos="tính từ / adjective" data-def-en="Particular." data-def-vn="Đặc biệt." data-context-en="đặc biệt đáng sợ.">đặc</span> <span class="vocab" data-word-en="special" data-word-vn="biệt" data-pos="tính từ / adjective" data-def-en="Unique." data-def-vn="Biệt." data-context-en="đặc biệt...">biệt</span> <span class="vocab" data-word-en="scary" data-word-vn="đáng" data-pos="tính từ / adjective" data-def-en="Frightening." data-def-vn="Đáng sợ." data-context-en="đáng sợ.">đáng</span> <span class="vocab" data-word-en="scary" data-word-vn="sợ" data-pos="tính từ / adjective" data-def-en="Terrifying." data-def-vn="Sợ." data-context-en="đáng sợ.">sợ</span>. Nhiều <span class="vocab" data-word-en="opponent" data-word-vn="đối" data-pos="danh từ / noun" data-def-en="Rival." data-def-vn="Đối thủ." data-context-en="đối thủ...">đối</span> <span class="vocab" data-word-en="opponent" data-word-vn="thủ" data-pos="danh từ / noun" data-def-en="Adversary." data-def-vn="Thủ." data-context-en="đối thủ...">thủ</span> <span class="vocab" data-word-en="suffer" data-word-vn="bị" data-pos="động từ / verb" data-def-en="Receive." data-def-vn="Bị." data-context-en="bị đánh ngã...">bị</span> <span class="vocab" data-word-en="fall" data-word-vn="đánh" data-pos="động từ / verb" data-def-en="Beaten." data-def-vn="Đánh." data-context-en="đánh ngã...">đánh</span> <span class="vocab" data-word-en="fall" data-word-vn="ngã" data-pos="động từ / verb" data-def-en="Drop." data-def-vn="Ngã." data-context-en="ngã...">ngã</span> trước khi họ <span class="vocab" data-word-en="realize" data-word-vn="kịp" data-pos="động từ / verb" data-def-en="Have time." data-def-vn="Kịp." data-context-en="kịp nhận ra...">kịp</span> <span class="vocab" data-word-en="realize" data-word-vn="nhận" data-pos="động từ / verb" data-def-en="Understand." data-def-vn="Nhận." data-context-en="nhận ra...">nhận</span> <span class="vocab" data-word-en="realize" data-word-vn="ra" data-pos="động từ / verb" data-def-en="Perceive." data-def-vn="Ra." data-context-en="nhận ra...">ra</span> <span class="vocab" data-word-en="what" data-word-vn="chuyện" data-pos="đại từ / pronoun" data-def-en="Thing." data-def-vn="Chuyện." data-context-en="chuyện gì...">chuyện</span> <span class="vocab" data-word-en="what" data-word-vn="gì" data-pos="đại từ / pronoun" data-def-en="Which." data-def-vn="Gì." data-context-en="gì đã...">gì</span> đã <span class="vocab" data-word-en="happen" data-word-vn="xảy" data-pos="động từ / verb" data-def-en="Occur." data-def-vn="Xảy ra." data-context-en="đã xảy ra.">xảy</span> <span class="vocab" data-word-en="happen" data-word-vn="ra" data-pos="động từ / verb" data-def-en="Take place." data-def-vn="Ra." data-context-en="xảy ra.">ra</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="challenge" data-word-vn="thử" data-pos="danh từ / noun" data-def-en="Test." data-def-vn="Thử thách." data-context-en="Thử thách lớn nhất...">thử</span> <span class="vocab" data-word-en="challenge" data-word-vn="thách" data-pos="danh từ / noun" data-def-en="Difficulty." data-def-vn="Thách." data-context-en="thử thách...">thách</span> <span class="vocab" data-word-en="big" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Major." data-def-vn="Lớn." data-context-en="lớn nhất...">lớn</span> <span class="vocab" data-word-en="big" data-word-vn="nhất" data-pos="tính từ / adjective" data-def-en="Greatest." data-def-vn="Nhất." data-context-en="lớn nhất...">nhất</span> của cô <span class="vocab" data-word-en="come" data-word-vn="đến" data-pos="động từ / verb" data-def-en="Arrive." data-def-vn="Đến." data-context-en="đến trong...">đến</span> trong một <span class="vocab" data-word-en="match" data-word-vn="trận" data-pos="danh từ / noun" data-def-en="Fight." data-def-vn="Trận." data-context-en="trận tranh...">trận</span> <span class="vocab" data-word-en="match" data-word-vn="tranh" data-pos="động từ / verb" data-def-en="Compete." data-def-vn="Tranh." data-context-en="tranh đai...">tranh</span> <span class="vocab" data-word-en="title" data-word-vn="đai" data-pos="danh từ / noun" data-def-en="Belt." data-def-vn="Đai." data-context-en="đai vô địch...">đai</span> <span class="vocab" data-word-en="champion" data-word-vn="vô" data-pos="danh từ / noun" data-def-en="Winner." data-def-vn="Vô địch." data-context-en="vô địch...">vô</span> <span class="vocab" data-word-en="champion" data-word-vn="địch" data-pos="danh từ / noun" data-def-en="Champion." data-def-vn="Địch." data-context-en="vô địch...">địch</span> với một <span class="vocab" data-word-en="fighter" data-word-vn="võ" data-pos="danh từ / noun" data-def-en="Combatant." data-def-vn="Võ sĩ." data-context-en="võ sĩ kỳ cựu...">võ</span> <span class="vocab" data-word-en="fighter" data-word-vn="sĩ" data-pos="danh từ / noun" data-def-en="Athlete." data-def-vn="Sĩ." data-context-en="võ sĩ...">sĩ</span> <span class="vocab" data-word-en="veteran" data-word-vn="kỳ" data-pos="tính từ / adjective" data-def-en="Experienced." data-def-vn="Kỳ cựu." data-context-en="kỳ cựu...">kỳ</span> <span class="vocab" data-word-en="veteran" data-word-vn="cựu" data-pos="tính từ / adjective" data-def-en="Seasoned." data-def-vn="Cựu." data-context-en="kỳ cựu...">cựu</span> <span class="vocab" data-word-en="famous" data-word-vn="nổi" data-pos="tính từ / adjective" data-def-en="Renowned." data-def-vn="Nổi." data-context-en="nổi tiếng...">nổi</span> <span class="vocab" data-word-en="famous" data-word-vn="tiếng" data-pos="tính từ / adjective" data-def-en="Well-known." data-def-vn="Tiếng." data-context-en="nổi tiếng...">tiếng</span> vì những <span class="vocab" data-word-en="series" data-word-vn="chuỗi" data-pos="danh từ / noun" data-def-en="Sequence." data-def-vn="Chuỗi." data-context-en="chuỗi đòn...">chuỗi</span> <span class="vocab" data-word-en="punch" data-word-vn="đòn" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Đòn." data-context-en="đòn đấm...">đòn</span> <span class="vocab" data-word-en="punch" data-word-vn="đấm" data-pos="danh từ / noun" data-def-en="Fist." data-def-vn="Đấm." data-context-en="đấm tấn công...">đấm</span> <span class="vocab" data-word-en="attack" data-word-vn="tấn" data-pos="danh từ / noun" data-def-en="Offensive." data-def-vn="Tấn công." data-context-en="tấn công dồn dập.">tấn</span> <span class="vocab" data-word-en="attack" data-word-vn="công" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Công." data-context-en="tấn công...">công</span> <span class="vocab" data-word-en="dense" data-word-vn="dồn" data-pos="tính từ / adjective" data-def-en="Intense." data-def-vn="Dồn dập." data-context-en="dồn dập.">dồn</span> <span class="vocab" data-word-en="dense" data-word-vn="dập" data-pos="tính từ / adjective" data-def-en="Heavy." data-def-vn="Dập." data-context-en="dồn dập.">dập</span>. <span class="vocab" data-word-en="part" data-word-vn="phần" data-pos="danh từ / noun" data-def-en="Portion." data-def-vn="Phần." data-context-en="phần lớn người...">phần</span> <span class="vocab" data-word-en="part" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Major." data-def-vn="Lớn." data-context-en="phần lớn...">lớn</span> người <span class="vocab" data-word-en="fan" data-word-vn="hâm" data-pos="danh từ / noun" data-def-en="Supporter." data-def-vn="Hâm mộ." data-context-en="người hâm mộ...">hâm</span> <span class="vocab" data-word-en="fan" data-word-vn="mộ" data-pos="danh từ / noun" data-def-en="Admirer." data-def-vn="Mộ." data-context-en="hâm mộ...">mộ</span> đều cho rằng Kimura sẽ <span class="vocab" data-word-en="meet" data-word-vn="gặp" data-pos="động từ / verb" data-def-en="Encounter." data-def-vn="Gặp." data-context-en="sẽ gặp rất nhiều...">gặp</span> rất nhiều <span class="vocab" data-word-en="difficulty" data-word-vn="khó" data-pos="tính từ / adjective" data-def-en="Hard." data-def-vn="Khó khăn." data-context-en="khó khăn...">khó</span> <span class="vocab" data-word-en="difficulty" data-word-vn="khăn" data-pos="tính từ / adjective" data-def-en="Trouble." data-def-vn="Khăn." data-context-en="khó khăn...">khăn</span> trước <span class="vocab" data-word-en="pressure" data-word-vn="sức" data-pos="danh từ / noun" data-def-en="Force." data-def-vn="Sức." data-context-en="sức ép...">sức</span> <span class="vocab" data-word-en="pressure" data-word-vn="ép" data-pos="danh từ / noun" data-def-en="Stress." data-def-vn="Ép." data-context-en="sức ép...">ép</span> <span class="vocab" data-word-en="continuous" data-word-vn="liên" data-pos="tính từ / adjective" data-def-en="Uninterrupted." data-def-vn="Liên tục." data-context-en="liên tục đó.">liên</span> <span class="vocab" data-word-en="continuous" data-word-vn="tục" data-pos="tính từ / adjective" data-def-en="Ongoing." data-def-vn="Tục." data-context-en="liên tục...">tục</span> đó. <span class="vocab" data-word-en="instead" data-word-vn="thay" data-pos="trạng từ / adverb" data-def-en="Rather." data-def-vn="Thay vào đó." data-context-en="Thay vào đó...">thay</span> <span class="vocab" data-word-en="instead" data-word-vn="vào" data-pos="trạng từ / adverb" data-def-en="Alternatively." data-def-vn="Vào." data-context-en="thay vào đó...">vào</span> <span class="vocab" data-word-en="instead" data-word-vn="đó" data-pos="trạng từ / adverb" data-def-en="There." data-def-vn="Đó." data-context-en="thay vào đó...">đó</span>, cô đã <span class="vocab" data-word-en="perform" data-word-vn="trình" data-pos="động từ / verb" data-def-en="Show." data-def-vn="Trình diễn." data-context-en="trình diễn...">trình</span> <span class="vocab" data-word-en="perform" data-word-vn="diễn" data-pos="động từ / verb" data-def-en="Display." data-def-vn="Diễn." data-context-en="trình diễn...">diễn</span> một <span class="vocab" data-word-en="performance" data-word-vn="màn" data-pos="danh từ / noun" data-def-en="Show." data-def-vn="Màn." data-context-en="màn thể hiện...">màn</span> <span class="vocab" data-word-en="performance" data-word-vn="thể" data-pos="danh từ / noun" data-def-en="Display." data-def-vn="Thể." data-context-en="thể hiện...">thể</span> <span class="vocab" data-word-en="performance" data-word-vn="hiện" data-pos="danh từ / noun" data-def-en="Exhibition." data-def-vn="Hiện." data-context-en="thể hiện...">hiện</span> <span class="vocab" data-word-en="excellent" data-word-vn="xuất" data-pos="tính từ / adjective" data-def-en="Outstanding." data-def-vn="Xuất sắc." data-context-en="xuất sắc...">xuất</span> <span class="vocab" data-word-en="excellent" data-word-vn="sắc" data-pos="tính từ / adjective" data-def-en="Superb." data-def-vn="Sắc." data-context-en="xuất sắc...">sắc</span> về <span class="vocab" data-word-en="ability" data-word-vn="khả" data-pos="danh từ / noun" data-def-en="Skill." data-def-vn="Khả năng." data-context-en="khả năng di chuyển...">khả</span> <span class="vocab" data-word-en="ability" data-word-vn="năng" data-pos="danh từ / noun" data-def-en="Capacity." data-def-vn="Năng." data-context-en="khả năng...">năng</span> <span class="vocab" data-word-en="move" data-word-vn="di" data-pos="động từ / verb" data-def-en="Travel." data-def-vn="Di chuyển." data-context-en="di chuyển...">di</span> <span class="vocab" data-word-en="move" data-word-vn="chuyển" data-pos="động từ / verb" data-def-en="Shift." data-def-vn="Chuyển." data-context-en="di chuyển...">chuyển</span> và <span class="vocab" data-word-en="time" data-word-vn="căn" data-pos="động từ / verb" data-def-en="Time." data-def-vn="Căn." data-context-en="căn thời điểm...">căn</span> <span class="vocab" data-word-en="time" data-word-vn="thời" data-pos="danh từ / noun" data-def-en="Moment." data-def-vn="Thời." data-context-en="thời điểm...">thời</span> <span class="vocab" data-word-en="time" data-word-vn="điểm" data-pos="danh từ / noun" data-def-en="Point." data-def-vn="Điểm." data-context-en="thời điểm...">điểm</span> <span class="vocab" data-word-en="attack" data-word-vn="tấn" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Tấn công." data-context-en="tấn công.">tấn</span> <span class="vocab" data-word-en="attack" data-word-vn="công" data-pos="danh từ / noun" data-def-en="Offensive." data-def-vn="Công." data-context-en="tấn công.">công</span>. Khi <span class="vocab" data-word-en="match" data-word-vn="trận" data-pos="danh từ / noun" data-def-en="Fight." data-def-vn="Trận." data-context-en="Khi trận đấu...">trận</span> <span class="vocab" data-word-en="match" data-word-vn="đấu" data-pos="danh từ / noun" data-def-en="Contest." data-def-vn="Đấu." data-context-en="trận đấu...">đấu</span> <span class="vocab" data-word-en="end" data-word-vn="kết" data-pos="động từ / verb" data-def-en="Finish." data-def-vn="Kết thúc." data-context-en="kết thúc...">kết</span> <span class="vocab" data-word-en="end" data-word-vn="thúc" data-pos="động từ / verb" data-def-en="Conclude." data-def-vn="Thúc." data-context-en="kết thúc...">thúc</span>, <span class="vocab" data-word-en="pair" data-word-vn="đôi" data-pos="danh từ / noun" data-def-en="Both." data-def-vn="Đôi." data-context-en="đôi chân...">đôi</span> <span class="vocab" data-word-en="foot" data-word-vn="chân" data-pos="danh từ / noun" data-def-en="Leg." data-def-vn="Chân." data-context-en="chân của...">chân</span> của <span class="vocab" data-word-en="opponent" data-word-vn="đối" data-pos="danh từ / noun" data-def-en="Rival." data-def-vn="Đối thủ." data-context-en="đối thủ...">đối</span> <span class="vocab" data-word-en="opponent" data-word-vn="thủ" data-pos="danh từ / noun" data-def-en="Adversary." data-def-vn="Thủ." data-context-en="đối thủ...">thủ</span> đã <span class="vocab" data-word-en="suffer" data-word-vn="bị" data-pos="động từ / verb" data-def-en="Receive." data-def-vn="Bị." data-context-en="bị tổn thương...">bị</span> <span class="vocab" data-word-en="damage" data-word-vn="tổn" data-pos="danh từ / noun" data-def-en="Injury." data-def-vn="Tổn." data-context-en="tổn thương...">tổn</span> <span class="vocab" data-word-en="damage" data-word-vn="thương" data-pos="danh từ / noun" data-def-en="Harm." data-def-vn="Thương." data-context-en="tổn thương...">thương</span> <span class="vocab" data-word-en="heavy" data-word-vn="nặng" data-pos="tính từ / adjective" data-def-en="Severe." data-def-vn="Nặng nề." data-context-en="nặng nề...">nặng</span> <span class="vocab" data-word-en="heavy" data-word-vn="nề" data-pos="tính từ / adjective" data-def-en="Serious." data-def-vn="Nề." data-context-en="nặng nề...">nề</span> bởi những <span class="vocab" data-word-en="kick" data-word-vn="cú" data-pos="danh từ / noun" data-def-en="Strike." data-def-vn="Cú." data-context-en="cú đá thấp...">cú</span> <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="danh từ / noun" data-def-en="Foot strike." data-def-vn="Đá." data-context-en="cú đá...">đá</span> <span class="vocab" data-word-en="low" data-word-vn="thấp" data-pos="tính từ / adjective" data-def-en="Low level." data-def-vn="Thấp." data-context-en="đá thấp...">thấp</span> <span class="vocab" data-word-en="continuous" data-word-vn="liên" data-pos="tính từ / adjective" data-def-en="Repeated." data-def-vn="Liên tiếp." data-context-en="liên tiếp.">liên</span> <span class="vocab" data-word-en="continuous" data-word-vn="tiếp" data-pos="tính từ / adjective" data-def-en="Successive." data-def-vn="Tiếp." data-context-en="liên tiếp.">tiếp</span>. Kimura <span class="vocab" data-word-en="win" data-word-vn="giành" data-pos="động từ / verb" data-def-en="Victory." data-def-vn="Giành." data-context-en="Kimura giành chiến thắng...">giành</span> <span class="vocab" data-word-en="win" data-word-vn="chiến" data-pos="danh từ / noun" data-def-en="Victory." data-def-vn="Chiến thắng." data-context-en="chiến thắng...">chiến</span> <span class="vocab" data-word-en="win" data-word-vn="thắng" data-pos="danh từ / noun" data-def-en="Triumph." data-def-vn="Thắng." data-context-en="chiến thắng...">thắng</span> bằng <span class="vocab" data-word-en="decision" data-word-vn="quyết" data-pos="danh từ / noun" data-def-en="Judgment." data-def-vn="Quyết định." data-context-en="quyết định đồng thuận...">quyết</span> <span class="vocab" data-word-en="decision" data-word-vn="định" data-pos="danh từ / noun" data-def-en="Verdict." data-def-vn="Định." data-context-en="quyết định...">định</span> <span class="vocab" data-word-en="unanimous" data-word-vn="đồng" data-pos="tính từ / adjective" data-def-en="Agreed." data-def-vn="Đồng thuận." data-context-en="đồng thuận...">đồng</span> <span class="vocab" data-word-en="unanimous" data-word-vn="thuận" data-pos="tính từ / adjective" data-def-en="Full agreement." data-def-vn="Thuận." data-context-en="đồng thuận...">thuận</span> của các <span class="vocab" data-word-en="referee" data-word-vn="trọng" data-pos="danh từ / noun" data-def-en="Judge." data-def-vn="Trọng tài." data-context-en="các trọng tài.">trọng</span> <span class="vocab" data-word-en="referee" data-word-vn="tài" data-pos="danh từ / noun" data-def-en="Official." data-def-vn="Tài." data-context-en="trọng tài.">tài</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="day" data-word-vn="ngày" data-pos="danh từ / noun" data-def-en="Today." data-def-vn="Ngày nay." data-context-en="Ngày nay...">ngày</span> <span class="vocab" data-word-en="day" data-word-vn="nay" data-pos="trạng từ / adverb" data-def-en="Now." data-def-vn="Nay." data-context-en="ngày nay...">nay</span>, các <span class="vocab" data-word-en="video" data-word-vn="video" data-pos="danh từ / noun" data-def-en="Recording." data-def-vn="Video." data-context-en="các video...">video</span> về những <span class="vocab" data-word-en="match" data-word-vn="trận" data-pos="danh từ / noun" data-def-en="Fight." data-def-vn="Trận." data-context-en="trận đấu...">trận</span> <span class="vocab" data-word-en="match" data-word-vn="đấu" data-pos="danh từ / noun" data-def-en="Contest." data-def-vn="Đấu." data-context-en="trận đấu...">đấu</span> của cô <span class="vocab" data-word-en="attract" data-word-vn="thu" data-pos="động từ / verb" data-def-en="Draw." data-def-vn="Thu hút." data-context-en="thu hút hàng...">thu</span> <span class="vocab" data-word-en="attract" data-word-vn="hút" data-pos="động từ / verb" data-def-en="Pull." data-def-vn="Hút." data-context-en="thu hút...">hút</span> <span class="vocab" data-word-en="million" data-word-vn="hàng" data-pos="danh từ / noun" data-def-en="Many." data-def-vn="Hàng." data-context-en="hàng triệu...">hàng</span> <span class="vocab" data-word-en="million" data-word-vn="triệu" data-pos="số / number" data-def-en="Million." data-def-vn="Triệu." data-context-en="triệu lượt...">triệu</span> <span class="vocab" data-word-en="view" data-word-vn="lượt" data-pos="danh từ / noun" data-def-en="Watch." data-def-vn="Lượt." data-context-en="lượt xem...">lượt</span> <span class="vocab" data-word-en="view" data-word-vn="xem" data-pos="danh từ / noun" data-def-en="Watch." data-def-vn="Xem." data-context-en="xem...">xem</span> trên <span class="vocab" data-word-en="network" data-word-vn="mạng" data-pos="danh từ / noun" data-def-en="Internet." data-def-vn="Mạng." data-context-en="trên mạng.">mạng</span>. Các <span class="vocab" data-word-en="fighter" data-word-vn="võ" data-pos="danh từ / noun" data-def-en="Combatant." data-def-vn="Võ sĩ." data-context-en="võ sĩ trẻ...">võ</span> <span class="vocab" data-word-en="fighter" data-word-vn="sĩ" data-pos="danh từ / noun" data-def-en="Athlete." data-def-vn="Sĩ." data-context-en="võ sĩ...">sĩ</span> <span class="vocab" data-word-en="young" data-word-vn="trẻ" data-pos="tính từ / adjective" data-def-en="Youthful." data-def-vn="Trẻ." data-context-en="trẻ trên...">trẻ</span> trên <span class="vocab" data-word-en="whole" data-word-vn="khắp" data-pos="trạng từ / adverb" data-def-en="All." data-def-vn="Khắp." data-context-en="khắp thế giới...">khắp</span> <span class="vocab" data-word-en="world" data-word-vn="thế" data-pos="danh từ / noun" data-def-en="Globe." data-def-vn="Thế." data-context-en="thế giới...">thế</span> <span class="vocab" data-word-en="world" data-word-vn="giới" data-pos="danh từ / noun" data-def-en="Planet." data-def-vn="Giới." data-context-en="thế giới...">giới</span> <span class="vocab" data-word-en="study" data-word-vn="nghiên" data-pos="động từ / verb" data-def-en="Examine." data-def-vn="Nghiên cứu." data-context-en="nghiên cứu kỹ thuật...">nghiên</span> <span class="vocab" data-word-en="study" data-word-vn="cứu" data-pos="động từ / verb" data-def-en="Research." data-def-vn="Cứu." data-context-en="nghiên cứu...">cứu</span> <span class="vocab" data-word-en="technique" data-word-vn="kỹ" data-pos="danh từ / noun" data-def-en="Skill." data-def-vn="Kỹ thuật." data-context-en="kỹ thuật...">kỹ</span> <span class="vocab" data-word-en="technique" data-word-vn="thuật" data-pos="danh từ / noun" data-def-en="Method." data-def-vn="Thuật." data-context-en="kỹ thuật...">thuật</span> của cô và <span class="vocab" data-word-en="try" data-word-vn="cố" data-pos="động từ / verb" data-def-en="Attempt." data-def-vn="Cố gắng." data-context-en="cố gắng bắt chước...">cố</span> <span class="vocab" data-word-en="try" data-word-vn="gắng" data-pos="động từ / verb" data-def-en="Endeavor." data-def-vn="Gắng." data-context-en="cố gắng...">gắng</span> <span class="vocab" data-word-en="imitate" data-word-vn="bắt" data-pos="động từ / verb" data-def-en="Copy." data-def-vn="Bắt chước." data-context-en="bắt chước phong cách...">bắt</span> <span class="vocab" data-word-en="imitate" data-word-vn="chước" data-pos="động từ / verb" data-def-en="Mimic." data-def-vn="Chước." data-context-en="bắt chước...">chước</span> <span class="vocab" data-word-en="style" data-word-vn="phong" data-pos="danh từ / noun" data-def-en="Approach." data-def-vn="Phong cách." data-context-en="phong cách thi đấu...">phong</span> <span class="vocab" data-word-en="style" data-word-vn="cách" data-pos="danh từ / noun" data-def-en="Method." data-def-vn="Cách." data-context-en="phong cách...">cách</span> <span class="vocab" data-word-en="fight" data-word-vn="thi" data-pos="động từ / verb" data-def-en="Compete." data-def-vn="Thi đấu." data-context-en="thi đấu ấy.">thi</span> <span class="vocab" data-word-en="fight" data-word-vn="đấu" data-pos="động từ / verb" data-def-en="Battle." data-def-vn="Đấu." data-context-en="thi đấu...">đấu</span> ấy. Một số <span class="vocab" data-word-en="coach" data-word-vn="huấn" data-pos="danh từ / noun" data-def-en="Trainer." data-def-vn="Huấn luyện viên." data-context-en="huấn luyện viên...">huấn</span> <span class="vocab" data-word-en="coach" data-word-vn="luyện" data-pos="danh từ / noun" data-def-en="Instructor." data-def-vn="Luyện." data-context-en="huấn luyện viên...">luyện</span> <span class="vocab" data-word-en="coach" data-word-vn="viên" data-pos="danh từ / noun" data-def-en="Trainer." data-def-vn="Viên." data-context-en="huấn luyện viên...">viên</span> <span class="vocab" data-word-en="even" data-word-vn="thậm" data-pos="trạng từ / adverb" data-def-en="Also." data-def-vn="Thậm chí." data-context-en="thậm chí...">thậm</span> <span class="vocab" data-word-en="even" data-word-vn="chí" data-pos="trạng từ / adverb" data-def-en="Indeed." data-def-vn="Chí." data-context-en="thậm chí...">chí</span> còn cho <span class="vocab" data-word-en="know" data-word-vn="biết" data-pos="động từ / verb" data-def-en="Inform." data-def-vn="Biết." data-context-en="cho biết...">biết</span> <span class="vocab" data-word-en="student" data-word-vn="học" data-pos="danh từ / noun" data-def-en="Learner." data-def-vn="Học viên." data-context-en="học viên của họ...">học</span> <span class="vocab" data-word-en="student" data-word-vn="viên" data-pos="danh từ / noun" data-def-en="Pupil." data-def-vn="Viên." data-context-en="học viên...">viên</span> của họ <span class="vocab" data-word-en="current" data-word-vn="hiện" data-pos="tính từ / adjective" data-def-en="Now." data-def-vn="Hiện." data-context-en="hiện dành...">hiện</span> <span class="vocab" data-word-en="dedicate" data-word-vn="dành" data-pos="động từ / verb" data-def-en="Allocate." data-def-vn="Dành." data-context-en="dành nhiều...">dành</span> nhiều <span class="vocab" data-word-en="time" data-word-vn="thời" data-pos="danh từ / noun" data-def-en="Duration." data-def-vn="Thời gian." data-context-en="thời gian tập...">thời</span> <span class="vocab" data-word-en="time" data-word-vn="gian" data-pos="danh từ / noun" data-def-en="Period." data-def-vn="Gian." data-context-en="thời gian...">gian</span> <span class="vocab" data-word-en="practice" data-word-vn="tập" data-pos="động từ / verb" data-def-en="Train." data-def-vn="Tập." data-context-en="tập đá...">tập</span> <span class="vocab" data-word-en="kick" data-word-vn="đá" data-pos="danh từ / noun" data-def-en="Foot strike." data-def-vn="Đá." data-context-en="tập đá...">đá</span> <span class="vocab" data-word-en="more" data-word-vn="hơn" data-pos="trạng từ / adverb" data-def-en="Greater." data-def-vn="Hơn." data-context-en="hơn là...">hơn</span> là <span class="vocab" data-word-en="practice" data-word-vn="tập" data-pos="động từ / verb" data-def-en="Train." data-def-vn="Tập." data-context-en="tập đấm.">tập</span> <span class="vocab" data-word-en="punch" data-word-vn="đấm" data-pos="danh từ / noun" data-def-en="Fist." data-def-vn="Đấm." data-context-en="tập đấm.">đấm</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="whether" data-word-vn="liệu" data-pos="liên từ / conjunction" data-def-en="If." data-def-vn="Liệu." data-context-en="Liệu Mona Kimura...">liệu</span> Mona Kimura có <span class="vocab" data-word-en="become" data-word-vn="trở" data-pos="động từ / verb" data-def-en="Turn into." data-def-vn="Trở thành." data-context-en="trở thành một...">trở</span> <span class="vocab" data-word-en="become" data-word-vn="thành" data-pos="động từ / verb" data-def-en="Grow." data-def-vn="Thành." data-context-en="trở thành...">thành</span> một <span class="vocab" data-word-en="champion" data-word-vn="nhà" data-pos="danh từ / noun" data-def-en="Winner." data-def-vn="Nhà." data-context-en="nhà vô địch...">nhà</span> <span class="vocab" data-word-en="champion" data-word-vn="vô" data-pos="danh từ / noun" data-def-en="Title holder." data-def-vn="Vô địch." data-context-en="vô địch...">vô</span> <span class="vocab" data-word-en="champion" data-word-vn="địch" data-pos="danh từ / noun" data-def-en="Champion." data-def-vn="Địch." data-context-en="vô địch...">địch</span> <span class="vocab" data-word-en="long" data-word-vn="lâu" data-pos="tính từ / adjective" data-def-en="Extended." data-def-vn="Lâu dài." data-context-en="lâu dài...">lâu</span> <span class="vocab" data-word-en="long" data-word-vn="dài" data-pos="tính từ / adjective" data-def-en="Prolonged." data-def-vn="Dài." data-context-en="lâu dài...">dài</span> hay <span class="vocab" data-word-en="not" data-word-vn="không" data-pos="phó từ / adverb" data-def-en="Negative." data-def-vn="Không." data-context-en="hay không...">không</span> vẫn còn phải <span class="vocab" data-word-en="wait" data-word-vn="chờ" data-pos="động từ / verb" data-def-en="Await." data-def-vn="Chờ." data-context-en="chờ thời gian...">chờ</span> <span class="vocab" data-word-en="time" data-word-vn="thời" data-pos="danh từ / noun" data-def-en="Period." data-def-vn="Thời gian." data-context-en="thời gian trả lời.">thời</span> <span class="vocab" data-word-en="time" data-word-vn="gian" data-pos="danh từ / noun" data-def-en="Duration." data-def-vn="Gian." data-context-en="thời gian...">gian</span> <span class="vocab" data-word-en="answer" data-word-vn="trả" data-pos="động từ / verb" data-def-en="Reply." data-def-vn="Trả lời." data-context-en="trả lời.">trả</span> <span class="vocab" data-word-en="answer" data-word-vn="lời" data-pos="động từ / verb" data-def-en="Respond." data-def-vn="Lời." data-context-en="trả lời.">lời</span>. Tuy nhiên, cô đã <span class="vocab" data-word-en="achieve" data-word-vn="đạt" data-pos="động từ / verb" data-def-en="Attain." data-def-vn="Đạt được." data-context-en="đã đạt được...">đạt</span> <span class="vocab" data-word-en="achieve" data-word-vn="được" data-pos="trợ động từ" data-def-en="Obtain." data-def-vn="Được." data-context-en="đạt được...">được</span> một <span class="vocab" data-word-en="thing" data-word-vn="điều" data-pos="danh từ / noun" data-def-en="Matter." data-def-vn="Điều." data-context-en="một điều hiếm...">điều</span> <span class="vocab" data-word-en="rare" data-word-vn="hiếm" data-pos="tính từ / adjective" data-def-en="Uncommon." data-def-vn="Hiếm." data-context-en="hiếm có...">hiếm</span> <span class="vocab" data-word-en="rare" data-word-vn="có" data-pos="tính từ / adjective" data-def-en="Scarce." data-def-vn="Có." data-context-en="hiếm có...">có</span> trong <span class="vocab" data-word-en="sport" data-word-vn="thể" data-pos="danh từ / noun" data-def-en="Athletics." data-def-vn="Thể thao." data-context-en="thể thao chuyên nghiệp...">thể</span> <span class="vocab" data-word-en="sport" data-word-vn="thao" data-pos="danh từ / noun" data-def-en="Activity." data-def-vn="Thao." data-context-en="thể thao...">thao</span> <span class="vocab" data-word-en="professional" data-word-vn="chuyên" data-pos="tính từ / adjective" data-def-en="Pro." data-def-vn="Chuyên nghiệp." data-context-en="chuyên nghiệp...">chuyên</span> <span class="vocab" data-word-en="professional" data-word-vn="nghiệp" data-pos="tính từ / adjective" data-def-en="Expert." data-def-vn="Nghiệp." data-context-en="chuyên nghiệp...">nghiệp</span>: cô đã <span class="vocab" data-word-en="change" data-word-vn="thay" data-pos="động từ / verb" data-def-en="Alter." data-def-vn="Thay đổi." data-context-en="thay đổi cách...">thay</span> <span class="vocab" data-word-en="change" data-word-vn="đổi" data-pos="động từ / verb" data-def-en="Modify." data-def-vn="Đổi." data-context-en="thay đổi...">đổi</span> <span class="vocab" data-word-en="way" data-word-vn="cách" data-pos="danh từ / noun" data-def-en="Method." data-def-vn="Cách." data-context-en="cách mọi người...">cách</span> <span class="vocab" data-word-en="people" data-word-vn="mọi" data-pos="đại từ / pronoun" data-def-en="Everyone." data-def-vn="Mọi." data-context-en="mọi người suy nghĩ...">mọi</span> <span class="vocab" data-word-en="people" data-word-vn="người" data-pos="đại từ / pronoun" data-def-en="Persons." data-def-vn="Người." data-context-en="mọi người...">người</span> <span class="vocab" data-word-en="think" data-word-vn="suy" data-pos="động từ / verb" data-def-en="Consider." data-def-vn="Suy nghĩ." data-context-en="suy nghĩ về...">suy</span> <span class="vocab" data-word-en="think" data-word-vn="nghĩ" data-pos="động từ / verb" data-def-en="Ponder." data-def-vn="Nghĩ." data-context-en="suy nghĩ...">nghĩ</span> về <span class="vocab" data-word-en="sport" data-word-vn="môn" data-pos="danh từ / noun" data-def-en="Discipline." data-def-vn="Môn." data-context-en="môn thể thao...">môn</span> <span class="vocab" data-word-en="sport" data-word-vn="thể" data-pos="danh từ / noun" data-def-en="Activity." data-def-vn="Thể." data-context-en="thể thao...">thể</span> <span class="vocab" data-word-en="sport" data-word-vn="thao" data-pos="danh từ / noun" data-def-en="Athletics." data-def-vn="Thao." data-context-en="thể thao...">thao</span> này. Trong một <span class="vocab" data-word-en="sport" data-word-vn="môn" data-pos="danh từ / noun" data-def-en="Discipline." data-def-vn="Môn." data-context-en="một môn thi đấu...">môn</span> <span class="vocab" data-word-en="sport" data-word-vn="thi" data-pos="động từ / verb" data-def-en="Compete." data-def-vn="Thi đấu." data-context-en="môn thi đấu...">thi</span> <span class="vocab" data-word-en="sport" data-word-vn="đấu" data-pos="động từ / verb" data-def-en="Battle." data-def-vn="Đấu." data-context-en="thi đấu...">đấu</span> mà ai cũng <span class="vocab" data-word-en="follow" data-word-vn="đi" data-pos="động từ / verb" data-def-en="Go." data-def-vn="Đi theo." data-context-en="đi theo...">đi</span> <span class="vocab" data-word-en="follow" data-word-vn="theo" data-pos="động từ / verb" data-def-en="Pursue." data-def-vn="Theo." data-context-en="đi theo...">theo</span> <span class="vocab" data-word-en="same" data-word-vn="cùng" data-pos="tính từ / adjective" data-def-en="Identical." data-def-vn="Cùng." data-context-en="cùng một...">cùng</span> một <span class="vocab" data-word-en="formula" data-word-vn="công" data-pos="danh từ / noun" data-def-en="Pattern." data-def-vn="Công thức." data-context-en="công thức...">công</span> <span class="vocab" data-word-en="formula" data-word-vn="thức" data-pos="danh từ / noun" data-def-en="Method." data-def-vn="Thức." data-context-en="công thức...">thức</span>, Mona Kimura đã <span class="vocab" data-word-en="dare" data-word-vn="dám" data-pos="động từ / verb" data-def-en="Venture." data-def-vn="Dám." data-context-en="đã dám khác biệt...">dám</span> <span class="vocab" data-word-en="different" data-word-vn="khác" data-pos="tính từ / adjective" data-def-en="Distinct." data-def-vn="Khác." data-context-en="khác biệt...">khác</span> <span class="vocab" data-word-en="different" data-word-vn="biệt" data-pos="tính từ / adjective" data-def-en="Unique." data-def-vn="Biệt." data-context-en="khác biệt...">biệt</span> — và <span class="vocab" data-word-en="condition" data-word-vn="điều" data-pos="danh từ / noun" data-def-en="Fact." data-def-vn="Điều." data-context-en="và điều đó...">điều</span> đó đã <span class="vocab" data-word-en="bring" data-word-vn="mang" data-pos="động từ / verb" data-def-en="Deliver." data-def-vn="Mang lại." data-context-en="mang lại thành công.">mang</span> <span class="vocab" data-word-en="bring" data-word-vn="lại" data-pos="động từ / verb" data-def-en="Produce." data-def-vn="Lại." data-context-en="mang lại...">lại</span> <span class="vocab" data-word-en="success" data-word-vn="thành" data-pos="danh từ / noun" data-def-en="Achievement." data-def-vn="Thành công." data-context-en="thành công.">thành</span> <span class="vocab" data-word-en="success" data-word-vn="công" data-pos="danh từ / noun" data-def-en="Victory." data-def-vn="Công." data-context-en="thành công.">công</span>.
+    </p>
+
+    <p>
+        Bạn <span class="vocab" data-word-en="think" data-word-vn="nghĩ" data-pos="động từ / verb" data-def-en="Consider." data-def-vn="Nghĩ." data-context-en="Bạn nghĩ gì...">nghĩ</span> gì về <span class="vocab" data-word-en="style" data-word-vn="phong" data-pos="danh từ / noun" data-def-en="Approach." data-def-vn="Phong cách." data-context-en="phong cách chiến đấu...">phong</span> <span class="vocab" data-word-en="style" data-word-vn="cách" data-pos="danh từ / noun" data-def-en="Method." data-def-vn="Cách." data-context-en="phong cách...">cách</span> <span class="vocab" data-word-en="fight" data-word-vn="chiến" data-pos="danh từ / noun" data-def-en="Combat." data-def-vn="Chiến đấu." data-context-en="chiến đấu độc đáo...">chiến</span> <span class="vocab" data-word-en="fight" data-word-vn="đấu" data-pos="danh từ / noun" data-def-en="Battle." data-def-vn="Đấu." data-context-en="chiến đấu...">đấu</span> <span class="vocab" data-word-en="unique" data-word-vn="độc" data-pos="tính từ / adjective" data-def-en="Special." data-def-vn="Độc đáo." data-context-en="độc đáo...">độc</span> <span class="vocab" data-word-en="unique" data-word-vn="đáo" data-pos="tính từ / adjective" data-def-en="Distinctive." data-def-vn="Đáo." data-context-en="độc đáo...">đáo</span> và <span class="vocab" data-word-en="specialized" data-word-vn="chuyên" data-pos="tính từ / adjective" data-def-en="Focused." data-def-vn="Chuyên biệt." data-context-en="chuyên biệt...">chuyên</span> <span class="vocab" data-word-en="specialized" data-word-vn="biệt" data-pos="tính từ / adjective" data-def-en="Particular." data-def-vn="Biệt." data-context-en="chuyên biệt...">biệt</span> của cô <span class="vocab" data-word-en="that" data-word-vn="ấy" data-pos="đại từ / pronoun" data-def-en="Her." data-def-vn="Ấy." data-context-en="cô ấy?">ấy</span>? Bạn có <span class="vocab" data-word-en="think" data-word-vn="nghĩ" data-pos="động từ / verb" data-def-en="Believe." data-def-vn="Nghĩ." data-context-en="bạn có nghĩ...">nghĩ</span> cô <span class="vocab" data-word-en="that" data-word-vn="ấy" data-pos="đại từ / pronoun" data-def-en="She." data-def-vn="Ấy." data-context-en="cô ấy sẽ...">ấy</span> sẽ <span class="vocab" data-word-en="become" data-word-vn="trở" data-pos="động từ / verb" data-def-en="Turn." data-def-vn="Trở thành." data-context-en="trở thành một...">trở</span> <span class="vocab" data-word-en="become" data-word-vn="thành" data-pos="động từ / verb" data-def-en="Grow." data-def-vn="Thành." data-context-en="trở thành...">thành</span> một <span class="vocab" data-word-en="legend" data-word-vn="huyền" data-pos="danh từ / noun" data-def-en="Icon." data-def-vn="Huyền thoại." data-context-en="huyền thoại...">huyền</span> <span class="vocab" data-word-en="legend" data-word-vn="thoại" data-pos="danh từ / noun" data-def-en="Myth." data-def-vn="Thoại." data-context-en="huyền thoại...">thoại</span> trong nhiều <span class="vocab" data-word-en="year" data-word-vn="năm" data-pos="danh từ / noun" data-def-en="Year." data-def-vn="Năm." data-context-en="nhiều năm tới...">năm</span> <span class="vocab" data-word-en="next" data-word-vn="tới" data-pos="tính từ / adjective" data-def-en="Coming." data-def-vn="Tới." data-context-en="năm tới...">tới</span>, hay chỉ là một <span class="vocab" data-word-en="phenomenon" data-word-vn="hiện" data-pos="danh từ / noun" data-def-en="Event." data-def-vn="Hiện tượng." data-context-en="hiện tượng nhất thời.">hiện</span> <span class="vocab" data-word-en="phenomenon" data-word-vn="tượng" data-pos="danh từ / noun" data-def-en="Occurrence." data-def-vn="Tượng." data-context-en="hiện tượng...">tượng</span> <span class="vocab" data-word-en="temporary" data-word-vn="nhất" data-pos="tính từ / adjective" data-def-en="Short-term." data-def-vn="Nhất thời." data-context-en="nhất thời.">nhất</span> <span class="vocab" data-word-en="temporary" data-word-vn="thời" data-pos="tính từ / adjective" data-def-en="Transient." data-def-vn="Thời." data-context-en="nhất thời.">thời</span>?
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning and where in the story each word appeared.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">tháng</div>
+        <div class="memory-word">gần</div>
+        <div class="memory-word">đây</div>
+        <div class="memory-word">cái</div>
+        <div class="memory-word">tên</div>
+        <div class="memory-word">mới</div>
+        <div class="memory-word">thu</div>
+        <div class="memory-word">hút</div>
+        <div class="memory-word">chú</div>
+        <div class="memory-word">ý</div>
+        <div class="memory-word">làng</div>
+        <div class="memory-word">nữ</div>
+        <div class="memory-word">võ</div>
+        <div class="memory-word">sĩ</div>
+        <div class="memory-word">trẻ</div>
+        <div class="memory-word">người</div>
+        <div class="memory-word">Nhật</div>
+        <div class="memory-word">Bản</div>
+        <div class="memory-word">trở</div>
+        <div class="memory-word">nên</div>
+        <div class="memory-word">nổi</div>
+        <div class="memory-word">tiếng</div>
+        <div class="memory-word">lý</div>
+        <div class="memory-word">do</div>
+        <div class="memory-word">khác</div>
+        <div class="memory-word">thường</div>
+        <div class="memory-word">hầu</div>
+        <div class="memory-word">hết</div>
+        <div class="memory-word">võ</div>
+        <div class="memory-word">sĩ</div>
+        <div class="memory-word">sử</div>
+        <div class="memory-word">dụng</div>
+        <div class="memory-word">kết</div>
+        <div class="memory-word">hợp</div>
+        <div class="memory-word">cân</div>
+        <div class="memory-word">bằng</div>
+        <div class="memory-word">đấm</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">dựa</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">phần</div>
+        <div class="memory-word">trăm</div>
+        <div class="memory-word">đợt</div>
+        <div class="memory-word">tấn</div>
+        <div class="memory-word">công</div>
+        <div class="memory-word">hâm</div>
+        <div class="memory-word">mộ</div>
+        <div class="memory-word">đặt</div>
+        <div class="memory-word">biệt</div>
+        <div class="memory-word">danh</div>
+        <div class="memory-word">lốc</div>
+        <div class="memory-word">dường</div>
+        <div class="memory-word">như</div>
+        <div class="memory-word">di</div>
+        <div class="memory-word">chuyển</div>
+        <div class="memory-word">không</div>
+        <div class="memory-word">ngừng</div>
+        <div class="memory-word">trận</div>
+        <div class="memory-word">đấu</div>
+        <div class="memory-word">liên</div>
+        <div class="memory-word">tục</div>
+        <div class="memory-word">vòng</div>
+        <div class="memory-word">quanh</div>
+        <div class="memory-word">đối</div>
+        <div class="memory-word">thủ</div>
+        <div class="memory-word">tìm</div>
+        <div class="memory-word">kiếm</div>
+        <div class="memory-word">sơ</div>
+        <div class="memory-word">hở</div>
+        <div class="memory-word">bất</div>
+        <div class="memory-word">ngờ</div>
+        <div class="memory-word">cú</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">lao</div>
+        <div class="memory-word">tới</div>
+        <div class="memory-word">chân</div>
+        <div class="memory-word">sườn</div>
+        <div class="memory-word">đầu</div>
+        <div class="memory-word">đối</div>
+        <div class="memory-word">phương</div>
+        <div class="memory-word">gặp</div>
+        <div class="memory-word">khó</div>
+        <div class="memory-word">khăn</div>
+        <div class="memory-word">đoán</div>
+        <div class="memory-word">đòn</div>
+        <div class="memory-word">tấn</div>
+        <div class="memory-word">công</div>
+        <div class="memory-word">tiếp</div>
+        <div class="memory-word">theo</div>
+        <div class="memory-word">xuất</div>
+        <div class="memory-word">phát</div>
+        <div class="memory-word">đâu</div>
+        <div class="memory-word">hành</div>
+        <div class="memory-word">trình</div>
+        <div class="memory-word">bắt</div>
+        <div class="memory-word">đầu</div>
+        <div class="memory-word">mới</div>
+        <div class="memory-word">tám</div>
+        <div class="memory-word">tuổi</div>
+        <div class="memory-word">cha</div>
+        <div class="memory-word">người</div>
+        <div class="memory-word">đam</div>
+        <div class="memory-word">mê</div>
+        <div class="memory-word">võ</div>
+        <div class="memory-word">thuật</div>
+        <div class="memory-word">khuyến</div>
+        <div class="memory-word">khích</div>
+        <div class="memory-word">thử</div>
+        <div class="memory-word">học</div>
+        <div class="memory-word">ban</div>
+        <div class="memory-word">đầu</div>
+        <div class="memory-word">nhút</div>
+        <div class="memory-word">nhát</div>
+        <div class="memory-word">ít</div>
+        <div class="memory-word">nói</div>
+        <div class="memory-word">nhanh</div>
+        <div class="memory-word">chóng</div>
+        <div class="memory-word">phát</div>
+        <div class="memory-word">hiện</div>
+        <div class="memory-word">khả</div>
+        <div class="memory-word">năng</div>
+        <div class="memory-word">giữ</div>
+        <div class="memory-word">thăng</div>
+        <div class="memory-word">bằng</div>
+        <div class="memory-word">độ</div>
+        <div class="memory-word">dẻo</div>
+        <div class="memory-word">dai</div>
+        <div class="memory-word">đặc</div>
+        <div class="memory-word">biệt</div>
+        <div class="memory-word">huấn</div>
+        <div class="memory-word">luyện</div>
+        <div class="memory-word">viên</div>
+        <div class="memory-word">nhận</div>
+        <div class="memory-word">thấy</div>
+        <div class="memory-word">cú</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">nhanh</div>
+        <div class="memory-word">hơn</div>
+        <div class="memory-word">mạnh</div>
+        <div class="memory-word">hơn</div>
+        <div class="memory-word">học</div>
+        <div class="memory-word">viên</div>
+        <div class="memory-word">khác</div>
+        <div class="memory-word">cùng</div>
+        <div class="memory-word">độ</div>
+        <div class="memory-word">tuổi</div>
+        <div class="memory-word">bước</div>
+        <div class="memory-word">vào</div>
+        <div class="memory-word">thiếu</div>
+        <div class="memory-word">niên</div>
+        <div class="memory-word">chuyển</div>
+        <div class="memory-word">sang</div>
+        <div class="memory-word">tập</div>
+        <div class="memory-word">huấn</div>
+        <div class="memory-word">luyện</div>
+        <div class="memory-word">viên</div>
+        <div class="memory-word">ngay</div>
+        <div class="memory-word">lập</div>
+        <div class="memory-word">tức</div>
+        <div class="memory-word">cố</div>
+        <div class="memory-word">gắng</div>
+        <div class="memory-word">cải</div>
+        <div class="memory-word">thiện</div>
+        <div class="memory-word">kỹ</div>
+        <div class="memory-word">năng</div>
+        <div class="memory-word">đấm</div>
+        <div class="memory-word">phụ</div>
+        <div class="memory-word">thuộc</div>
+        <div class="memory-word">quá</div>
+        <div class="memory-word">nhiều</div>
+        <div class="memory-word">đòn</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">suy</div>
+        <div class="memory-word">nghĩ</div>
+        <div class="memory-word">khác</div>
+        <div class="memory-word">mong</div>
+        <div class="memory-word">đợi</div>
+        <div class="memory-word">võ</div>
+        <div class="memory-word">sĩ</div>
+        <div class="memory-word">sử</div>
+        <div class="memory-word">dụng</div>
+        <div class="memory-word">cú</div>
+        <div class="memory-word">đấm</div>
+        <div class="memory-word">từng</div>
+        <div class="memory-word">nói</div>
+        <div class="memory-word">phóng</div>
+        <div class="memory-word">viên</div>
+        <div class="memory-word">trở</div>
+        <div class="memory-word">thành</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">giỏi</div>
+        <div class="memory-word">nhất</div>
+        <div class="memory-word">môn</div>
+        <div class="memory-word">thể</div>
+        <div class="memory-word">thao</div>
+        <div class="memory-word">tạo</div>
+        <div class="memory-word">ra</div>
+        <div class="memory-word">phong</div>
+        <div class="memory-word">cách</div>
+        <div class="memory-word">riêng</div>
+        <div class="memory-word">mình</div>
+        <div class="memory-word">chuyên</div>
+        <div class="memory-word">gia</div>
+        <div class="memory-word">nghi</div>
+        <div class="memory-word">ngờ</div>
+        <div class="memory-word">chiến</div>
+        <div class="memory-word">lược</div>
+        <div class="memory-word">đối</div>
+        <div class="memory-word">thủ</div>
+        <div class="memory-word">giàu</div>
+        <div class="memory-word">kinh</div>
+        <div class="memory-word">nghiệm</div>
+        <div class="memory-word">cuối</div>
+        <div class="memory-word">cùng</div>
+        <div class="memory-word">tìm</div>
+        <div class="memory-word">ra</div>
+        <div class="memory-word">cách</div>
+        <div class="memory-word">hóa</div>
+        <div class="memory-word">giải</div>
+        <div class="memory-word">đòn</div>
+        <div class="memory-word">tấn</div>
+        <div class="memory-word">công</div>
+        <div class="memory-word">thế</div>
+        <div class="memory-word">nhưng</div>
+        <div class="memory-word">hết</div>
+        <div class="memory-word">trận</div>
+        <div class="memory-word">này</div>
+        <div class="memory-word">đến</div>
+        <div class="memory-word">trận</div>
+        <div class="memory-word">khác</div>
+        <div class="memory-word">vẫn</div>
+        <div class="memory-word">tiếp</div>
+        <div class="memory-word">tục</div>
+        <div class="memory-word">giành</div>
+        <div class="memory-word">chiến</div>
+        <div class="memory-word">thắng</div>
+        <div class="memory-word">cú</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">xoay</div>
+        <div class="memory-word">gót</div>
+        <div class="memory-word">ra</div>
+        <div class="memory-word">sau</div>
+        <div class="memory-word">đặc</div>
+        <div class="memory-word">biệt</div>
+        <div class="memory-word">đáng</div>
+        <div class="memory-word">sợ</div>
+        <div class="memory-word">đối</div>
+        <div class="memory-word">thủ</div>
+        <div class="memory-word">bị</div>
+        <div class="memory-word">đánh</div>
+        <div class="memory-word">ngã</div>
+        <div class="memory-word">kịp</div>
+        <div class="memory-word">nhận</div>
+        <div class="memory-word">ra</div>
+        <div class="memory-word">chuyện</div>
+        <div class="memory-word">gì</div>
+        <div class="memory-word">xảy</div>
+        <div class="memory-word">ra</div>
+        <div class="memory-word">thử</div>
+        <div class="memory-word">thách</div>
+        <div class="memory-word">lớn</div>
+        <div class="memory-word">nhất</div>
+        <div class="memory-word">đến</div>
+        <div class="memory-word">trận</div>
+        <div class="memory-word">tranh</div>
+        <div class="memory-word">đai</div>
+        <div class="memory-word">vô</div>
+        <div class="memory-word">địch</div>
+        <div class="memory-word">võ</div>
+        <div class="memory-word">sĩ</div>
+        <div class="memory-word">kỳ</div>
+        <div class="memory-word">cựu</div>
+        <div class="memory-word">nổi</div>
+        <div class="memory-word">tiếng</div>
+        <div class="memory-word">chuỗi</div>
+        <div class="memory-word">đòn</div>
+        <div class="memory-word">đấm</div>
+        <div class="memory-word">tấn</div>
+        <div class="memory-word">công</div>
+        <div class="memory-word">dồn</div>
+        <div class="memory-word">dập</div>
+        <div class="memory-word">phần</div>
+        <div class="memory-word">lớn</div>
+        <div class="memory-word">hâm</div>
+        <div class="memory-word">mộ</div>
+        <div class="memory-word">gặp</div>
+        <div class="memory-word">khó</div>
+        <div class="memory-word">khăn</div>
+        <div class="memory-word">sức</div>
+        <div class="memory-word">ép</div>
+        <div class="memory-word">liên</div>
+        <div class="memory-word">tục</div>
+        <div class="memory-word">thay</div>
+        <div class="memory-word">vào</div>
+        <div class="memory-word">đó</div>
+        <div class="memory-word">trình</div>
+        <div class="memory-word">diễn</div>
+        <div class="memory-word">màn</div>
+        <div class="memory-word">thể</div>
+        <div class="memory-word">hiện</div>
+        <div class="memory-word">xuất</div>
+        <div class="memory-word">sắc</div>
+        <div class="memory-word">khả</div>
+        <div class="memory-word">năng</div>
+        <div class="memory-word">di</div>
+        <div class="memory-word">chuyển</div>
+        <div class="memory-word">căn</div>
+        <div class="memory-word">thời</div>
+        <div class="memory-word">điểm</div>
+        <div class="memory-word">tấn</div>
+        <div class="memory-word">công</div>
+        <div class="memory-word">trận</div>
+        <div class="memory-word">đấu</div>
+        <div class="memory-word">kết</div>
+        <div class="memory-word">thúc</div>
+        <div class="memory-word">đôi</div>
+        <div class="memory-word">chân</div>
+        <div class="memory-word">đối</div>
+        <div class="memory-word">thủ</div>
+        <div class="memory-word">bị</div>
+        <div class="memory-word">tổn</div>
+        <div class="memory-word">thương</div>
+        <div class="memory-word">nặng</div>
+        <div class="memory-word">nề</div>
+        <div class="memory-word">cú</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">thấp</div>
+        <div class="memory-word">liên</div>
+        <div class="memory-word">tiếp</div>
+        <div class="memory-word">giành</div>
+        <div class="memory-word">chiến</div>
+        <div class="memory-word">thắng</div>
+        <div class="memory-word">quyết</div>
+        <div class="memory-word">định</div>
+        <div class="memory-word">đồng</div>
+        <div class="memory-word">thuận</div>
+        <div class="memory-word">trọng</div>
+        <div class="memory-word">tài</div>
+        <div class="memory-word">ngày</div>
+        <div class="memory-word">nay</div>
+        <div class="memory-word">video</div>
+        <div class="memory-word">trận</div>
+        <div class="memory-word">đấu</div>
+        <div class="memory-word">thu</div>
+        <div class="memory-word">hút</div>
+        <div class="memory-word">hàng</div>
+        <div class="memory-word">triệu</div>
+        <div class="memory-word">lượt</div>
+        <div class="memory-word">xem</div>
+        <div class="memory-word">mạng</div>
+        <div class="memory-word">võ</div>
+        <div class="memory-word">sĩ</div>
+        <div class="memory-word">trẻ</div>
+        <div class="memory-word">khắp</div>
+        <div class="memory-word">thế</div>
+        <div class="memory-word">giới</div>
+        <div class="memory-word">nghiên</div>
+        <div class="memory-word">cứu</div>
+        <div class="memory-word">kỹ</div>
+        <div class="memory-word">thuật</div>
+        <div class="memory-word">cố</div>
+        <div class="memory-word">gắng</div>
+        <div class="memory-word">bắt</div>
+        <div class="memory-word">chước</div>
+        <div class="memory-word">phong</div>
+        <div class="memory-word">cách</div>
+        <div class="memory-word">thi</div>
+        <div class="memory-word">đấu</div>
+        <div class="memory-word">huấn</div>
+        <div class="memory-word">luyện</div>
+        <div class="memory-word">viên</div>
+        <div class="memory-word">thậm</div>
+        <div class="memory-word">chí</div>
+        <div class="memory-word">biết</div>
+        <div class="memory-word">học</div>
+        <div class="memory-word">viên</div>
+        <div class="memory-word">hiện</div>
+        <div class="memory-word">dành</div>
+        <div class="memory-word">thời</div>
+        <div class="memory-word">gian</div>
+        <div class="memory-word">tập</div>
+        <div class="memory-word">đá</div>
+        <div class="memory-word">hơn</div>
+        <div class="memory-word">tập</div>
+        <div class="memory-word">đấm</div>
+        <div class="memory-word">liệu</div>
+        <div class="memory-word">trở</div>
+        <div class="memory-word">thành</div>
+        <div class="memory-word">nhà</div>
+        <div class="memory-word">vô</div>
+        <div class="memory-word">địch</div>
+        <div class="memory-word">lâu</div>
+        <div class="memory-word">dài</div>
+        <div class="memory-word">không</div>
+        <div class="memory-word">chờ</div>
+        <div class="memory-word">thời</div>
+        <div class="memory-word">gian</div>
+        <div class="memory-word">trả</div>
+        <div class="memory-word">lời</div>
+        <div class="memory-word">đạt</div>
+        <div class="memory-word">được</div>
+        <div class="memory-word">điều</div>
+        <div class="memory-word">hiếm</div>
+        <div class="memory-word">có</div>
+        <div class="memory-word">thể</div>
+        <div class="memory-word">thao</div>
+        <div class="memory-word">chuyên</div>
+        <div class="memory-word">nghiệp</div>
+        <div class="memory-word">thay</div>
+        <div class="memory-word">đổi</div>
+        <div class="memory-word">cách</div>
+        <div class="memory-word">mọi</div>
+        <div class="memory-word">người</div>
+        <div class="memory-word">suy</div>
+        <div class="memory-word">nghĩ</div>
+        <div class="memory-word">môn</div>
+        <div class="memory-word">thể</div>
+        <div class="memory-word">thao</div>
+        <div class="memory-word">môn</div>
+        <div class="memory-word">thi</div>
+        <div class="memory-word">đấu</div>
+        <div class="memory-word">đi</div>
+        <div class="memory-word">theo</div>
+        <div class="memory-word">cùng</div>
+        <div class="memory-word">công</div>
+        <div class="memory-word">thức</div>
+        <div class="memory-word">dám</div>
+        <div class="memory-word">khác</div>
+        <div class="memory-word">biệt</div>
+        <div class="memory-word">điều</div>
+        <div class="memory-word">mang</div>
+        <div class="memory-word">lại</div>
+        <div class="memory-word">thành</div>
+        <div class="memory-word">công</div>
+        <div class="memory-word">nghĩ</div>
+        <div class="memory-word">phong</div>
+        <div class="memory-word">cách</div>
+        <div class="memory-word">chiến</div>
+        <div class="memory-word">đấu</div>
+        <div class="memory-word">độc</div>
+        <div class="memory-word">đáo</div>
+        <div class="memory-word">chuyên</div>
+        <div class="memory-word">biệt</div>
+        <div class="memory-word">ấy</div>
+        <div class="memory-word">nghĩ</div>
+        <div class="memory-word">ấy</div>
+        <div class="memory-word">trở</div>
+        <div class="memory-word">thành</div>
+        <div class="memory-word">huyền</div>
+        <div class="memory-word">thoại</div>
+        <div class="memory-word">năm</div>
+        <div class="memory-word">tới</div>
+        <div class="memory-word">hiện</div>
+        <div class="memory-word">tượng</div>
+        <div class="memory-word">nhất</div>
+        <div class="memory-word">thời</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    (el.dataset.wordVn || '').trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
