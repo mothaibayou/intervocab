@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Lost City of Z</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+	<!-- VOCABULARY DENSITY RULE:  please meticulously follow these instructions:
+     Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
+- Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
+- Break apart phrases: e.g., tag "quê hương" separately AND "yêu dấu" separately.
+- Tag "trí tuệ" and "sắc bén" as two different spans.
+- Only use 2-word spans for fixed compounds or proper names when necessary.
+- Prefer maximum granularity.
+- First occurrence of each word is clickable; later ones can be plain text.
+      -->
+			
+		
+</head>
+<body>
+
+<div class="page-container">
+    <h1>The Lost City of Z</h1>
+    <h2 class="subtitle">Explorer Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to The Lost City of Z</div>
+        <audio id="audio-player" src="lost-city.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        For most <span class="vocab" data-word-en="people" data-word-vn="người dân" data-pos="danh từ / noun (plural)" data-def-en="Human beings in general." data-def-vn="Các sinh vật loài người nói chung." data-context-en="For most people, the Amazon rainforest...">people</span>, the <span class="vocab" data-word-en="Amazon" data-word-vn="rừng Amazon" data-pos="danh từ riêng / proper noun" data-def-en="The vast tropical rainforest in South America." data-def-vn="Rừng nhiệt đới rộng lớn ở Nam Mỹ." data-context-en="the Amazon rainforest is a place of mystery.">Amazon</span> <span class="vocab" data-word-en="rainforest" data-word-vn="rừng mưa" data-pos="danh từ / noun" data-def-en="A dense forest in tropical regions with high rainfall." data-def-vn="Một khu rừng rậm ở vùng nhiệt đới với lượng mưa cao." data-context-en="Amazon rainforest is a place of mystery.">rainforest</span> is a <span class="vocab" data-word-en="place" data-word-vn="nơi chốn" data-pos="danh từ / noun" data-def-en="A particular location or area." data-def-vn="Một vị trí hoặc khu vực cụ thể." data-context-en="is a place of mystery.">place</span> of <span class="vocab" data-word-en="mystery" data-word-vn="bí ẩn" data-pos="danh từ / noun" data-def-en="Something that is difficult or impossible to understand or explain." data-def-vn="Điều gì đó khó hoặc không thể hiểu hoặc giải thích." data-context-en="place of mystery.">mystery</span>.
+    </p>
+
+    <p>
+        For <span class="vocab" data-word-en="British" data-word-vn="người Anh" data-pos="tính từ / adjective" data-def-en="Relating to the United Kingdom or its people." data-def-vn="Liên quan đến Vương quốc Anh hoặc người dân của nó." data-context-en="For British explorer Percy Fawcett...">British</span> <span class="vocab" data-word-en="explorer" data-word-vn="nhà thám hiểm" data-pos="danh từ / noun" data-def-en="A person who travels to discover new places." data-def-vn="Người du hành để khám phá những nơi mới." data-context-en="British explorer Percy Fawcett...">explorer</span> Percy Fawcett, it became an <span class="vocab" data-word-en="obsession" data-word-vn="sự ám ảnh" data-pos="danh từ / noun" data-def-en="A persistent disturbing preoccupation with an idea or feeling." data-def-vn="Sự bận tâm dai dẳng gây rối loạn với một ý tưởng hoặc cảm xúc." data-context-en="it became an obsession that would eventually cost him his life.">obsession</span> that would <span class="vocab" data-word-en="eventually" data-word-vn="cuối cùng" data-pos="trạng từ / adverb" data-def-en="In the end, especially after a long delay." data-def-vn="Cuối cùng, đặc biệt sau khoảng thời gian dài." data-context-en="obsession that would eventually cost him his life.">eventually</span> <span class="vocab" data-word-en="cost" data-word-vn="trả giá" data-pos="động từ / verb" data-def-en="Require the payment or loss of something." data-def-vn="Yêu cầu trả giá hoặc mất mát thứ gì đó." data-context-en="would eventually cost him his life.">cost</span> him his <span class="vocab" data-word-en="life" data-word-vn="mạng sống" data-pos="danh từ / noun" data-def-en="The state of being alive." data-def-vn="Trạng thái tồn tại sống." data-context-en="cost him his life.">life</span>.
+    </p>
+
+    <p>
+        In the <span class="vocab" data-word-en="early" data-word-vn="đầu" data-pos="tính từ / adjective" data-def-en="Near the beginning of a period." data-def-vn="Gần đầu của một giai đoạn." data-context-en="In the early 1900s...">early</span> <span class="vocab" data-word-en="1900s" data-word-vn="những năm 1900" data-pos="danh từ / noun" data-def-en="The decade at the start of the twentieth century." data-def-vn="Thập kỷ đầu thế kỷ hai mươi." data-context-en="early 1900s, large parts...">1900s</span>, <span class="vocab" data-word-en="large" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Of considerable size or extent." data-def-vn="Có kích thước hoặc phạm vi đáng kể." data-context-en="large parts of the Amazon...">large</span> <span class="vocab" data-word-en="parts" data-word-vn="phần" data-pos="danh từ / noun (plural)" data-def-en="Portions or sections of something." data-def-vn="Những phần hoặc bộ phận của cái gì đó." data-context-en="large parts of the Amazon had never been mapped...">parts</span> of the <span class="vocab" data-word-en="Amazon" data-word-vn="Amazon" data-pos="danh từ riêng / proper noun" data-def-en="The vast tropical rainforest in South America." data-def-vn="Rừng nhiệt đới rộng lớn ở Nam Mỹ." data-context-en="parts of the Amazon had never been mapped by Europeans.">Amazon</span> had never been <span class="vocab" data-word-en="mapped" data-word-vn="vẽ bản đồ" data-pos="động từ / verb (past participle)" data-def-en="Represented on a diagram showing spatial relations." data-def-vn="Được thể hiện trên sơ đồ chỉ mối quan hệ không gian." data-context-en="had never been mapped by Europeans.">mapped</span> by <span class="vocab" data-word-en="Europeans" data-word-vn="người châu Âu" data-pos="danh từ / noun (plural)" data-def-en="People from the continent of Europe." data-def-vn="Người dân từ châu lục châu Âu." data-context-en="mapped by Europeans.">Europeans</span>.
+    </p>
+
+    <p>
+        Fawcett was <span class="vocab" data-word-en="hired" data-word-vn="được thuê" data-pos="động từ / verb (past)" data-def-en="Employed for a job or task." data-def-vn="Được thuê để thực hiện công việc hoặc nhiệm vụ." data-context-en="Fawcett was hired to survey...">hired</span> to <span class="vocab" data-word-en="survey" data-word-vn="khảo sát" data-pos="động từ / verb" data-def-en="Examine and record details of an area." data-def-vn="Khảo sát và ghi chép chi tiết về một khu vực." data-context-en="hired to survey remote regions...">survey</span> <span class="vocab" data-word-en="remote" data-word-vn="hẻo lánh" data-pos="tính từ / adjective" data-def-en="Far away from populated areas." data-def-vn="Xa xôi khỏi các khu vực đông dân." data-context-en="survey remote regions...">remote</span> <span class="vocab" data-word-en="regions" data-word-vn="vùng" data-pos="danh từ / noun (plural)" data-def-en="Areas or districts." data-def-vn="Các khu vực hoặc miền." data-context-en="remote regions and settle...">regions</span> and <span class="vocab" data-word-en="settle" data-word-vn="giải quyết" data-pos="động từ / verb" data-def-en="Resolve or reach an agreement on." data-def-vn="Giải quyết hoặc đạt thỏa thuận về." data-context-en="settle border disputes...">settle</span> <span class="vocab" data-word-en="border" data-word-vn="biên giới" data-pos="danh từ / noun" data-def-en="The dividing line between countries." data-def-vn="Đường phân chia giữa các quốc gia." data-context-en="settle border disputes between...">border</span> <span class="vocab" data-word-en="disputes" data-word-vn="tranh chấp" data-pos="danh từ / noun (plural)" data-def-en="Arguments or disagreements." data-def-vn="Các cuộc tranh cãi hoặc bất đồng." data-context-en="border disputes between South American countries.">disputes</span> between <span class="vocab" data-word-en="South" data-word-vn="Nam" data-pos="tính từ / adjective" data-def-en="Relating to the southern part." data-def-vn="Liên quan đến phần phía nam." data-context-en="South American countries.">South</span> <span class="vocab" data-word-en="American" data-word-vn="Mỹ" data-pos="tính từ / adjective" data-def-en="Relating to the continent of America." data-def-vn="Liên quan đến châu lục Mỹ." data-context-en="South American countries.">American</span> <span class="vocab" data-word-en="countries" data-word-vn="các quốc gia" data-pos="danh từ / noun (plural)" data-def-en="Nations or states." data-def-vn="Các quốc gia hoặc nhà nước." data-context-en="South American countries.">countries</span>.
+    </p>
+
+    <p>
+        During his <span class="vocab" data-word-en="travels" data-word-vn="các chuyến đi" data-pos="danh từ / noun (plural)" data-def-en="Journeys or movements from place to place." data-def-vn="Các chuyến hành trình hoặc di chuyển từ nơi này sang nơi khác." data-context-en="During his travels, he heard...">travels</span>, he <span class="vocab" data-word-en="heard" data-word-vn="nghe" data-pos="động từ / verb (past)" data-def-en="Perceived with the ear." data-def-vn="Nhận thức bằng tai." data-context-en="he heard stories of...">heard</span> <span class="vocab" data-word-en="stories" data-word-vn="câu chuyện" data-pos="danh từ / noun (plural)" data-def-en="Accounts of real or imaginary events." data-def-vn="Các kể về sự kiện thực hoặc hư cấu." data-context-en="heard stories of an ancient...">stories</span> of an <span class="vocab" data-word-en="ancient" data-word-vn="cổ xưa" data-pos="tính từ / adjective" data-def-en="Belonging to the very distant past." data-def-vn="Thuộc về quá khứ xa xôi." data-context-en="stories of an ancient lost civilization...">ancient</span> <span class="vocab" data-word-en="lost" data-word-vn="bị mất" data-pos="tính từ / adjective" data-def-en="Unable to be found." data-def-vn="Không thể tìm thấy." data-context-en="ancient lost civilization...">lost</span> <span class="vocab" data-word-en="civilization" data-word-vn="nền văn minh" data-pos="danh từ / noun" data-def-en="An advanced state of human social development." data-def-vn="Trạng thái phát triển xã hội con người tiên tiến." data-context-en="lost civilization hidden deep...">civilization</span> <span class="vocab" data-word-en="hidden" data-word-vn="ẩn giấu" data-pos="tính từ / adjective" data-def-en="Concealed from view." data-def-vn="Được che giấu khỏi tầm nhìn." data-context-en="civilization hidden deep within the jungle.">hidden</span> <span class="vocab" data-word-en="deep" data-word-vn="sâu" data-pos="trạng từ / adverb" data-def-en="Far down or in." data-def-vn="Xa xuống hoặc vào bên trong." data-context-en="hidden deep within the jungle.">deep</span> within the <span class="vocab" data-word-en="jungle" data-word-vn="rừng rậm" data-pos="danh từ / noun" data-def-en="A dense, tangled forest." data-def-vn="Một khu rừng rậm rạp, chằng chịt." data-context-en="within the jungle.">jungle</span>.
+    </p>
+
+    <p>
+        Most <span class="vocab" data-word-en="experts" data-word-vn="chuyên gia" data-pos="danh từ / noun (plural)" data-def-en="People with special knowledge or skill." data-def-vn="Những người có kiến thức hoặc kỹ năng đặc biệt." data-context-en="Most experts dismissed these stories...">experts</span> <span class="vocab" data-word-en="dismissed" data-word-vn="bác bỏ" data-pos="động từ / verb (past)" data-def-en="Rejected as unworthy of serious consideration." data-def-vn="Bác bỏ như không đáng xem xét nghiêm túc." data-context-en="experts dismissed these stories as myths.">dismissed</span> these <span class="vocab" data-word-en="stories" data-word-vn="câu chuyện" data-pos="danh từ / noun (plural)" data-def-en="Accounts of real or imaginary events." data-def-vn="Các kể về sự kiện thực hoặc hư cấu." data-context-en="dismissed these stories as myths.">stories</span> as <span class="vocab" data-word-en="myths" data-word-vn="thần thoại" data-pos="danh từ / noun (plural)" data-def-en="Traditional stories, especially ones concerning early history." data-def-vn="Các câu chuyện truyền thống, đặc biệt liên quan đến lịch sử ban đầu." data-context-en="as myths.">myths</span>.
+    </p>
+
+    <p>
+        They <span class="vocab" data-word-en="believed" data-word-vn="tin" data-pos="động từ / verb (past)" data-def-en="Accepted as true." data-def-vn="Chấp nhận là đúng." data-context-en="They believed the rainforest...">believed</span> the <span class="vocab" data-word-en="rainforest" data-word-vn="rừng mưa" data-pos="danh từ / noun" data-def-en="A dense forest in tropical regions with high rainfall." data-def-vn="Một khu rừng rậm ở vùng nhiệt đới với lượng mưa cao." data-context-en="the rainforest was too harsh...">rainforest</span> was too <span class="vocab" data-word-en="harsh" data-word-vn="khắc nghiệt" data-pos="tính từ / adjective" data-def-en="Unpleasantly rough or severe." data-def-vn="Thô ráp hoặc nghiêm khắc khó chịu." data-context-en="rainforest was too harsh to support...">harsh</span> to <span class="vocab" data-word-en="support" data-word-vn="hỗ trợ" data-pos="động từ / verb" data-def-en="Provide the necessary conditions for." data-def-vn="Cung cấp điều kiện cần thiết cho." data-context-en="too harsh to support a large civilization.">support</span> a <span class="vocab" data-word-en="large" data-word-vn="lớn" data-pos="tính từ / adjective" data-def-en="Of considerable size or extent." data-def-vn="Có kích thước hoặc phạm vi đáng kể." data-context-en="support a large civilization.">large</span> <span class="vocab" data-word-en="civilization" data-word-vn="nền văn minh" data-pos="danh từ / noun" data-def-en="An advanced state of human social development." data-def-vn="Trạng thái phát triển xã hội con người tiên tiến." data-context-en="a large civilization.">civilization</span>.
+    </p>
+
+    <p>
+        Fawcett <span class="vocab" data-word-en="disagreed" data-word-vn="không đồng ý" data-pos="động từ / verb (past)" data-def-en="Had a different opinion." data-def-vn="Có ý kiến khác biệt." data-context-en="Fawcett disagreed.">disagreed</span>.
+    </p>
+
+    <p>
+        He became <span class="vocab" data-word-en="convinced" data-word-vn="tin chắc" data-pos="tính từ / adjective" data-def-en="Completely certain about something." data-def-vn="Hoàn toàn chắc chắn về điều gì đó." data-context-en="He became convinced that a lost city...">convinced</span> that a <span class="vocab" data-word-en="lost" data-word-vn="bị mất" data-pos="tính từ / adjective" data-def-en="Unable to be found." data-def-vn="Không thể tìm thấy." data-context-en="a lost city...">lost</span> <span class="vocab" data-word-en="city" data-word-vn="thành phố" data-pos="danh từ / noun" data-def-en="A large town." data-def-vn="Một thị trấn lớn." data-context-en="lost city, which he called...">city</span>, which he called "<span class="vocab" data-word-en="Z" data-word-vn="Z" data-pos="danh từ riêng / proper noun" data-def-en="The designation for the lost city." data-def-vn="Tên gọi cho thành phố bị mất." data-context-en="which he called 'Z,' existed...">Z</span>," <span class="vocab" data-word-en="existed" data-word-vn="tồn tại" data-pos="động từ / verb (past)" data-def-en="Had actual being." data-def-vn="Có sự tồn tại thực tế." data-context-en="existed somewhere in the Amazon.">existed</span> <span class="vocab" data-word-en="somewhere" data-word-vn="ở đâu đó" data-pos="trạng từ / adverb" data-def-en="In or to some place." data-def-vn="Ở hoặc đến một nơi nào đó." data-context-en="existed somewhere in the Amazon.">somewhere</span> in the <span class="vocab" data-word-en="Amazon" data-word-vn="Amazon" data-pos="danh từ riêng / proper noun" data-def-en="The vast tropical rainforest in South America." data-def-vn="Rừng nhiệt đới rộng lớn ở Nam Mỹ." data-context-en="in the Amazon.">Amazon</span>.
+    </p>
+
+    <p>
+        Over the next <span class="vocab" data-word-en="twenty" data-word-vn="hai mươi" data-pos="số từ / numeral" data-def-en="The number 20." data-def-vn="Con số 20." data-context-en="Over the next twenty years...">twenty</span> <span class="vocab" data-word-en="years" data-word-vn="năm" data-pos="danh từ / noun (plural)" data-def-en="Periods of 365 days." data-def-vn="Các khoảng thời gian 365 ngày." data-context-en="twenty years, Fawcett organized...">years</span>, Fawcett <span class="vocab" data-word-en="organized" data-word-vn="tổ chức" data-pos="động từ / verb (past)" data-def-en="Arranged or planned." data-def-vn="Sắp xếp hoặc lập kế hoạch." data-context-en="Fawcett organized several expeditions.">organized</span> <span class="vocab" data-word-en="several" data-word-vn="nhiều" data-pos="tính từ / adjective" data-def-en="More than two but not many." data-def-vn="Nhiều hơn hai nhưng không quá nhiều." data-context-en="organized several expeditions.">several</span> <span class="vocab" data-word-en="expeditions" data-word-vn="các cuộc thám hiểm" data-pos="danh từ / noun (plural)" data-def-en="Organized journeys for a purpose." data-def-vn="Các chuyến đi có tổ chức cho một mục đích." data-context-en="several expeditions.">expeditions</span>.
+    </p>
+
+    <p>
+        He <span class="vocab" data-word-en="endured" data-word-vn="chịu đựng" data-pos="động từ / verb (past)" data-def-en="Suffered through difficult conditions." data-def-vn="Chịu đựng qua các điều kiện khó khăn." data-context-en="He endured disease, insects...">endured</span> <span class="vocab" data-word-en="disease" data-word-vn="bệnh tật" data-pos="danh từ / noun" data-def-en="An illness affecting living organisms." data-def-vn="Bệnh ảnh hưởng đến sinh vật sống." data-context-en="endured disease, insects...">disease</span>, <span class="vocab" data-word-en="insects" data-word-vn="côn trùng" data-pos="danh từ / noun (plural)" data-def-en="Small invertebrate animals with six legs." data-def-vn="Động vật không xương sống nhỏ có sáu chân." data-context-en="disease, insects, floods...">insects</span>, <span class="vocab" data-word-en="floods" data-word-vn="lũ lụt" data-pos="danh từ / noun (plural)" data-def-en="Overflows of water." data-def-vn="Sự tràn ngập của nước." data-context-en="insects, floods, and dangerous animals.">floods</span>, and <span class="vocab" data-word-en="dangerous" data-word-vn="nguy hiểm" data-pos="tính từ / adjective" data-def-en="Likely to cause harm." data-def-vn="Có khả năng gây hại." data-context-en="and dangerous animals.">dangerous</span> <span class="vocab" data-word-en="animals" data-word-vn="động vật" data-pos="danh từ / noun (plural)" data-def-en="Living creatures other than humans." data-def-vn="Các sinh vật sống ngoài con người." data-context-en="dangerous animals.">animals</span>.
+    </p>
+
+    <p>
+        He also <span class="vocab" data-word-en="met" data-word-vn="gặp" data-pos="động từ / verb (past)" data-def-en="Came into contact with." data-def-vn="Tiếp xúc với." data-context-en="He also met indigenous tribes...">met</span> <span class="vocab" data-word-en="indigenous" data-word-vn="bản địa" data-pos="tính từ / adjective" data-def-en="Native to a particular place." data-def-vn="Bản xứ của một nơi cụ thể." data-context-en="met indigenous tribes...">indigenous</span> <span class="vocab" data-word-en="tribes" data-word-vn="bộ lạc" data-pos="danh từ / noun (plural)" data-def-en="Social groups of people." data-def-vn="Các nhóm xã hội của con người." data-context-en="indigenous tribes, some friendly...">tribes</span>, some <span class="vocab" data-word-en="friendly" data-word-vn="thân thiện" data-pos="tính từ / adjective" data-def-en="Kind and pleasant." data-def-vn="Tốt bụng và dễ chịu." data-context-en="some friendly and some hostile.">friendly</span> and some <span class="vocab" data-word-en="hostile" data-word-vn="thù địch" data-pos="tính từ / adjective" data-def-en="Unfriendly or antagonistic." data-def-vn="Không thân thiện hoặc thù nghịch." data-context-en="some hostile.">hostile</span>.
+    </p>
+
+    <p>
+        Despite the <span class="vocab" data-word-en="hardships" data-word-vn="khó khăn" data-pos="danh từ / noun (plural)" data-def-en="Difficult conditions." data-def-vn="Các điều kiện khó khăn." data-context-en="Despite the hardships, he never...">hardships</span>, he never found <span class="vocab" data-word-en="convincing" data-word-vn="thuyết phục" data-pos="tính từ / adjective" data-def-en="Capable of causing someone to believe." data-def-vn="Có khả năng khiến ai đó tin." data-context-en="never found convincing proof...">convincing</span> <span class="vocab" data-word-en="proof" data-word-vn="bằng chứng" data-pos="danh từ / noun" data-def-en="Evidence establishing truth." data-def-vn="Bằng chứng xác lập sự thật." data-context-en="convincing proof of the city.">proof</span> of the <span class="vocab" data-word-en="city" data-word-vn="thành phố" data-pos="danh từ / noun" data-def-en="A large town." data-def-vn="Một thị trấn lớn." data-context-en="proof of the city.">city</span>.
+    </p>
+
+    <p>
+        In <span class="vocab" data-word-en="1925" data-word-vn="1925" data-pos="danh từ / noun" data-def-en="The year nineteen twenty-five." data-def-vn="Năm một nghìn chín trăm hai mươi lăm." data-context-en="In 1925, Fawcett decided...">1925</span>, Fawcett <span class="vocab" data-word-en="decided" data-word-vn="quyết định" data-pos="động từ / verb (past)" data-def-en="Made up one's mind." data-def-vn="Đưa ra quyết định." data-context-en="Fawcett decided to make...">decided</span> to make one <span class="vocab" data-word-en="final" data-word-vn="cuối cùng" data-pos="tính từ / adjective" data-def-en="Coming at the end." data-def-vn="Đến ở cuối cùng." data-context-en="one final expedition.">final</span> <span class="vocab" data-word-en="expedition" data-word-vn="cuộc thám hiểm" data-pos="danh từ / noun" data-def-en="Organized journey for a purpose." data-def-vn="Chuyến đi có tổ chức cho mục đích." data-context-en="final expedition.">expedition</span>.
+    </p>
+
+    <p>
+        This <span class="vocab" data-word-en="time" data-word-vn="lần" data-pos="danh từ / noun" data-def-en="A particular occasion." data-def-vn="Một dịp cụ thể." data-context-en="This time he was accompanied...">time</span> he was <span class="vocab" data-word-en="accompanied" data-word-vn="đi cùng" data-pos="động từ / verb (past passive)" data-def-en="Went with someone." data-def-vn="Đi cùng ai đó." data-context-en="he was accompanied by his son...">accompanied</span> by his <span class="vocab" data-word-en="son" data-word-vn="con trai" data-pos="danh từ / noun" data-def-en="A male child." data-def-vn="Đứa con trai." data-context-en="by his son Jack...">son</span> Jack and Jack's <span class="vocab" data-word-en="friend" data-word-vn="bạn" data-pos="danh từ / noun" data-def-en="A person one knows and likes." data-def-vn="Người quen và thích." data-context-en="Jack's friend Raleigh.">friend</span> Raleigh.
+    </p>
+
+    <p>
+        Before <span class="vocab" data-word-en="leaving" data-word-vn="rời đi" data-pos="động từ / verb (gerund)" data-def-en="Departing from a place." data-def-vn="Rời khỏi một nơi." data-context-en="Before leaving, he warned...">leaving</span>, he <span class="vocab" data-word-en="warned" data-word-vn="cảnh báo" data-pos="động từ / verb (past)" data-def-en="Informed of a possible danger." data-def-vn="Thông báo về nguy hiểm có thể." data-context-en="he warned people not to...">warned</span> <span class="vocab" data-word-en="people" data-word-vn="người dân" data-pos="danh từ / noun (plural)" data-def-en="Human beings in general." data-def-vn="Các sinh vật loài người nói chung." data-context-en="warned people not to search...">people</span> not to <span class="vocab" data-word-en="search" data-word-vn="tìm kiếm" data-pos="động từ / verb" data-def-en="Look for something." data-def-vn="Tìm kiếm thứ gì đó." data-context-en="not to search for him...">search</span> for him if he <span class="vocab" data-word-en="disappeared" data-word-vn="biến mất" data-pos="động từ / verb (past)" data-def-en="Ceased to be visible." data-def-vn="Ngừng hiện diện." data-context-en="if he disappeared.">disappeared</span>.
+    </p>
+
+    <p>
+        The three <span class="vocab" data-word-en="men" data-word-vn="người đàn ông" data-pos="danh từ / noun (plural)" data-def-en="Adult human males." data-def-vn="Nam giới trưởng thành." data-context-en="The three men entered...">men</span> <span class="vocab" data-word-en="entered" data-word-vn="bước vào" data-pos="động từ / verb (past)" data-def-en="Came or went into." data-def-vn="Đi vào." data-context-en="men entered the jungle...">entered</span> the <span class="vocab" data-word-en="jungle" data-word-vn="rừng rậm" data-pos="danh từ / noun" data-def-en="A dense, tangled forest." data-def-vn="Một khu rừng rậm rạp, chằng chịt." data-context-en="entered the jungle carrying...">jungle</span> <span class="vocab" data-word-en="carrying" data-word-vn="mang theo" data-pos="động từ / verb (present participle)" data-def-en="Holding and transporting." data-def-vn="Cầm và vận chuyển." data-context-en="carrying only basic supplies.">carrying</span> only <span class="vocab" data-word-en="basic" data-word-vn="cơ bản" data-pos="tính từ / adjective" data-def-en="Fundamental or simple." data-def-vn="Cơ bản hoặc đơn giản." data-context-en="only basic supplies.">basic</span> <span class="vocab" data-word-en="supplies" data-word-vn="vật tư" data-pos="danh từ / noun (plural)" data-def-en="Necessary items." data-def-vn="Các vật dụng cần thiết." data-context-en="basic supplies.">supplies</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Weeks" data-word-vn="nhiều tuần" data-pos="danh từ / noun (plural)" data-def-en="Periods of seven days." data-def-vn="Các khoảng thời gian bảy ngày." data-context-en="Weeks later, they sent...">Weeks</span> <span class="vocab" data-word-en="later" data-word-vn="sau đó" data-pos="trạng từ / adverb" data-def-en="After a period of time." data-def-vn="Sau một khoảng thời gian." data-context-en="Weeks later, they sent...">later</span>, they <span class="vocab" data-word-en="sent" data-word-vn="gửi" data-pos="động từ / verb (past)" data-def-en="Caused to be delivered." data-def-vn="Khiến được chuyển giao." data-context-en="they sent their final message.">sent</span> their <span class="vocab" data-word-en="final" data-word-vn="cuối cùng" data-pos="tính từ / adjective" data-def-en="Coming at the end." data-def-vn="Đến ở cuối cùng." data-context-en="their final message.">final</span> <span class="vocab" data-word-en="message" data-word-vn="tin nhắn" data-pos="danh từ / noun" data-def-en="A communication." data-def-vn="Một thông điệp." data-context-en="final message.">message</span>.
+    </p>
+
+    <p>
+        Then all <span class="vocab" data-word-en="contact" data-word-vn="liên lạc" data-pos="danh từ / noun" data-def-en="Communication between people." data-def-vn="Giao tiếp giữa con người." data-context-en="Then all contact stopped.">contact</span> <span class="vocab" data-word-en="stopped" data-word-vn="dừng lại" data-pos="động từ / verb (past)" data-def-en="Ceased movement or action." data-def-vn="Ngừng chuyển động hoặc hành động." data-context-en="all contact stopped.">stopped</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Search" data-word-vn="đội tìm kiếm" data-pos="danh từ / noun" data-def-en="An act of looking for something." data-def-vn="Hành động tìm kiếm thứ gì đó." data-context-en="Search parties later entered...">Search</span> <span class="vocab" data-word-en="parties" data-word-vn="các nhóm" data-pos="danh từ / noun (plural)" data-def-en="Groups of people." data-def-vn="Các nhóm người." data-context-en="Search parties later entered...">parties</span> <span class="vocab" data-word-en="later" data-word-vn="sau đó" data-pos="trạng từ / adverb" data-def-en="After a period of time." data-def-vn="Sau một khoảng thời gian." data-context-en="later entered the Amazon...">later</span> <span class="vocab" data-word-en="entered" data-word-vn="bước vào" data-pos="động từ / verb (past)" data-def-en="Came or went into." data-def-vn="Đi vào." data-context-en="entered the Amazon looking...">entered</span> the <span class="vocab" data-word-en="Amazon" data-word-vn="Amazon" data-pos="danh từ riêng / proper noun" data-def-en="The vast tropical rainforest in South America." data-def-vn="Rừng nhiệt đới rộng lớn ở Nam Mỹ." data-context-en="entered the Amazon looking for the missing explorers.">Amazon</span> <span class="vocab" data-word-en="looking" data-word-vn="tìm" data-pos="động từ / verb (present participle)" data-def-en="Trying to find." data-def-vn="Cố gắng tìm." data-context-en="looking for the missing explorers.">looking</span> for the <span class="vocab" data-word-en="missing" data-word-vn="mất tích" data-pos="tính từ / adjective" data-def-en="Not present or not found." data-def-vn="Không có mặt hoặc không tìm thấy." data-context-en="missing explorers.">missing</span> <span class="vocab" data-word-en="explorers" data-word-vn="các nhà thám hiểm" data-pos="danh từ / noun (plural)" data-def-en="People who explore." data-def-vn="Những người thám hiểm." data-context-en="missing explorers.">explorers</span>.
+    </p>
+
+    <p>
+        Some <span class="vocab" data-word-en="investigators" data-word-vn="điều tra viên" data-pos="danh từ / noun (plural)" data-def-en="People who inquire into something." data-def-vn="Những người điều tra thứ gì đó." data-context-en="Some investigators believed...">investigators</span> <span class="vocab" data-word-en="believed" data-word-vn="tin" data-pos="động từ / verb (past)" data-def-en="Accepted as true." data-def-vn="Chấp nhận là đúng." data-context-en="investigators believed they had been killed...">believed</span> they had been <span class="vocab" data-word-en="killed" data-word-vn="bị giết" data-pos="động từ / verb (past participle)" data-def-en="Deprived of life." data-def-vn="Bị tước đoạt sự sống." data-context-en="had been killed by a local tribe.">killed</span> by a <span class="vocab" data-word-en="local" data-word-vn="địa phương" data-pos="tính từ / adjective" data-def-en="Belonging to a particular area." data-def-vn="Thuộc về một khu vực cụ thể." data-context-en="by a local tribe.">local</span> <span class="vocab" data-word-en="tribe" data-word-vn="bộ lạc" data-pos="danh từ / noun" data-def-en="A social group of people." data-def-vn="Một nhóm xã hội của con người." data-context-en="local tribe.">tribe</span>.
+    </p>
+
+    <p>
+        Others <span class="vocab" data-word-en="thought" data-word-vn="nghĩ" data-pos="động từ / verb (past)" data-def-en="Had an opinion." data-def-vn="Có ý kiến." data-context-en="Others thought they may have died...">thought</span> they may have <span class="vocab" data-word-en="died" data-word-vn="chết" data-pos="động từ / verb (past)" data-def-en="Ceased to live." data-def-vn="Ngừng sống." data-context-en="may have died from starvation...">died</span> from <span class="vocab" data-word-en="starvation" data-word-vn="đói khát" data-pos="danh từ / noun" data-def-en="Suffering or death from lack of food." data-def-vn="Khổ sở hoặc chết do thiếu thức ăn." data-context-en="died from starvation, disease...">starvation</span>, <span class="vocab" data-word-en="disease" data-word-vn="bệnh tật" data-pos="danh từ / noun" data-def-en="An illness affecting living organisms." data-def-vn="Bệnh ảnh hưởng đến sinh vật sống." data-context-en="starvation, disease, or an accident.">disease</span>, or an <span class="vocab" data-word-en="accident" data-word-vn="tai nạn" data-pos="danh từ / noun" data-def-en="An unexpected event causing damage." data-def-vn="Sự kiện bất ngờ gây thiệt hại." data-context-en="or an accident.">accident</span>.
+    </p>
+
+    <p>
+        A few <span class="vocab" data-word-en="people" data-word-vn="người dân" data-pos="danh từ / noun (plural)" data-def-en="Human beings in general." data-def-vn="Các sinh vật loài người nói chung." data-context-en="A few people even claimed...">people</span> even <span class="vocab" data-word-en="claimed" data-word-vn="nói rằng" data-pos="động từ / verb (past)" data-def-en="Stated as a fact." data-def-vn="Nêu như một sự thật." data-context-en="even claimed that Fawcett...">claimed</span> that Fawcett had found the <span class="vocab" data-word-en="lost" data-word-vn="bị mất" data-pos="tính từ / adjective" data-def-en="Unable to be found." data-def-vn="Không thể tìm thấy." data-context-en="found the lost city...">lost</span> <span class="vocab" data-word-en="city" data-word-vn="thành phố" data-pos="danh từ / noun" data-def-en="A large town." data-def-vn="Một thị trấn lớn." data-context-en="the lost city and chosen...">city</span> and <span class="vocab" data-word-en="chosen" data-word-vn="chọn" data-pos="động từ / verb (past participle)" data-def-en="Selected as preferred." data-def-vn="Chọn là ưu tiên." data-context-en="and chosen to remain there.">chosen</span> to <span class="vocab" data-word-en="remain" data-word-vn="ở lại" data-pos="động từ / verb" data-def-en="Continue to stay." data-def-vn="Tiếp tục ở lại." data-context-en="chosen to remain there.">remain</span> there.
+    </p>
+
+    <p>
+        More than one <span class="vocab" data-word-en="hundred" data-word-vn="trăm" data-pos="số từ / numeral" data-def-en="The number 100." data-def-vn="Con số 100." data-context-en="More than one hundred years later...">hundred</span> <span class="vocab" data-word-en="years" data-word-vn="năm" data-pos="danh từ / noun (plural)" data-def-en="Periods of 365 days." data-def-vn="Các khoảng thời gian 365 ngày." data-context-en="hundred years later...">years</span> <span class="vocab" data-word-en="later" data-word-vn="sau đó" data-pos="trạng từ / adverb" data-def-en="After a period of time." data-def-vn="Sau một khoảng thời gian." data-context-en="years later, nobody knows...">later</span>, nobody knows <span class="vocab" data-word-en="exactly" data-word-vn="chính xác" data-pos="trạng từ / adverb" data-def-en="In a precise manner." data-def-vn="Theo cách chính xác." data-context-en="nobody knows exactly what happened.">exactly</span> what <span class="vocab" data-word-en="happened" data-word-vn="xảy ra" data-pos="động từ / verb (past)" data-def-en="Took place." data-def-vn="Đã diễn ra." data-context-en="exactly what happened.">happened</span>.
+    </p>
+
+    <p>
+        The <span class="vocab" data-word-en="mystery" data-word-vn="bí ẩn" data-pos="danh từ / noun" data-def-en="Something that is difficult or impossible to understand or explain." data-def-vn="Điều gì đó khó hoặc không thể hiểu hoặc giải thích." data-context-en="The mystery has inspired...">mystery</span> has <span class="vocab" data-word-en="inspired" data-word-vn="truyền cảm hứng" data-pos="động từ / verb (past)" data-def-en="Filled with the urge to do something creative." data-def-vn="Khơi dậy thôi thúc làm điều sáng tạo." data-context-en="mystery has inspired books...">inspired</span> <span class="vocab" data-word-en="books" data-word-vn="sách" data-pos="danh từ / noun (plural)" data-def-en="Written works for reading." data-def-vn="Các tác phẩm viết để đọc." data-context-en="inspired books, documentaries...">books</span>, <span class="vocab" data-word-en="documentaries" data-word-vn="phim tài liệu" data-pos="danh từ / noun (plural)" data-def-en="Films or programs based on facts." data-def-vn="Phim hoặc chương trình dựa trên sự kiện." data-context-en="books, documentaries, and movies.">documentaries</span>, and <span class="vocab" data-word-en="movies" data-word-vn="phim" data-pos="danh từ / noun (plural)" data-def-en="Motion pictures." data-def-vn="Các bộ phim chuyển động." data-context-en="documentaries, and movies.">movies</span>.
+    </p>
+
+    <p>
+        Percy Fawcett never found the <span class="vocab" data-word-en="city" data-word-vn="thành phố" data-pos="danh từ / noun" data-def-en="A large town." data-def-vn="Một thị trấn lớn." data-context-en="never found the city he was searching for.">city</span> he was <span class="vocab" data-word-en="searching" data-word-vn="tìm kiếm" data-pos="động từ / verb (present participle)" data-def-en="Looking for." data-def-vn="Đang tìm kiếm." data-context-en="the city he was searching for.">searching</span> for.
+    </p>
+
+    <p>
+        Yet his <span class="vocab" data-word-en="story" data-word-vn="câu chuyện" data-pos="danh từ / noun" data-def-en="An account of events." data-def-vn="Một kể về các sự kiện." data-context-en="Yet his story raises...">story</span> <span class="vocab" data-word-en="raises" data-word-vn="đặt ra" data-pos="động từ / verb (present)" data-def-en="Brings up for consideration." data-def-vn="Đưa ra để xem xét." data-context-en="story raises an enduring question...">raises</span> an <span class="vocab" data-word-en="enduring" data-word-vn="bền vững" data-pos="tính từ / adjective" data-def-en="Continuing or lasting." data-def-vn="Tiếp tục hoặc kéo dài." data-context-en="an enduring question...">enduring</span> <span class="vocab" data-word-en="question" data-word-vn="câu hỏi" data-pos="danh từ / noun" data-def-en="A matter to be resolved." data-def-vn="Vấn đề cần giải quyết." data-context-en="enduring question: How far...">question</span>: How <span class="vocab" data-word-en="far" data-word-vn="xa" data-pos="trạng từ / adverb" data-def-en="To what extent." data-def-vn="Đến mức độ nào." data-context-en="How far would you go...">far</span> would you <span class="vocab" data-word-en="go" data-word-vn="đi" data-pos="động từ / verb" data-def-en="Proceed or travel." data-def-vn="Tiến hành hoặc di chuyển." data-context-en="would you go to pursue...">go</span> to <span class="vocab" data-word-en="pursue" data-word-vn="theo đuổi" data-pos="động từ / verb" data-def-en="Seek to attain." data-def-vn="Tìm cách đạt được." data-context-en="go to pursue a dream...">pursue</span> a <span class="vocab" data-word-en="dream" data-word-vn="giấc mơ" data-pos="danh từ / noun" data-def-en="An aspiration or ambition." data-def-vn="Khát vọng hoặc tham vọng." data-context-en="pursue a dream that everyone...">dream</span> that <span class="vocab" data-word-en="everyone" data-word-vn="mọi người" data-pos="đại từ / pronoun" data-def-en="All people." data-def-vn="Tất cả mọi người." data-context-en="that everyone else believes...">everyone</span> <span class="vocab" data-word-en="else" data-word-vn="khác" data-pos="trạng từ / adverb" data-def-en="In addition or different." data-def-vn="Ngoài ra hoặc khác." data-context-en="everyone else believes is impossible?">else</span> <span class="vocab" data-word-en="believes" data-word-vn="tin" data-pos="động từ / verb (present)" data-def-en="Accepts as true." data-def-vn="Chấp nhận là đúng." data-context-en="believes is impossible?">believes</span> is <span class="vocab" data-word-en="impossible" data-word-vn="không thể" data-pos="tính từ / adjective" data-def-en="Not possible." data-def-vn="Không thể." data-context-en="is impossible?">impossible</span>?
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning 
+	and where in the story each word appeared.  Click on each word to jump to it's first occurrence in the story.</h2>
+    <div class="memory-grid">
+        <!-- Memory words populated with main unique terms -->
+        <div class="memory-word">people</div>
+        <div class="memory-word">Amazon</div>
+        <div class="memory-word">rainforest</div>
+        <div class="memory-word">place</div>
+        <div class="memory-word">mystery</div>
+        <div class="memory-word">British</div>
+        <div class="memory-word">explorer</div>
+        <div class="memory-word">obsession</div>
+        <div class="memory-word">eventually</div>
+        <div class="memory-word">cost</div>
+        <div class="memory-word">life</div>
+        <div class="memory-word">early</div>
+        <div class="memory-word">1900s</div>
+        <div class="memory-word">large</div>
+        <div class="memory-word">parts</div>
+        <div class="memory-word">mapped</div>
+        <div class="memory-word">Europeans</div>
+        <div class="memory-word">hired</div>
+        <div class="memory-word">survey</div>
+        <div class="memory-word">remote</div>
+        <div class="memory-word">regions</div>
+        <div class="memory-word">settle</div>
+        <div class="memory-word">border</div>
+        <div class="memory-word">disputes</div>
+        <div class="memory-word">travels</div>
+        <div class="memory-word">heard</div>
+        <div class="memory-word">stories</div>
+        <div class="memory-word">ancient</div>
+        <div class="memory-word">lost</div>
+        <div class="memory-word">civilization</div>
+        <div class="memory-word">hidden</div>
+        <div class="memory-word">deep</div>
+        <div class="memory-word">jungle</div>
+        <div class="memory-word">experts</div>
+        <div class="memory-word">dismissed</div>
+        <div class="memory-word">myths</div>
+        <div class="memory-word">believed</div>
+        <div class="memory-word">harsh</div>
+        <div class="memory-word">support</div>
+        <div class="memory-word">disagreed</div>
+        <div class="memory-word">convinced</div>
+        <div class="memory-word">city</div>
+        <div class="memory-word">Z</div>
+        <div class="memory-word">existed</div>
+        <div class="memory-word">somewhere</div>
+        <div class="memory-word">twenty</div>
+        <div class="memory-word">years</div>
+        <div class="memory-word">organized</div>
+        <div class="memory-word">several</div>
+        <div class="memory-word">expeditions</div>
+        <div class="memory-word">endured</div>
+        <div class="memory-word">disease</div>
+        <div class="memory-word">insects</div>
+        <div class="memory-word">floods</div>
+        <div class="memory-word">dangerous</div>
+        <div class="memory-word">animals</div>
+        <div class="memory-word">met</div>
+        <div class="memory-word">indigenous</div>
+        <div class="memory-word">tribes</div>
+        <div class="memory-word">friendly</div>
+        <div class="memory-word">hostile</div>
+        <div class="memory-word">hardships</div>
+        <div class="memory-word">convincing</div>
+        <div class="memory-word">proof</div>
+        <div class="memory-word">1925</div>
+        <div class="memory-word">decided</div>
+        <div class="memory-word">final</div>
+        <div class="memory-word">time</div>
+        <div class="memory-word">accompanied</div>
+        <div class="memory-word">son</div>
+        <div class="memory-word">friend</div>
+        <div class="memory-word">leaving</div>
+        <div class="memory-word">warned</div>
+        <div class="memory-word">search</div>
+        <div class="memory-word">disappeared</div>
+        <div class="memory-word">men</div>
+        <div class="memory-word">entered</div>
+        <div class="memory-word">carrying</div>
+        <div class="memory-word">basic</div>
+        <div class="memory-word">supplies</div>
+        <div class="memory-word">Weeks</div>
+        <div class="memory-word">later</div>
+        <div class="memory-word">sent</div>
+        <div class="memory-word">message</div>
+        <div class="memory-word">contact</div>
+        <div class="memory-word">stopped</div>
+        <div class="memory-word">Search</div>
+        <div class="memory-word">parties</div>
+        <div class="memory-word">looking</div>
+        <div class="memory-word">missing</div>
+        <div class="memory-word">explorers</div>
+        <div class="memory-word">investigators</div>
+        <div class="memory-word">killed</div>
+        <div class="memory-word">local</div>
+        <div class="memory-word">tribe</div>
+        <div class="memory-word">thought</div>
+        <div class="memory-word">died</div>
+        <div class="memory-word">starvation</div>
+        <div class="memory-word">accident</div>
+        <div class="memory-word">claimed</div>
+        <div class="memory-word">chosen</div>
+        <div class="memory-word">remain</div>
+        <div class="memory-word">hundred</div>
+        <div class="memory-word">exactly</div>
+        <div class="memory-word">happened</div>
+        <div class="memory-word">inspired</div>
+        <div class="memory-word">books</div>
+        <div class="memory-word">documentaries</div>
+        <div class="memory-word">movies</div>
+        <div class="memory-word">searching</div>
+        <div class="memory-word">story</div>
+        <div class="memory-word">raises</div>
+        <div class="memory-word">enduring</div>
+        <div class="memory-word">question</div>
+        <div class="memory-word">far</div>
+        <div class="memory-word">go</div>
+        <div class="memory-word">pursue</div>
+        <div class="memory-word">dream</div>
+        <div class="memory-word">everyone</div>
+        <div class="memory-word">else</div>
+        <div class="memory-word">believes</div>
+        <div class="memory-word">impossible</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordEn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord || 
+                    el.innerText.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
