@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cánh Tay Hay Mạng Sống!</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Cánh Tay Hay Mạng Sống!</h1>
+    <h2 class="subtitle">Câu Chuyện Sinh Tồn</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Nghe câu chuyện</div>
+        <audio id="audio-player" src="canh_tay.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Bắt đầu</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 giây</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 giây</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 giây</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 giây</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ Kết thúc</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Tốc độ:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        Vào <span class="vocab" data-word-en="April" data-word-vn="tháng 4" data-pos="danh từ / noun" data-def-en="The fourth month of the year." data-def-vn="Tháng thứ tư trong năm." data-context-en="In April 2003...">tháng 4</span> năm <span class="vocab" data-word-en="2003" data-word-vn="2003" data-pos="số / number" data-def-en="The year two thousand three." data-def-vn="Năm hai nghìn không ba." data-context-en="In April 2003...">2003</span>, một <span class="vocab" data-word-en="experienced" data-word-vn="giàu kinh nghiệm" data-pos="tính từ / adjective" data-def-en="Having a lot of knowledge or skill from practice." data-def-vn="Có nhiều kiến thức hoặc kỹ năng từ thực hành." data-context-en="An experienced American mountaineer...">nhà leo núi</span> <span class="vocab" data-word-en="experienced" data-word-vn="giàu kinh nghiệm" data-pos="tính từ / adjective" data-def-en="Having a lot of knowledge or skill from practice." data-def-vn="Có nhiều kiến thức hoặc kỹ năng từ thực hành." data-context-en="An experienced American mountaineer...">giàu kinh nghiệm</span> người Mỹ tên Aron Ralston một mình lên đường <span class="vocab" data-word-en="explore" data-word-vn="khám phá" data-pos="động từ / verb" data-def-en="To travel around an area to learn about it." data-def-vn="Đi xung quanh một khu vực để tìm hiểu về nó." data-context-en="...đi khám phá một hẻm núi...">khám phá</span> một <span class="vocab" data-word-en="canyon" data-word-vn="hẻm núi" data-pos="danh từ / noun" data-def-en="A deep narrow valley with steep sides." data-def-vn="Một thung lũng hẹp sâu với hai bên dốc đứng." data-context-en="...một hẻm núi hẻo lánh...">hẻm núi</span> <span class="vocab" data-word-en="remote" data-word-vn="hẻo lánh" data-pos="tính từ / adjective" data-def-en="Far away from other places." data-def-vn="Xa xôi, cách biệt." data-context-en="...hẻm núi hẻo lánh...">hẻo lánh</span> ở bang Utah.
+    </p>
+
+    <p>
+        Ông đã nhiều lần đến những nơi <span class="vocab" data-word-en="similar" data-word-vn="tương tự" data-pos="tính từ / adjective" data-def-en="Like something else." data-def-vn="Giống với cái gì đó khác." data-context-en="...những nơi tương tự...">tương tự</span> trước đó và cho rằng đây sẽ chỉ là một chuyến <span class="vocab" data-word-en="adventure" data-word-vn="phiêu lưu" data-pos="danh từ / noun" data-def-en="An exciting or dangerous experience." data-def-vn="Một trải nghiệm thú vị hoặc nguy hiểm." data-context-en="...chuyến phiêu lưu bình thường.">phiêu lưu</span> <span class="vocab" data-word-en="normal" data-word-vn="bình thường" data-pos="tính từ / adjective" data-def-en="Usual, ordinary." data-def-vn="Thông thường, không đặc biệt." data-context-en="...phiêu lưu bình thường.">bình thường</span>. Tuy nhiên, khi đang leo qua một hẻm núi <span class="vocab" data-word-en="narrow" data-word-vn="hẹp" data-pos="tính từ / adjective" data-def-en="Not wide." data-def-vn="Không rộng." data-context-en="...hẻm núi hẹp...">hẹp</span>, <span class="vocab" data-word-en="disaster" data-word-vn="thảm họa" data-pos="danh từ / noun" data-def-en="A sudden terrible event." data-def-vn="Một sự kiện đột ngột kinh khủng." data-context-en="...thảm họa bất ngờ xảy ra.">thảm họa</span> <span class="vocab" data-word-en="suddenly" data-word-vn="bất ngờ" data-pos="trạng từ / adverb" data-def-en="Quickly and unexpectedly." data-def-vn="Nhanh chóng và không mong đợi." data-context-en="...bất ngờ xảy ra.">bất ngờ</span> xảy ra. Một <span class="vocab" data-word-en="boulder" data-word-vn="tảng đá lớn" data-pos="danh từ / noun" data-def-en="A very large rock." data-def-vn="Một tảng đá rất to." data-context-en="Một tảng đá lớn...">tảng đá lớn</span> đột ngột <span class="vocab" data-word-en="shifted" data-word-vn="dịch chuyển" data-pos="động từ / verb" data-def-en="Moved from its position." data-def-vn="Di chuyển khỏi vị trí ban đầu." data-context-en="...dịch chuyển và kẹp chặt...">dịch chuyển</span> và <span class="vocab" data-word-en="trapped" data-word-vn="kẹp chặt" data-pos="động từ / verb" data-def-en="Caught and held firmly." data-def-vn="Bị kẹt và giữ chặt." data-context-en="...kẹp chặt cánh tay...">kẹp chặt</span> <span class="vocab" data-word-en="right arm" data-word-vn="cánh tay phải" data-pos="cụm danh từ / noun phrase" data-def-en="The arm on the right side of the body." data-def-vn="Cánh tay bên phải của cơ thể." data-context-en="...cánh tay phải của ông...">cánh tay phải</span> của ông vào vách đá. Dù cố gắng <span class="vocab" data-word-en="pull" data-word-vn="kéo" data-pos="động từ / verb" data-def-en="Use force to move something toward oneself." data-def-vn="Sử dụng lực để kéo cái gì đó về phía mình." data-context-en="...cố gắng kéo mạnh...">kéo</span> mạnh đến đâu, ông vẫn không thể <span class="vocab" data-word-en="free" data-word-vn="giải thoát" data-pos="động từ / verb" data-def-en="Release from restraint." data-def-vn="Thả ra khỏi sự kìm hãm." data-context-en="...không thể giải thoát...">giải thoát</span> cánh tay của mình.
+    </p>
+
+    <p>
+        Ban đầu, Ralston tin rằng sẽ có người tìm thấy ông. Tuy nhiên, ông đã không nói cho bất kỳ ai biết chính xác mình sẽ đi đâu. Hàng giờ <span class="vocab" data-word-en="passed" data-word-vn="trôi qua" data-pos="động từ / verb" data-def-en="Went by (time)." data-def-vn="Thời gian trôi qua." data-context-en="Hàng giờ trôi qua...">trôi qua</span> rồi thành nhiều ngày. Lượng <span class="vocab" data-word-en="food" data-word-vn="thức ăn" data-pos="danh từ / noun" data-def-en="Things that people eat." data-def-vn="Những thứ con người ăn." data-context-en="...lượng thức ăn...">thức ăn</span> của ông dần <span class="vocab" data-word-en="ran out" data-word-vn="cạn kiệt" data-pos="cụm động từ / verb phrase" data-def-en="Became completely used up." data-def-vn="Dùng hết hoàn toàn." data-context-en="...cạn kiệt...">cạn kiệt</span>, còn nguồn <span class="vocab" data-word-en="water" data-word-vn="nước" data-pos="danh từ / noun" data-def-en="The clear liquid necessary for life." data-def-vn="Chất lỏng trong suốt cần thiết cho sự sống." data-context-en="...nguồn nước gần như không còn.">nước</span> gần như không còn. Trong suốt năm ngày, ông bị <span class="vocab" data-word-en="trapped" data-word-vn="mắc kẹt" data-pos="động từ / verb" data-def-en="Unable to escape." data-def-vn="Không thể thoát ra." data-context-en="...bị mắc kẹt tại đó.">mắc kẹt</span> tại đó. Ông thử mọi cách mà mình có thể <span class="vocab" data-word-en="think of" data-word-vn="nghĩ ra" data-pos="cụm động từ / verb phrase" data-def-en="Come up with ideas." data-def-vn="Nghĩ ra ý tưởng." data-context-en="...mọi cách mà mình có thể nghĩ ra.">nghĩ ra</span>.
+    </p>
+
+    <p>
+        Ông <span class="vocab" data-word-en="chipped" data-word-vn="đục" data-pos="động từ / verb" data-def-en="Cut small pieces off a hard surface." data-def-vn="Đục những mảnh nhỏ khỏi bề mặt cứng." data-context-en="Ông đục vào tảng đá...">đục</span> vào tảng đá, cố gắng di chuyển nó, và thậm chí còn <span class="vocab" data-word-en="recorded" data-word-vn="ghi lại" data-pos="động từ / verb" data-def-en="Made a video or audio record." data-def-vn="Ghi hình hoặc âm thanh lại." data-context-en="...ghi lại những lời từ biệt...">ghi lại</span> những lời <span class="vocab" data-word-en="farewell" data-word-vn="từ biệt" data-pos="danh từ / noun" data-def-en="Goodbye, especially final." data-def-vn="Lời chào tạm biệt, đặc biệt là lần cuối." data-context-en="...lời từ biệt...">từ biệt</span> gửi đến gia đình vì tin rằng mình sắp chết. Khi nhận ra khả năng được <span class="vocab" data-word-en="rescued" data-word-vn="cứu" data-pos="động từ / verb" data-def-en="Saved from danger." data-def-vn="Được cứu khỏi nguy hiểm." data-context-en="...khả năng được cứu...">cứu</span> là rất <span class="vocab" data-word-en="slim" data-word-vn="mong manh" data-pos="tính từ / adjective" data-def-en="Very small chance." data-def-vn="Cơ hội rất nhỏ." data-context-en="...rất mong manh...">mong manh</span>, Ralston đã đưa ra một <span class="vocab" data-word-en="decision" data-word-vn="quyết định" data-pos="danh từ / noun" data-def-en="A choice made after thinking." data-def-vn="Một lựa chọn được đưa ra sau khi suy nghĩ." data-context-en="...một quyết định gây sốc...">quyết định</span> gây <span class="vocab" data-word-en="shock" data-word-vn="sốc" data-pos="danh từ / noun" data-def-en="A strong emotional reaction." data-def-vn="Phản ứng cảm xúc mạnh mẽ." data-context-en="...gây sốc...">sốc</span>: tự <span class="vocab" data-word-en="amputate" data-word-vn="cắt bỏ" data-pos="động từ / verb" data-def-en="Cut off a body part." data-def-vn="Cắt bỏ một bộ phận cơ thể." data-context-en="...tự cắt bỏ cánh tay...">cắt bỏ</span> cánh tay của mình.
+    </p>
+
+    <p>
+        Sử dụng một chiếc <span class="vocab" data-word-en="multi-tool" data-word-vn="dao đa năng" data-pos="danh từ / noun" data-def-en="A tool with many functions." data-def-vn="Công cụ có nhiều chức năng." data-context-en="...chiếc dao đa năng nhỏ...">dao đa năng</span> nhỏ, ông làm <span class="vocab" data-word-en="break" data-word-vn="gãy" data-pos="động từ / verb" data-def-en="Cause something to separate into pieces." data-def-vn="Làm cho cái gì đó gãy ra." data-context-en="...làm gãy các xương...">gãy</span> các xương ở cánh tay rồi cắt qua phần <span class="vocab" data-word-en="tissue" data-word-vn="mô" data-pos="danh từ / noun" data-def-en="Soft body material." data-def-vn="Mô mềm của cơ thể." data-context-en="...cắt qua phần mô...">mô</span> còn lại. Quá trình <span class="vocab" data-word-en="painful" data-word-vn="đau đớn" data-pos="tính từ / adjective" data-def-en="Causing great pain." data-def-vn="Gây ra đau đớn lớn." data-context-en="Quá trình đau đớn ấy...">đau đớn</span> ấy kéo dài hơn một giờ đồng hồ. Cuối cùng được giải thoát, ông vẫn phải đối mặt với một <span class="vocab" data-word-en="challenge" data-word-vn="thử thách" data-pos="danh từ / noun" data-def-en="A difficult task." data-def-vn="Một nhiệm vụ khó khăn." data-context-en="...một thử thách khác.">thử thách</span> khác.
+    </p>
+
+    <p>
+        Ông phải tự <span class="vocab" data-word-en="climb" data-word-vn="trèo" data-pos="động từ / verb" data-def-en="Move up using hands and feet." data-def-vn="Di chuyển lên cao bằng tay và chân." data-context-en="...tự trèo ra khỏi hẻm núi...">trèo</span> ra khỏi hẻm núi, <span class="vocab" data-word-en="rappel" data-word-vn="đu dây" data-pos="động từ / verb" data-def-en="Descend using a rope." data-def-vn="Hạ xuống bằng dây thừng." data-context-en="...đu dây xuống...">đu dây</span> xuống một vách đá <span class="vocab" data-word-en="steep" data-word-vn="dựng đứng" data-pos="tính từ / adjective" data-def-en="Almost vertical." data-def-vn="Gần như thẳng đứng." data-context-en="...vách đá dựng đứng...">dựng đứng</span> và <span class="vocab" data-word-en="walk" data-word-vn="đi bộ" data-pos="động từ / verb" data-def-en="Move on foot." data-def-vn="Di chuyển bằng chân." data-context-en="...và đi bộ nhiều dặm...">đi bộ</span> nhiều dặm trước khi gặp được những người khác để gọi <span class="vocab" data-word-en="rescue" data-word-vn="cứu hộ" data-pos="danh từ / noun" data-def-en="Help to save someone." data-def-vn="Giúp cứu ai đó." data-context-en="...gọi cứu hộ.">cứu hộ</span>. Vượt qua mọi khó khăn tưởng chừng không thể, Ralston đã <span class="vocab" data-word-en="survived" data-word-vn="sống sót" data-pos="động từ / verb" data-def-en="Continued to live." data-def-vn="Tiếp tục sống." data-context-en="...đã sống sót.">sống sót</span>.
+    </p>
+
+    <p>
+        Câu chuyện của ông trở thành tin tức <span class="vocab" data-word-en="international" data-word-vn="quốc tế" data-pos="tính từ / adjective" data-def-en="Involving many countries." data-def-vn="Liên quan đến nhiều quốc gia." data-context-en="...tin tức quốc tế...">quốc tế</span> và sau đó còn <span class="vocab" data-word-en="inspired" data-word-vn="truyền cảm hứng" data-pos="động từ / verb" data-def-en="Gave creative ideas or motivation." data-def-vn="Khơi dậy ý tưởng hoặc động lực." data-context-en="...truyền cảm hứng cho...">truyền cảm hứng</span> cho một bộ phim nổi tiếng. Nhiều người <span class="vocab" data-word-en="admired" data-word-vn="khâm phục" data-pos="động từ / verb" data-def-en="Respected greatly." data-def-vn="Tôn trọng rất nhiều." data-context-en="Nhiều người khâm phục...">khâm phục</span> lòng <span class="vocab" data-word-en="courage" data-word-vn="dũng cảm" data-pos="danh từ / noun" data-def-en="Bravery when facing danger." data-def-vn="Sự dũng cảm khi đối mặt nguy hiểm." data-context-en="...lòng dũng cảm...">dũng cảm</span> và ý chí <span class="vocab" data-word-en="strong" data-word-vn="kiên cường" data-pos="tính từ / adjective" data-def-en="Very determined and tough." data-def-vn="Rất kiên định và bền bỉ." data-context-en="...ý chí kiên cường...">kiên cường</span> của ông.
+    </p>
+
+    <p>
+        Những người khác thì tự hỏi liệu họ có thể đưa ra một <span class="vocab" data-word-en="choice" data-word-vn="lựa chọn" data-pos="danh từ / noun" data-def-en="A decision between options." data-def-vn="Quyết định giữa các lựa chọn." data-context-en="...một lựa chọn khủng khiếp...">lựa chọn</span> <span class="vocab" data-word-en="terrible" data-word-vn="khủng khiếp" data-pos="tính từ / adjective" data-def-en="Extremely bad or frightening." data-def-vn="Cực kỳ xấu hoặc đáng sợ." data-context-en="...lựa chọn khủng khiếp...">khủng khiếp</span> như vậy trong hoàn cảnh tương tự hay không.
+    </p>
+
+    <p>
+        Ngày nay, Ralston vẫn thường <span class="vocab" data-word-en="share" data-word-vn="chia sẻ" data-pos="động từ / verb" data-def-en="Tell others about something." data-def-vn="Kể cho người khác nghe về điều gì đó." data-context-en="...thường chia sẻ...">chia sẻ</span> những bài nói chuyện về <span class="vocab" data-word-en="willpower" data-word-vn="nghị lực" data-pos="danh từ / noun" data-def-en="Mental strength to continue." data-def-vn="Sức mạnh tinh thần để tiếp tục." data-context-en="...về nghị lực...">nghị lực</span> và sự <span class="vocab" data-word-en="survival" data-word-vn="sinh tồn" data-pos="danh từ / noun" data-def-en="The state of continuing to live." data-def-vn="Trạng thái tiếp tục sống." data-context-en="...sự sinh tồn.">sinh tồn</span>. Trải nghiệm của ông cho thấy con người có thể đi xa đến mức nào để giữ lấy sự sống.
+    </p>
+
+    <p>
+        Hầu hết chúng ta sẽ không bao giờ phải đối mặt với một quyết định như ông. Thế nhưng câu chuyện của ông để lại một câu hỏi đầy <span class="vocab" data-word-en="weight" data-word-vn="sức nặng" data-pos="danh từ / noun" data-def-en="Importance or seriousness." data-def-vn="Tầm quan trọng hoặc mức độ nghiêm trọng." data-context-en="...đầy sức nặng...">sức nặng</span>:
+    </p>
+
+    <p>
+        Nếu muốn sống sót, bạn phải <span class="vocab" data-word-en="sacrifice" data-word-vn="hy sinh" data-pos="động từ / verb" data-def-en="Give up something valuable." data-def-vn="Từ bỏ thứ có giá trị." data-context-en="...phải hy sinh...">hy sinh</span> một điều <span class="vocab" data-word-en="extreme" data-word-vn="cực đoan" data-pos="tính từ / adjective" data-def-en="Very great or severe." data-def-vn="Rất lớn hoặc nghiêm trọng." data-context-en="...cực đoan đến như vậy...">cực đoan</span> đến như vậy, liệu bạn có đủ <span class="vocab" data-word-en="courage" data-word-vn="can đảm" data-pos="danh từ / noun" data-def-en="Bravery." data-def-vn="Sự dũng cảm." data-context-en="...đủ can đảm...">can đảm</span> và <span class="vocab" data-word-en="strength" data-word-vn="sức mạnh" data-pos="danh từ / noun" data-def-en="Physical or mental power." data-def-vn="Sức mạnh thể chất hoặc tinh thần." data-context-en="...và sức mạnh...">sức mạnh</span> để làm điều đó không?
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Quay về Danh sách</button></a>
+    </div>
+
+    <h2 class="memory-heading">Kiểm tra trí nhớ — Nhấp vào mỗi từ để xem nghĩa và quay lại vị trí đầu tiên trong câu chuyện.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">tháng 4</div>
+        <div class="memory-word">khám phá</div>
+        <div class="memory-word">hẻm núi</div>
+        <div class="memory-word">hẻo lánh</div>
+        <div class="memory-word">tương tự</div>
+        <div class="memory-word">phiêu lưu</div>
+        <div class="memory-word">bình thường</div>
+        <div class="memory-word">hẹp</div>
+        <div class="memory-word">thảm họa</div>
+        <div class="memory-word">bất ngờ</div>
+        <div class="memory-word">tảng đá lớn</div>
+        <div class="memory-word">dịch chuyển</div>
+        <div class="memory-word">kẹp chặt</div>
+        <div class="memory-word">kéo</div>
+        <div class="memory-word">giải thoát</div>
+        <div class="memory-word">trôi qua</div>
+        <div class="memory-word">thức ăn</div>
+        <div class="memory-word">cạn kiệt</div>
+        <div class="memory-word">nước</div>
+        <div class="memory-word">mắc kẹt</div>
+        <div class="memory-word">nghĩ ra</div>
+        <div class="memory-word">đục</div>
+        <div class="memory-word">ghi lại</div>
+        <div class="memory-word">từ biệt</div>
+        <div class="memory-word">cứu</div>
+        <div class="memory-word">mong manh</div>
+        <div class="memory-word">quyết định</div>
+        <div class="memory-word">sốc</div>
+        <div class="memory-word">cắt bỏ</div>
+        <div class="memory-word">dao đa năng</div>
+        <div class="memory-word">gãy</div>
+        <div class="memory-word">mô</div>
+        <div class="memory-word">đau đớn</div>
+        <div class="memory-word">thử thách</div>
+        <div class="memory-word">trèo</div>
+        <div class="memory-word">đu dây</div>
+        <div class="memory-word">dựng đứng</div>
+        <div class="memory-word">đi bộ</div>
+        <div class="memory-word">cứu hộ</div>
+        <div class="memory-word">sống sót</div>
+        <div class="memory-word">quốc tế</div>
+        <div class="memory-word">truyền cảm hứng</div>
+        <div class="memory-word">khâm phục</div>
+        <div class="memory-word">dũng cảm</div>
+        <div class="memory-word">kiên cường</div>
+        <div class="memory-word">lựa chọn</div>
+        <div class="memory-word">khủng khiếp</div>
+        <div class="memory-word">chia sẻ</div>
+        <div class="memory-word">nghị lực</div>
+        <div class="memory-word">sinh tồn</div>
+        <div class="memory-word">sức nặng</div>
+        <div class="memory-word">hy sinh</div>
+        <div class="memory-word">cực đoan</div>
+        <div class="memory-word">can đảm</div>
+        <div class="memory-word">sức mạnh</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                document.getElementById('popup-definition').innerHTML = 
+                    el.dataset.defEn + '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">' + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordVn.trim() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
