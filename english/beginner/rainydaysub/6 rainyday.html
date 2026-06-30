@@ -1,0 +1,447 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Story 6: A Rainy Day</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1>Story 6: A Rainy Day</h1>
+
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Story 6</div>
+        <audio id="audio-player" src="rainyday.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        <span class="vocab" data-word-en="Today" data-word-vn="Hôm nay" data-pos="trạng từ / adverb" data-def-en="On this present day." data-def-vn="Vào ngày hôm nay." data-context-en="Today, the weather is bad.">Today</span>, the <span class="vocab" data-word-en="weather" data-word-vn="thời tiết" data-pos="danh từ / noun" data-def-en="The state of the atmosphere at a place and time." data-def-vn="Trạng thái của khí quyển tại một nơi và thời điểm nào đó." data-context-en="Today, the weather is bad.">weather</span> is <span class="vocab" data-word-en="bad" data-word-vn="xấu" data-pos="tính từ / adjective" data-def-en="Not good; unpleasant in quality." data-def-vn="Không tốt; khó chịu về chất lượng." data-context-en="Today, the weather is bad.">bad</span>. It is <span class="vocab" data-word-en="raining" data-word-vn="đang mưa" data-pos="động từ / verb" data-def-en="Water falling from the clouds." data-def-vn="Nước rơi từ những đám mây." data-context-en="It is raining hard.">raining</span> <span class="vocab" data-word-en="hard" data-word-vn="dữ dội" data-pos="trạng từ / adverb" data-def-en="With great force or intensity." data-def-vn="Với lực hoặc cường độ mạnh." data-context-en="It is raining hard.">hard</span>, and the <span class="vocab" data-word-en="sky" data-word-vn="bầu trời" data-pos="danh từ / noun" data-def-en="The space above the earth seen from the ground." data-def-vn="Khoảng không gian phía trên trái đất nhìn từ mặt đất." data-context-en="The sky is grey.">sky</span> is <span class="vocab" data-word-en="grey" data-word-vn="màu xám" data-pos="tính từ / adjective" data-def-en="A color between black and white." data-def-vn="Một màu nằm giữa đen và trắng." data-context-en="The sky is grey.">grey</span>. Elena <span class="vocab" data-word-en="stays" data-word-vn="ở lại" data-pos="động từ / verb" data-def-en="Remains in a place." data-def-vn="Tiếp tục ở một nơi nào đó." data-context-en="Elena stays inside her house.">stays</span> <span class="vocab" data-word-en="inside" data-word-vn="bên trong" data-pos="giới từ / preposition" data-def-en="In or into the interior of a place." data-def-vn="Ở trong hoặc vào bên trong một nơi nào đó." data-context-en="Elena stays inside her house.">inside</span> her <span class="vocab" data-word-en="house" data-word-vn="ngôi nhà" data-pos="danh từ / noun" data-def-en="A building where a person lives." data-def-vn="Một tòa nhà nơi một người sinh sống." data-context-en="Elena stays inside her house.">house</span>. She does not <span class="vocab" data-word-en="want" data-word-vn="muốn" data-pos="động từ / verb" data-def-en="To have a desire for something." data-def-vn="Có mong muốn về một điều gì đó." data-context-en="She does not want to go out in the rain.">want</span> to <span class="vocab" data-word-en="go" data-word-vn="đi" data-pos="động từ / verb" data-def-en="To move from one place to another." data-def-vn="Di chuyển từ nơi này đến nơi khác." data-context-en="She does not want to go out in the rain.">go</span> <span class="vocab" data-word-en="out" data-word-vn="ra ngoài" data-pos="trạng từ / adverb" data-def-en="Away from the inside of a place." data-def-vn="Ra khỏi bên trong một nơi nào đó." data-context-en="She does not want to go out in the rain.">out</span> in the <span class="vocab" data-word-en="rain" data-word-vn="cơn mưa" data-pos="danh từ / noun" data-def-en="Water falling in drops from the clouds." data-def-vn="Nước rơi thành giọt từ những đám mây." data-context-en="She does not want to go out in the rain.">rain</span>. She <span class="vocab" data-word-en="sits" data-word-vn="ngồi" data-pos="động từ / verb" data-def-en="Rests on a seat with the body upright." data-def-vn="Nghỉ trên một chỗ ngồi với thân người thẳng đứng." data-context-en="She sits on her comfortable sofa with a warm blanket.">sits</span> on her <span class="vocab" data-word-en="comfortable" data-word-vn="thoải mái" data-pos="tính từ / adjective" data-def-en="Giving a pleasant feeling of physical ease." data-def-vn="Mang lại cảm giác dễ chịu về thể chất." data-context-en="She sits on her comfortable sofa with a warm blanket.">comfortable</span> <span class="vocab" data-word-en="sofa" data-word-vn="ghế sô-pha" data-pos="danh từ / noun" data-def-en="A long upholstered seat for sitting." data-def-vn="Một chiếc ghế dài có đệm để ngồi." data-context-en="She sits on her comfortable sofa with a warm blanket.">sofa</span> with a <span class="vocab" data-word-en="warm" data-word-vn="ấm áp" data-pos="tính từ / adjective" data-def-en="Having a comfortably high temperature." data-def-vn="Có nhiệt độ dễ chịu, hơi cao." data-context-en="She sits on her comfortable sofa with a warm blanket.">warm</span> <span class="vocab" data-word-en="blanket" data-word-vn="chăn" data-pos="danh từ / noun" data-def-en="A cloth covering used for warmth." data-def-vn="Một tấm vải dùng để đắp giữ ấm." data-context-en="She sits on her comfortable sofa with a warm blanket.">blanket</span>.
+    </p>
+
+    <p>
+        She <span class="vocab" data-word-en="has" data-word-vn="có" data-pos="động từ / verb" data-def-en="Possesses or owns something." data-def-vn="Sở hữu hoặc có một thứ gì đó." data-context-en="She has a long book to read.">has</span> a <span class="vocab" data-word-en="long" data-word-vn="dài" data-pos="tính từ / adjective" data-def-en="Having great length." data-def-vn="Có chiều dài lớn." data-context-en="She has a long book to read.">long</span> <span class="vocab" data-word-en="book" data-word-vn="cuốn sách" data-pos="danh từ / noun" data-def-en="A written or printed work with pages." data-def-vn="Một tác phẩm viết hoặc in có các trang giấy." data-context-en="She has a long book to read.">book</span> to <span class="vocab" data-word-en="read" data-word-vn="đọc" data-pos="động từ / verb" data-def-en="To look at and understand written words." data-def-vn="Nhìn vào và hiểu được những từ ngữ được viết ra." data-context-en="She has a long book to read.">read</span>. She reads for <span class="vocab" data-word-en="two" data-word-vn="hai" data-pos="số từ / number" data-def-en="The number after one." data-def-vn="Con số đứng sau số một." data-context-en="She reads for two hours.">two</span> <span class="vocab" data-word-en="hours" data-word-vn="giờ đồng hồ" data-pos="danh từ / noun" data-def-en="Units of time equal to sixty minutes." data-def-vn="Đơn vị thời gian bằng sáu mươi phút." data-context-en="She reads for two hours.">hours</span>. <span class="vocab" data-word-en="Later" data-word-vn="Sau đó" data-pos="trạng từ / adverb" data-def-en="At a time after the present or after a stated event." data-def-vn="Vào một thời điểm sau hiện tại hoặc sau một sự kiện đã nêu." data-context-en="Later, she makes a cup of hot tea and looks out the window.">Later</span>, she <span class="vocab" data-word-en="makes" data-word-vn="pha" data-pos="động từ / verb" data-def-en="To prepare or create something." data-def-vn="Chuẩn bị hoặc tạo ra một thứ gì đó." data-context-en="Later, she makes a cup of hot tea.">makes</span> a <span class="vocab" data-word-en="cup" data-word-vn="cốc" data-pos="danh từ / noun" data-def-en="A small open container used for drinking." data-def-vn="Một vật chứa nhỏ, hở miệng dùng để uống." data-context-en="She makes a cup of hot tea.">cup</span> of <span class="vocab" data-word-en="hot" data-word-vn="nóng" data-pos="tính từ / adjective" data-def-en="Having a high temperature." data-def-vn="Có nhiệt độ cao." data-context-en="She makes a cup of hot tea.">hot</span> <span class="vocab" data-word-en="tea" data-word-vn="trà" data-pos="danh từ / noun" data-def-en="A hot drink made from steeped leaves." data-def-vn="Một loại đồ uống nóng làm từ lá cây ngâm trong nước." data-context-en="She makes a cup of hot tea.">tea</span> and <span class="vocab" data-word-en="looks" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="To direct one's eyes in order to see." data-def-vn="Hướng mắt để nhìn thấy điều gì đó." data-context-en="She looks out the window.">looks</span> out the <span class="vocab" data-word-en="window" data-word-vn="cửa sổ" data-pos="danh từ / noun" data-def-en="An opening in a wall fitted with glass." data-def-vn="Một lỗ mở trên tường được lắp kính." data-context-en="She looks out the window.">window</span>. She <span class="vocab" data-word-en="watches" data-word-vn="quan sát" data-pos="động từ / verb" data-def-en="Looks at something attentively over time." data-def-vn="Nhìn vào một thứ gì đó một cách chăm chú trong một khoảng thời gian." data-context-en="She watches the rain hit the glass.">watches</span> the rain <span class="vocab" data-word-en="hit" data-word-vn="va vào" data-pos="động từ / verb" data-def-en="To strike against something with force." data-def-vn="Đập vào một vật gì đó với một lực nhất định." data-context-en="She watches the rain hit the glass.">hit</span> the <span class="vocab" data-word-en="glass" data-word-vn="tấm kính" data-pos="danh từ / noun" data-def-en="A hard transparent material used in windows." data-def-vn="Một vật liệu trong suốt, cứng dùng để làm cửa sổ." data-context-en="She watches the rain hit the glass.">glass</span>. It is <span class="vocab" data-word-en="quiet" data-word-vn="yên tĩnh" data-pos="tính từ / adjective" data-def-en="Making little or no noise." data-def-vn="Ít hoặc không gây tiếng ồn." data-context-en="It is quiet and peaceful.">quiet</span> and <span class="vocab" data-word-en="peaceful" data-word-vn="bình yên" data-pos="tính từ / adjective" data-def-en="Free from disturbance; calm." data-def-vn="Không bị quấy rầy; yên ổn." data-context-en="It is quiet and peaceful.">peaceful</span>. She <span class="vocab" data-word-en="likes" data-word-vn="thích" data-pos="động từ / verb" data-def-en="Finds something pleasant or enjoyable." data-def-vn="Cảm thấy một điều gì đó dễ chịu hoặc thú vị." data-context-en="She likes rainy days because they are perfect for relaxing at home.">likes</span> <span class="vocab" data-word-en="rainy" data-word-vn="có mưa" data-pos="tính từ / adjective" data-def-en="Marked by a lot of rain." data-def-vn="Có nhiều mưa." data-context-en="She likes rainy days.">rainy</span> <span class="vocab" data-word-en="days" data-word-vn="những ngày" data-pos="danh từ / noun (plural)" data-def-en="Periods of twenty-four hours." data-def-vn="Những khoảng thời gian hai mươi bốn giờ." data-context-en="She likes rainy days.">days</span> <span class="vocab" data-word-en="because" data-word-vn="bởi vì" data-pos="liên từ / conjunction" data-def-en="For the reason that; introduces a cause." data-def-vn="Giới thiệu lý do hoặc nguyên nhân." data-context-en="She likes rainy days because they are perfect for relaxing at home.">because</span> they are <span class="vocab" data-word-en="perfect" data-word-vn="hoàn hảo" data-pos="tính từ / adjective" data-def-en="Completely suitable; without flaw." data-def-vn="Hoàn toàn phù hợp; không có khuyết điểm." data-context-en="They are perfect for relaxing at home.">perfect</span> for <span class="vocab" data-word-en="relaxing" data-word-vn="thư giãn" data-pos="động từ / verb (gerund)" data-def-en="Resting and becoming free from tension." data-def-vn="Nghỉ ngơi và trở nên không còn căng thẳng." data-context-en="They are perfect for relaxing at home.">relaxing</span> at <span class="vocab" data-word-en="home" data-word-vn="nhà" data-pos="danh từ / noun" data-def-en="The place where one lives." data-def-vn="Nơi một người sinh sống." data-context-en="They are perfect for relaxing at home.">home</span>.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning 
+	and where in the story each word appeared.  Click on each word to jump to it's first occurrence in the story.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">Today</div>
+        <div class="memory-word">weather</div>
+        <div class="memory-word">bad</div>
+        <div class="memory-word">raining</div>
+        <div class="memory-word">hard</div>
+        <div class="memory-word">sky</div>
+        <div class="memory-word">grey</div>
+        <div class="memory-word">stays</div>
+        <div class="memory-word">inside</div>
+        <div class="memory-word">house</div>
+        <div class="memory-word">want</div>
+        <div class="memory-word">go</div>
+        <div class="memory-word">out</div>
+        <div class="memory-word">rain</div>
+        <div class="memory-word">sits</div>
+        <div class="memory-word">comfortable</div>
+        <div class="memory-word">sofa</div>
+        <div class="memory-word">warm</div>
+        <div class="memory-word">blanket</div>
+        <div class="memory-word">has</div>
+        <div class="memory-word">long</div>
+        <div class="memory-word">book</div>
+        <div class="memory-word">read</div>
+        <div class="memory-word">two</div>
+        <div class="memory-word">hours</div>
+        <div class="memory-word">Later</div>
+        <div class="memory-word">makes</div>
+        <div class="memory-word">cup</div>
+        <div class="memory-word">hot</div>
+        <div class="memory-word">tea</div>
+        <div class="memory-word">looks</div>
+        <div class="memory-word">window</div>
+        <div class="memory-word">watches</div>
+        <div class="memory-word">hit</div>
+        <div class="memory-word">glass</div>
+        <div class="memory-word">quiet</div>
+        <div class="memory-word">peaceful</div>
+        <div class="memory-word">likes</div>
+        <div class="memory-word">rainy</div>
+        <div class="memory-word">days</div>
+        <div class="memory-word">because</div>
+        <div class="memory-word">perfect</div>
+        <div class="memory-word">relaxing</div>
+        <div class="memory-word">home</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                const isEnInput = document.documentElement.lang === 'en';
+                document.getElementById('popup-definition').innerHTML = isEnInput
+                    ? el.dataset.defVn + hr + el.dataset.defEn
+                    : el.dataset.defEn + hr + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
