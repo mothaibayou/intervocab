@@ -1,77 +1,3 @@
-    Ctrl+K
-
-    Ctrl+J
-
-create a file identical to the attached, explicitly following the vocab density
-and granularity rules below and using the input text posted below the rules.
- VOCABULARY DENSITY RULE:
-Tag EVERY meaningful individual word that has semantic value as a separate vocabulary item.
-
-    Give me maximum density version — tag every meaningful word possible on first occurrence following the rules.
-    I want maximum granularity. The user should not have to go to an external source to learn the meaning of
-    Each <span class="vocab"> must cover EXACTLY ONE word (never 2+ unless it's a true compound like "phần mềm").
-    Only use 2-word spans for fixed compounds or proper names when necessary.
-    First occurrence of each word is clickable; later ones can be plain text.
-    Popup card title = the language opposite to the input text. Input is Vietnamese → title is English. Input is English → title is Vietnamese."
-    Do not make personal names clickable. Treat them as plain text.
-    Treat the heading AND subheading just like the body -- make all vocabulary words clickable.
-    Scan one more time to be sure ALL vocabulary words have been made clickable.
-    Do not combine plurality markers like 'những' with vocab words
-    Do not display running commentary during the build process - only the final product.
-    Do not put these instructions OR input text as comments in the output.
-    Use the title and/or subtitle I provide in the story text. Do not create your own.
-     
-    Story 8: The Lost Umbrella
-    Mr. Miller takes the bus to work every day. One afternoon, it starts to rain very hard. Mr. Miller opens his black umbrella and walks to the bus stop. When the bus arrives, he is in a hurry, so he gets on quickly.
-    When he arrives at his office, he realizes he does not have his umbrella. He looks around, but it is gone. He feels sad because it was a gift from his daughter. Later that day, he calls the bus company. A kind driver tells him, "Yes, I have it!" Mr. Miller is very relieved and happy.
-
-File created successfully: 
-
-The new HTML file follows the master template exactly (structure, styles, JS functionality, audio controls, popup card, memory grid, etc.).
-
-    Title: "Story 8: The Lost Umbrella"
-    Subtitle: "English Learning Series" (fits naturally)
-    Maximum vocabulary density applied per your rules: Every meaningful semantic word on first occurrence is wrapped in a <span class="vocab"> (single words only, no unnecessary multi-word spans except for proper handling of names).
-    Personal names ("Mr. Miller") are not clickable.
-    Popup logic adjusted for English input (title shows Vietnamese, sub shows English).
-    Memory grid includes all tagged terms with click-to-jump functionality.
-    Audio placeholder: umbrella.mp3 (update the src if you have the actual file).
-    No extra comments or instructions in the output file.
-
-You can now open  in a browser or copy it for use. Let me know if you need adjustments, a different filename, or the next story!
-
-Use template and instructions above and create Story 9 with this text:
- 
-Story 9: A Saturday Hobby
-On Saturdays, Kenji likes to paint. He sets up his easel in his small garden. He likes to paint the flowers and the trees in his yard. He uses many colors: bright yellow for the sun, green for the leaves, and red for the roses.
-Painting helps him feel calm after a long week of work. Sometimes, his cat, Luna, sits near him and watches. She likes to watch the brush move across the canvas. By the end of the day, Kenji finishes his painting. He hangs it on his living room wall, and it makes his home look beautiful.
-
-File created successfully: 
-
-Story 9 is ready with the same template structure, maximum vocabulary density (single-word spans on first occurrences following all rules), proper popup behavior for English input, and full memory grid.
-
-    Title: Story 9: A Saturday Hobby
-    Audio placeholder set to saturday.mp3
-
-Open the file in your browser to test. Ready for the next one whenever you are!
-
-the link doesn't respond
-
-Got it! The "Back to Directory" link points to index.html, which doesn't exist yet in your folder.
-Quick Fix:
-
-    Option A (Recommended): Create a simple index.html that lists all stories.
-    Option B: Temporarily change the link to something else (e.g., # or another page).
-
-Would you like me to:
-
-    Create a nice index.html directory page that links to story8.html, story9.html, etc.?
-    Or just update the back button in story9.html (and future stories) right now?
-
-Let me know what you prefer and I'll fix it immediately.
-
-no. paste the entire code block for story 9 right here. i'll download it to a text editor.
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -326,7 +252,7 @@ no. paste the entire code block for story 9 right here. i'll download it to a te
     
     <div class="audio-section">
         <div class="audio-label">🎧 Listen to Story 9</div>
-        <audio id="audio-player" src="saturday.mp3" controls></audio>
+        <audio id="audio-player" src="saturdayhobby.mp3" controls></audio>
         
         <div class="audio-controls">
             <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
