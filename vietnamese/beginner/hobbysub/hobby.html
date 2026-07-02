@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Câu chuyện 9: Sở thích ngày thứ Bảy</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1><span class="vocab" data-word-en="story" data-word-vn="Câu chuyện" data-pos="danh từ / noun" data-def-en="A written or spoken account of events." data-def-vn="Một bài kể về các sự việc, bằng lời nói hoặc chữ viết." data-context-vn="Câu chuyện 9: Sở thích ngày thứ Bảy">Câu chuyện</span> 9: <span class="vocab" data-word-en="hobby" data-word-vn="Sở thích" data-pos="danh từ / noun" data-def-en="An activity done regularly for pleasure." data-def-vn="Một hoạt động được làm thường xuyên để giải trí." data-context-vn="Câu chuyện 9: Sở thích ngày thứ Bảy">Sở thích</span> <span class="vocab" data-word-en="day" data-word-vn="ngày" data-pos="danh từ / noun" data-def-en="A period of twenty-four hours." data-def-vn="Một khoảng thời gian hai mươi bốn giờ." data-context-vn="Câu chuyện 9: Sở thích ngày thứ Bảy">ngày</span> <span class="vocab" data-word-en="Saturday" data-word-vn="thứ Bảy" data-pos="danh từ / noun" data-def-en="The day of the week between Friday and Sunday." data-def-vn="Ngày trong tuần nằm giữa thứ Sáu và Chủ Nhật." data-context-vn="Câu chuyện 9: Sở thích ngày thứ Bảy">thứ Bảy</span></h1>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Câu chuyện 9</div>
+        <audio id="audio-player" src="story9.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        <span class="vocab" data-word-en="on / at (a time)" data-word-vn="Vào" data-pos="giới từ / preposition" data-def-en="Indicating a specific point in time." data-def-vn="Chỉ một thời điểm cụ thể." data-context-vn="Vào các ngày thứ Bảy, Kenji thích vẽ tranh.">Vào</span> <span class="vocab" data-word-en="(plural marker)" data-word-vn="các" data-pos="từ chỉ số nhiều / plural marker" data-def-en="A word placed before nouns to indicate a definite plural group." data-def-vn="Từ đặt trước danh từ để chỉ một nhóm số nhiều xác định." data-context-vn="Vào các ngày thứ Bảy, Kenji thích vẽ tranh.">các</span> ngày thứ Bảy, Kenji <span class="vocab" data-word-en="to like" data-word-vn="thích" data-pos="động từ / verb" data-def-en="To find something enjoyable or pleasing." data-def-vn="Cảm thấy điều gì đó thú vị hoặc dễ chịu." data-context-vn="Vào các ngày thứ Bảy, Kenji thích vẽ tranh.">thích</span> <span class="vocab" data-word-en="to paint / draw" data-word-vn="vẽ" data-pos="động từ / verb" data-def-en="To create a picture using paint or a similar tool." data-def-vn="Tạo ra một bức tranh bằng sơn hoặc công cụ tương tự." data-context-vn="Vào các ngày thứ Bảy, Kenji thích vẽ tranh.">vẽ</span> <span class="vocab" data-word-en="painting" data-word-vn="tranh" data-pos="danh từ / noun" data-def-en="A picture made with paint." data-def-vn="Một bức hình được vẽ bằng sơn." data-context-vn="Vào các ngày thứ Bảy, Kenji thích vẽ tranh.">tranh</span>. <span class="vocab" data-word-en="he" data-word-vn="Anh ấy" data-pos="đại từ / pronoun" data-def-en="A third-person singular pronoun referring to a young or adult male." data-def-vn="Đại từ ngôi thứ ba số ít chỉ một người nam trẻ hoặc trưởng thành." data-context-vn="Anh ấy đặt giá vẽ trong khu vườn nhỏ của mình.">Anh ấy</span> <span class="vocab" data-word-en="to place / set up" data-word-vn="đặt" data-pos="động từ / verb" data-def-en="To put something in a particular position." data-def-vn="Đặt vật gì đó vào một vị trí cụ thể." data-context-vn="Anh ấy đặt giá vẽ trong khu vườn nhỏ của mình.">đặt</span> <span class="vocab" data-word-en="easel" data-word-vn="giá vẽ" data-pos="danh từ / noun" data-def-en="A stand used to hold a canvas while painting." data-def-vn="Một cái giá dùng để đỡ khung vải khi vẽ tranh." data-context-vn="Anh ấy đặt giá vẽ trong khu vườn nhỏ của mình.">giá vẽ</span> <span class="vocab" data-word-en="in / inside" data-word-vn="trong" data-pos="giới từ / preposition" data-def-en="Within the limits of a space." data-def-vn="Ở bên trong giới hạn của một không gian." data-context-vn="Anh ấy đặt giá vẽ trong khu vườn nhỏ của mình.">trong</span> <span class="vocab" data-word-en="garden" data-word-vn="khu vườn" data-pos="danh từ / noun" data-def-en="An area of land used for growing plants." data-def-vn="Một khu đất dùng để trồng cây." data-context-vn="Anh ấy đặt giá vẽ trong khu vườn nhỏ của mình.">khu vườn</span> <span class="vocab" data-word-en="small" data-word-vn="nhỏ" data-pos="tính từ / adjective" data-def-en="Little in size." data-def-vn="Có kích thước bé." data-context-vn="Anh ấy đặt giá vẽ trong khu vườn nhỏ của mình.">nhỏ</span> <span class="vocab" data-word-en="of / belonging to" data-word-vn="của" data-pos="giới từ / preposition" data-def-en="Indicates possession or belonging." data-def-vn="Chỉ sự sở hữu hoặc thuộc về." data-context-vn="Anh ấy đặt giá vẽ trong khu vườn nhỏ của mình.">của</span> <span class="vocab" data-word-en="oneself" data-word-vn="mình" data-pos="đại từ / pronoun" data-def-en="A reflexive pronoun referring back to the subject." data-def-vn="Đại từ phản thân chỉ lại chủ thể." data-context-vn="Anh ấy đặt giá vẽ trong khu vườn nhỏ của mình.">mình</span>. Anh ấy thích vẽ <span class="vocab" data-word-en="(plural marker)" data-word-vn="những" data-pos="từ chỉ số nhiều / plural marker" data-def-en="A word placed before nouns to indicate plurality." data-def-vn="Từ đặt trước danh từ để chỉ số nhiều." data-context-vn="Anh ấy thích vẽ những bông hoa và cái cây trong sân nhà mình.">những</span> <span class="vocab" data-word-en="(classifier for flowers)" data-word-vn="bông" data-pos="loại từ / classifier" data-def-en="A word used to count individual flowers." data-def-vn="Từ dùng để đếm từng bông hoa." data-context-vn="Anh ấy thích vẽ những bông hoa và cái cây trong sân nhà mình.">bông</span> <span class="vocab" data-word-en="flower" data-word-vn="hoa" data-pos="danh từ / noun" data-def-en="The colorful part of a plant that blooms." data-def-vn="Phần có màu sắc của cây, thường nở ra." data-context-vn="Anh ấy thích vẽ những bông hoa và cái cây trong sân nhà mình.">hoa</span> <span class="vocab" data-word-en="and" data-word-vn="và" data-pos="liên từ / conjunction" data-def-en="Used to connect words or clauses." data-def-vn="Dùng để nối các từ hoặc mệnh đề." data-context-vn="Anh ấy thích vẽ những bông hoa và cái cây trong sân nhà mình.">và</span> <span class="vocab" data-word-en="(general classifier)" data-word-vn="cái" data-pos="loại từ / classifier" data-def-en="A general word used before many kinds of nouns." data-def-vn="Một từ chỉ loại chung dùng trước nhiều loại danh từ." data-context-vn="Anh ấy thích vẽ những bông hoa và cái cây trong sân nhà mình.">cái</span> <span class="vocab" data-word-en="tree" data-word-vn="cây" data-pos="danh từ / noun" data-def-en="A tall plant with a trunk and branches." data-def-vn="Một loại cây to có thân và cành." data-context-vn="Anh ấy thích vẽ những bông hoa và cái cây trong sân nhà mình.">cây</span> trong <span class="vocab" data-word-en="yard" data-word-vn="sân" data-pos="danh từ / noun" data-def-en="An outdoor area next to a house." data-def-vn="Một khu vực ngoài trời bên cạnh nhà." data-context-vn="Anh ấy thích vẽ những bông hoa và cái cây trong sân nhà mình.">sân</span> <span class="vocab" data-word-en="house" data-word-vn="nhà" data-pos="danh từ / noun" data-def-en="A building where someone lives." data-def-vn="Một tòa nhà nơi ai đó sinh sống." data-context-vn="Anh ấy thích vẽ những bông hoa và cái cây trong sân nhà mình.">nhà</span> mình. Anh ấy <span class="vocab" data-word-en="to use" data-word-vn="sử dụng" data-pos="động từ / verb" data-def-en="To employ something for a purpose." data-def-vn="Dùng vật gì đó cho một mục đích." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">sử dụng</span> <span class="vocab" data-word-en="many / much" data-word-vn="nhiều" data-pos="tính từ / adjective" data-def-en="A large amount or number of something." data-def-vn="Một số lượng lớn của điều gì đó." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">nhiều</span> <span class="vocab" data-word-en="color" data-word-vn="màu sắc" data-pos="danh từ / noun" data-def-en="The property of an object based on light it reflects." data-def-vn="Đặc tính của một vật dựa trên ánh sáng mà nó phản chiếu." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">màu sắc</span>: màu <span class="vocab" data-word-en="yellow" data-word-vn="vàng" data-pos="tính từ / adjective" data-def-en="Having the color of the sun or a lemon." data-def-vn="Có màu giống như mặt trời hoặc quả chanh." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">vàng</span> <span class="vocab" data-word-en="vivid / brilliant" data-word-vn="rực rỡ" data-pos="tính từ / adjective" data-def-en="Very bright and intense in color." data-def-vn="Rất sáng và đậm về màu sắc." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">rực rỡ</span> <span class="vocab" data-word-en="for" data-word-vn="cho" data-pos="giới từ / preposition" data-def-en="Indicating the purpose or recipient of something." data-def-vn="Chỉ mục đích hoặc đối tượng nhận của điều gì đó." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">cho</span> <span class="vocab" data-word-en="sun" data-word-vn="mặt trời" data-pos="danh từ / noun" data-def-en="The star at the center of our solar system." data-def-vn="Ngôi sao ở trung tâm hệ mặt trời của chúng ta." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">mặt trời</span>, màu <span class="vocab" data-word-en="green" data-word-vn="xanh lá" data-pos="tính từ / adjective" data-def-en="Having the color of grass or leaves." data-def-vn="Có màu giống như cỏ hoặc lá cây." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">xanh lá</span> cho những <span class="vocab" data-word-en="(classifier for flat/thin objects)" data-word-vn="chiếc" data-pos="loại từ / classifier" data-def-en="A word used to count thin, flat objects such as leaves." data-def-vn="Từ dùng để đếm các vật mỏng, phẳng như lá cây." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">chiếc</span> <span class="vocab" data-word-en="leaf" data-word-vn="lá" data-pos="danh từ / noun" data-def-en="A flat green part of a plant." data-def-vn="Một bộ phận phẳng, màu xanh của cây." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">lá</span>, và màu <span class="vocab" data-word-en="red" data-word-vn="đỏ" data-pos="tính từ / adjective" data-def-en="Having the color of blood or a ripe tomato." data-def-vn="Có màu giống như máu hoặc cà chua chín." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">đỏ</span> cho những <span class="vocab" data-word-en="(classifier for blossoms)" data-word-vn="đóa" data-pos="loại từ / classifier" data-def-en="A word used to count individual blossoms." data-def-vn="Từ dùng để đếm từng đóa hoa." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">đóa</span> <span class="vocab" data-word-en="rose" data-word-vn="hoa hồng" data-pos="danh từ / noun" data-def-en="A flower known for its fragrance and thorns." data-def-vn="Một loài hoa nổi tiếng với hương thơm và gai." data-context-vn="Anh ấy sử dụng nhiều màu sắc: màu vàng rực rỡ cho mặt trời, màu xanh lá cho những chiếc lá, và màu đỏ cho những đóa hoa hồng.">hoa hồng</span>. Vẽ tranh <span class="vocab" data-word-en="to help" data-word-vn="giúp" data-pos="động từ / verb" data-def-en="To assist or make something easier." data-def-vn="Hỗ trợ hoặc làm cho điều gì đó dễ dàng hơn." data-context-vn="Vẽ tranh giúp anh ấy cảm thấy bình tĩnh sau một tuần làm việc dài.">giúp</span> anh ấy <span class="vocab" data-word-en="to feel" data-word-vn="cảm thấy" data-pos="động từ / verb" data-def-en="To experience an emotion or physical sensation." data-def-vn="Trải qua một cảm xúc hoặc cảm giác thể chất." data-context-vn="Vẽ tranh giúp anh ấy cảm thấy bình tĩnh sau một tuần làm việc dài.">cảm thấy</span> <span class="vocab" data-word-en="calm" data-word-vn="bình tĩnh" data-pos="tính từ / adjective" data-def-en="Free from nervousness or excitement." data-def-vn="Không lo lắng hay bồn chồn." data-context-vn="Vẽ tranh giúp anh ấy cảm thấy bình tĩnh sau một tuần làm việc dài.">bình tĩnh</span> <span class="vocab" data-word-en="after" data-word-vn="sau" data-pos="giới từ / preposition" data-def-en="Following in time." data-def-vn="Sau về mặt thời gian." data-context-vn="Vẽ tranh giúp anh ấy cảm thấy bình tĩnh sau một tuần làm việc dài.">sau</span> <span class="vocab" data-word-en="a / one" data-word-vn="một" data-pos="từ chỉ số / numeral" data-def-en="The number one; used as an indefinite article." data-def-vn="Số một; dùng như một mạo từ không xác định." data-context-vn="Vẽ tranh giúp anh ấy cảm thấy bình tĩnh sau một tuần làm việc dài.">một</span> <span class="vocab" data-word-en="week" data-word-vn="tuần" data-pos="danh từ / noun" data-def-en="A period of seven days." data-def-vn="Một khoảng thời gian bảy ngày." data-context-vn="Vẽ tranh giúp anh ấy cảm thấy bình tĩnh sau một tuần làm việc dài.">tuần</span> <span class="vocab" data-word-en="to work" data-word-vn="làm việc" data-pos="động từ / verb" data-def-en="To do a job or task." data-def-vn="Thực hiện một công việc." data-context-vn="Vẽ tranh giúp anh ấy cảm thấy bình tĩnh sau một tuần làm việc dài.">làm việc</span> <span class="vocab" data-word-en="long" data-word-vn="dài" data-pos="tính từ / adjective" data-def-en="Great in duration or length." data-def-vn="Có thời lượng hoặc độ dài lớn." data-context-vn="Vẽ tranh giúp anh ấy cảm thấy bình tĩnh sau một tuần làm việc dài.">dài</span>. <span class="vocab" data-word-en="sometimes" data-word-vn="Đôi khi" data-pos="trạng từ / adverb" data-def-en="On certain occasions; not always." data-def-vn="Vào một số dịp nhất định; không phải lúc nào cũng vậy." data-context-vn="Đôi khi, cô mèo Luna của anh ấy ngồi gần bên và quan sát.">Đôi khi</span>, <span class="vocab" data-word-en="(term for a female animal / Miss)" data-word-vn="cô" data-pos="loại từ / classifier" data-def-en="A term used affectionately before the name of a female animal." data-def-vn="Một từ dùng một cách trìu mến trước tên của một con vật cái." data-context-vn="Đôi khi, cô mèo Luna của anh ấy ngồi gần bên và quan sát.">cô</span> <span class="vocab" data-word-en="cat" data-word-vn="mèo" data-pos="danh từ / noun" data-def-en="A small domesticated animal known for chasing mice." data-def-vn="Một loài động vật nhỏ được thuần hóa, nổi tiếng vì hay đuổi bắt chuột." data-context-vn="Đôi khi, cô mèo Luna của anh ấy ngồi gần bên và quan sát.">mèo</span> Luna của anh ấy <span class="vocab" data-word-en="to sit" data-word-vn="ngồi" data-pos="động từ / verb" data-def-en="To rest with the body supported by the buttocks." data-def-vn="Ở tư thế cơ thể được đỡ bằng mông." data-context-vn="Đôi khi, cô mèo Luna của anh ấy ngồi gần bên và quan sát.">ngồi</span> <span class="vocab" data-word-en="near / close by" data-word-vn="gần bên" data-pos="trạng từ / adverb" data-def-en="At a short distance from something." data-def-vn="Ở khoảng cách gần với vật gì đó." data-context-vn="Đôi khi, cô mèo Luna của anh ấy ngồi gần bên và quan sát.">gần bên</span> và <span class="vocab" data-word-en="to observe" data-word-vn="quan sát" data-pos="động từ / verb" data-def-en="To watch carefully." data-def-vn="Theo dõi một cách cẩn thận." data-context-vn="Đôi khi, cô mèo Luna của anh ấy ngồi gần bên và quan sát.">quan sát</span>. <span class="vocab" data-word-en="it" data-word-vn="Nó" data-pos="đại từ / pronoun" data-def-en="A pronoun used to refer to an animal or thing." data-def-vn="Đại từ dùng để chỉ một con vật hoặc một vật." data-context-vn="Nó thích nhìn cây cọ di chuyển trên mặt vải canvas.">Nó</span> thích <span class="vocab" data-word-en="to watch / look at" data-word-vn="nhìn" data-pos="động từ / verb" data-def-en="To direct one's eyes toward something." data-def-vn="Hướng mắt về phía điều gì đó." data-context-vn="Nó thích nhìn cây cọ di chuyển trên mặt vải canvas.">nhìn</span> <span class="vocab" data-word-en="paintbrush" data-word-vn="cây cọ" data-pos="danh từ / noun" data-def-en="A tool with bristles used for applying paint." data-def-vn="Một dụng cụ có lông dùng để quét sơn." data-context-vn="Nó thích nhìn cây cọ di chuyển trên mặt vải canvas.">cây cọ</span> <span class="vocab" data-word-en="to move" data-word-vn="di chuyển" data-pos="động từ / verb" data-def-en="To change position or location." data-def-vn="Thay đổi vị trí hoặc nơi chốn." data-context-vn="Nó thích nhìn cây cọ di chuyển trên mặt vải canvas.">di chuyển</span> <span class="vocab" data-word-en="on" data-word-vn="trên" data-pos="giới từ / preposition" data-def-en="Positioned above or on the surface of something." data-def-vn="Ở vị trí phía trên hoặc trên bề mặt của vật gì đó." data-context-vn="Nó thích nhìn cây cọ di chuyển trên mặt vải canvas.">trên</span> <span class="vocab" data-word-en="surface" data-word-vn="mặt" data-pos="danh từ / noun" data-def-en="The outer or top layer of something." data-def-vn="Lớp ngoài hoặc lớp trên cùng của một vật." data-context-vn="Nó thích nhìn cây cọ di chuyển trên mặt vải canvas.">mặt</span> <span class="vocab" data-word-en="canvas" data-word-vn="vải canvas" data-pos="danh từ / noun" data-def-en="A heavy woven fabric used as a surface for painting." data-def-vn="Một loại vải dệt dày dùng làm bề mặt để vẽ tranh." data-context-vn="Nó thích nhìn cây cọ di chuyển trên mặt vải canvas.">vải canvas</span>. <span class="vocab" data-word-en="by (a certain time)" data-word-vn="Đến" data-pos="giới từ / preposition" data-def-en="Indicating the point by which something happens." data-def-vn="Chỉ thời điểm mà điều gì đó xảy ra." data-context-vn="Đến cuối ngày, Kenji hoàn thành bức tranh của mình.">Đến</span> <span class="vocab" data-word-en="end" data-word-vn="cuối" data-pos="danh từ / noun" data-def-en="The final part of something." data-def-vn="Phần cuối cùng của một điều gì đó." data-context-vn="Đến cuối ngày, Kenji hoàn thành bức tranh của mình.">cuối</span> ngày, Kenji <span class="vocab" data-word-en="to finish / complete" data-word-vn="hoàn thành" data-pos="động từ / verb" data-def-en="To bring something to completion." data-def-vn="Làm cho điều gì đó hoàn tất." data-context-vn="Đến cuối ngày, Kenji hoàn thành bức tranh của mình.">hoàn thành</span> <span class="vocab" data-word-en="(classifier for pictures)" data-word-vn="bức" data-pos="loại từ / classifier" data-def-en="A word used to count flat items like paintings." data-def-vn="Từ dùng để đếm các vật phẳng như bức tranh." data-context-vn="Đến cuối ngày, Kenji hoàn thành bức tranh của mình.">bức</span> tranh của mình. Anh <span class="vocab" data-word-en="to hang" data-word-vn="treo" data-pos="động từ / verb" data-def-en="To attach something so it is suspended." data-def-vn="Gắn vật gì đó để nó được treo lên." data-context-vn="Anh treo nó trên bức tường phòng khách, và nó làm cho ngôi nhà của anh trông thật đẹp.">treo</span> nó trên <span class="vocab" data-word-en="wall" data-word-vn="bức tường" data-pos="danh từ / noun" data-def-en="A vertical structure that divides or encloses a space." data-def-vn="Một cấu trúc thẳng đứng dùng để ngăn cách hoặc bao quanh một không gian." data-context-vn="Anh treo nó trên bức tường phòng khách, và nó làm cho ngôi nhà của anh trông thật đẹp.">bức tường</span> <span class="vocab" data-word-en="living room" data-word-vn="phòng khách" data-pos="danh từ / noun" data-def-en="A room in a house used for relaxing or entertaining guests." data-def-vn="Một căn phòng trong nhà dùng để thư giãn hoặc tiếp khách." data-context-vn="Anh treo nó trên bức tường phòng khách, và nó làm cho ngôi nhà của anh trông thật đẹp.">phòng khách</span>, và nó <span class="vocab" data-word-en="to make / cause" data-word-vn="làm cho" data-pos="động từ / verb" data-def-en="To cause something to become a certain way." data-def-vn="Làm cho điều gì đó trở nên như thế nào đó." data-context-vn="Anh treo nó trên bức tường phòng khách, và nó làm cho ngôi nhà của anh trông thật đẹp.">làm cho</span> <span class="vocab" data-word-en="home" data-word-vn="ngôi nhà" data-pos="danh từ / noun" data-def-en="A place where someone lives." data-def-vn="Một nơi mà ai đó sinh sống." data-context-vn="Anh treo nó trên bức tường phòng khách, và nó làm cho ngôi nhà của anh trông thật đẹp.">ngôi nhà</span> của anh <span class="vocab" data-word-en="to look / appear" data-word-vn="trông" data-pos="động từ / verb" data-def-en="To have a certain appearance." data-def-vn="Có một vẻ ngoài nhất định." data-context-vn="Anh treo nó trên bức tường phòng khách, và nó làm cho ngôi nhà của anh trông thật đẹp.">trông</span> <span class="vocab" data-word-en="truly / really" data-word-vn="thật" data-pos="trạng từ / adverb" data-def-en="In a real or genuine manner; very." data-def-vn="Theo cách thật sự hoặc chân thật; rất." data-context-vn="Anh treo nó trên bức tường phòng khách, và nó làm cho ngôi nhà của anh trông thật đẹp.">thật</span> <span class="vocab" data-word-en="beautiful" data-word-vn="đẹp" data-pos="tính từ / adjective" data-def-en="Pleasing to look at." data-def-vn="Đẹp mắt, dễ nhìn." data-context-vn="Anh treo nó trên bức tường phòng khách, và nó làm cho ngôi nhà của anh trông thật đẹp.">đẹp</span>.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning 
+	and where in the story each word appeared.  Click on each word to jump to it's first occurrence in the story.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">Câu chuyện</div>
+        <div class="memory-word">Sở thích</div>
+        <div class="memory-word">ngày</div>
+        <div class="memory-word">thứ Bảy</div>
+        <div class="memory-word">Vào</div>
+        <div class="memory-word">các</div>
+        <div class="memory-word">thích</div>
+        <div class="memory-word">vẽ</div>
+        <div class="memory-word">tranh</div>
+        <div class="memory-word">Anh ấy</div>
+        <div class="memory-word">đặt</div>
+        <div class="memory-word">giá vẽ</div>
+        <div class="memory-word">trong</div>
+        <div class="memory-word">khu vườn</div>
+        <div class="memory-word">nhỏ</div>
+        <div class="memory-word">của</div>
+        <div class="memory-word">mình</div>
+        <div class="memory-word">những</div>
+        <div class="memory-word">bông</div>
+        <div class="memory-word">hoa</div>
+        <div class="memory-word">và</div>
+        <div class="memory-word">cái</div>
+        <div class="memory-word">cây</div>
+        <div class="memory-word">sân</div>
+        <div class="memory-word">nhà</div>
+        <div class="memory-word">sử dụng</div>
+        <div class="memory-word">nhiều</div>
+        <div class="memory-word">màu sắc</div>
+        <div class="memory-word">vàng</div>
+        <div class="memory-word">rực rỡ</div>
+        <div class="memory-word">cho</div>
+        <div class="memory-word">mặt trời</div>
+        <div class="memory-word">xanh lá</div>
+        <div class="memory-word">chiếc</div>
+        <div class="memory-word">lá</div>
+        <div class="memory-word">đỏ</div>
+        <div class="memory-word">đóa</div>
+        <div class="memory-word">hoa hồng</div>
+        <div class="memory-word">giúp</div>
+        <div class="memory-word">cảm thấy</div>
+        <div class="memory-word">bình tĩnh</div>
+        <div class="memory-word">sau</div>
+        <div class="memory-word">một</div>
+        <div class="memory-word">tuần</div>
+        <div class="memory-word">làm việc</div>
+        <div class="memory-word">dài</div>
+        <div class="memory-word">Đôi khi</div>
+        <div class="memory-word">cô</div>
+        <div class="memory-word">mèo</div>
+        <div class="memory-word">ngồi</div>
+        <div class="memory-word">gần bên</div>
+        <div class="memory-word">quan sát</div>
+        <div class="memory-word">Nó</div>
+        <div class="memory-word">nhìn</div>
+        <div class="memory-word">cây cọ</div>
+        <div class="memory-word">di chuyển</div>
+        <div class="memory-word">trên</div>
+        <div class="memory-word">mặt</div>
+        <div class="memory-word">vải canvas</div>
+        <div class="memory-word">Đến</div>
+        <div class="memory-word">cuối</div>
+        <div class="memory-word">hoàn thành</div>
+        <div class="memory-word">bức</div>
+        <div class="memory-word">treo</div>
+        <div class="memory-word">bức tường</div>
+        <div class="memory-word">phòng khách</div>
+        <div class="memory-word">làm cho</div>
+        <div class="memory-word">ngôi nhà</div>
+        <div class="memory-word">trông</div>
+        <div class="memory-word">thật</div>
+        <div class="memory-word">đẹp</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the text:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                document.getElementById('popup-definition').innerHTML = el.dataset.defEn + hr + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordVn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
