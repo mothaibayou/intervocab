@@ -1,0 +1,612 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Life in the City</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1><span class="vocab" data-word-en="Life" data-word-vn="cuộc sống" data-pos="danh từ / noun" data-def-en="A person&#x27;s or people&#x27;s existence; the state of being alive." data-def-vn="Sự tồn tại của con người; trạng thái còn sống." data-context-en="Life in the City">Life</span> <span class="vocab" data-word-en="in" data-word-vn="trong" data-pos="giới từ / preposition" data-def-en="Indicates location inside something." data-def-vn="Chỉ vị trí bên trong một điều gì đó." data-context-en="Life in the City">in</span> <span class="vocab" data-word-en="the" data-word-vn="(definite article)" data-pos="mạo từ / article" data-def-en="Used before a noun to refer to a specific, already-identified thing." data-def-vn="Dùng trước danh từ để chỉ một điều cụ thể, đã được xác định." data-context-en="Life in the City">the</span> <span class="vocab" data-word-en="City" data-word-vn="thành phố" data-pos="danh từ / noun" data-def-en="A large, important town." data-def-vn="Một thị trấn lớn, quan trọng." data-context-en="Life in the City">City</span></h1>
+
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to the story</div>
+        <audio id="audio-player" src="lifeinthecity.mp3" controls></audio>
+
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+<p>
+    Life in the city <span class="vocab" data-word-en="is" data-word-vn="là / thì" data-pos="động từ / verb (to be)" data-def-en="Used to describe a state or identity of the subject." data-def-vn="Dùng để miêu tả trạng thái hoặc bản chất của chủ ngữ." data-context-en="Life in the city is very busy.">is</span> <span class="vocab" data-word-en="very" data-word-vn="rất" data-pos="trạng từ / adverb" data-def-en="To a high degree." data-def-vn="Ở mức độ cao." data-context-en="Life in the city is very busy.">very</span> <span class="vocab" data-word-en="busy" data-word-vn="bận rộn" data-pos="tính từ / adjective" data-def-en="Full of activity; having a lot to do." data-def-vn="Đầy hoạt động; có nhiều việc phải làm." data-context-en="Life in the city is very busy.">busy</span>. <span class="vocab" data-word-en="From" data-word-vn="từ" data-pos="giới từ / preposition" data-def-en="Indicates the starting point of something." data-def-vn="Chỉ điểm khởi đầu của điều gì đó." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">From</span> the <span class="vocab" data-word-en="break of dawn" data-word-vn="lúc bình minh / rạng sáng" data-pos="cụm danh từ / noun phrase (fixed idiom)" data-def-en="The very first light of morning; daybreak." data-def-vn="Ánh sáng đầu tiên của buổi sáng; lúc trời vừa rạng." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">break of dawn</span>, <span class="vocab" data-word-en="hundreds" data-word-vn="hàng trăm" data-pos="danh từ / noun" data-def-en="A large but unspecified number, in the hundreds." data-def-vn="Một số lượng lớn nhưng không xác định, tính bằng hàng trăm." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">hundreds</span> <span class="vocab" data-word-en="of" data-word-vn="của / thuộc về" data-pos="giới từ / preposition" data-def-en="Indicates belonging or a relationship between two things." data-def-vn="Chỉ sự sở hữu hoặc mối quan hệ giữa hai sự vật." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">of</span> <span class="vocab" data-word-en="people" data-word-vn="người / mọi người" data-pos="danh từ / noun" data-def-en="Human beings in general." data-def-vn="Con người nói chung." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">people</span> <span class="vocab" data-word-en="pour out" data-word-vn="tuôn ra / ùa ra" data-pos="cụm động từ / phrasal verb (fixed)" data-def-en="To come out in large numbers all at once." data-def-vn="Ùa ra với số lượng lớn cùng một lúc." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">pour out</span> of <span class="vocab" data-word-en="their" data-word-vn="của họ" data-pos="đại từ sở hữu / possessive pronoun" data-def-en="Belonging to the people previously mentioned." data-def-vn="Thuộc về những người đã được nhắc đến trước đó." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">their</span> <span class="vocab" data-word-en="homes" data-word-vn="nhà / mái ấm" data-pos="danh từ / noun" data-def-en="Places where people live." data-def-vn="Những nơi mà con người sinh sống." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">homes</span> <span class="vocab" data-word-en="like" data-word-vn="giống như" data-pos="giới từ / preposition" data-def-en="Used to compare one thing to another." data-def-vn="Dùng để so sánh sự vật này với sự vật khác." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">like</span> <span class="vocab" data-word-en="ants" data-word-vn="kiến" data-pos="danh từ / noun" data-def-en="Small insects that live in organized colonies." data-def-vn="Loài côn trùng nhỏ sống thành đàn có tổ chức." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">ants</span> from <span class="vocab" data-word-en="a" data-word-vn="một" data-pos="mạo từ / article" data-def-en="Used before a singular noun to mean one, unspecified." data-def-vn="Dùng trước danh từ số ít để chỉ một điều gì đó chưa xác định." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">a</span> <span class="vocab" data-word-en="disturbed" data-word-vn="bị quấy rối / bị phá vỡ" data-pos="tính từ / adjective" data-def-en="Disrupted from a calm or settled state." data-def-vn="Bị xáo trộn khỏi trạng thái yên bình." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">disturbed</span> <span class="vocab" data-word-en="nest" data-word-vn="tổ" data-pos="danh từ / noun" data-def-en="A structure built by insects or birds to live in." data-def-vn="Cấu trúc do côn trùng hoặc chim xây để sinh sống." data-context-en="From the break of dawn, hundreds of people pour out of their homes like ants from a disturbed nest.">nest</span>. <span class="vocab" data-word-en="Before long" data-word-vn="chẳng bao lâu" data-pos="cụm trạng từ / adverb phrase (fixed idiom)" data-def-en="Soon; after a short time." data-def-vn="Sớm thôi; sau một khoảng thời gian ngắn." data-context-en="Before long, the streets are packed with vehicles.">Before long</span>, the <span class="vocab" data-word-en="streets" data-word-vn="đường phố" data-pos="danh từ / noun" data-def-en="Public roads in a town or city." data-def-vn="Những con đường công cộng trong thị trấn hoặc thành phố." data-context-en="Before long, the streets are packed with vehicles.">streets</span> <span class="vocab" data-word-en="are" data-word-vn="thì / là" data-pos="động từ / verb (to be, plural)" data-def-en="Used to describe the state of a plural subject." data-def-vn="Dùng để miêu tả trạng thái của chủ ngữ số nhiều." data-context-en="Before long, the streets are packed with vehicles.">are</span> <span class="vocab" data-word-en="packed" data-word-vn="chật kín" data-pos="tính từ / adjective" data-def-en="Completely filled, leaving no space." data-def-vn="Đầy kín, không còn chỗ trống." data-context-en="Before long, the streets are packed with vehicles.">packed</span> <span class="vocab" data-word-en="with" data-word-vn="với" data-pos="giới từ / preposition" data-def-en="Indicates accompaniment or the contents of something." data-def-vn="Chỉ sự đi kèm hoặc nội dung của điều gì đó." data-context-en="Before long, the streets are packed with vehicles.">with</span> <span class="vocab" data-word-en="vehicles" data-word-vn="xe cộ" data-pos="danh từ / noun" data-def-en="Cars, motorbikes, and other means of transport." data-def-vn="Ô tô, xe máy và các phương tiện di chuyển khác." data-context-en="Before long, the streets are packed with vehicles.">vehicles</span>. <span class="vocab" data-word-en="Shops" data-word-vn="cửa hàng" data-pos="danh từ / noun" data-def-en="Places of business that sell goods." data-def-vn="Những địa điểm kinh doanh bán hàng hóa." data-context-en="Shops and offices open for business.">Shops</span> <span class="vocab" data-word-en="and" data-word-vn="và" data-pos="liên từ / conjunction" data-def-en="Used to connect two related words or ideas." data-def-vn="Dùng để nối hai từ hoặc ý có liên quan với nhau." data-context-en="Shops and offices open for business.">and</span> <span class="vocab" data-word-en="offices" data-word-vn="văn phòng" data-pos="danh từ / noun" data-def-en="Rooms or buildings used for business or professional work." data-def-vn="Những căn phòng hoặc tòa nhà dùng cho công việc kinh doanh, chuyên môn." data-context-en="Shops and offices open for business.">offices</span> <span class="vocab" data-word-en="open" data-word-vn="mở cửa" data-pos="động từ / tính từ / verb / adjective" data-def-en="To become available for business, or not closed." data-def-vn="Bắt đầu hoạt động kinh doanh, hoặc không đóng." data-context-en="Shops and offices open for business.">open</span> <span class="vocab" data-word-en="for" data-word-vn="cho / vì" data-pos="giới từ / preposition" data-def-en="Indicates purpose or intended recipient." data-def-vn="Chỉ mục đích hoặc đối tượng nhận." data-context-en="Shops and offices open for business.">for</span> <span class="vocab" data-word-en="business" data-word-vn="công việc kinh doanh" data-pos="danh từ / noun" data-def-en="Commercial activity of buying and selling." data-def-vn="Hoạt động thương mại mua bán." data-context-en="Shops and offices open for business.">business</span>. <span class="vocab" data-word-en="Students" data-word-vn="học sinh" data-pos="danh từ / noun" data-def-en="People who are studying at a school." data-def-vn="Những người đang học tập tại trường." data-context-en="Students hurry to school carrying their books, and another working day begins.">Students</span> <span class="vocab" data-word-en="hurry" data-word-vn="vội vã / sự vội vã" data-pos="động từ / danh từ / verb / noun" data-def-en="To move quickly, or a state of rushing." data-def-vn="Di chuyển nhanh, hoặc trạng thái vội vàng." data-context-en="Students hurry to school carrying their books, and another working day begins.">hurry</span> <span class="vocab" data-word-en="to" data-word-vn="đến / để" data-pos="giới từ / preposition" data-def-en="Indicates direction toward something, or purpose." data-def-vn="Chỉ hướng đi về phía điều gì đó, hoặc mục đích." data-context-en="Students hurry to school carrying their books, and another working day begins.">to</span> <span class="vocab" data-word-en="school" data-word-vn="trường học" data-pos="danh từ / noun" data-def-en="An institution where students go to study." data-def-vn="Một cơ sở nơi học sinh đến học tập." data-context-en="Students hurry to school carrying their books, and another working day begins.">school</span> <span class="vocab" data-word-en="carrying" data-word-vn="mang theo" data-pos="động từ / verb (gerund of &#x27;carry&#x27;)" data-def-en="Holding or transporting something while moving." data-def-vn="Cầm hoặc mang theo một vật gì đó khi di chuyển." data-context-en="Students hurry to school carrying their books, and another working day begins.">carrying</span> their <span class="vocab" data-word-en="books" data-word-vn="sách" data-pos="danh từ / noun" data-def-en="Written or printed works with pages bound together." data-def-vn="Những tác phẩm viết hoặc in gồm các trang được đóng lại với nhau." data-context-en="Students hurry to school carrying their books, and another working day begins.">books</span>, and <span class="vocab" data-word-en="another" data-word-vn="một... khác" data-pos="tính từ / adjective" data-def-en="One more, in addition to the one before." data-def-vn="Thêm một cái nữa, ngoài cái trước đó." data-context-en="Students hurry to school carrying their books, and another working day begins.">another</span> <span class="vocab" data-word-en="working day" data-word-vn="ngày làm việc" data-pos="cụm danh từ / noun phrase (fixed)" data-def-en="A day set aside for work." data-def-vn="Một ngày dành cho công việc." data-context-en="Students hurry to school carrying their books, and another working day begins.">working day</span> <span class="vocab" data-word-en="begins" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="To start." data-def-vn="Bắt đầu làm điều gì đó." data-context-en="Students hurry to school carrying their books, and another working day begins.">begins</span>.
+</p>
+
+<p>
+    The city is <span class="vocab" data-word-en="now" data-word-vn="bây giờ" data-pos="trạng từ / adverb" data-def-en="At the present time." data-def-vn="Vào thời điểm hiện tại." data-context-en="The city is now bustling with activity and filled with noise.">now</span> <span class="vocab" data-word-en="bustling" data-word-vn="nhộn nhịp" data-pos="tính từ / adjective" data-def-en="Full of lively, busy activity." data-def-vn="Đầy ắp những hoạt động sôi động, bận rộn." data-context-en="The city is now bustling with activity and filled with noise.">bustling</span> with <span class="vocab" data-word-en="activity" data-word-vn="hoạt động" data-pos="danh từ / noun" data-def-en="Something that is happening or being done." data-def-vn="Điều gì đó đang xảy ra hoặc đang được thực hiện." data-context-en="The city is now bustling with activity and filled with noise.">activity</span> and <span class="vocab" data-word-en="filled" data-word-vn="đầy ắp" data-pos="tính từ / adjective" data-def-en="Completely full of something." data-def-vn="Đầy ắp một điều gì đó." data-context-en="The city is now bustling with activity and filled with noise.">filled</span> with <span class="vocab" data-word-en="noise" data-word-vn="tiếng ồn" data-pos="danh từ / noun" data-def-en="A sound, especially a loud or unpleasant one." data-def-vn="Âm thanh, đặc biệt là âm thanh lớn hoặc khó chịu." data-context-en="The city is now bustling with activity and filled with noise.">noise</span>. Hundreds of <span class="vocab" data-word-en="sightseers" data-word-vn="người ngoạn cảnh" data-pos="danh từ / noun" data-def-en="People who visit and view interesting or scenic places." data-def-vn="Những người đi tham quan và ngắm cảnh." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">sightseers</span>, <span class="vocab" data-word-en="tourists" data-word-vn="du khách" data-pos="danh từ / noun" data-def-en="People traveling for pleasure or sightseeing." data-def-vn="Những người đi du lịch để giải trí hoặc tham quan." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">tourists</span>, and <span class="vocab" data-word-en="other" data-word-vn="khác" data-pos="tính từ / adjective" data-def-en="Different from the one(s) already mentioned." data-def-vn="Khác với (những) điều đã được nhắc đến." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">other</span> <span class="vocab" data-word-en="visitors" data-word-vn="người viếng thăm" data-pos="danh từ / noun" data-def-en="People who visit a place." data-def-vn="Những người đến thăm một nơi nào đó." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">visitors</span> <span class="vocab" data-word-en="explore" data-word-vn="khám phá" data-pos="động từ / verb" data-def-en="To travel through a place in order to learn about it." data-def-vn="Đi khắp một nơi để tìm hiểu về nó." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">explore</span> the city's <span class="vocab" data-word-en="attractions" data-word-vn="thắng cảnh / điểm hấp dẫn" data-pos="danh từ / noun" data-def-en="Places or things that draw people&#x27;s interest." data-def-vn="Những nơi hoặc điều thu hút sự quan tâm của mọi người." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">attractions</span>, <span class="vocab" data-word-en="while" data-word-vn="trong khi" data-pos="liên từ / conjunction" data-def-en="Introduces something happening at the same time as another." data-def-vn="Giới thiệu một điều xảy ra cùng lúc với một điều khác." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">while</span> <span class="vocab" data-word-en="businesspeople" data-word-vn="doanh nhân" data-pos="danh từ / noun" data-def-en="People who work in business, especially at a high level." data-def-vn="Những người làm việc trong lĩnh vực kinh doanh, đặc biệt ở cấp cao." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">businesspeople</span> from <span class="vocab" data-word-en="many" data-word-vn="nhiều" data-pos="tính từ / adjective" data-def-en="A large number of." data-def-vn="Một số lượng lớn của." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">many</span> <span class="vocab" data-word-en="parts" data-word-vn="các phần / các nơi" data-pos="danh từ / noun" data-def-en="Sections or regions of a larger whole." data-def-vn="Những phần hoặc khu vực của một tổng thể lớn hơn." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">parts</span> of the <span class="vocab" data-word-en="world" data-word-vn="thế giới" data-pos="danh từ / noun" data-def-en="The earth and all its people and places." data-def-vn="Trái đất cùng toàn bộ con người và địa điểm trên đó." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">world</span> <span class="vocab" data-word-en="come" data-word-vn="đến" data-pos="động từ / verb" data-def-en="To move toward a place or person." data-def-vn="Di chuyển đến một nơi hoặc một người nào đó." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">come</span> to <span class="vocab" data-word-en="conduct" data-word-vn="tiến hành" data-pos="động từ / verb" data-def-en="To carry out or organize an activity." data-def-vn="Thực hiện hoặc tổ chức một hoạt động." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">conduct</span> <span class="vocab" data-word-en="trade" data-word-vn="buôn bán" data-pos="danh từ / noun" data-def-en="The activity of buying and selling goods." data-def-vn="Hoạt động mua bán hàng hóa." data-context-en="Hundreds of sightseers, tourists, and other visitors explore the city&#x27;s attractions, while businesspeople from many parts of the world come to conduct trade and business.">trade</span> and business.
+</p>
+
+<p>
+    <span class="vocab" data-word-en="As" data-word-vn="khi" data-pos="liên từ / conjunction" data-def-en="Introduces something happening at the same time as another event." data-def-vn="Giới thiệu một điều xảy ra cùng lúc với một sự việc khác." data-context-en="As evening approaches, offices and schools begin to close.">As</span> <span class="vocab" data-word-en="evening" data-word-vn="buổi tối / buổi chiều tối" data-pos="danh từ / noun" data-def-en="The part of the day between afternoon and night." data-def-vn="Phần của ngày giữa buổi chiều và ban đêm." data-context-en="As evening approaches, offices and schools begin to close.">evening</span> <span class="vocab" data-word-en="approaches" data-word-vn="đến gần" data-pos="động từ / verb (lemma &#x27;approach&#x27;)" data-def-en="To come closer in time or space." data-def-vn="Đến gần hơn về mặt thời gian hoặc không gian." data-context-en="As evening approaches, offices and schools begin to close.">approaches</span>, offices and schools begin to <span class="vocab" data-word-en="close" data-word-vn="đóng cửa" data-pos="động từ / verb" data-def-en="To stop being open." data-def-vn="Ngừng mở cửa." data-context-en="As evening approaches, offices and schools begin to close.">close</span>. Many shops close <span class="vocab" data-word-en="as well" data-word-vn="cũng vậy" data-pos="cụm trạng từ / adverb phrase (fixed idiom)" data-def-en="Also; too." data-def-vn="Cũng như vậy; cũng thế." data-context-en="Many shops close as well.">as well</span>. <span class="vocab" data-word-en="At" data-word-vn="vào lúc" data-pos="giới từ / preposition" data-def-en="Indicates a specific point in time or place." data-def-vn="Chỉ một thời điểm hoặc địa điểm cụ thể." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">At</span> <span class="vocab" data-word-en="this" data-word-vn="này" data-pos="đại từ chỉ định / demonstrative pronoun" data-def-en="Refers to something close by or just mentioned." data-def-vn="Chỉ về điều gì đó ở gần hoặc vừa được nhắc đến." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">this</span> <span class="vocab" data-word-en="time" data-word-vn="thời gian / thời điểm" data-pos="danh từ / noun" data-def-en="The ongoing progress of existence, or a particular point in it." data-def-vn="Sự tiến triển của thời gian, hoặc một thời điểm cụ thể trong đó." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">time</span>, people <span class="vocab" data-word-en="crowd" data-word-vn="chen lấn / tụ tập" data-pos="động từ / verb" data-def-en="To gather closely together in a large group." data-def-vn="Tụ tập chen chúc thành một nhóm đông." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">crowd</span> <span class="vocab" data-word-en="together" data-word-vn="cùng nhau" data-pos="trạng từ / adverb" data-def-en="With each other; in a group." data-def-vn="Cùng với nhau; thành một nhóm." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">together</span> to <span class="vocab" data-word-en="catch" data-word-vn="bắt kịp / đón" data-pos="động từ / verb" data-def-en="To reach a form of transportation in time to board it." data-def-vn="Đến kịp một phương tiện để lên nó." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">catch</span> <span class="vocab" data-word-en="buses" data-word-vn="xe buýt" data-pos="danh từ / noun" data-def-en="Large motor vehicles carrying passengers along a fixed route." data-def-vn="Những phương tiện cơ giới lớn chở hành khách theo một tuyến cố định." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">buses</span> and other <span class="vocab" data-word-en="forms" data-word-vn="các hình thức" data-pos="danh từ / noun" data-def-en="Different types or kinds of something." data-def-vn="Các loại hoặc kiểu khác nhau của một điều gì đó." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">forms</span> of <span class="vocab" data-word-en="public transportation" data-word-vn="phương tiện giao thông công cộng" data-pos="cụm danh từ / noun phrase (fixed)" data-def-en="Buses, trains, and other transport available to the general public." data-def-vn="Xe buýt, tàu hỏa và các phương tiện khác dành cho công chúng." data-context-en="At this time, people crowd together to catch buses and other forms of public transportation.">public transportation</span>. <span class="vocab" data-word-en="Everyone" data-word-vn="mọi người" data-pos="đại từ / pronoun" data-def-en="Every person." data-def-vn="Tất cả mọi người." data-context-en="Everyone seems to be in a hurry to get home.">Everyone</span> <span class="vocab" data-word-en="seems" data-word-vn="dường như" data-pos="động từ / verb (lemma &#x27;seem&#x27;)" data-def-en="To appear to be the case." data-def-vn="Có vẻ như đúng là vậy." data-context-en="Everyone seems to be in a hurry to get home.">seems</span> to <span class="vocab" data-word-en="be" data-word-vn="là / thì" data-pos="động từ / verb (infinitive &#x27;to be&#x27;)" data-def-en="The base form of the verb expressing existence or state." data-def-vn="Dạng nguyên thể của động từ diễn tả sự tồn tại hoặc trạng thái." data-context-en="Everyone seems to be in a hurry to get home.">be</span> in a hurry to <span class="vocab" data-word-en="get" data-word-vn="về đến" data-pos="động từ / verb" data-def-en="To arrive at or reach a place." data-def-vn="Đến được một nơi nào đó." data-context-en="Everyone seems to be in a hurry to get home.">get</span> <span class="vocab" data-word-en="home" data-word-vn="nhà" data-pos="danh từ / trạng từ / noun / adverb" data-def-en="One&#x27;s own house, or toward one&#x27;s own house." data-def-vn="Nhà riêng của một người, hoặc hướng về nhà riêng đó." data-context-en="Everyone seems to be in a hurry to get home.">home</span>. <span class="vocab" data-word-en="As a result" data-word-vn="kết quả là" data-pos="cụm trạng từ / adverb phrase (fixed idiom)" data-def-en="Consequently; because of this." data-def-vn="Do đó; vì lý do này." data-context-en="As a result of this rush, many accidents occur.">As a result</span> of this <span class="vocab" data-word-en="rush" data-word-vn="sự vội vã" data-pos="danh từ / noun" data-def-en="A hurried, urgent movement." data-def-vn="Sự di chuyển vội vàng, gấp gáp." data-context-en="As a result of this rush, many accidents occur.">rush</span>, many <span class="vocab" data-word-en="accidents" data-word-vn="tai nạn" data-pos="danh từ / noun" data-def-en="Unfortunate, unplanned events causing harm." data-def-vn="Những sự việc không may, ngoài dự tính gây ra thiệt hại." data-context-en="As a result of this rush, many accidents occur.">accidents</span> <span class="vocab" data-word-en="occur" data-word-vn="xảy ra" data-pos="động từ / verb" data-def-en="To happen." data-def-vn="Xảy ra hoặc diễn ra." data-context-en="As a result of this rush, many accidents occur.">occur</span>. <span class="vocab" data-word-en="Those" data-word-vn="những người" data-pos="đại từ / pronoun" data-def-en="Refers to the people or things previously indicated." data-def-vn="Chỉ những người hoặc vật đã được chỉ ra trước đó." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">Those</span> <span class="vocab" data-word-en="who" data-word-vn="người mà" data-pos="đại từ quan hệ / relative pronoun" data-def-en="Introduces a clause describing a person." data-def-vn="Giới thiệu một mệnh đề mô tả một người." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">who</span> are <span class="vocab" data-word-en="unfamiliar" data-word-vn="không quen thuộc" data-pos="tính từ / adjective" data-def-en="Not well known or recognized." data-def-vn="Không được biết đến hoặc quen thuộc." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">unfamiliar</span> with the city <span class="vocab" data-word-en="often" data-word-vn="thường xuyên" data-pos="trạng từ / adverb" data-def-en="Frequently; many times." data-def-vn="Thường xuyên; nhiều lần." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">often</span> <span class="vocab" data-word-en="find" data-word-vn="thấy / nhận thấy" data-pos="động từ / verb" data-def-en="To discover or come to realize something." data-def-vn="Khám phá ra hoặc nhận ra điều gì đó." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">find</span> <span class="vocab" data-word-en="it" data-word-vn="điều đó / nó" data-pos="đại từ / pronoun" data-def-en="Refers to a thing, situation, or idea previously mentioned." data-def-vn="Chỉ một sự vật, tình huống hoặc ý tưởng đã được nhắc đến." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">it</span> <span class="vocab" data-word-en="difficult" data-word-vn="khó khăn" data-pos="tính từ / adjective" data-def-en="Not easy to do or deal with." data-def-vn="Không dễ để thực hiện hoặc xử lý." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">difficult</span> to <span class="vocab" data-word-en="get around" data-word-vn="đi lại" data-pos="cụm động từ / phrasal verb (fixed idiom)" data-def-en="To travel or move about within a place." data-def-vn="Di chuyển qua lại trong một khu vực." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">get around</span> at this time of <span class="vocab" data-word-en="day" data-word-vn="ngày" data-pos="danh từ / noun" data-def-en="A 24-hour period." data-def-vn="Một khoảng thời gian 24 giờ." data-context-en="Those who are unfamiliar with the city often find it difficult to get around at this time of day.">day</span>. Before long, <span class="vocab" data-word-en="however" data-word-vn="tuy nhiên" data-pos="liên từ / conjunction" data-def-en="Introduces a contrast with what was said before." data-def-vn="Giới thiệu một sự tương phản với điều đã nói trước đó." data-context-en="Before long, however, certain parts of the city become almost deserted.">however</span>, <span class="vocab" data-word-en="certain" data-word-vn="một số / nhất định" data-pos="tính từ / adjective" data-def-en="Specific but not named; particular." data-def-vn="Cụ thể nhưng không được nêu tên; nhất định." data-context-en="Before long, however, certain parts of the city become almost deserted.">certain</span> parts of the city <span class="vocab" data-word-en="become" data-word-vn="trở nên" data-pos="động từ / verb" data-def-en="To change into a different state." data-def-vn="Chuyển sang một trạng thái khác." data-context-en="Before long, however, certain parts of the city become almost deserted.">become</span> <span class="vocab" data-word-en="almost" data-word-vn="gần như" data-pos="trạng từ / adverb" data-def-en="Very nearly; not quite completely." data-def-vn="Gần như hoàn toàn; chưa hẳn là hoàn toàn." data-context-en="Before long, however, certain parts of the city become almost deserted.">almost</span> <span class="vocab" data-word-en="deserted" data-word-vn="vắng vẻ" data-pos="tính từ / adjective" data-def-en="Empty of people." data-def-vn="Không có người, vắng vẻ." data-context-en="Before long, however, certain parts of the city become almost deserted.">deserted</span>. <span class="vocab" data-word-en="These" data-word-vn="những... này" data-pos="đại từ chỉ định / demonstrative pronoun" data-def-en="Refers to specific things close by or just mentioned, in the plural." data-def-vn="Chỉ những vật cụ thể ở gần hoặc vừa được nhắc đến, ở số nhiều." data-context-en="These are usually the business districts.">These</span> are <span class="vocab" data-word-en="usually" data-word-vn="thường" data-pos="trạng từ / adverb" data-def-en="Under normal conditions; most of the time." data-def-vn="Trong điều kiện bình thường; hầu hết thời gian." data-context-en="These are usually the business districts.">usually</span> the business <span class="vocab" data-word-en="districts" data-word-vn="các khu vực" data-pos="danh từ / noun" data-def-en="Areas of a city or region with a shared character." data-def-vn="Những khu vực của thành phố hoặc vùng có đặc điểm chung." data-context-en="These are usually the business districts.">districts</span>.
+</p>
+
+<p>
+    <span class="vocab" data-word-en="When" data-word-vn="khi" data-pos="liên từ / conjunction" data-def-en="Introduces the time at which something happens." data-def-vn="Giới thiệu thời điểm mà điều gì đó xảy ra." data-context-en="When night falls, a different kind of activity begins.">When</span> <span class="vocab" data-word-en="night" data-word-vn="ban đêm" data-pos="danh từ / noun" data-def-en="The period of darkness between sunset and sunrise." data-def-vn="Khoảng thời gian tối trời giữa lúc mặt trời lặn và mọc." data-context-en="When night falls, a different kind of activity begins.">night</span> <span class="vocab" data-word-en="falls" data-word-vn="buông xuống" data-pos="động từ / verb (lemma &#x27;fall&#x27;)" data-def-en="To come down or descend, as darkness at nightfall." data-def-vn="Buông xuống, như bóng tối lúc trời tối." data-context-en="When night falls, a different kind of activity begins.">falls</span>, a <span class="vocab" data-word-en="different" data-word-vn="khác nhau" data-pos="tính từ / adjective" data-def-en="Not the same as something else." data-def-vn="Không giống với một điều gì khác." data-context-en="When night falls, a different kind of activity begins.">different</span> <span class="vocab" data-word-en="kind" data-word-vn="loại" data-pos="danh từ / noun" data-def-en="A type or category of something." data-def-vn="Một loại hoặc phạm trù của điều gì đó." data-context-en="When night falls, a different kind of activity begins.">kind</span> of activity begins. The streets <span class="vocab" data-word-en="glow" data-word-vn="tỏa sáng" data-pos="động từ / verb" data-def-en="To shine with a soft, steady light." data-def-vn="Chiếu sáng với ánh sáng nhẹ nhàng, ổn định." data-context-en="The streets glow with colorful lights.">glow</span> with <span class="vocab" data-word-en="colorful" data-word-vn="đầy màu sắc" data-pos="tính từ / adjective" data-def-en="Having many bright colors." data-def-vn="Có nhiều màu sắc rực rỡ." data-context-en="The streets glow with colorful lights.">colorful</span> <span class="vocab" data-word-en="lights" data-word-vn="ánh đèn" data-pos="danh từ / noun" data-def-en="Sources of illumination." data-def-vn="Những nguồn phát sáng." data-context-en="The streets glow with colorful lights.">lights</span>. The <span class="vocab" data-word-en="atmosphere" data-word-vn="bầu không khí" data-pos="danh từ / noun" data-def-en="The general mood or feeling of a place." data-def-vn="Không khí hoặc cảm giác chung của một nơi." data-context-en="The atmosphere becomes calmer, and life takes on a more relaxed pace.">atmosphere</span> becomes <span class="vocab" data-word-en="calmer" data-word-vn="yên tĩnh hơn" data-pos="tính từ / adjective (comparative of &#x27;calm&#x27;)" data-def-en="More peaceful and quiet than before." data-def-vn="Yên bình và tĩnh lặng hơn trước." data-context-en="The atmosphere becomes calmer, and life takes on a more relaxed pace.">calmer</span>, and life <span class="vocab" data-word-en="takes on" data-word-vn="mang lại / trở nên có" data-pos="cụm động từ / phrasal verb (fixed idiom)" data-def-en="To acquire or begin to have a certain quality." data-def-vn="Có được hoặc bắt đầu mang một tính chất nhất định." data-context-en="The atmosphere becomes calmer, and life takes on a more relaxed pace.">takes on</span> a <span class="vocab" data-word-en="more" data-word-vn="hơn" data-pos="trạng từ / adverb (comparative marker)" data-def-en="Used to compare two things, meaning to a greater degree." data-def-vn="Dùng để so sánh hai sự vật, mang nghĩa ở mức độ cao hơn." data-context-en="The atmosphere becomes calmer, and life takes on a more relaxed pace.">more</span> <span class="vocab" data-word-en="relaxed" data-word-vn="thư thả" data-pos="tính từ / adjective" data-def-en="Free from tension; calm and easy." data-def-vn="Không căng thẳng; thoải mái và dễ chịu." data-context-en="The atmosphere becomes calmer, and life takes on a more relaxed pace.">relaxed</span> <span class="vocab" data-word-en="pace" data-word-vn="nhịp độ" data-pos="danh từ / noun" data-def-en="The speed at which something happens or moves." data-def-vn="Tốc độ mà một điều gì đó xảy ra hoặc di chuyển." data-context-en="The atmosphere becomes calmer, and life takes on a more relaxed pace.">pace</span>. People now <span class="vocab" data-word-en="seek" data-word-vn="tìm kiếm" data-pos="động từ / verb" data-def-en="To try to find or obtain something." data-def-vn="Cố gắng tìm kiếm hoặc có được điều gì đó." data-context-en="People now seek entertainment and recreation.">seek</span> <span class="vocab" data-word-en="entertainment" data-word-vn="giải trí" data-pos="danh từ / noun" data-def-en="Activities done for amusement or enjoyment." data-def-vn="Các hoạt động được thực hiện để mua vui, thư giãn." data-context-en="People now seek entertainment and recreation.">entertainment</span> and <span class="vocab" data-word-en="recreation" data-word-vn="sự thư giãn / vui chơi" data-pos="danh từ / noun" data-def-en="Activities done for enjoyment when not working." data-def-vn="Các hoạt động được thực hiện để giải trí khi không làm việc." data-context-en="People now seek entertainment and recreation.">recreation</span>. Many <span class="vocab" data-word-en="go" data-word-vn="đi" data-pos="động từ / verb" data-def-en="To move from one place to another." data-def-vn="Di chuyển từ nơi này đến nơi khác." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">go</span> to <span class="vocab" data-word-en="movie theaters" data-word-vn="rạp chiếu phim" data-pos="cụm danh từ / noun phrase (fixed)" data-def-en="Buildings where films are shown to the public." data-def-vn="Những tòa nhà nơi phim được chiếu cho công chúng xem." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">movie theaters</span>, <span class="vocab" data-word-en="parks" data-word-vn="công viên" data-pos="danh từ / noun" data-def-en="Public areas with grass, trees, and paths for recreation." data-def-vn="Những khu vực công cộng có cỏ, cây và lối đi để vui chơi giải trí." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">parks</span>, and <span class="vocab" data-word-en="clubs" data-word-vn="câu lạc bộ" data-pos="danh từ / noun" data-def-en="Organizations or places people join for a shared interest." data-def-vn="Những tổ chức hoặc địa điểm mà mọi người tham gia vì một sở thích chung." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">clubs</span>, while <span class="vocab" data-word-en="others" data-word-vn="những người khác" data-pos="đại từ / pronoun" data-def-en="Other people, different from those already mentioned." data-def-vn="Những người khác, khác với những người đã được nhắc đến." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">others</span> <span class="vocab" data-word-en="stay" data-word-vn="ở lại" data-pos="động từ / verb" data-def-en="To remain in a place." data-def-vn="Ở lại một nơi nào đó." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">stay</span> home to <span class="vocab" data-word-en="watch" data-word-vn="xem" data-pos="động từ / verb" data-def-en="To look at something attentively." data-def-vn="Nhìn vào điều gì đó một cách chú ý." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">watch</span> <span class="vocab" data-word-en="television" data-word-vn="ti vi / truyền hình" data-pos="danh từ / noun" data-def-en="An electronic device or medium for viewing broadcast programs." data-def-vn="Một thiết bị hoặc phương tiện để xem các chương trình phát sóng." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">television</span> <span class="vocab" data-word-en="or" data-word-vn="hoặc" data-pos="liên từ / conjunction" data-def-en="Introduces an alternative." data-def-vn="Giới thiệu một lựa chọn khác." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">or</span> <span class="vocab" data-word-en="listen" data-word-vn="nghe" data-pos="động từ / verb" data-def-en="To pay attention to sound in order to hear it." data-def-vn="Chú ý đến âm thanh để nghe được nó." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">listen</span> to the <span class="vocab" data-word-en="radio" data-word-vn="đài phát thanh" data-pos="danh từ / noun" data-def-en="A device or service for broadcasting audio programs." data-def-vn="Một thiết bị hoặc dịch vụ phát sóng chương trình âm thanh." data-context-en="Many go to movie theaters, parks, and clubs, while others stay home to watch television or listen to the radio.">radio</span>. <span class="vocab" data-word-en="Some" data-word-vn="một số" data-pos="đại từ / tính từ / pronoun / adjective" data-def-en="An unspecified amount or number of people or things." data-def-vn="Một số lượng người hoặc vật không xác định." data-context-en="Some visit friends and relatives.">Some</span> <span class="vocab" data-word-en="visit" data-word-vn="thăm" data-pos="động từ / verb" data-def-en="To go see a person or place." data-def-vn="Đến gặp một người hoặc đến một nơi nào đó." data-context-en="Some visit friends and relatives.">visit</span> <span class="vocab" data-word-en="friends" data-word-vn="bạn bè" data-pos="danh từ / noun" data-def-en="People one knows well and regards with affection." data-def-vn="Những người mà một người quen biết và có tình cảm quý mến." data-context-en="Some visit friends and relatives.">friends</span> and <span class="vocab" data-word-en="relatives" data-word-vn="người thân" data-pos="danh từ / noun" data-def-en="Family members." data-def-vn="Các thành viên trong gia đình." data-context-en="Some visit friends and relatives.">relatives</span>. Others <span class="vocab" data-word-en="spend" data-word-vn="dành" data-pos="động từ / verb" data-def-en="To use up time or money on something." data-def-vn="Sử dụng thời gian hoặc tiền bạc vào một việc gì đó." data-context-en="Others spend their time reading books and magazines.">spend</span> their time <span class="vocab" data-word-en="reading" data-word-vn="đọc" data-pos="động từ / verb (gerund of &#x27;read&#x27;)" data-def-en="Looking at and understanding written words." data-def-vn="Nhìn vào và hiểu các từ ngữ được viết ra." data-context-en="Others spend their time reading books and magazines.">reading</span> books and <span class="vocab" data-word-en="magazines" data-word-vn="tạp chí" data-pos="danh từ / noun" data-def-en="Periodical publications with articles and pictures." data-def-vn="Những ấn phẩm định kỳ có bài viết và hình ảnh." data-context-en="Others spend their time reading books and magazines.">magazines</span>. Those <span class="vocab" data-word-en="interested" data-word-vn="quan tâm" data-pos="tính từ / adjective" data-def-en="Having a feeling of curiosity or concern about something." data-def-vn="Có cảm giác tò mò hoặc quan tâm đến điều gì đó." data-context-en="Those interested in politics discuss the latest political events.">interested</span> in <span class="vocab" data-word-en="politics" data-word-vn="chính trị" data-pos="danh từ / noun" data-def-en="Activities associated with the governance of a country." data-def-vn="Các hoạt động liên quan đến việc quản lý, điều hành một quốc gia." data-context-en="Those interested in politics discuss the latest political events.">politics</span> <span class="vocab" data-word-en="discuss" data-word-vn="bàn luận" data-pos="động từ / verb" data-def-en="To talk about a subject in detail." data-def-vn="Nói chuyện chi tiết về một chủ đề." data-context-en="Those interested in politics discuss the latest political events.">discuss</span> the <span class="vocab" data-word-en="latest" data-word-vn="mới nhất" data-pos="tính từ / adjective (superlative of &#x27;late&#x27;)" data-def-en="Most recent." data-def-vn="Gần đây nhất." data-context-en="Those interested in politics discuss the latest political events.">latest</span> <span class="vocab" data-word-en="political" data-word-vn="chính trị (thuộc về)" data-pos="tính từ / adjective" data-def-en="Relating to politics or government." data-def-vn="Liên quan đến chính trị hoặc chính quyền." data-context-en="Those interested in politics discuss the latest political events.">political</span> <span class="vocab" data-word-en="events" data-word-vn="sự kiện" data-pos="danh từ / noun" data-def-en="Things that happen, especially of importance." data-def-vn="Những điều xảy ra, đặc biệt là quan trọng." data-context-en="Those interested in politics discuss the latest political events.">events</span>. It is <span class="vocab" data-word-en="also" data-word-vn="cũng" data-pos="trạng từ / adverb" data-def-en="In addition; too." data-def-vn="Thêm vào đó; cũng vậy." data-context-en="It is also during this time that hundreds of thefts and robberies take place.">also</span> <span class="vocab" data-word-en="during" data-word-vn="trong suốt" data-pos="giới từ / preposition" data-def-en="Throughout the course of a period of time." data-def-vn="Trong suốt một khoảng thời gian." data-context-en="It is also during this time that hundreds of thefts and robberies take place.">during</span> this time <span class="vocab" data-word-en="that" data-word-vn="rằng / đó" data-pos="liên từ / đại từ / conjunction / pronoun" data-def-en="Introduces a clause, or refers to something previously mentioned." data-def-vn="Giới thiệu một mệnh đề, hoặc chỉ về một điều đã được nhắc đến." data-context-en="It is also during this time that hundreds of thefts and robberies take place.">that</span> hundreds of <span class="vocab" data-word-en="thefts" data-word-vn="các vụ trộm" data-pos="danh từ / noun" data-def-en="Acts of stealing." data-def-vn="Những hành vi trộm cắp." data-context-en="It is also during this time that hundreds of thefts and robberies take place.">thefts</span> and <span class="vocab" data-word-en="robberies" data-word-vn="các vụ cướp" data-pos="danh từ / noun" data-def-en="Acts of stealing by force or threat." data-def-vn="Những hành vi cướp giật bằng vũ lực hoặc đe dọa." data-context-en="It is also during this time that hundreds of thefts and robberies take place.">robberies</span> <span class="vocab" data-word-en="take place" data-word-vn="diễn ra" data-pos="cụm động từ / phrasal verb (fixed idiom)" data-def-en="To happen; to occur." data-def-vn="Xảy ra; diễn tiến." data-context-en="It is also during this time that hundreds of thefts and robberies take place.">take place</span>.
+</p>
+
+<p>
+    <span class="vocab" data-word-en="Working" data-word-vn="đang làm việc" data-pos="tính từ / adjective (present participle of &#x27;work&#x27;)" data-def-en="Engaged in a job or labor." data-def-vn="Đang tham gia vào công việc hoặc lao động." data-context-en="Working people and those who wish to advance in their careers attend evening classes.">Working</span> people and those who <span class="vocab" data-word-en="wish" data-word-vn="mong muốn" data-pos="động từ / verb" data-def-en="To want something." data-def-vn="Mong muốn điều gì đó." data-context-en="Working people and those who wish to advance in their careers attend evening classes.">wish</span> to <span class="vocab" data-word-en="advance" data-word-vn="tiến bộ / thăng tiến" data-pos="động từ / verb" data-def-en="To move forward or make progress." data-def-vn="Tiến lên phía trước hoặc đạt được tiến bộ." data-context-en="Working people and those who wish to advance in their careers attend evening classes.">advance</span> in their <span class="vocab" data-word-en="careers" data-word-vn="sự nghiệp" data-pos="danh từ / noun" data-def-en="People&#x27;s courses of professional life." data-def-vn="Con đường nghề nghiệp của một người." data-context-en="Working people and those who wish to advance in their careers attend evening classes.">careers</span> <span class="vocab" data-word-en="attend" data-word-vn="tham dự" data-pos="động từ / verb" data-def-en="To be present at an event or class." data-def-vn="Có mặt tại một sự kiện hoặc lớp học." data-context-en="Working people and those who wish to advance in their careers attend evening classes.">attend</span> evening <span class="vocab" data-word-en="classes" data-word-vn="các lớp học" data-pos="danh từ / noun" data-def-en="Groups of students taught together, or the sessions themselves." data-def-vn="Những nhóm học sinh được dạy cùng nhau, hoặc các buổi học." data-context-en="Working people and those who wish to advance in their careers attend evening classes.">classes</span>. <span class="vocab" data-word-en="Every" data-word-vn="mỗi" data-pos="tính từ / adjective" data-def-en="Used before a singular noun to mean each one without exception." data-def-vn="Dùng trước danh từ số ít để chỉ từng cái một, không có ngoại lệ." data-context-en="Every year, hundreds of them sit for various examinations.">Every</span> <span class="vocab" data-word-en="year" data-word-vn="năm" data-pos="danh từ / noun" data-def-en="A period of twelve months." data-def-vn="Một khoảng thời gian mười hai tháng." data-context-en="Every year, hundreds of them sit for various examinations.">year</span>, hundreds of <span class="vocab" data-word-en="them" data-word-vn="họ" data-pos="đại từ / pronoun" data-def-en="Refers to the people previously mentioned." data-def-vn="Chỉ những người đã được nhắc đến trước đó." data-context-en="Every year, hundreds of them sit for various examinations.">them</span> <span class="vocab" data-word-en="sit for" data-word-vn="dự thi" data-pos="cụm động từ / phrasal verb (fixed idiom)" data-def-en="To take an examination." data-def-vn="Tham dự một kỳ thi." data-context-en="Every year, hundreds of them sit for various examinations.">sit for</span> <span class="vocab" data-word-en="various" data-word-vn="khác nhau / nhiều loại" data-pos="tính từ / adjective" data-def-en="Of several different kinds." data-def-vn="Thuộc nhiều loại khác nhau." data-context-en="Every year, hundreds of them sit for various examinations.">various</span> <span class="vocab" data-word-en="examinations" data-word-vn="các kỳ thi" data-pos="danh từ / noun" data-def-en="Formal tests of knowledge or skill." data-def-vn="Những bài kiểm tra chính thức về kiến thức hoặc kỹ năng." data-context-en="Every year, hundreds of them sit for various examinations.">examinations</span>. City <span class="vocab" data-word-en="residents" data-word-vn="cư dân" data-pos="danh từ / noun" data-def-en="People who live in a particular place." data-def-vn="Những người sinh sống tại một nơi cụ thể." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">residents</span> <span class="vocab" data-word-en="have" data-word-vn="có" data-pos="động từ / verb" data-def-en="To possess or hold something." data-def-vn="Sở hữu hoặc có một điều gì đó." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">have</span> <span class="vocab" data-word-en="abundant" data-word-vn="dồi dào / phong phú" data-pos="tính từ / adjective" data-def-en="Existing in large amounts." data-def-vn="Tồn tại với số lượng lớn." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">abundant</span> <span class="vocab" data-word-en="opportunities" data-word-vn="cơ hội" data-pos="danh từ / noun" data-def-en="Favorable circumstances allowing something to be done." data-def-vn="Những hoàn cảnh thuận lợi cho phép điều gì đó được thực hiện." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">opportunities</span> and <span class="vocab" data-word-en="facilities" data-word-vn="các phương tiện / cơ sở vật chất" data-pos="danh từ / noun" data-def-en="Resources or amenities provided for a particular purpose." data-def-vn="Những nguồn lực hoặc tiện ích được cung cấp cho một mục đích cụ thể." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">facilities</span> to <span class="vocab" data-word-en="continue" data-word-vn="tiếp tục" data-pos="động từ / verb" data-def-en="To keep doing something without stopping." data-def-vn="Tiếp tục làm điều gì đó mà không dừng lại." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">continue</span> their <span class="vocab" data-word-en="education" data-word-vn="giáo dục / học vấn" data-pos="danh từ / noun" data-def-en="The process of receiving or giving instruction." data-def-vn="Quá trình tiếp thu hoặc truyền đạt kiến thức." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">education</span> and <span class="vocab" data-word-en="broaden" data-word-vn="mở rộng" data-pos="động từ / verb" data-def-en="To make something wider in range or scope." data-def-vn="Làm cho điều gì đó rộng hơn về phạm vi." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">broaden</span> their <span class="vocab" data-word-en="knowledge" data-word-vn="kiến thức" data-pos="danh từ / noun" data-def-en="Facts, information, and skills acquired through experience or study." data-def-vn="Các sự kiện, thông tin và kỹ năng có được qua trải nghiệm hoặc học tập." data-context-en="City residents have abundant opportunities and facilities to continue their education and broaden their knowledge of life.">knowledge</span> of life. As a result, people <span class="vocab" data-word-en="living" data-word-vn="sinh sống" data-pos="động từ / verb (gerund of &#x27;live&#x27;)" data-def-en="Residing or being alive in a particular place." data-def-vn="Đang cư trú hoặc tồn tại tại một nơi cụ thể." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">living</span> in cities usually <span class="vocab" data-word-en="receive" data-word-vn="nhận được" data-pos="động từ / verb" data-def-en="To be given or come into possession of something." data-def-vn="Được cho hoặc có được điều gì đó." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">receive</span> <span class="vocab" data-word-en="information" data-word-vn="thông tin" data-pos="danh từ / noun" data-def-en="Facts or details communicated about something." data-def-vn="Các sự kiện hoặc chi tiết được truyền đạt về điều gì đó." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">information</span> <span class="vocab" data-word-en="much" data-word-vn="nhiều hơn nhiều" data-pos="trạng từ / adverb" data-def-en="Used to intensify a comparison." data-def-vn="Dùng để nhấn mạnh một sự so sánh." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">much</span> more <span class="vocab" data-word-en="quickly" data-word-vn="nhanh chóng" data-pos="trạng từ / adverb" data-def-en="At a fast speed." data-def-vn="Với tốc độ nhanh." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">quickly</span> <span class="vocab" data-word-en="than" data-word-vn="hơn (so với)" data-pos="liên từ / conjunction" data-def-en="Used to introduce the second element of a comparison." data-def-vn="Dùng để giới thiệu vế thứ hai của một sự so sánh." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">than</span> those in <span class="vocab" data-word-en="rural" data-word-vn="nông thôn" data-pos="tính từ / adjective" data-def-en="Relating to the countryside, as opposed to towns and cities." data-def-vn="Liên quan đến nông thôn, trái ngược với thị trấn và thành phố." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">rural</span> <span class="vocab" data-word-en="areas" data-word-vn="khu vực" data-pos="danh từ / noun" data-def-en="Particular regions or districts." data-def-vn="Những vùng hoặc khu vực cụ thể." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">areas</span>, <span class="vocab" data-word-en="where" data-word-vn="nơi mà" data-pos="đại từ quan hệ / relative pronoun" data-def-en="Introduces a clause describing a place." data-def-vn="Giới thiệu một mệnh đề mô tả một nơi chốn." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">where</span> <span class="vocab" data-word-en="even" data-word-vn="thậm chí" data-pos="trạng từ / adverb" data-def-en="Used to emphasize something surprising or extreme." data-def-vn="Dùng để nhấn mạnh điều gì đó bất ngờ hoặc cực đoan." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">even</span> <span class="vocab" data-word-en="obtaining" data-word-vn="có được" data-pos="động từ / verb (gerund of &#x27;obtain&#x27;)" data-def-en="Getting or acquiring something." data-def-vn="Có được hoặc giành được điều gì đó." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">obtaining</span> a <span class="vocab" data-word-en="single" data-word-vn="một tờ / duy nhất" data-pos="tính từ / adjective" data-def-en="Just one; not more than one." data-def-vn="Chỉ một; không nhiều hơn một." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">single</span> <span class="vocab" data-word-en="newspaper" data-word-vn="tờ báo" data-pos="danh từ / noun" data-def-en="A regularly printed publication containing news." data-def-vn="Một ấn phẩm được in định kỳ chứa tin tức." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">newspaper</span> <span class="vocab" data-word-en="can" data-word-vn="có thể" data-pos="động từ khiếm khuyết / modal verb" data-def-en="Expresses possibility or ability." data-def-vn="Diễn tả khả năng hoặc năng lực có thể xảy ra." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">can</span> <span class="vocab" data-word-en="sometimes" data-word-vn="đôi khi" data-pos="trạng từ / adverb" data-def-en="On some occasions; not always." data-def-vn="Vào một số dịp; không phải lúc nào cũng vậy." data-context-en="As a result, people living in cities usually receive information much more quickly than those in rural areas, where even obtaining a single newspaper can sometimes be difficult.">sometimes</span> be difficult.
+</p>
+
+<p>
+    <span class="vocab" data-word-en="In conclusion" data-word-vn="tóm lại" data-pos="cụm trạng từ / adverb phrase (fixed idiom)" data-def-en="Used to introduce a final summarizing statement." data-def-vn="Dùng để giới thiệu một câu kết luận tóm tắt." data-context-en="In conclusion, a city can truly be described as a place of constant activity.">In conclusion</span>, a city can <span class="vocab" data-word-en="truly" data-word-vn="thực sự" data-pos="trạng từ / adverb" data-def-en="Genuinely; in a true manner." data-def-vn="Một cách chân thật; đúng như vậy." data-context-en="In conclusion, a city can truly be described as a place of constant activity.">truly</span> be <span class="vocab" data-word-en="described" data-word-vn="được miêu tả" data-pos="động từ / verb (lemma &#x27;describe&#x27;)" data-def-en="To give an account of something in words." data-def-vn="Diễn tả điều gì đó bằng lời." data-context-en="In conclusion, a city can truly be described as a place of constant activity.">described</span> as a <span class="vocab" data-word-en="place" data-word-vn="nơi chốn" data-pos="danh từ / noun" data-def-en="A particular location." data-def-vn="Một địa điểm cụ thể." data-context-en="In conclusion, a city can truly be described as a place of constant activity.">place</span> of <span class="vocab" data-word-en="constant" data-word-vn="không ngừng / liên tục" data-pos="tính từ / adjective" data-def-en="Continuing without stopping." data-def-vn="Tiếp diễn liên tục không dừng lại." data-context-en="In conclusion, a city can truly be described as a place of constant activity.">constant</span> activity. It is <span class="vocab" data-word-en="here" data-word-vn="tại đây" data-pos="trạng từ / adverb" data-def-en="In or at this place." data-def-vn="Ở nơi này." data-context-en="It is here that the drama of life is performed anew each day.">here</span> that the <span class="vocab" data-word-en="drama" data-word-vn="tấn kịch / vở kịch" data-pos="danh từ / noun" data-def-en="A dramatic or exciting series of events." data-def-vn="Một chuỗi sự kiện kịch tính hoặc thú vị." data-context-en="It is here that the drama of life is performed anew each day.">drama</span> of life is <span class="vocab" data-word-en="performed" data-word-vn="được diễn ra / được trình diễn" data-pos="động từ / verb (lemma &#x27;perform&#x27;)" data-def-en="To be carried out or acted out." data-def-vn="Được thực hiện hoặc diễn ra." data-context-en="It is here that the drama of life is performed anew each day.">performed</span> <span class="vocab" data-word-en="anew" data-word-vn="một lần nữa" data-pos="trạng từ / adverb" data-def-en="Once again, in a new way." data-def-vn="Một lần nữa, theo một cách mới." data-context-en="It is here that the drama of life is performed anew each day.">anew</span> <span class="vocab" data-word-en="each" data-word-vn="mỗi" data-pos="tính từ / adjective" data-def-en="Every one of two or more things, considered separately." data-def-vn="Từng cái một trong hai hoặc nhiều thứ, được xét riêng lẻ." data-context-en="It is here that the drama of life is performed anew each day.">each</span> day.
+</p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning
+	and where in the story each word appeared.  Click on each word to jump to it's first occurrence in the story.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">Life</div>
+        <div class="memory-word">in</div>
+        <div class="memory-word">the</div>
+        <div class="memory-word">City</div>
+        <div class="memory-word">is</div>
+        <div class="memory-word">very</div>
+        <div class="memory-word">busy</div>
+        <div class="memory-word">From</div>
+        <div class="memory-word">break of dawn</div>
+        <div class="memory-word">hundreds</div>
+        <div class="memory-word">of</div>
+        <div class="memory-word">people</div>
+        <div class="memory-word">pour out</div>
+        <div class="memory-word">their</div>
+        <div class="memory-word">homes</div>
+        <div class="memory-word">like</div>
+        <div class="memory-word">ants</div>
+        <div class="memory-word">a</div>
+        <div class="memory-word">disturbed</div>
+        <div class="memory-word">nest</div>
+        <div class="memory-word">Before long</div>
+        <div class="memory-word">streets</div>
+        <div class="memory-word">are</div>
+        <div class="memory-word">packed</div>
+        <div class="memory-word">with</div>
+        <div class="memory-word">vehicles</div>
+        <div class="memory-word">Shops</div>
+        <div class="memory-word">and</div>
+        <div class="memory-word">offices</div>
+        <div class="memory-word">open</div>
+        <div class="memory-word">for</div>
+        <div class="memory-word">business</div>
+        <div class="memory-word">Students</div>
+        <div class="memory-word">hurry</div>
+        <div class="memory-word">to</div>
+        <div class="memory-word">school</div>
+        <div class="memory-word">carrying</div>
+        <div class="memory-word">books</div>
+        <div class="memory-word">another</div>
+        <div class="memory-word">working day</div>
+        <div class="memory-word">begins</div>
+        <div class="memory-word">now</div>
+        <div class="memory-word">bustling</div>
+        <div class="memory-word">activity</div>
+        <div class="memory-word">filled</div>
+        <div class="memory-word">noise</div>
+        <div class="memory-word">sightseers</div>
+        <div class="memory-word">tourists</div>
+        <div class="memory-word">other</div>
+        <div class="memory-word">visitors</div>
+        <div class="memory-word">explore</div>
+        <div class="memory-word">attractions</div>
+        <div class="memory-word">while</div>
+        <div class="memory-word">businesspeople</div>
+        <div class="memory-word">many</div>
+        <div class="memory-word">parts</div>
+        <div class="memory-word">world</div>
+        <div class="memory-word">come</div>
+        <div class="memory-word">conduct</div>
+        <div class="memory-word">trade</div>
+        <div class="memory-word">As</div>
+        <div class="memory-word">evening</div>
+        <div class="memory-word">approaches</div>
+        <div class="memory-word">close</div>
+        <div class="memory-word">as well</div>
+        <div class="memory-word">At</div>
+        <div class="memory-word">this</div>
+        <div class="memory-word">time</div>
+        <div class="memory-word">crowd</div>
+        <div class="memory-word">together</div>
+        <div class="memory-word">catch</div>
+        <div class="memory-word">buses</div>
+        <div class="memory-word">forms</div>
+        <div class="memory-word">public transportation</div>
+        <div class="memory-word">Everyone</div>
+        <div class="memory-word">seems</div>
+        <div class="memory-word">be</div>
+        <div class="memory-word">get</div>
+        <div class="memory-word">home</div>
+        <div class="memory-word">As a result</div>
+        <div class="memory-word">rush</div>
+        <div class="memory-word">accidents</div>
+        <div class="memory-word">occur</div>
+        <div class="memory-word">Those</div>
+        <div class="memory-word">who</div>
+        <div class="memory-word">unfamiliar</div>
+        <div class="memory-word">often</div>
+        <div class="memory-word">find</div>
+        <div class="memory-word">it</div>
+        <div class="memory-word">difficult</div>
+        <div class="memory-word">get around</div>
+        <div class="memory-word">day</div>
+        <div class="memory-word">however</div>
+        <div class="memory-word">certain</div>
+        <div class="memory-word">become</div>
+        <div class="memory-word">almost</div>
+        <div class="memory-word">deserted</div>
+        <div class="memory-word">These</div>
+        <div class="memory-word">usually</div>
+        <div class="memory-word">districts</div>
+        <div class="memory-word">When</div>
+        <div class="memory-word">night</div>
+        <div class="memory-word">falls</div>
+        <div class="memory-word">different</div>
+        <div class="memory-word">kind</div>
+        <div class="memory-word">glow</div>
+        <div class="memory-word">colorful</div>
+        <div class="memory-word">lights</div>
+        <div class="memory-word">atmosphere</div>
+        <div class="memory-word">calmer</div>
+        <div class="memory-word">takes on</div>
+        <div class="memory-word">more</div>
+        <div class="memory-word">relaxed</div>
+        <div class="memory-word">pace</div>
+        <div class="memory-word">seek</div>
+        <div class="memory-word">entertainment</div>
+        <div class="memory-word">recreation</div>
+        <div class="memory-word">go</div>
+        <div class="memory-word">movie theaters</div>
+        <div class="memory-word">parks</div>
+        <div class="memory-word">clubs</div>
+        <div class="memory-word">others</div>
+        <div class="memory-word">stay</div>
+        <div class="memory-word">watch</div>
+        <div class="memory-word">television</div>
+        <div class="memory-word">or</div>
+        <div class="memory-word">listen</div>
+        <div class="memory-word">radio</div>
+        <div class="memory-word">Some</div>
+        <div class="memory-word">visit</div>
+        <div class="memory-word">friends</div>
+        <div class="memory-word">relatives</div>
+        <div class="memory-word">spend</div>
+        <div class="memory-word">reading</div>
+        <div class="memory-word">magazines</div>
+        <div class="memory-word">interested</div>
+        <div class="memory-word">politics</div>
+        <div class="memory-word">discuss</div>
+        <div class="memory-word">latest</div>
+        <div class="memory-word">political</div>
+        <div class="memory-word">events</div>
+        <div class="memory-word">also</div>
+        <div class="memory-word">during</div>
+        <div class="memory-word">that</div>
+        <div class="memory-word">thefts</div>
+        <div class="memory-word">robberies</div>
+        <div class="memory-word">take place</div>
+        <div class="memory-word">Working</div>
+        <div class="memory-word">wish</div>
+        <div class="memory-word">advance</div>
+        <div class="memory-word">careers</div>
+        <div class="memory-word">attend</div>
+        <div class="memory-word">classes</div>
+        <div class="memory-word">Every</div>
+        <div class="memory-word">year</div>
+        <div class="memory-word">them</div>
+        <div class="memory-word">sit for</div>
+        <div class="memory-word">various</div>
+        <div class="memory-word">examinations</div>
+        <div class="memory-word">residents</div>
+        <div class="memory-word">have</div>
+        <div class="memory-word">abundant</div>
+        <div class="memory-word">opportunities</div>
+        <div class="memory-word">facilities</div>
+        <div class="memory-word">continue</div>
+        <div class="memory-word">education</div>
+        <div class="memory-word">broaden</div>
+        <div class="memory-word">knowledge</div>
+        <div class="memory-word">living</div>
+        <div class="memory-word">receive</div>
+        <div class="memory-word">information</div>
+        <div class="memory-word">much</div>
+        <div class="memory-word">quickly</div>
+        <div class="memory-word">than</div>
+        <div class="memory-word">rural</div>
+        <div class="memory-word">areas</div>
+        <div class="memory-word">where</div>
+        <div class="memory-word">even</div>
+        <div class="memory-word">obtaining</div>
+        <div class="memory-word">single</div>
+        <div class="memory-word">newspaper</div>
+        <div class="memory-word">can</div>
+        <div class="memory-word">sometimes</div>
+        <div class="memory-word">In conclusion</div>
+        <div class="memory-word">truly</div>
+        <div class="memory-word">described</div>
+        <div class="memory-word">place</div>
+        <div class="memory-word">constant</div>
+        <div class="memory-word">here</div>
+        <div class="memory-word">drama</div>
+        <div class="memory-word">performed</div>
+        <div class="memory-word">anew</div>
+        <div class="memory-word">each</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the text:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+        const isEnInput = document.documentElement.lang === 'en';
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = isEnInput ? (el.dataset.wordVn || '') : (el.dataset.wordEn || '');
+                document.getElementById('popup-sub').innerText = isEnInput ? (el.dataset.wordEn || '') : (el.dataset.wordVn || '');
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                document.getElementById('popup-definition').innerHTML = isEnInput
+                    ? el.dataset.defVn + hr + el.dataset.defEn
+                    : el.dataset.defEn + hr + el.dataset.defVn;
+
+                document.getElementById('popup-context-text').innerText = (isEnInput ? el.dataset.contextEn : el.dataset.contextVn) || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el =>
+                    (isEnInput ? el.dataset.wordEn : el.dataset.wordVn).trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
