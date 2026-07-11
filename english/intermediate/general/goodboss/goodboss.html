@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Characteristics of a Good Boss</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+</head>
+<body>
+
+<div class="page-container">
+    <h1><span class="vocab" data-word-en="Characteristics" data-word-vn="Đặc điểm / Tính chất" data-pos="danh từ / noun (plural)" data-def-en="Distinguishing traits, qualities, or properties that identify something." data-def-vn="Các đặc điểm, phẩm chất hoặc tính chất phân biệt để nhận dạng một điều gì đó." data-context-en="Characteristics in this context.">Characteristics</span> of a <span class="vocab" data-word-en="Good" data-word-vn="Tốt / Lý tưởng" data-pos="tính từ / adjective" data-def-en="Having the required qualities; of a high standard or favorable character." data-def-vn="Có các phẩm chất cần thiết; đạt tiêu chuẩn cao hoặc có tính chất thuận lợi." data-context-en="Good in this context.">Good</span> <span class="vocab" data-word-en="Boss" data-word-vn="Sếp / Ông chủ" data-pos="danh từ / noun" data-def-en="A person who is in charge of a worker or organization." data-def-vn="Người phụ trách một người lao động hoặc một tổ chức." data-context-en="Boss in this context.">Boss</span></h1>
+    <h2 class="subtitle">Professional Development Series</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to Audio</div>
+        <audio id="audio-player" src="boss.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p><span class="vocab" data-word-en="Many" data-word-vn="Nhiều" data-pos="tính từ / adjective" data-def-en="A large number of; numerous." data-def-vn="Một số lượng lớn; nhiều." data-context-en="Many in this context.">Many</span> <span class="vocab" data-word-en="People" data-word-vn="Người / Con người" data-pos="danh từ / noun" data-def-en="Human beings in general or considered collectively." data-def-vn="Con người nói chung hoặc được xem xét mang tính tập thể." data-context-en="People in this context.">people</span> have to <span class="vocab" data-word-en="Work" data-word-vn="Làm việc" data-pos="động từ / verb" data-def-en="Engage in physical or mental activity in order to achieve a purpose or result." data-def-vn="Tham gia vào hoạt động thể chất hoặc tinh thần để đạt được mục đích hoặc kết quả." data-context-en="Work in this context.">work</span> <span class="vocab" data-word-en="Under" data-word-vn="Dưới / Dưới sự chỉ đạo" data-pos="giới từ / preposition" data-def-en="Controlled, managed, or governed by." data-def-vn="Được kiểm soát, quản lý hoặc quản trị bởi." data-context-en="Under in this context.">under</span> the <span class="vocab" data-word-en="Supervision" data-word-vn="Sự giám sát" data-pos="danh từ / noun" data-def-en="The act or function of overseeing something or someone." data-def-vn="Hành động hoặc chức năng giám sát một cái gì đó hoặc một ai đó." data-context-en="Supervision in this context.">supervision</span> of <span class="vocab" data-word-en="Others" data-word-vn="Những người khác" data-pos="đại từ / pronoun" data-def-en="Other people apart from the ones already mentioned." data-def-vn="Những người khác ngoài những người đã được đề cập." data-context-en="Others in this context.">others</span>. In <span class="vocab" data-word-en="Most" data-word-vn="Hầu hết" data-pos="tính từ / adjective" data-def-en="Greatest in amount or degree; the majority of." data-def-vn="Lớn nhất về số lượng hoặc mức độ; phần lớn của." data-context-en="Most in this context.">most</span> <span class="vocab" data-word-en="Cases" data-word-vn="Trường hợp" data-pos="danh từ / noun (plural)" data-def-en="An instance of a particular situation; occurrences." data-def-vn="Một ví dụ về một tình huống cụ thể; các sự việc xảy ra." data-context-en="Cases in this context.">cases</span>, <span class="vocab" data-word-en="Employees" data-word-vn="Nhân viên / Người lao động" data-pos="danh từ / noun (plural)" data-def-en="People employed for wages or salary, especially at non-executive level." data-def-vn="Những người được thuê để nhận tiền công hoặc lương, đặc biệt là ở cấp độ phi quản lý." data-context-en="Employees in this context.">employees</span> do not get to <span class="vocab" data-word-en="Choose" data-word-vn="Lựa chọn" data-pos="động từ / verb" data-def-en="Pick out or select someone or something as being the best or most appropriate." data-def-vn="Chọn ra hoặc lựa chọn ai đó hoặc cái gì đó là tốt nhất hoặc phù hợp nhất." data-context-en="Choose in this context.">choose</span> <span class="vocab" data-word-en="Their" data-word-vn="Của họ" data-pos="tính từ sở hữu / possessive adjective" data-def-en="Belonging to or associated with the people or things previously mentioned." data-def-vn="Thuộc về hoặc gắn liền với những người hoặc sự vật đã đề cập trước đó." data-context-en="Their in this context.">their</span> boss <span class="vocab" data-word-en="Unless" data-word-vn="Trừ phi / Trừ khi" data-pos="liên từ / conjunction" data-def-en="Except if; used to introduce the only case in which a statement is not true." data-def-vn="Ngoại trừ nếu; được sử dụng để giới thiệu trường hợp duy nhất mà một tuyên bố không đúng." data-context-en="Unless in this context.">unless</span> that <span class="vocab" data-word-en="Supervisor" data-word-vn="Người giám sát" data-pos="danh từ / noun" data-def-en="A person who oversees a person or an activity." data-def-vn="Một người giám sát một người hoặc một hoạt động." data-context-en="Supervisor in this context.">supervisor</span> is <span class="vocab" data-word-en="Elected" data-word-vn="Được bầu chọn" data-pos="động từ / verb (past participle)" data-def-en="Chosen by vote to a particular office or position." data-def-vn="Được chọn bằng cách bỏ phiếu vào một văn phòng hoặc vị trí cụ thể." data-context-en="Elected in this context.">elected</span>. In the <span class="vocab" data-word-en="Following" data-word-vn="Sau đây / Tiếp theo" data-pos="tính từ / adjective" data-def-en="Coming after something else in time or order." data-def-vn="Đến sau một cái gì đó khác về thời gian hoặc thứ tự." data-context-en="Following in this context.">following</span> <span class="vocab" data-word-en="Paragraphs" data-word-vn="Đoạn văn" data-pos="danh từ / noun (plural)" data-def-en="Distinct section of a piece of writing, usually dealing with a single theme." data-def-vn="Phần riêng biệt của một bài viết, thường giải quyết về một chủ đề duy nhất." data-context-en="Paragraphs in this context.">paragraphs</span>, I will <span class="vocab" data-word-en="List" data-word-vn="Liệt kê" data-pos="động từ / verb" data-def-en="Make a list of; enumerate item by item." data-def-vn="Lập danh sách; liệt kê từng mục một." data-context-en="List in this context.">list</span> the <span class="vocab" data-word-en="Important" data-word-vn="Quan trọng" data-pos="tính từ / adjective" data-def-en="Of great significance or value; likely to have a profound effect." data-def-vn="Có ý nghĩa hoặc giá trị lớn; có khả năng có ảnh hưởng sâu sắc." data-context-en="Important in this context.">important</span> <span class="vocab" data-word-en="Qualities" data-word-vn="Phẩm chất / Tố chất" data-pos="danh từ / noun (plural)" data-def-en="Distinctive attributes or characteristics possessed by someone or something." data-def-vn="Các thuộc tính hoặc đặc điểm khác biệt mà ai đó hoặc cái gì đó sở hữu." data-context-en="Qualities in this context.">qualities</span> of an <span class="vocab" data-word-en="Ideal" data-word-vn="Lý tưởng" data-pos="tính từ / adjective" data-def-en="Satisfying one's conception of what is perfect; most suitable." data-def-vn="Thỏa mãn quan niệm của một người về những gì hoàn hảo; phù hợp nhất." data-context-en="Ideal in this context.">ideal</span> boss.</p><p><span class="vocab" data-word-en="First" data-word-vn="Trước tiên / Đầu tiên" data-pos="trạng từ / adverb" data-def-en="Before anything else in time or order." data-def-vn="Trước bất kỳ điều gì khác về thời gian hoặc thứ tự." data-context-en="First in this context.">First</span> of all, a boss must be <span class="vocab" data-word-en="Impartial" data-word-vn="Vô tư / Công bằng" data-pos="tính từ / adjective" data-def-en="Treating all rivals or disputants equally; unbiased." data-def-vn="Đối xử bình đẳng với tất cả các đối thủ hoặc bên tranh chấp; không thiên vị." data-context-en="Impartial in this context.">impartial</span>. I <span class="vocab" data-word-en="Believe" data-word-vn="Tin rằng" data-pos="động từ / verb" data-def-en="Accept something as true; feel sure of the truth of." data-def-vn="Chấp nhận điều gì đó là sự thật; cảm thấy chắc chắn về sự thật của." data-context-en="Believe in this context.">believe</span> it is very important to make a <span class="vocab" data-word-en="Technical" data-word-vn="Kỹ thuật / Chuyên môn" data-pos="tính từ / adjective" data-def-en="Relating to a particular subject, art, or craft, or its techniques." data-def-vn="Liên quan đến một chủ đề, nghệ thuật hoặc nghề thủ công cụ thể, hoặc các kỹ thuật của nó." data-context-en="Technical in this context.">technical</span> <span class="vocab" data-word-en="Decision" data-word-vn="Quyết định" data-pos="danh từ / noun" data-def-en="A conclusion or resolution reached after consideration." data-def-vn="Một kết luận hoặc giải quyết đạt được sau khi xem xét." data-context-en="Decision in this context.">decision</span>, or <span class="vocab" data-word-en="Think" data-word-vn="Suy nghĩ" data-pos="động từ / verb" data-def-en="Have a particular opinion, belief, or idea about something." data-def-vn="Có một ý kiến, niềm tin hoặc ý tưởng cụ thể về điều gì đó." data-context-en="Think in this context.">think</span> about <span class="vocab" data-word-en="Promoting" data-word-vn="Thăng chức" data-pos="động từ / verb (gerund)" data-def-en="Advancing someone to a higher position or rank." data-def-vn="Đưa ai đó lên một vị trí hoặc cấp bậc cao hơn." data-context-en="Promoting in this context.">promoting</span> <span class="vocab" data-word-en="Someone" data-word-vn="Ai đó" data-pos="đại từ / pronoun" data-def-en="An unknown or unspecified person." data-def-vn="Một người chưa biết hoặc không được chỉ định cụ thể." data-context-en="Someone in this context.">someone</span>, in an <span class="vocab" data-word-en="Unbiased" data-word-vn="Không thiên vị" data-pos="tính từ / adjective" data-def-en="Showing no prejudice for or against something; impartial." data-def-vn="Không thể hiện định kiến ủng hộ hay chống lại điều gì đó; khách quan." data-context-en="Unbiased in this context.">unbiased</span> <span class="vocab" data-word-en="Manner" data-word-vn="Cách thức" data-pos="danh từ / noun" data-def-en="A way in which a thing is done or happens." data-def-vn="Cách một việc được thực hiện hoặc xảy ra." data-context-en="Manner in this context.">manner</span>, and so on. For <span class="vocab" data-word-en="Example" data-word-vn="Ví dụ" data-pos="danh từ / noun" data-def-en="A thing characteristic of its kind or illustrating a general rule." data-def-vn="Một điều đặc trưng cho loại của nó hoặc minh họa cho một quy tắc chung." data-context-en="Example in this context.">example</span>, my <span class="vocab" data-word-en="Friend" data-word-vn="Bạn bè" data-pos="danh từ / noun" data-def-en="A person whom one knows and has a bond of mutual affection with." data-def-vn="Một người mà một người biết và có mối quan hệ tình cảm lẫn nhau." data-context-en="Friend in this context.">friend</span> is the boss of a <span class="vocab" data-word-en="Dairy" data-word-vn="Ngành sữa / Nhà máy sữa" data-pos="tính từ / danh từ / noun" data-def-en="Relating to milk or products made from milk." data-def-vn="Liên quan đến sữa hoặc các sản phẩm làm từ sữa." data-context-en="Dairy in this context.">dairy</span> <span class="vocab" data-word-en="Processing" data-word-vn="Chế biến" data-pos="danh từ / động từ / noun/gerund" data-def-en="Subjecting to a series of mechanical or chemical operations to change or preserve it." data-def-vn="Trải qua một loạt các hoạt động cơ học hoặc hóa học để thay đổi hoặc bảo quản nó." data-context-en="Processing in this context.">processing</span> <span class="vocab" data-word-en="Plant" data-word-vn="Nhà máy / Xí nghiệp" data-pos="danh từ / noun" data-def-en="A place where an industrial or manufacturing process takes place." data-def-vn="Nơi diễn ra một quy trình công nghiệp hoặc sản xuất." data-context-en="Plant in this context.">plant</span>. It is a <span class="vocab" data-word-en="Family" data-word-vn="Gia đình" data-pos="tính từ / danh từ / noun" data-def-en="A group of people related by blood or marriage." data-def-vn="Một nhóm người có quan hệ huyết thống hoặc hôn nhân." data-context-en="Family in this context.">family</span> <span class="vocab" data-word-en="Business" data-word-vn="Doanh nghiệp / Việc kinh doanh" data-pos="danh từ / noun" data-def-en="A commercial activity or organization engaged in trade." data-def-vn="Một hoạt động thương mại hoặc tổ chức tham gia vào thương mại." data-context-en="Business in this context.">business</span>, so there are many <span class="vocab" data-word-en="Relatives" data-word-vn="Họ hàng / Người thân" data-pos="danh từ / noun (plural)" data-def-en="A person connected by blood or marriage." data-def-vn="Một người được kết nối bởi huyết thống hoặc hôn nhân." data-context-en="Relatives in this context.">relatives</span> <span class="vocab" data-word-en="Working" data-word-vn="Làm việc" data-pos="tính từ / danh từ / adjective" data-def-en="Relating to labor, employment, or a job." data-def-vn="Liên quan đến lao động, việc làm hoặc một công việc." data-context-en="Working in this context.">working</span> there. <span class="vocab" data-word-en="However" data-word-vn="Tuy nhiên" data-pos="trạng từ / trạng từ liên kết / adverb" data-def-en="In spite of that; on the other hand; but." data-def-vn="Bất chấp điều đó; mặt khác; nhưng." data-context-en="However in this context.">However</span>, he <span class="vocab" data-word-en="Never" data-word-vn="Không bao giờ" data-pos="trạng từ / adverb" data-def-en="At no time in the past or future." data-def-vn="Không bao giờ trong quá khứ hoặc tương lai." data-context-en="Never in this context.">never</span> <span class="vocab" data-word-en="Promotes" data-word-vn="Thăng chức cho" data-pos="động từ / verb (presents)" data-def-en="Advances someone to a higher position or rank." data-def-vn="Đưa ai đó lên một vị trí hoặc cấp bậc cao hơn." data-context-en="Promotes in this context.">promotes</span> <span class="vocab" data-word-en="Anyone" data-word-vn="Bất kỳ ai" data-pos="đại từ / pronoun" data-def-en="Any person at all." data-def-vn="Bất kỳ người nào." data-context-en="Anyone in this context.">anyone</span> <span class="vocab" data-word-en="Just" data-word-vn="Chỉ vì / Đơn thuần" data-pos="trạng từ / adverb" data-def-en="Simply; only; for no other reason." data-def-vn="Đơn giản; chỉ; không vì lý do nào khác." data-context-en="Just in this context.">just</span> <span class="vocab" data-word-en="Because" data-word-vn="Bởi vì" data-pos="liên từ / conjunction" data-def-en="For the reason that; since." data-def-vn="Vì lý do đó; từ khi." data-context-en="Because in this context.">because</span> they are his <span class="vocab" data-word-en="Relative" data-word-vn="Người họ hàng" data-pos="danh từ / noun" data-def-en="A person connected by blood or marriage." data-def-vn="Một người được kết nối bởi huyết thống hoặc hôn nhân." data-context-en="Relative in this context.">relative</span>. I think that is an important quality of a boss.</p><p><span class="vocab" data-word-en="Secondly" data-word-vn="Thứ hai là" data-pos="trạng từ / adverb" data-def-en="In the second place; used to introduce a second point." data-def-vn="Ở vị trí thứ hai; được sử dụng để giới thiệu một điểm thứ hai." data-context-en="Secondly in this context.">Secondly</span>, in my <span class="vocab" data-word-en="Opinion" data-word-vn="Ý kiến / Quan điểm" data-pos="danh từ / noun" data-def-en="A view or judgment formed about something, not necessarily based on fact." data-def-vn="Một quan điểm hoặc phán đoán được hình thành về một điều gì đó, không nhất thiết dựa trên thực tế." data-context-en="Opinion in this context.">opinion</span>, an ideal boss must be <span class="vocab" data-word-en="Straightforward" data-word-vn="Thẳng thắn" data-pos="tính từ / adjective" data-def-en="Honest and open; frank; easy to understand." data-def-vn="Trung thực và cởi mở; thẳng thắn; dễ hiểu." data-context-en="Straightforward in this context.">straightforward</span>, <span class="vocab" data-word-en="Patient" data-word-vn="Kiên nhẫn" data-pos="tính từ / adjective" data-def-en="Able to accept or tolerate delays, problems, or suffering without becoming annoyed." data-def-vn="Có thể chấp nhận hoặc chịu đựng sự chậm trễ, vấn đề hoặc đau khổ mà không trở nên khó chịu." data-context-en="Patient in this context.">patient</span>, and a good <span class="vocab" data-word-en="Listener" data-word-vn="Người lắng nghe" data-pos="danh từ / noun" data-def-en="A person who listens, especially a sympathetic or attentive one." data-def-vn="Một người biết lắng nghe, đặc biệt là một người thông cảm hoặc chăm chú." data-context-en="Listener in this context.">listener</span>. He should <span class="vocab" data-word-en="Pay" data-word-vn="Dành / Trả" data-pos="động từ / verb" data-def-en="Give or bestow attention, respect, or a compliment." data-def-vn="Dành hoặc ban tặng sự chú ý, tôn kính, hoặc một lời khen ngợi." data-context-en="Pay in this context.">pay</span> <span class="vocab" data-word-en="Attention" data-word-vn="Sự chú ý" data-pos="danh từ / noun" data-def-en="Notice taken of someone or something; the regarding of someone as interesting or important." data-def-vn="Sự chú ý đến ai đó hoặc cái gì đó; việc coi ai đó là thú vị hoặc quan trọng." data-context-en="Attention in this context.">attention</span> to the <span class="vocab" data-word-en="Feelings" data-word-vn="Cảm xúc / Cảm giác" data-pos="danh từ / noun (plural)" data-def-en="An emotional state or reaction." data-def-vn="Một trạng thái cảm xúc hoặc phản ứng." data-context-en="Feelings in this context.">feelings</span> of others, <span class="vocab" data-word-en="Encourage" data-word-vn="Khuyến khích" data-pos="động từ / verb" data-def-en="Give support, confidence, or hope to someone." data-def-vn="Cung cấp sự hỗ trợ, sự tự tin, hoặc hy vọng cho ai đó." data-context-en="Encourage in this context.">encourage</span> them by <span class="vocab" data-word-en="Raising" data-word-vn="Tăng / Nâng cao" data-pos="động từ / verb (gerund)" data-def-en="Increasing the amount, level, or strength of something." data-def-vn="Tăng số lượng, mức độ hoặc sức mạnh của một cái gì đó." data-context-en="Raising in this context.">raising</span> their <span class="vocab" data-word-en="Salaries" data-word-vn="Lương / Tiền lương" data-pos="danh từ / noun (plural)" data-def-en="A fixed regular payment, typically paid on a monthly basis." data-def-vn="Một khoản thanh toán thường xuyên cố định, thường được trả trên cơ sở hàng tháng." data-context-en="Salaries in this context.">salaries</span>, and <span class="vocab" data-word-en="Listen" data-word-vn="Lắng nghe" data-pos="động từ / verb" data-def-en="Give one's attention to a sound or speaker." data-def-vn="Dành sự chú ý của mình cho một âm thanh hoặc người nói." data-context-en="Listen in this context.">listen</span> to their <span class="vocab" data-word-en="Suggestions" data-word-vn="Đề xuất / Gợi ý" data-pos="danh từ / noun (plural)" data-def-en="An idea or plan put forward for consideration." data-def-vn="Một ý tưởng hoặc kế hoạch được đưa ra để xem xét." data-context-en="Suggestions in this context.">suggestions</span> for <span class="vocab" data-word-en="Improving" data-word-vn="Cải thiện" data-pos="động từ / verb (gerund)" data-def-en="Making or becoming better." data-def-vn="Làm cho hoặc trở nên tốt hơn." data-context-en="Improving in this context.">improving</span> working <span class="vocab" data-word-en="Conditions" data-word-vn="Điều kiện" data-pos="danh từ / noun (plural)" data-def-en="The circumstances affecting the way in which people live or work." data-def-vn="Các hoàn cảnh ảnh hưởng đến cách mọi người sống hoặc làm việc." data-context-en="Conditions in this context.">conditions</span> and <span class="vocab" data-word-en="Labor" data-word-vn="Lao động" data-pos="danh từ / noun" data-def-en="Work, especially hard physical work." data-def-vn="Công việc, đặc biệt là công việc thể chất nặng nhọc." data-context-en="Labor in this context.">labor</span> <span class="vocab" data-word-en="Productivity" data-word-vn="Năng suất" data-pos="danh từ / noun" data-def-en="The effectiveness of productive effort, especially in industry." data-def-vn="Hiệu quả của nỗ lực sản xuất, đặc biệt là trong công nghiệp." data-context-en="Productivity in this context.">productivity</span>. For example, if he is not <span class="vocab" data-word-en="Satisfied" data-word-vn="Hài lòng" data-pos="tính từ / adjective" data-def-en="Contented; pleased with something." data-def-vn="Mãn nguyện; hài lòng với một cái gì đó." data-context-en="Satisfied in this context.">satisfied</span> with the <span class="vocab" data-word-en="Results" data-word-vn="Kết quả" data-pos="danh từ / noun (plural)" data-def-en="The outcome or consequence of an action, policy, or course of events." data-def-vn="Kết quả hoặc hệ quả của một hành động, chính sách hoặc diễn biến của các sự kiện." data-context-en="Results in this context.">results</span>, he should <span class="vocab" data-word-en="Understand" data-word-vn="Hiểu" data-pos="động từ / verb" data-def-en="Perceive the intended meaning of; grasp the significance of." data-def-vn="Nhận thức được ý nghĩa dự định của; nắm bắt ý nghĩa của." data-context-en="Understand in this context.">understand</span> the <span class="vocab" data-word-en="Root" data-word-vn="Gốc rễ / Nguồn gốc" data-pos="danh từ / noun" data-def-en="The basic cause, source, or origin of something." data-def-vn="Nguyên nhân cơ bản, nguồn gốc hoặc nguồn gốc của một cái gì đó." data-context-en="Root in this context.">root</span> of the <span class="vocab" data-word-en="Problem" data-word-vn="Vấn đề" data-pos="danh từ / noun" data-def-en="A matter or situation regarded as unwelcome or harmful and needing to be dealt with." data-def-vn="Một vấn đề hoặc tình huống được coi là không mong muốn hoặc có hại và cần phải được giải quyết." data-context-en="Problem in this context.">problem</span> and <span class="vocab" data-word-en="Show" data-word-vn="Chỉ ra / Cho thấy" data-pos="động từ / verb" data-def-en="Allow or cause something to be visible; guide or direct someone." data-def-vn="Cho phép hoặc làm cho cái gì đó hữu hình; hướng dẫn hoặc chỉ dẫn ai đó." data-context-en="Show in this context.">show</span> others how to <span class="vocab" data-word-en="Fix" data-word-vn="Khắc phục / Sửa chữa" data-pos="động từ / verb" data-def-en="Repair or restore something to its proper state." data-def-vn="Sửa chữa hoặc khôi phục cái gì đó về trạng thái thích hợp của nó." data-context-en="Fix in this context.">fix</span> it. <span class="vocab" data-word-en="Additionally" data-word-vn="Thêm vào đó" data-pos="trạng từ / adverb" data-def-en="As an extra factor or circumstance; also." data-def-vn="Như một yếu tố hoặc hoàn cảnh bổ sung; cũng thế." data-context-en="Additionally in this context.">Additionally</span>, he <span class="vocab" data-word-en="Needs" data-word-vn="Cần" data-pos="động từ / verb (presents)" data-def-en="Require something because it is essential or very important." data-def-vn="Yêu cầu một cái gì đó vì nó là thiết yếu hoặc rất quan trọng." data-context-en="Needs in this context.">needs</span> to <span class="vocab" data-word-en="Know" data-word-vn="Biết" data-pos="động từ / verb" data-def-en="Be aware of through observation, inquiry, or information." data-def-vn="Nhận biết được thông qua quan sát, tìm hiểu hoặc thông tin." data-context-en="Know in this context.">know</span> how to <span class="vocab" data-word-en="Resolve" data-word-vn="Giải quyết" data-pos="động từ / verb" data-def-en="Settle or find a solution to a problem or dispute." data-def-vn="Giải quyết hoặc tìm giải pháp cho một vấn đề hoặc tranh chấp." data-context-en="Resolve in this context.">resolve</span> <span class="vocab" data-word-en="Conflicts" data-word-vn="Xung đột" data-pos="danh từ / noun (plural)" data-def-en="A serious disagreement or argument, typically a protracted one." data-def-vn="Một sự bất đồng hoặc tranh cãi nghiêm trọng, thường là một cuộc tranh cãi kéo dài." data-context-en="Conflicts in this context.">conflicts</span> that <span class="vocab" data-word-en="Arise" data-word-vn="Phát sinh" data-pos="động từ / verb" data-def-en="Originate or come into being; notice to happen." data-def-vn="Bắt nguồn hoặc hình thành; nhận thấy sẽ xảy ra." data-context-en="Arise in this context.">arise</span> <span class="vocab" data-word-en="Among" data-word-vn="Giữa / Trong số" data-pos="giới từ / preposition" data-def-en="Situated more or less centrally in relation to several other things." data-def-vn="Nằm ở trung tâm ít nhiều trong mối quan hệ với một vài thứ khác." data-context-en="Among in this context.">among</span> employees.</p><p><span class="vocab" data-word-en="Another" data-word-vn="Một tố chất khác / Một cái khác" data-pos="tính từ / đại từ / adjective/pronoun" data-def-en="Used to refer to an additional person or thing of the same type." data-def-vn="Được sử dụng để chỉ một người hoặc vật bổ sung cùng loại." data-context-en="Another in this context.">Another</span> important quality of a boss is the <span class="vocab" data-word-en="Ability" data-word-vn="Khả năng" data-pos="danh từ / noun" data-def-en="Possession of the means or skills to do something." data-def-vn="Sở hữu các phương tiện hoặc kỹ năng để làm một cái gì đó." data-context-en="Ability in this context.">ability</span> to make <span class="vocab" data-word-en="Accurate" data-word-vn="Chính xác" data-pos="tính từ / adjective" data-def-en="Correct in all details; exact." data-def-vn="Chính xác trong tất cả các chi tiết; đúng đắn." data-context-en="Accurate in this context.">accurate</span> <span class="vocab" data-word-en="Decisions" data-word-vn="Quyết định" data-pos="danh từ / noun (plural)" data-def-en="Conclusions or resolutions reached after consideration." data-def-vn="Các kết luận hoặc giải quyết đạt được sau khi xem xét." data-context-en="Decisions in this context.">decisions</span> and <span class="vocab" data-word-en="Learn" data-word-vn="Học hỏi" data-pos="động từ / verb" data-def-en="Gain or acquire knowledge of or skill in something by study or experience." data-def-vn="Nhận được hoặc đạt được kiến thức hoặc kỹ năng trong một cái gì đó bằng cách nghiên cứu hoặc kinh nghiệm." data-context-en="Learn in this context.">learn</span> from the <span class="vocab" data-word-en="Mistakes" data-word-vn="Sai lầm" data-pos="danh từ / noun (plural)" data-def-en="An action or judgment that is misguided or wrong." data-def-vn="Một hành động hoặc phán đoán sai lầm hoặc sai trái." data-context-en="Mistakes in this context.">mistakes</span> of others.</p><p><span class="vocab" data-word-en="Finally" data-word-vn="Cuối cùng" data-pos="trạng từ / adverb" data-def-en="After a long time, typically involving difficulty or delay; in conclusion." data-def-vn="Sau một thời gian dài, thường liên quan đến khó khăn hoặc chậm trễ; tóm lại." data-context-en="Finally in this context.">Finally</span>, in my <span class="vocab" data-word-en="View" data-word-vn="Quan điểm" data-pos="danh từ / noun" data-def-en="An opinion or way of thinking about something." data-def-vn="Một ý kiến hoặc cách suy nghĩ về một điều gì đó." data-context-en="View in this context.">view</span>, a good boss must know how to <span class="vocab" data-word-en="Properly" data-word-vn="Đúng đắn / Thích đáng" data-pos="trạng từ / adverb" data-def-en="Of a satisfactory or suitable correct manner." data-def-vn="Theo một cách chính xác thỏa đáng hoặc phù hợp." data-context-en="Properly in this context.">properly</span> <span class="vocab" data-word-en="Appreciate" data-word-vn="Đánh giá cao / Trân trọng" data-pos="động từ / verb" data-def-en="Recognize the full worth of; be grateful for." data-def-vn="Nhận biết đầy đủ giá trị của; biết ơn về." data-context-en="Appreciate in this context.">appreciate</span> their employees because <span class="vocab" data-word-en="Profits" data-word-vn="Lợi nhuận" data-pos="danh từ / noun (plural)" data-def-en="A financial gain, especially the difference between the amount earned and the amount spent." data-def-vn="Một khoản lợi nhuận tài chính, đặc biệt là khoản chênh lệch giữa số tiền kiếm được và số tiền chi tiêu." data-context-en="Profits in this context.">profits</span> <span class="vocab" data-word-en="Directly" data-word-vn="Trực tiếp" data-pos="trạng từ / adverb" data-def-en="With nothing or no one in between; straight." data-def-vn="Không có gì hoặc không có ai ở giữa; thẳng thắn." data-context-en="Directly in this context.">directly</span> <span class="vocab" data-word-en="Depend" data-word-vn="Phụ thuộc" data-pos="động từ / verb" data-def-en="Be controlled or determined by." data-def-vn="Được kiểm soát hoặc xác định bởi." data-context-en="Depend in this context.">depend</span> on them.</p><p>In <span class="vocab" data-word-en="Conclusion" data-word-vn="Tóm lại / Kết luận" data-pos="danh từ / noun" data-def-en="The sum up or judgment reached by reasoning." data-def-vn="Tóm lại hoặc phán đoán đạt được bằng lập luận." data-context-en="Conclusion in this context.">conclusion</span>, I think a good boss should know how to make their employees <span class="vocab" data-word-en="Love" data-word-vn="Yêu thích" data-pos="động từ / verb" data-def-en="Like very much; take great pleasure in." data-def-vn="Thích rất nhiều; có niềm vui lớn trong." data-context-en="Love in this context.">love</span> their work and encourage their <span class="vocab" data-word-en="Enthusiasm" data-word-vn="Sự tích cực / Sự nhiệt tình" data-pos="danh từ / noun" data-def-en="Intense and eager enjoyment, interest, or approval." data-def-vn="Sự thích thú, quan tâm hoặc tán thành mãnh liệt và háo hức." data-context-en="Enthusiasm in this context.">enthusiasm</span>.</p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning 
+	and where in the story each word appeared. Click on each word to jump to its first occurrence in the story.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">Ability</div>
+        <div class="memory-word">Accurate</div>
+        <div class="memory-word">Additionally</div>
+        <div class="memory-word">Among</div>
+        <div class="memory-word">Another</div>
+        <div class="memory-word">Anyone</div>
+        <div class="memory-word">Appreciate</div>
+        <div class="memory-word">Arise</div>
+        <div class="memory-word">Attention</div>
+        <div class="memory-word">Because</div>
+        <div class="memory-word">Believe</div>
+        <div class="memory-word">Boss</div>
+        <div class="memory-word">Business</div>
+        <div class="memory-word">Cases</div>
+        <div class="memory-word">Characteristics</div>
+        <div class="memory-word">Choose</div>
+        <div class="memory-word">Conclusion</div>
+        <div class="memory-word">Conditions</div>
+        <div class="memory-word">Conflicts</div>
+        <div class="memory-word">Dairy</div>
+        <div class="memory-word">Decision</div>
+        <div class="memory-word">Decisions</div>
+        <div class="memory-word">Depend</div>
+        <div class="memory-word">Directly</div>
+        <div class="memory-word">Elected</div>
+        <div class="memory-word">Employees</div>
+        <div class="memory-word">Encourage</div>
+        <div class="memory-word">Enthusiasm</div>
+        <div class="memory-word">Example</div>
+        <div class="memory-word">Family</div>
+        <div class="memory-word">Feelings</div>
+        <div class="memory-word">Finally</div>
+        <div class="memory-word">First</div>
+        <div class="memory-word">Fix</div>
+        <div class="memory-word">Following</div>
+        <div class="memory-word">Friend</div>
+        <div class="memory-word">Good</div>
+        <div class="memory-word">However</div>
+        <div class="memory-word">Ideal</div>
+        <div class="memory-word">Impartial</div>
+        <div class="memory-word">Important</div>
+        <div class="memory-word">Improving</div>
+        <div class="memory-word">Just</div>
+        <div class="memory-word">Know</div>
+        <div class="memory-word">Labor</div>
+        <div class="memory-word">Learn</div>
+        <div class="memory-word">List</div>
+        <div class="memory-word">Listen</div>
+        <div class="memory-word">Listener</div>
+        <div class="memory-word">Love</div>
+        <div class="memory-word">Manner</div>
+        <div class="memory-word">Many</div>
+        <div class="memory-word">Mistakes</div>
+        <div class="memory-word">Most</div>
+        <div class="memory-word">Needs</div>
+        <div class="memory-word">Never</div>
+        <div class="memory-word">Opinion</div>
+        <div class="memory-word">Others</div>
+        <div class="memory-word">Paragraphs</div>
+        <div class="memory-word">Patient</div>
+        <div class="memory-word">Pay</div>
+        <div class="memory-word">People</div>
+        <div class="memory-word">Plant</div>
+        <div class="memory-word">Problem</div>
+        <div class="memory-word">Processing</div>
+        <div class="memory-word">Productivity</div>
+        <div class="memory-word">Profits</div>
+        <div class="memory-word">Promotes</div>
+        <div class="memory-word">Promoting</div>
+        <div class="memory-word">Properly</div>
+        <div class="memory-word">Qualities</div>
+        <div class="memory-word">Raising</div>
+        <div class="memory-word">Relative</div>
+        <div class="memory-word">Relatives</div>
+        <div class="memory-word">Resolve</div>
+        <div class="memory-word">Results</div>
+        <div class="memory-word">Root</div>
+        <div class="memory-word">Salaries</div>
+        <div class="memory-word">Satisfied</div>
+        <div class="memory-word">Secondly</div>
+        <div class="memory-word">Show</div>
+        <div class="memory-word">Someone</div>
+        <div class="memory-word">Straightforward</div>
+        <div class="memory-word">Suggestions</div>
+        <div class="memory-word">Supervision</div>
+        <div class="memory-word">Supervisor</div>
+        <div class="memory-word">Technical</div>
+        <div class="memory-word">Their</div>
+        <div class="memory-word">Think</div>
+        <div class="memory-word">Unbiased</div>
+        <div class="memory-word">Under</div>
+        <div class="memory-word">Understand</div>
+        <div class="memory-word">Unless</div>
+        <div class="memory-word">View</div>
+        <div class="memory-word">Work</div>
+        <div class="memory-word">Working</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                // Input is English -> Title is Vietnamese
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                document.getElementById('popup-definition').innerHTML = el.dataset.defVn + hr + el.dataset.defEn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.wordEn + " in this context.";
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
