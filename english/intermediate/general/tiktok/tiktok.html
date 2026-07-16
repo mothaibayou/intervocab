@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TikTok and Dopamine</title>
+	
+    <style>
+        body {
+            background-color: #2b2b2b;
+            color: #2a1500;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .back-btn-container {
+            margin: 30px 0;
+            text-align: center;
+        }
+        .memory-heading {
+            font-size: 1.2rem;
+            color: #3a1f00;
+            margin-top: 30px;
+            border-top: 2px dashed #a0845a;
+            padding-top: 20px;
+        }
+        .memory-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
+            margin-top: 20px;
+        }
+        .memory-word {
+            font-size: 0.95rem;
+            border-bottom: 1px dotted #7a4e1a;
+            cursor: pointer;
+            padding: 4px;
+            text-align: center;
+            background: rgba(122, 78, 26, 0.03);
+            border-radius: 3px;
+        }
+        .memory-word:hover {
+            background: rgba(122, 78, 26, 0.1);
+        }
+        .highlight-flash {
+            background-color: #ffe082 !important;
+            transition: background-color 0.2s ease;
+        }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .memory-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+    </style>
+			
+		
+</head>
+<body>
+
+<div class="page-container">
+    <h1>TIK TOK and DOPAMINE</h1>
+    <h2 class="subtitle">The Danger of Digital Addiction</h2>
+    
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen to the Story</div>
+        <audio id="audio-player" src="tiktok.mp3" controls></audio>
+        
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-15);">↺ 15 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration,a.currentTime+20);">⇢ 20 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=a.duration;">⏭ End</button>
+        </div>
+
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+
+    <p>
+        "<span class="vocab" data-word-en="Just" data-word-vn="chỉ là" data-pos="trạng từ / adverb" data-def-en="Simply or merely; used to emphasize a small amount." data-def-vn="Chỉ đơn giản là; dùng để nhấn mạnh một số lượng nhỏ." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">Just</span> <span class="vocab" data-word-en="five" data-word-vn="năm" data-pos="số từ / number" data-def-en="The number 5." data-def-vn="Con số 5." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">five</span> <span class="vocab" data-word-en="minutes" data-word-vn="những phút" data-pos="danh từ / noun (plural)" data-def-en="Units of time equal to sixty seconds each." data-def-vn="Các đơn vị thời gian bằng sáu mươi giây." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">minutes</span>." <span class="vocab" data-word-en="That" data-word-vn="rằng / đó" data-pos="đại từ, liên từ / pronoun, conjunction" data-def-en="Used to refer to something mentioned, or to introduce a clause." data-def-vn="Dùng để chỉ điều đã được nhắc đến, hoặc để mở đầu một mệnh đề." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">That</span> <span class="vocab" data-word-en="is" data-word-vn="thì, là" data-pos="động từ / verb" data-def-en="Third-person singular present form of &#x27;be&#x27;." data-def-vn="Dạng số ít ngôi thứ ba, thì hiện tại của động từ &#x27;be&#x27;." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">is</span> <span class="vocab" data-word-en="what" data-word-vn="cái gì / điều mà" data-pos="đại từ / pronoun" data-def-en="Used to ask about or refer to a thing." data-def-vn="Dùng để hỏi hoặc chỉ về một sự việc." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">what</span> Tom <span class="vocab" data-word-en="told" data-word-vn="đã nói / kể" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;tell&#x27;; said something to someone." data-def-vn="Thì quá khứ của &#x27;tell&#x27;; đã nói điều gì đó với ai." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">told</span> <span class="vocab" data-word-en="himself" data-word-vn="chính bản thân mình" data-pos="đại từ phản thân / reflexive pronoun" data-def-en="A reflexive pronoun referring back to a male subject." data-def-vn="Đại từ phản thân chỉ về chính chủ thể nam giới đã nhắc tới." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">himself</span> <span class="vocab" data-word-en="when" data-word-vn="khi" data-pos="liên từ / conjunction" data-def-en="At the time that; indicates the moment something happens." data-def-vn="Vào lúc mà; chỉ thời điểm một điều gì đó xảy ra." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">when</span> <span class="vocab" data-word-en="he" data-word-vn="anh ấy" data-pos="đại từ / pronoun" data-def-en="A male pronoun referring to a person already mentioned." data-def-vn="Đại từ nam giới chỉ về người đã được nhắc đến trước đó." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">he</span> <span class="vocab" data-word-en="opened" data-word-vn="đã mở" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;open&#x27;; caused something to become open." data-def-vn="Thì quá khứ của &#x27;open&#x27;; làm cho điều gì đó trở nên mở ra." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">opened</span> <span class="vocab" data-word-en="TikTok" data-word-vn="TikTok" data-pos="danh từ riêng / proper noun" data-def-en="A popular short-video social media application." data-def-vn="Một ứng dụng mạng xã hội video ngắn phổ biến." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">TikTok</span> <span class="vocab" data-word-en="after" data-word-vn="sau khi" data-pos="giới từ, liên từ / preposition, conjunction" data-def-en="Following in time; later than." data-def-vn="Sau về mặt thời gian; muộn hơn." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">after</span> <span class="vocab" data-word-en="dinner" data-word-vn="bữa tối" data-pos="danh từ / noun" data-def-en="The main evening meal of the day." data-def-vn="Bữa ăn chính vào buổi tối." data-context-en="&quot;Just five minutes.&quot; That is what Tom told himself when he opened TikTok after dinner.">dinner</span>. He <span class="vocab" data-word-en="wanted" data-word-vn="đã muốn" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;want&#x27;; desired something." data-def-vn="Thì quá khứ của &#x27;want&#x27;; đã mong muốn điều gì đó." data-context-en="He wanted to relax for a short time before doing his homework.">wanted</span> <span class="vocab" data-word-en="to" data-word-vn="để / đến" data-pos="giới từ, tiểu từ / preposition, particle" data-def-en="Used before a verb to form the infinitive, or to show direction." data-def-vn="Dùng trước động từ để tạo thể nguyên mẫu, hoặc để chỉ hướng." data-context-en="He wanted to relax for a short time before doing his homework.">to</span> <span class="vocab" data-word-en="relax" data-word-vn="thư giãn" data-pos="động từ / verb" data-def-en="To rest and become less tense or worried." data-def-vn="Nghỉ ngơi và trở nên bớt căng thẳng, lo lắng." data-context-en="He wanted to relax for a short time before doing his homework.">relax</span> <span class="vocab" data-word-en="for" data-word-vn="trong / cho" data-pos="giới từ / preposition" data-def-en="Used to indicate purpose, duration, or a recipient." data-def-vn="Dùng để chỉ mục đích, khoảng thời gian, hoặc người nhận." data-context-en="He wanted to relax for a short time before doing his homework.">for</span> <span class="vocab" data-word-en="a" data-word-vn="một" data-pos="mạo từ / article" data-def-en="Indefinite article used before a singular noun." data-def-vn="Mạo từ bất định dùng trước danh từ số ít." data-context-en="He wanted to relax for a short time before doing his homework.">a</span> <span class="vocab" data-word-en="short" data-word-vn="ngắn" data-pos="tính từ / adjective" data-def-en="Not long in duration or length." data-def-vn="Không dài về thời gian hoặc độ dài." data-context-en="He wanted to relax for a short time before doing his homework.">short</span> <span class="vocab" data-word-en="time" data-word-vn="thời gian" data-pos="danh từ / noun" data-def-en="A continuous, measurable period in which actions occur." data-def-vn="Một khoảng thời gian liên tục, có thể đo được." data-context-en="He wanted to relax for a short time before doing his homework.">time</span> <span class="vocab" data-word-en="before" data-word-vn="trước khi" data-pos="giới từ, liên từ / preposition, conjunction" data-def-en="Earlier than a specified time or event." data-def-vn="Sớm hơn một thời điểm hoặc sự kiện cụ thể." data-context-en="He wanted to relax for a short time before doing his homework.">before</span> <span class="vocab" data-word-en="doing" data-word-vn="đang làm" data-pos="động từ / verb (gerund)" data-def-en="Present participle of &#x27;do&#x27;; performing an action." data-def-vn="Dạng phân từ hiện tại của &#x27;do&#x27;; đang thực hiện một hành động." data-context-en="He wanted to relax for a short time before doing his homework.">doing</span> <span class="vocab" data-word-en="his" data-word-vn="của anh ấy" data-pos="đại từ sở hữu / possessive pronoun" data-def-en="Belonging to a previously mentioned male person." data-def-vn="Thuộc về một người nam giới đã được nhắc đến trước đó." data-context-en="He wanted to relax for a short time before doing his homework.">his</span> <span class="vocab" data-word-en="homework" data-word-vn="bài tập về nhà" data-pos="danh từ / noun" data-def-en="School work that a student does at home." data-def-vn="Bài tập ở trường mà học sinh làm tại nhà." data-context-en="He wanted to relax for a short time before doing his homework.">homework</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="The" data-word-vn="cái / con" data-pos="mạo từ / article" data-def-en="Definite article used to refer to a specific thing." data-def-vn="Mạo từ xác định dùng để chỉ một sự vật cụ thể." data-context-en="The first video showed a funny cat.">The</span> <span class="vocab" data-word-en="first" data-word-vn="đầu tiên" data-pos="tính từ, trạng từ / adjective, adverb" data-def-en="Coming before all others in order or time." data-def-vn="Đến trước tất cả những cái khác về thứ tự hoặc thời gian." data-context-en="The first video showed a funny cat.">first</span> <span class="vocab" data-word-en="video" data-word-vn="video" data-pos="danh từ / noun" data-def-en="A recording of moving visual images." data-def-vn="Một đoạn ghi hình ảnh chuyển động." data-context-en="The first video showed a funny cat.">video</span> <span class="vocab" data-word-en="showed" data-word-vn="đã cho thấy" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;show&#x27;; displayed or presented something." data-def-vn="Thì quá khứ của &#x27;show&#x27;; đã trình bày hoặc hiển thị điều gì đó." data-context-en="The first video showed a funny cat.">showed</span> a <span class="vocab" data-word-en="funny" data-word-vn="buồn cười" data-pos="tính từ / adjective" data-def-en="Causing laughter or amusement." data-def-vn="Gây cười hoặc thích thú." data-context-en="The first video showed a funny cat.">funny</span> <span class="vocab" data-word-en="cat" data-word-vn="con mèo" data-pos="danh từ / noun" data-def-en="A small domesticated feline animal." data-def-vn="Một loài động vật họ mèo nhỏ được thuần hóa." data-context-en="The first video showed a funny cat.">cat</span>. The <span class="vocab" data-word-en="next" data-word-vn="tiếp theo" data-pos="tính từ / adjective" data-def-en="Coming immediately after the current one." data-def-vn="Đến ngay sau cái hiện tại." data-context-en="The next one was about an amazing football goal.">next</span> <span class="vocab" data-word-en="one" data-word-vn="một (cái)" data-pos="đại từ, số từ / pronoun, number" data-def-en="Used to refer to a single unspecified item or person." data-def-vn="Dùng để chỉ một vật hoặc người duy nhất, không xác định." data-context-en="The next one was about an amazing football goal.">one</span> <span class="vocab" data-word-en="was" data-word-vn="đã là" data-pos="động từ / verb (past tense)" data-def-en="Past tense singular of &#x27;be&#x27;." data-def-vn="Thì quá khứ số ít của động từ &#x27;be&#x27;." data-context-en="The next one was about an amazing football goal.">was</span> <span class="vocab" data-word-en="about" data-word-vn="về" data-pos="giới từ / preposition" data-def-en="Concerning or relating to a topic." data-def-vn="Liên quan đến một chủ đề." data-context-en="The next one was about an amazing football goal.">about</span> <span class="vocab" data-word-en="an" data-word-vn="một" data-pos="mạo từ / article" data-def-en="Indefinite article used before a vowel sound." data-def-vn="Mạo từ bất định dùng trước âm bắt đầu bằng nguyên âm." data-context-en="The next one was about an amazing football goal.">an</span> <span class="vocab" data-word-en="amazing" data-word-vn="tuyệt vời" data-pos="tính từ / adjective" data-def-en="Causing great surprise or wonder; very impressive." data-def-vn="Gây ngạc nhiên lớn hoặc kinh ngạc; rất ấn tượng." data-context-en="The next one was about an amazing football goal.">amazing</span> <span class="vocab" data-word-en="football" data-word-vn="bóng đá" data-pos="danh từ / noun" data-def-en="A sport played by kicking a ball, or the ball itself." data-def-vn="Một môn thể thao chơi bằng cách đá bóng, hoặc chính quả bóng đó." data-context-en="The next one was about an amazing football goal.">football</span> <span class="vocab" data-word-en="goal" data-word-vn="bàn thắng" data-pos="danh từ / noun" data-def-en="A score made in a sport such as football." data-def-vn="Một điểm số ghi được trong môn thể thao như bóng đá." data-context-en="The next one was about an amazing football goal.">goal</span>. <span class="vocab" data-word-en="Then" data-word-vn="sau đó" data-pos="trạng từ / adverb" data-def-en="Next in time or sequence." data-def-vn="Tiếp theo về thời gian hoặc trình tự." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">Then</span> <span class="vocab" data-word-en="came" data-word-vn="đã đến" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;come&#x27;; arrived or appeared." data-def-vn="Thì quá khứ của &#x27;come&#x27;; đã đến hoặc xuất hiện." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">came</span> a <span class="vocab" data-word-en="cooking" data-word-vn="nấu ăn" data-pos="danh từ, danh động từ / noun, gerund" data-def-en="The activity of preparing food." data-def-vn="Hoạt động chuẩn bị thức ăn." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">cooking</span> video, a <span class="vocab" data-word-en="magic" data-word-vn="ma thuật / ảo thuật" data-pos="danh từ / noun" data-def-en="The power of apparently influencing events, or performing illusions." data-def-vn="Sức mạnh dường như tác động đến sự việc, hoặc màn biểu diễn ảo thuật." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">magic</span> <span class="vocab" data-word-en="trick" data-word-vn="trò ảo thuật / mánh khóe" data-pos="danh từ / noun" data-def-en="A skillful act intended to deceive or entertain." data-def-vn="Một hành động khéo léo nhằm đánh lừa hoặc giải trí." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">trick</span>, <span class="vocab" data-word-en="and" data-word-vn="và" data-pos="liên từ / conjunction" data-def-en="Used to connect words, phrases, or clauses." data-def-vn="Dùng để nối các từ, cụm từ, hoặc mệnh đề." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">and</span> a <span class="vocab" data-word-en="man" data-word-vn="người đàn ông" data-pos="danh từ / noun" data-def-en="An adult male human being." data-def-vn="Một người nam giới trưởng thành." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">man</span> <span class="vocab" data-word-en="climbing" data-word-vn="đang leo trèo" data-pos="động từ / verb (gerund)" data-def-en="The act of moving upward using hands and feet." data-def-vn="Hành động di chuyển lên cao bằng tay và chân." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">climbing</span> a <span class="vocab" data-word-en="mountain" data-word-vn="ngọn núi" data-pos="danh từ / noun" data-def-en="A large natural elevation of the earth&#x27;s surface." data-def-vn="Một địa hình tự nhiên cao lớn trên bề mặt trái đất." data-context-en="Then came a cooking video, a magic trick, and a man climbing a mountain.">mountain</span>. <span class="vocab" data-word-en="Every" data-word-vn="mỗi" data-pos="từ hạn định / determiner" data-def-en="Used to refer to all members of a group individually." data-def-vn="Dùng để chỉ tất cả các thành viên của một nhóm một cách riêng lẻ." data-context-en="Every video was different, so Tom kept watching.">Every</span> video was <span class="vocab" data-word-en="different" data-word-vn="khác nhau" data-pos="tính từ / adjective" data-def-en="Not the same as another; distinct." data-def-vn="Không giống với cái khác; riêng biệt." data-context-en="Every video was different, so Tom kept watching.">different</span>, <span class="vocab" data-word-en="so" data-word-vn="vì vậy" data-pos="liên từ, trạng từ / conjunction, adverb" data-def-en="Therefore; as a result." data-def-vn="Do đó; như là một kết quả." data-context-en="Every video was different, so Tom kept watching.">so</span> Tom <span class="vocab" data-word-en="kept" data-word-vn="đã tiếp tục" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;keep&#x27;; continued doing something." data-def-vn="Thì quá khứ của &#x27;keep&#x27;; đã tiếp tục làm điều gì đó." data-context-en="Every video was different, so Tom kept watching.">kept</span> <span class="vocab" data-word-en="watching" data-word-vn="đang xem" data-pos="động từ / verb (gerund)" data-def-en="Looking at something attentively over time." data-def-vn="Nhìn vào điều gì đó một cách chăm chú theo thời gian." data-context-en="Every video was different, so Tom kept watching.">watching</span>. When he <span class="vocab" data-word-en="finally" data-word-vn="cuối cùng" data-pos="trạng từ / adverb" data-def-en="After a long time or delay; at last." data-def-vn="Sau một thời gian dài hoặc trì hoãn; cuối cùng." data-context-en="When he finally looked at the clock, more than an hour had passed.">finally</span> <span class="vocab" data-word-en="looked" data-word-vn="đã nhìn" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;look&#x27;; directed one&#x27;s eyes toward something." data-def-vn="Thì quá khứ của &#x27;look&#x27;; đã hướng mắt về phía điều gì đó." data-context-en="When he finally looked at the clock, more than an hour had passed.">looked</span> <span class="vocab" data-word-en="at" data-word-vn="vào lúc / tại" data-pos="giới từ / preposition" data-def-en="Used to indicate a specific point in time or place." data-def-vn="Dùng để chỉ một điểm cụ thể về thời gian hoặc địa điểm." data-context-en="When he finally looked at the clock, more than an hour had passed.">at</span> the <span class="vocab" data-word-en="clock" data-word-vn="đồng hồ" data-pos="danh từ / noun" data-def-en="A device used to measure and display time." data-def-vn="Một thiết bị dùng để đo và hiển thị thời gian." data-context-en="When he finally looked at the clock, more than an hour had passed.">clock</span>, <span class="vocab" data-word-en="more" data-word-vn="nhiều hơn" data-pos="tính từ, trạng từ / adjective, adverb" data-def-en="A greater amount or degree of something." data-def-vn="Một số lượng hoặc mức độ lớn hơn của điều gì đó." data-context-en="When he finally looked at the clock, more than an hour had passed.">more</span> <span class="vocab" data-word-en="than" data-word-vn="hơn" data-pos="liên từ / conjunction" data-def-en="Used to introduce a comparison." data-def-vn="Dùng để giới thiệu một sự so sánh." data-context-en="When he finally looked at the clock, more than an hour had passed.">than</span> an <span class="vocab" data-word-en="hour" data-word-vn="giờ đồng hồ" data-pos="danh từ / noun" data-def-en="A period of time equal to sixty minutes." data-def-vn="Một khoảng thời gian bằng sáu mươi phút." data-context-en="When he finally looked at the clock, more than an hour had passed.">hour</span> <span class="vocab" data-word-en="had" data-word-vn="đã có" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;have&#x27;; possessed or experienced something." data-def-vn="Thì quá khứ của &#x27;have&#x27;; đã sở hữu hoặc trải qua điều gì đó." data-context-en="When he finally looked at the clock, more than an hour had passed.">had</span> <span class="vocab" data-word-en="passed" data-word-vn="đã trôi qua" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;pass&#x27;; elapsed, referring to time." data-def-vn="Thì quá khứ của &#x27;pass&#x27;; đã trôi qua, nói về thời gian." data-context-en="When he finally looked at the clock, more than an hour had passed.">passed</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Many" data-word-vn="nhiều" data-pos="từ hạn định / determiner" data-def-en="A large number of; used with countable nouns." data-def-vn="Một số lượng lớn; dùng với danh từ đếm được." data-context-en="Many people have had the same experience.">Many</span> <span class="vocab" data-word-en="people" data-word-vn="mọi người" data-pos="danh từ / noun (plural)" data-def-en="Human beings in general or a specific group." data-def-vn="Con người nói chung hoặc một nhóm cụ thể." data-context-en="Many people have had the same experience.">people</span> <span class="vocab" data-word-en="have" data-word-vn="có" data-pos="động từ / verb" data-def-en="To possess, own, or experience something." data-def-vn="Sở hữu, có, hoặc trải qua điều gì đó." data-context-en="Many people have had the same experience.">have</span> had the <span class="vocab" data-word-en="same" data-word-vn="giống nhau" data-pos="tính từ / adjective" data-def-en="Identical or not different." data-def-vn="Giống hệt hoặc không khác biệt." data-context-en="Many people have had the same experience.">same</span> <span class="vocab" data-word-en="experience" data-word-vn="trải nghiệm" data-pos="danh từ / noun" data-def-en="An event or activity that one goes through or lives." data-def-vn="Một sự kiện hoặc hoạt động mà ai đó trải qua." data-context-en="Many people have had the same experience.">experience</span>. <span class="vocab" data-word-en="Apps" data-word-vn="các ứng dụng" data-pos="danh từ / noun (plural)" data-def-en="Software applications, especially on mobile devices." data-def-vn="Các phần mềm ứng dụng, đặc biệt là trên thiết bị di động." data-context-en="Apps like TikTok and YouTube Shorts are made to keep people watching.">Apps</span> <span class="vocab" data-word-en="like" data-word-vn="giống như" data-pos="giới từ / preposition" data-def-en="Similar to; in the same way as." data-def-vn="Tương tự như; theo cùng một cách." data-context-en="Apps like TikTok and YouTube Shorts are made to keep people watching.">like</span> TikTok and <span class="vocab" data-word-en="YouTube" data-word-vn="YouTube" data-pos="danh từ riêng / proper noun" data-def-en="A popular video-sharing website and platform." data-def-vn="Một trang web và nền tảng chia sẻ video phổ biến." data-context-en="Apps like TikTok and YouTube Shorts are made to keep people watching.">YouTube</span> <span class="vocab" data-word-en="Shorts" data-word-vn="Shorts (video ngắn)" data-pos="danh từ riêng / proper noun" data-def-en="A YouTube feature for short-form vertical videos." data-def-vn="Một tính năng của YouTube dành cho video dọc, ngắn." data-context-en="Apps like TikTok and YouTube Shorts are made to keep people watching.">Shorts</span> <span class="vocab" data-word-en="are" data-word-vn="thì / là" data-pos="động từ / verb" data-def-en="Plural present form of &#x27;be&#x27;." data-def-vn="Dạng số nhiều, thì hiện tại của động từ &#x27;be&#x27;." data-context-en="Apps like TikTok and YouTube Shorts are made to keep people watching.">are</span> <span class="vocab" data-word-en="made" data-word-vn="được tạo ra" data-pos="động từ / verb (past participle)" data-def-en="Past participle of &#x27;make&#x27;; created or designed for a purpose." data-def-vn="Dạng phân từ quá khứ của &#x27;make&#x27;; được tạo ra hoặc thiết kế cho một mục đích." data-context-en="Apps like TikTok and YouTube Shorts are made to keep people watching.">made</span> to <span class="vocab" data-word-en="keep" data-word-vn="tiếp tục / giữ" data-pos="động từ / verb" data-def-en="To continue an action, or to retain something." data-def-vn="Tiếp tục một hành động, hoặc giữ lại điều gì đó." data-context-en="Apps like TikTok and YouTube Shorts are made to keep people watching.">keep</span> people watching. Every time <span class="vocab" data-word-en="you" data-word-vn="bạn" data-pos="đại từ / pronoun" data-def-en="The person being addressed." data-def-vn="Người đang được nói đến hoặc nói chuyện cùng." data-context-en="Every time you swipe, you may find something funny, exciting, or surprising.">you</span> <span class="vocab" data-word-en="swipe" data-word-vn="vuốt (màn hình)" data-pos="động từ, danh từ / verb, noun" data-def-en="To slide a finger across a touchscreen to scroll content." data-def-vn="Trượt ngón tay trên màn hình cảm ứng để cuộn nội dung." data-context-en="Every time you swipe, you may find something funny, exciting, or surprising.">swipe</span>, you <span class="vocab" data-word-en="may" data-word-vn="có thể" data-pos="động từ khiếm khuyết / modal verb" data-def-en="Used to express possibility." data-def-vn="Dùng để diễn tả khả năng có thể xảy ra." data-context-en="Every time you swipe, you may find something funny, exciting, or surprising.">may</span> <span class="vocab" data-word-en="find" data-word-vn="tìm thấy" data-pos="động từ / verb" data-def-en="To discover or locate something." data-def-vn="Khám phá hoặc xác định vị trí của điều gì đó." data-context-en="Every time you swipe, you may find something funny, exciting, or surprising.">find</span> <span class="vocab" data-word-en="something" data-word-vn="điều gì đó" data-pos="đại từ / pronoun" data-def-en="An unspecified or unknown thing." data-def-vn="Một sự vật không xác định hoặc chưa biết." data-context-en="Every time you swipe, you may find something funny, exciting, or surprising.">something</span> funny, <span class="vocab" data-word-en="exciting" data-word-vn="thú vị / hấp dẫn" data-pos="tính từ / adjective" data-def-en="Causing great enthusiasm or eagerness." data-def-vn="Gây ra sự hào hứng hoặc mong đợi lớn." data-context-en="Every time you swipe, you may find something funny, exciting, or surprising.">exciting</span>, <span class="vocab" data-word-en="or" data-word-vn="hoặc" data-pos="liên từ / conjunction" data-def-en="Used to indicate an alternative." data-def-vn="Dùng để chỉ một lựa chọn thay thế." data-context-en="Every time you swipe, you may find something funny, exciting, or surprising.">or</span> <span class="vocab" data-word-en="surprising" data-word-vn="gây bất ngờ" data-pos="tính từ / adjective" data-def-en="Causing a feeling of mild astonishment." data-def-vn="Gây ra cảm giác ngạc nhiên nhẹ." data-context-en="Every time you swipe, you may find something funny, exciting, or surprising.">surprising</span>. <span class="vocab" data-word-en="Because" data-word-vn="bởi vì" data-pos="liên từ / conjunction" data-def-en="For the reason that; introduces a cause." data-def-vn="Vì lý do rằng; giới thiệu một nguyên nhân." data-context-en="Because you never know what will come next, you want to keep looking.">Because</span> you <span class="vocab" data-word-en="never" data-word-vn="không bao giờ" data-pos="trạng từ / adverb" data-def-en="At no time; not ever." data-def-vn="Không lúc nào; không bao giờ." data-context-en="Because you never know what will come next, you want to keep looking.">never</span> <span class="vocab" data-word-en="know" data-word-vn="biết" data-pos="động từ / verb" data-def-en="To be aware of or have information about something." data-def-vn="Nhận thức được hoặc có thông tin về điều gì đó." data-context-en="Because you never know what will come next, you want to keep looking.">know</span> what <span class="vocab" data-word-en="will" data-word-vn="sẽ" data-pos="động từ khiếm khuyết / modal verb" data-def-en="Used to indicate future action." data-def-vn="Dùng để diễn tả hành động trong tương lai." data-context-en="Because you never know what will come next, you want to keep looking.">will</span> <span class="vocab" data-word-en="come" data-word-vn="đến" data-pos="động từ / verb" data-def-en="To move toward or arrive at a place." data-def-vn="Di chuyển đến hoặc đến một nơi nào đó." data-context-en="Because you never know what will come next, you want to keep looking.">come</span> next, you <span class="vocab" data-word-en="want" data-word-vn="muốn" data-pos="động từ / verb" data-def-en="To desire or wish for something." data-def-vn="Mong muốn hoặc ước ao điều gì đó." data-context-en="Because you never know what will come next, you want to keep looking.">want</span> to keep <span class="vocab" data-word-en="looking" data-word-vn="đang nhìn / tìm kiếm" data-pos="động từ / verb (gerund)" data-def-en="Currently directing one&#x27;s eyes or attention." data-def-vn="Hiện đang hướng mắt hoặc sự chú ý." data-context-en="Because you never know what will come next, you want to keep looking.">looking</span>. One more swipe <span class="vocab" data-word-en="might" data-word-vn="có thể" data-pos="động từ khiếm khuyết / modal verb" data-def-en="Used to express a weaker possibility than &#x27;may&#x27;." data-def-vn="Dùng để diễn tả khả năng yếu hơn &#x27;may&#x27;." data-context-en="One more swipe might bring the best video yet.">might</span> <span class="vocab" data-word-en="bring" data-word-vn="mang lại" data-pos="động từ / verb" data-def-en="To cause something to happen, or to carry something along." data-def-vn="Làm cho điều gì đó xảy ra, hoặc mang theo điều gì đó." data-context-en="One more swipe might bring the best video yet.">bring</span> the <span class="vocab" data-word-en="best" data-word-vn="tốt nhất" data-pos="tính từ / adjective" data-def-en="Of the highest quality; superlative of &#x27;good&#x27;." data-def-vn="Có chất lượng cao nhất; dạng so sánh nhất của &#x27;good&#x27;." data-context-en="One more swipe might bring the best video yet.">best</span> video <span class="vocab" data-word-en="yet" data-word-vn="vẫn còn / chưa" data-pos="trạng từ / adverb" data-def-en="Up until now; still to come." data-def-vn="Cho đến bây giờ; vẫn còn sắp tới." data-context-en="One more swipe might bring the best video yet.">yet</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Scientists" data-word-vn="các nhà khoa học" data-pos="danh từ / noun (plural)" data-def-en="People who study and research science." data-def-vn="Những người nghiên cứu và học tập khoa học." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">Scientists</span> <span class="vocab" data-word-en="say" data-word-vn="nói" data-pos="động từ / verb" data-def-en="To express something in words." data-def-vn="Diễn đạt điều gì đó bằng lời." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">say</span> <span class="vocab" data-word-en="this" data-word-vn="điều này" data-pos="đại từ / pronoun" data-def-en="Used to refer to something nearby or just mentioned." data-def-vn="Dùng để chỉ điều gì đó gần đây hoặc vừa được nhắc đến." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">this</span> <span class="vocab" data-word-en="happens" data-word-vn="xảy ra" data-pos="động từ / verb" data-def-en="Occurs or takes place." data-def-vn="Diễn ra hoặc xảy ra." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">happens</span> because <span class="vocab" data-word-en="of" data-word-vn="của / thuộc về" data-pos="giới từ / preposition" data-def-en="Belonging to, or related to." data-def-vn="Thuộc về, hoặc có liên quan đến." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">of</span> a <span class="vocab" data-word-en="chemical" data-word-vn="chất hóa học" data-pos="danh từ / noun" data-def-en="A substance with a distinct molecular composition." data-def-vn="Một chất có thành phần phân tử riêng biệt." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">chemical</span> <span class="vocab" data-word-en="in" data-word-vn="trong" data-pos="giới từ / preposition" data-def-en="Inside or within a place or thing." data-def-vn="Ở bên trong một nơi hay vật gì đó." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">in</span> the <span class="vocab" data-word-en="brain" data-word-vn="bộ não" data-pos="danh từ / noun" data-def-en="The organ inside the head that controls thought and feeling." data-def-vn="Cơ quan bên trong đầu điều khiển suy nghĩ và cảm xúc." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">brain</span> <span class="vocab" data-word-en="called" data-word-vn="được gọi là" data-pos="động từ / verb (past participle)" data-def-en="Named or referred to as." data-def-vn="Được đặt tên hoặc gọi là." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">called</span> <span class="vocab" data-word-en="dopamine" data-word-vn="dopamine (chất dẫn truyền thần kinh)" data-pos="danh từ / noun" data-def-en="A brain chemical linked to feelings of pleasure and reward." data-def-vn="Một chất hóa học trong não liên quan đến khoái cảm và phần thưởng." data-context-en="Scientists say this happens because of a chemical in the brain called dopamine.">dopamine</span>. Dopamine <span class="vocab" data-word-en="helps" data-word-vn="giúp" data-pos="động từ / verb" data-def-en="Assists or makes something easier." data-def-vn="Hỗ trợ hoặc làm cho điều gì đó dễ dàng hơn." data-context-en="Dopamine helps us feel interested and excited.">helps</span> <span class="vocab" data-word-en="us" data-word-vn="chúng ta" data-pos="đại từ / pronoun" data-def-en="Refers to the speaker and others, as the object form of &#x27;we&#x27;." data-def-vn="Chỉ người nói và những người khác, là dạng tân ngữ của &#x27;we&#x27;." data-context-en="Dopamine helps us feel interested and excited.">us</span> <span class="vocab" data-word-en="feel" data-word-vn="cảm thấy" data-pos="động từ / verb" data-def-en="To experience an emotion or physical sensation." data-def-vn="Trải nghiệm một cảm xúc hoặc cảm giác thể chất." data-context-en="Dopamine helps us feel interested and excited.">feel</span> <span class="vocab" data-word-en="interested" data-word-vn="quan tâm / hứng thú" data-pos="tính từ / adjective" data-def-en="Showing curiosity or concern about something." data-def-vn="Thể hiện sự tò mò hoặc quan tâm về điều gì đó." data-context-en="Dopamine helps us feel interested and excited.">interested</span> and <span class="vocab" data-word-en="excited" data-word-vn="phấn khích" data-pos="tính từ / adjective" data-def-en="Feeling very enthusiastic or eager." data-def-vn="Cảm thấy rất hào hứng hoặc mong đợi." data-context-en="Dopamine helps us feel interested and excited.">excited</span>. When <span class="vocab" data-word-en="we" data-word-vn="chúng ta" data-pos="đại từ / pronoun" data-def-en="Refers to the speaker together with other people." data-def-vn="Chỉ người nói cùng với những người khác." data-context-en="When we see something new or fun, the brain releases a little dopamine.">we</span> <span class="vocab" data-word-en="see" data-word-vn="nhìn thấy" data-pos="động từ / verb" data-def-en="To perceive with the eyes." data-def-vn="Cảm nhận bằng mắt." data-context-en="When we see something new or fun, the brain releases a little dopamine.">see</span> something <span class="vocab" data-word-en="new" data-word-vn="mới" data-pos="tính từ / adjective" data-def-en="Recently made, discovered, or experienced." data-def-vn="Mới được tạo ra, khám phá, hoặc trải nghiệm." data-context-en="When we see something new or fun, the brain releases a little dopamine.">new</span> or <span class="vocab" data-word-en="fun" data-word-vn="vui vẻ / thú vị" data-pos="danh từ, tính từ / noun, adjective" data-def-en="Enjoyment, amusement, or light-hearted pleasure." data-def-vn="Sự vui thích, giải trí, hoặc niềm vui nhẹ nhàng." data-context-en="When we see something new or fun, the brain releases a little dopamine.">fun</span>, the brain <span class="vocab" data-word-en="releases" data-word-vn="giải phóng / tiết ra" data-pos="động từ / verb" data-def-en="Sets free or lets out a substance." data-def-vn="Giải phóng hoặc thải ra một chất." data-context-en="When we see something new or fun, the brain releases a little dopamine.">releases</span> a <span class="vocab" data-word-en="little" data-word-vn="một chút / nhỏ" data-pos="tính từ / adjective" data-def-en="Small in amount or size." data-def-vn="Nhỏ về số lượng hoặc kích thước." data-context-en="When we see something new or fun, the brain releases a little dopamine.">little</span> dopamine. This <span class="vocab" data-word-en="makes" data-word-vn="khiến / làm cho" data-pos="động từ / verb" data-def-en="Causes someone or something to be a certain way." data-def-vn="Khiến cho ai đó hoặc điều gì đó trở nên như thế nào." data-context-en="This makes us want to keep watching.">makes</span> us want to keep watching. After many short <span class="vocab" data-word-en="videos" data-word-vn="các video" data-pos="danh từ / noun (plural)" data-def-en="Multiple recordings of moving images." data-def-vn="Nhiều đoạn ghi hình ảnh chuyển động." data-context-en="After many short videos, the brain starts to expect this feeling again and again.">videos</span>, the brain <span class="vocab" data-word-en="starts" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Begins an action or process." data-def-vn="Bắt đầu một hành động hoặc quá trình." data-context-en="After many short videos, the brain starts to expect this feeling again and again.">starts</span> to <span class="vocab" data-word-en="expect" data-word-vn="mong đợi" data-pos="động từ / verb" data-def-en="To anticipate that something will happen." data-def-vn="Dự đoán rằng điều gì đó sẽ xảy ra." data-context-en="After many short videos, the brain starts to expect this feeling again and again.">expect</span> this <span class="vocab" data-word-en="feeling" data-word-vn="cảm giác" data-pos="danh từ / noun" data-def-en="An emotional state or physical sensation." data-def-vn="Một trạng thái cảm xúc hoặc cảm giác thể chất." data-context-en="After many short videos, the brain starts to expect this feeling again and again.">feeling</span> <span class="vocab" data-word-en="again" data-word-vn="lại / một lần nữa" data-pos="trạng từ / adverb" data-def-en="One more time; repeatedly." data-def-vn="Thêm một lần nữa; lặp đi lặp lại." data-context-en="After many short videos, the brain starts to expect this feeling again and again.">again</span> and again.
+    </p>
+
+    <p>
+        After a <span class="vocab" data-word-en="few" data-word-vn="vài" data-pos="từ hạn định / determiner" data-def-en="A small number of." data-def-vn="Một số lượng nhỏ." data-context-en="After a few months, Tom noticed a problem.">few</span> <span class="vocab" data-word-en="months" data-word-vn="những tháng" data-pos="danh từ / noun (plural)" data-def-en="Units of time, roughly thirty days each." data-def-vn="Đơn vị thời gian, mỗi đơn vị khoảng ba mươi ngày." data-context-en="After a few months, Tom noticed a problem.">months</span>, Tom <span class="vocab" data-word-en="noticed" data-word-vn="đã nhận thấy" data-pos="động từ / verb (past tense)" data-def-en="Became aware of or observed something." data-def-vn="Trở nên nhận thức được hoặc quan sát thấy điều gì đó." data-context-en="After a few months, Tom noticed a problem.">noticed</span> a <span class="vocab" data-word-en="problem" data-word-vn="vấn đề" data-pos="danh từ / noun" data-def-en="A matter or situation regarded as difficult." data-def-vn="Một vấn đề hoặc tình huống được xem là khó khăn." data-context-en="After a few months, Tom noticed a problem.">problem</span>. <span class="vocab" data-word-en="Reading" data-word-vn="việc đọc sách" data-pos="danh từ, danh động từ / noun, gerund" data-def-en="The activity of looking at and understanding written text." data-def-vn="Hoạt động nhìn và hiểu văn bản viết." data-context-en="Reading a book seemed boring.">Reading</span> a <span class="vocab" data-word-en="book" data-word-vn="quyển sách" data-pos="danh từ / noun" data-def-en="A written or printed work consisting of bound pages." data-def-vn="Một tác phẩm viết hoặc in gồm các trang được đóng lại." data-context-en="Reading a book seemed boring.">book</span> <span class="vocab" data-word-en="seemed" data-word-vn="có vẻ như" data-pos="động từ / verb (past tense)" data-def-en="Gave the impression of being something." data-def-vn="Tạo cảm giác như là một điều gì đó." data-context-en="Reading a book seemed boring.">seemed</span> <span class="vocab" data-word-en="boring" data-word-vn="nhàm chán" data-pos="tính từ / adjective" data-def-en="Not interesting; causing weariness." data-def-vn="Không thú vị; gây ra sự chán nản." data-context-en="Reading a book seemed boring.">boring</span>. <span class="vocab" data-word-en="It" data-word-vn="nó" data-pos="đại từ / pronoun" data-def-en="Refers to a thing previously mentioned." data-def-vn="Chỉ một sự vật đã được nhắc đến trước đó." data-context-en="It was hard to study for more than fifteen minutes.">It</span> was <span class="vocab" data-word-en="hard" data-word-vn="khó khăn" data-pos="tính từ / adjective" data-def-en="Difficult to do or endure." data-def-vn="Khó thực hiện hoặc chịu đựng." data-context-en="It was hard to study for more than fifteen minutes.">hard</span> to <span class="vocab" data-word-en="study" data-word-vn="học tập" data-pos="động từ / verb" data-def-en="To spend time learning about a subject." data-def-vn="Dành thời gian để học về một chủ đề." data-context-en="It was hard to study for more than fifteen minutes.">study</span> for more than <span class="vocab" data-word-en="fifteen" data-word-vn="mười lăm" data-pos="số từ / number" data-def-en="The number 15." data-def-vn="Con số 15." data-context-en="It was hard to study for more than fifteen minutes.">fifteen</span> minutes. <span class="vocab" data-word-en="Even" data-word-vn="thậm chí" data-pos="trạng từ / adverb" data-def-en="Used to emphasize something surprising or extreme." data-def-vn="Dùng để nhấn mạnh điều gì đó bất ngờ hoặc cực đoan." data-context-en="Even watching a normal movie felt too slow.">Even</span> watching a <span class="vocab" data-word-en="normal" data-word-vn="bình thường" data-pos="tính từ / adjective" data-def-en="Usual, typical, or expected." data-def-vn="Thông thường, điển hình, hoặc như mong đợi." data-context-en="Even watching a normal movie felt too slow.">normal</span> <span class="vocab" data-word-en="movie" data-word-vn="bộ phim" data-pos="danh từ / noun" data-def-en="A motion picture; a film." data-def-vn="Một tác phẩm điện ảnh; một bộ phim." data-context-en="Even watching a normal movie felt too slow.">movie</span> <span class="vocab" data-word-en="felt" data-word-vn="đã cảm thấy" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;feel&#x27;; experienced an emotion or sensation." data-def-vn="Thì quá khứ của &#x27;feel&#x27;; đã trải qua một cảm xúc hoặc cảm giác." data-context-en="Even watching a normal movie felt too slow.">felt</span> <span class="vocab" data-word-en="too" data-word-vn="quá" data-pos="trạng từ / adverb" data-def-en="To an excessive degree." data-def-vn="Đến một mức độ quá mức." data-context-en="Even watching a normal movie felt too slow.">too</span> <span class="vocab" data-word-en="slow" data-word-vn="chậm" data-pos="tính từ / adjective" data-def-en="Not fast; moving at a low speed." data-def-vn="Không nhanh; di chuyển với tốc độ thấp." data-context-en="Even watching a normal movie felt too slow.">slow</span>. He <span class="vocab" data-word-en="picked" data-word-vn="đã cầm lên" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;pick&#x27;; lifted or selected something." data-def-vn="Thì quá khứ của &#x27;pick&#x27;; đã nhấc lên hoặc chọn điều gì đó." data-context-en="He picked up his phone whenever he had a free minute.">picked</span> <span class="vocab" data-word-en="up" data-word-vn="lên" data-pos="trạng từ, giới từ / adverb, preposition" data-def-en="Toward a higher position." data-def-vn="Hướng về vị trí cao hơn." data-context-en="He picked up his phone whenever he had a free minute.">up</span> his <span class="vocab" data-word-en="phone" data-word-vn="điện thoại" data-pos="danh từ / noun" data-def-en="A device used for communication, especially calling or texting." data-def-vn="Một thiết bị dùng để liên lạc, đặc biệt là gọi điện hoặc nhắn tin." data-context-en="He picked up his phone whenever he had a free minute.">phone</span> <span class="vocab" data-word-en="whenever" data-word-vn="bất cứ khi nào" data-pos="liên từ / conjunction" data-def-en="At any time that; every time." data-def-vn="Vào bất cứ lúc nào; mỗi khi." data-context-en="He picked up his phone whenever he had a free minute.">whenever</span> he had a <span class="vocab" data-word-en="free" data-word-vn="rảnh rỗi / tự do" data-pos="tính từ / adjective" data-def-en="Not occupied; available." data-def-vn="Không bận rộn; sẵn có." data-context-en="He picked up his phone whenever he had a free minute.">free</span> <span class="vocab" data-word-en="minute" data-word-vn="phút" data-pos="danh từ / noun" data-def-en="A unit of time equal to sixty seconds." data-def-vn="Một đơn vị thời gian bằng sáu mươi giây." data-context-en="He picked up his phone whenever he had a free minute.">minute</span>.
+    </p>
+
+    <p>
+        One <span class="vocab" data-word-en="weekend" data-word-vn="cuối tuần" data-pos="danh từ / noun" data-def-en="Saturday and Sunday, the days at the end of the week." data-def-vn="Thứ Bảy và Chủ Nhật, những ngày cuối tuần." data-context-en="One weekend, Tom decided to take a break from TikTok.">weekend</span>, Tom <span class="vocab" data-word-en="decided" data-word-vn="đã quyết định" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;decide&#x27;; made a choice." data-def-vn="Thì quá khứ của &#x27;decide&#x27;; đã đưa ra một lựa chọn." data-context-en="One weekend, Tom decided to take a break from TikTok.">decided</span> to <span class="vocab" data-word-en="take" data-word-vn="thực hiện / lấy" data-pos="động từ / verb" data-def-en="To perform an action, or to obtain something." data-def-vn="Thực hiện một hành động, hoặc lấy điều gì đó." data-context-en="One weekend, Tom decided to take a break from TikTok.">take</span> a <span class="vocab" data-word-en="break" data-word-vn="kỳ nghỉ ngắn" data-pos="danh từ / noun" data-def-en="A pause or rest from an activity." data-def-vn="Một khoảng dừng hoặc nghỉ ngơi khỏi một hoạt động." data-context-en="One weekend, Tom decided to take a break from TikTok.">break</span> <span class="vocab" data-word-en="from" data-word-vn="từ" data-pos="giới từ / preposition" data-def-en="Indicating the point of origin or source." data-def-vn="Chỉ điểm xuất phát hoặc nguồn gốc." data-context-en="One weekend, Tom decided to take a break from TikTok.">from</span> TikTok. He <span class="vocab" data-word-en="deleted" data-word-vn="đã xóa" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;delete&#x27;; removed something completely." data-def-vn="Thì quá khứ của &#x27;delete&#x27;; đã loại bỏ hoàn toàn điều gì đó." data-context-en="He deleted the app for one month.">deleted</span> the <span class="vocab" data-word-en="app" data-word-vn="ứng dụng" data-pos="danh từ / noun" data-def-en="A software application, especially on a mobile device." data-def-vn="Một phần mềm ứng dụng, đặc biệt trên thiết bị di động." data-context-en="He deleted the app for one month.">app</span> for one <span class="vocab" data-word-en="month" data-word-vn="tháng" data-pos="danh từ / noun" data-def-en="One of the twelve divisions of a year." data-def-vn="Một trong mười hai phần của một năm." data-context-en="He deleted the app for one month.">month</span>.
+    </p>
+
+    <p>
+        The first <span class="vocab" data-word-en="week" data-word-vn="tuần" data-pos="danh từ / noun" data-def-en="A period of seven days." data-def-vn="Một khoảng thời gian bảy ngày." data-context-en="The first week was not easy.">week</span> was <span class="vocab" data-word-en="not" data-word-vn="không" data-pos="trạng từ / adverb" data-def-en="Used to negate a statement." data-def-vn="Dùng để phủ định một câu." data-context-en="The first week was not easy.">not</span> <span class="vocab" data-word-en="easy" data-word-vn="dễ dàng" data-pos="tính từ / adjective" data-def-en="Not difficult; simple to do." data-def-vn="Không khó khăn; đơn giản để thực hiện." data-context-en="The first week was not easy.">easy</span>. Many <span class="vocab" data-word-en="times" data-word-vn="những lần" data-pos="danh từ / noun (plural)" data-def-en="Occasions or instances." data-def-vn="Những dịp hoặc trường hợp." data-context-en="Many times, he reached for his phone without thinking.">times</span>, he <span class="vocab" data-word-en="reached" data-word-vn="đã đưa tay lấy / với tới" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;reach&#x27;; stretched out to touch or grab something." data-def-vn="Thì quá khứ của &#x27;reach&#x27;; đã vươn ra để chạm hoặc nắm lấy điều gì đó." data-context-en="Many times, he reached for his phone without thinking.">reached</span> for his phone <span class="vocab" data-word-en="without" data-word-vn="mà không có" data-pos="giới từ / preposition" data-def-en="Not having or accompanied by." data-def-vn="Không có hoặc không đi kèm với." data-context-en="Many times, he reached for his phone without thinking.">without</span> <span class="vocab" data-word-en="thinking" data-word-vn="suy nghĩ" data-pos="động từ / verb (gerund)" data-def-en="The act of using one&#x27;s mind to consider something." data-def-vn="Hành động dùng trí óc để suy xét điều gì đó." data-context-en="Many times, he reached for his phone without thinking.">thinking</span>. <span class="vocab" data-word-en="Sometimes" data-word-vn="đôi khi" data-pos="trạng từ / adverb" data-def-en="On some occasions; not always." data-def-vn="Vào một số dịp; không phải lúc nào cũng vậy." data-context-en="Sometimes he even forgot that the app was gone.">Sometimes</span> he even <span class="vocab" data-word-en="forgot" data-word-vn="đã quên" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;forget&#x27;; failed to remember something." data-def-vn="Thì quá khứ của &#x27;forget&#x27;; đã không nhớ được điều gì đó." data-context-en="Sometimes he even forgot that the app was gone.">forgot</span> that the app was <span class="vocab" data-word-en="gone" data-word-vn="đã biến mất / đi rồi" data-pos="tính từ, động từ / adjective, verb (past participle)" data-def-en="No longer present; departed." data-def-vn="Không còn hiện diện nữa; đã rời đi." data-context-en="Sometimes he even forgot that the app was gone.">gone</span>. <span class="vocab" data-word-en="But" data-word-vn="nhưng" data-pos="liên từ / conjunction" data-def-en="Used to introduce a contrast." data-def-vn="Dùng để giới thiệu một sự tương phản." data-context-en="But after two weeks, something changed.">But</span> after <span class="vocab" data-word-en="two" data-word-vn="hai" data-pos="số từ / number" data-def-en="The number 2." data-def-vn="Con số 2." data-context-en="But after two weeks, something changed.">two</span> <span class="vocab" data-word-en="weeks" data-word-vn="những tuần" data-pos="danh từ / noun (plural)" data-def-en="Periods of seven days; plural of &#x27;week&#x27;." data-def-vn="Những khoảng thời gian bảy ngày, số nhiều của &#x27;week&#x27;." data-context-en="But after two weeks, something changed.">weeks</span>, something <span class="vocab" data-word-en="changed" data-word-vn="đã thay đổi" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;change&#x27;; became different." data-def-vn="Thì quá khứ của &#x27;change&#x27;; đã trở nên khác đi." data-context-en="But after two weeks, something changed.">changed</span>. He <span class="vocab" data-word-en="could" data-word-vn="có thể (quá khứ)" data-pos="động từ khiếm khuyết / modal verb" data-def-en="Past tense of &#x27;can&#x27;; indicates ability in the past." data-def-vn="Thì quá khứ của &#x27;can&#x27;; chỉ khả năng trong quá khứ." data-context-en="He could read for longer.">could</span> <span class="vocab" data-word-en="read" data-word-vn="đọc" data-pos="động từ / verb" data-def-en="To look at and understand written words." data-def-vn="Nhìn và hiểu các từ ngữ được viết ra." data-context-en="He could read for longer.">read</span> for <span class="vocab" data-word-en="longer" data-word-vn="lâu hơn" data-pos="trạng từ, tính từ / adverb, adjective" data-def-en="For a greater length of time." data-def-vn="Trong một khoảng thời gian dài hơn." data-context-en="He could read for longer.">longer</span>. He <span class="vocab" data-word-en="finished" data-word-vn="đã hoàn thành" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;finish&#x27;; completed something." data-def-vn="Thì quá khứ của &#x27;finish&#x27;; đã hoàn tất điều gì đó." data-context-en="He finished his homework more quickly.">finished</span> his homework more <span class="vocab" data-word-en="quickly" data-word-vn="một cách nhanh chóng" data-pos="trạng từ / adverb" data-def-en="In a fast manner; rapidly." data-def-vn="Theo cách nhanh; mau lẹ." data-context-en="He finished his homework more quickly.">quickly</span>. He <span class="vocab" data-word-en="also" data-word-vn="cũng" data-pos="trạng từ / adverb" data-def-en="In addition; too." data-def-vn="Thêm vào đó; cũng vậy." data-context-en="He also enjoyed talking with his friends because he was not always looking at his phone.">also</span> <span class="vocab" data-word-en="enjoyed" data-word-vn="đã thích thú" data-pos="động từ / verb (past tense)" data-def-en="Past tense of &#x27;enjoy&#x27;; took pleasure in something." data-def-vn="Thì quá khứ của &#x27;enjoy&#x27;; đã cảm thấy vui thích với điều gì đó." data-context-en="He also enjoyed talking with his friends because he was not always looking at his phone.">enjoyed</span> <span class="vocab" data-word-en="talking" data-word-vn="trò chuyện" data-pos="động từ / verb (gerund)" data-def-en="The act of speaking with someone." data-def-vn="Hành động nói chuyện với ai đó." data-context-en="He also enjoyed talking with his friends because he was not always looking at his phone.">talking</span> <span class="vocab" data-word-en="with" data-word-vn="với" data-pos="giới từ / preposition" data-def-en="Accompanied by; together with." data-def-vn="Đi cùng với; cùng nhau với." data-context-en="He also enjoyed talking with his friends because he was not always looking at his phone.">with</span> his <span class="vocab" data-word-en="friends" data-word-vn="những người bạn" data-pos="danh từ / noun (plural)" data-def-en="People one knows well and likes." data-def-vn="Những người mà ai đó quen biết và yêu quý." data-context-en="He also enjoyed talking with his friends because he was not always looking at his phone.">friends</span> because he was not <span class="vocab" data-word-en="always" data-word-vn="luôn luôn" data-pos="trạng từ / adverb" data-def-en="At all times; every time." data-def-vn="Mọi lúc; mỗi lần." data-context-en="He also enjoyed talking with his friends because he was not always looking at his phone.">always</span> looking at his phone.
+    </p>
+
+    <p>
+        Short videos are not always <span class="vocab" data-word-en="bad" data-word-vn="tệ / xấu" data-pos="tính từ / adjective" data-def-en="Not good; of poor quality." data-def-vn="Không tốt; có chất lượng kém." data-context-en="Short videos are not always bad.">bad</span>. <span class="vocab" data-word-en="They" data-word-vn="họ" data-pos="đại từ / pronoun" data-def-en="Refers to a group of people or things previously mentioned." data-def-vn="Chỉ một nhóm người hoặc vật đã được nhắc đến trước đó." data-context-en="They can teach us new things, make us laugh, and help us relax.">They</span> <span class="vocab" data-word-en="can" data-word-vn="có thể" data-pos="động từ khiếm khuyết / modal verb" data-def-en="Used to indicate ability or possibility." data-def-vn="Dùng để chỉ khả năng hoặc điều có thể xảy ra." data-context-en="They can teach us new things, make us laugh, and help us relax.">can</span> <span class="vocab" data-word-en="teach" data-word-vn="dạy" data-pos="động từ / verb" data-def-en="To give instruction or impart knowledge." data-def-vn="Hướng dẫn hoặc truyền đạt kiến thức." data-context-en="They can teach us new things, make us laugh, and help us relax.">teach</span> us new <span class="vocab" data-word-en="things" data-word-vn="những điều / những thứ" data-pos="danh từ / noun (plural)" data-def-en="Objects or matters not specifically named." data-def-vn="Các đồ vật hoặc vấn đề không được nêu tên cụ thể." data-context-en="They can teach us new things, make us laugh, and help us relax.">things</span>, <span class="vocab" data-word-en="make" data-word-vn="làm cho / khiến" data-pos="động từ / verb" data-def-en="To cause something to happen or become a certain way." data-def-vn="Làm cho điều gì đó xảy ra hoặc trở nên như thế nào." data-context-en="They can teach us new things, make us laugh, and help us relax.">make</span> us <span class="vocab" data-word-en="laugh" data-word-vn="cười" data-pos="động từ / verb" data-def-en="To make sounds expressing amusement." data-def-vn="Tạo ra âm thanh thể hiện sự vui thích." data-context-en="They can teach us new things, make us laugh, and help us relax.">laugh</span>, and <span class="vocab" data-word-en="help" data-word-vn="giúp đỡ" data-pos="động từ / verb" data-def-en="To assist someone in doing something." data-def-vn="Hỗ trợ ai đó làm điều gì đó." data-context-en="They can teach us new things, make us laugh, and help us relax.">help</span> us relax. The problem <span class="vocab" data-word-en="begins" data-word-vn="bắt đầu" data-pos="động từ / verb" data-def-en="Starts or commences." data-def-vn="Khởi đầu hoặc bắt đầu." data-context-en="The problem begins when they take too much of our time and attention.">begins</span> when they take too <span class="vocab" data-word-en="much" data-word-vn="nhiều" data-pos="tính từ, trạng từ / adjective, adverb" data-def-en="A large amount of something uncountable." data-def-vn="Một số lượng lớn của một thứ không đếm được." data-context-en="The problem begins when they take too much of our time and attention.">much</span> of <span class="vocab" data-word-en="our" data-word-vn="của chúng ta" data-pos="đại từ sở hữu / possessive pronoun" data-def-en="Belonging to the speaker and others." data-def-vn="Thuộc về người nói và những người khác." data-context-en="The problem begins when they take too much of our time and attention.">our</span> time and <span class="vocab" data-word-en="attention" data-word-vn="sự chú ý" data-pos="danh từ / noun" data-def-en="The mental focus directed toward something." data-def-vn="Sự tập trung tinh thần hướng vào điều gì đó." data-context-en="The problem begins when they take too much of our time and attention.">attention</span>.
+    </p>
+
+    <p>
+        <span class="vocab" data-word-en="Phones" data-word-vn="những chiếc điện thoại" data-pos="danh từ / noun (plural)" data-def-en="Devices used for communication; plural of &#x27;phone&#x27;." data-def-vn="Các thiết bị dùng để liên lạc, số nhiều của &#x27;phone&#x27;." data-context-en="Phones are useful tools, but we should be careful.">Phones</span> are <span class="vocab" data-word-en="useful" data-word-vn="hữu ích" data-pos="tính từ / adjective" data-def-en="Helpful or beneficial for a purpose." data-def-vn="Có ích hoặc có lợi cho một mục đích." data-context-en="Phones are useful tools, but we should be careful.">useful</span> <span class="vocab" data-word-en="tools" data-word-vn="công cụ" data-pos="danh từ / noun (plural)" data-def-en="Instruments or devices used to perform a task." data-def-vn="Những dụng cụ hoặc thiết bị dùng để thực hiện một công việc." data-context-en="Phones are useful tools, but we should be careful.">tools</span>, but we <span class="vocab" data-word-en="should" data-word-vn="nên" data-pos="động từ khiếm khuyết / modal verb" data-def-en="Used to express obligation or recommendation." data-def-vn="Dùng để diễn tả nghĩa vụ hoặc lời khuyên." data-context-en="Phones are useful tools, but we should be careful.">should</span> <span class="vocab" data-word-en="be" data-word-vn="là / trở nên" data-pos="động từ / verb" data-def-en="The base form of &#x27;is/are/am&#x27;; to exist or become." data-def-vn="Dạng nguyên mẫu của &#x27;is/are/am&#x27;; tồn tại hoặc trở thành." data-context-en="Phones are useful tools, but we should be careful.">be</span> <span class="vocab" data-word-en="careful" data-word-vn="cẩn thận" data-pos="tính từ / adjective" data-def-en="Taking care to avoid mistakes or harm." data-def-vn="Chú ý để tránh sai sót hoặc tổn hại." data-context-en="Phones are useful tools, but we should be careful.">careful</span>. It is <span class="vocab" data-word-en="better" data-word-vn="tốt hơn" data-pos="tính từ / adjective" data-def-en="Of higher quality; comparative of &#x27;good&#x27;." data-def-vn="Có chất lượng cao hơn; dạng so sánh hơn của &#x27;good&#x27;." data-context-en="It is better when we choose how to use our phones instead of letting our phones choose how to use us.">better</span> when we <span class="vocab" data-word-en="choose" data-word-vn="chọn" data-pos="động từ / verb" data-def-en="To select from a number of options." data-def-vn="Lựa chọn trong số nhiều phương án." data-context-en="It is better when we choose how to use our phones instead of letting our phones choose how to use us.">choose</span> <span class="vocab" data-word-en="how" data-word-vn="làm thế nào" data-pos="trạng từ / adverb" data-def-en="In what way or manner." data-def-vn="Theo cách nào hoặc phương thức nào." data-context-en="It is better when we choose how to use our phones instead of letting our phones choose how to use us.">how</span> to <span class="vocab" data-word-en="use" data-word-vn="sử dụng" data-pos="động từ / verb" data-def-en="To employ something for a purpose." data-def-vn="Dùng điều gì đó cho một mục đích." data-context-en="It is better when we choose how to use our phones instead of letting our phones choose how to use us.">use</span> our phones <span class="vocab" data-word-en="instead" data-word-vn="thay vào đó" data-pos="trạng từ / adverb" data-def-en="As a substitute or alternative." data-def-vn="Như một sự thay thế hoặc lựa chọn khác." data-context-en="It is better when we choose how to use our phones instead of letting our phones choose how to use us.">instead</span> of <span class="vocab" data-word-en="letting" data-word-vn="để cho / cho phép" data-pos="động từ / verb (gerund)" data-def-en="Allowing something to happen." data-def-vn="Cho phép điều gì đó xảy ra." data-context-en="It is better when we choose how to use our phones instead of letting our phones choose how to use us.">letting</span> our phones choose how to use us.
+    </p>
+
+    <div class="back-btn-container">
+        <a href="index.html"><button class="back-btn">⬅ Back to Directory</button></a>
+    </div>
+
+    <h2 class="memory-heading">Test Your Memory — After each pass through the content, try to remember the meaning 
+	and where in the story each word appeared.  Click on each word to jump to it's first occurrence in the story.</h2>
+    <div class="memory-grid">
+        <div class="memory-word">Just</div>
+        <div class="memory-word">five</div>
+        <div class="memory-word">minutes</div>
+        <div class="memory-word">That</div>
+        <div class="memory-word">is</div>
+        <div class="memory-word">what</div>
+        <div class="memory-word">told</div>
+        <div class="memory-word">himself</div>
+        <div class="memory-word">when</div>
+        <div class="memory-word">he</div>
+        <div class="memory-word">opened</div>
+        <div class="memory-word">TikTok</div>
+        <div class="memory-word">after</div>
+        <div class="memory-word">dinner</div>
+        <div class="memory-word">wanted</div>
+        <div class="memory-word">to</div>
+        <div class="memory-word">relax</div>
+        <div class="memory-word">for</div>
+        <div class="memory-word">a</div>
+        <div class="memory-word">short</div>
+        <div class="memory-word">time</div>
+        <div class="memory-word">before</div>
+        <div class="memory-word">doing</div>
+        <div class="memory-word">his</div>
+        <div class="memory-word">homework</div>
+        <div class="memory-word">The</div>
+        <div class="memory-word">first</div>
+        <div class="memory-word">video</div>
+        <div class="memory-word">showed</div>
+        <div class="memory-word">funny</div>
+        <div class="memory-word">cat</div>
+        <div class="memory-word">next</div>
+        <div class="memory-word">one</div>
+        <div class="memory-word">was</div>
+        <div class="memory-word">about</div>
+        <div class="memory-word">an</div>
+        <div class="memory-word">amazing</div>
+        <div class="memory-word">football</div>
+        <div class="memory-word">goal</div>
+        <div class="memory-word">Then</div>
+        <div class="memory-word">came</div>
+        <div class="memory-word">cooking</div>
+        <div class="memory-word">magic</div>
+        <div class="memory-word">trick</div>
+        <div class="memory-word">and</div>
+        <div class="memory-word">man</div>
+        <div class="memory-word">climbing</div>
+        <div class="memory-word">mountain</div>
+        <div class="memory-word">Every</div>
+        <div class="memory-word">different</div>
+        <div class="memory-word">so</div>
+        <div class="memory-word">kept</div>
+        <div class="memory-word">watching</div>
+        <div class="memory-word">finally</div>
+        <div class="memory-word">looked</div>
+        <div class="memory-word">at</div>
+        <div class="memory-word">clock</div>
+        <div class="memory-word">more</div>
+        <div class="memory-word">than</div>
+        <div class="memory-word">hour</div>
+        <div class="memory-word">had</div>
+        <div class="memory-word">passed</div>
+        <div class="memory-word">Many</div>
+        <div class="memory-word">people</div>
+        <div class="memory-word">have</div>
+        <div class="memory-word">same</div>
+        <div class="memory-word">experience</div>
+        <div class="memory-word">Apps</div>
+        <div class="memory-word">like</div>
+        <div class="memory-word">YouTube</div>
+        <div class="memory-word">Shorts</div>
+        <div class="memory-word">are</div>
+        <div class="memory-word">made</div>
+        <div class="memory-word">keep</div>
+        <div class="memory-word">you</div>
+        <div class="memory-word">swipe</div>
+        <div class="memory-word">may</div>
+        <div class="memory-word">find</div>
+        <div class="memory-word">something</div>
+        <div class="memory-word">exciting</div>
+        <div class="memory-word">or</div>
+        <div class="memory-word">surprising</div>
+        <div class="memory-word">Because</div>
+        <div class="memory-word">never</div>
+        <div class="memory-word">know</div>
+        <div class="memory-word">will</div>
+        <div class="memory-word">come</div>
+        <div class="memory-word">want</div>
+        <div class="memory-word">looking</div>
+        <div class="memory-word">might</div>
+        <div class="memory-word">bring</div>
+        <div class="memory-word">best</div>
+        <div class="memory-word">yet</div>
+        <div class="memory-word">Scientists</div>
+        <div class="memory-word">say</div>
+        <div class="memory-word">this</div>
+        <div class="memory-word">happens</div>
+        <div class="memory-word">of</div>
+        <div class="memory-word">chemical</div>
+        <div class="memory-word">in</div>
+        <div class="memory-word">brain</div>
+        <div class="memory-word">called</div>
+        <div class="memory-word">dopamine</div>
+        <div class="memory-word">helps</div>
+        <div class="memory-word">us</div>
+        <div class="memory-word">feel</div>
+        <div class="memory-word">interested</div>
+        <div class="memory-word">excited</div>
+        <div class="memory-word">we</div>
+        <div class="memory-word">see</div>
+        <div class="memory-word">new</div>
+        <div class="memory-word">fun</div>
+        <div class="memory-word">releases</div>
+        <div class="memory-word">little</div>
+        <div class="memory-word">makes</div>
+        <div class="memory-word">videos</div>
+        <div class="memory-word">starts</div>
+        <div class="memory-word">expect</div>
+        <div class="memory-word">feeling</div>
+        <div class="memory-word">again</div>
+        <div class="memory-word">few</div>
+        <div class="memory-word">months</div>
+        <div class="memory-word">noticed</div>
+        <div class="memory-word">problem</div>
+        <div class="memory-word">Reading</div>
+        <div class="memory-word">book</div>
+        <div class="memory-word">seemed</div>
+        <div class="memory-word">boring</div>
+        <div class="memory-word">It</div>
+        <div class="memory-word">hard</div>
+        <div class="memory-word">study</div>
+        <div class="memory-word">fifteen</div>
+        <div class="memory-word">Even</div>
+        <div class="memory-word">normal</div>
+        <div class="memory-word">movie</div>
+        <div class="memory-word">felt</div>
+        <div class="memory-word">too</div>
+        <div class="memory-word">slow</div>
+        <div class="memory-word">picked</div>
+        <div class="memory-word">up</div>
+        <div class="memory-word">phone</div>
+        <div class="memory-word">whenever</div>
+        <div class="memory-word">free</div>
+        <div class="memory-word">minute</div>
+        <div class="memory-word">weekend</div>
+        <div class="memory-word">decided</div>
+        <div class="memory-word">take</div>
+        <div class="memory-word">break</div>
+        <div class="memory-word">from</div>
+        <div class="memory-word">deleted</div>
+        <div class="memory-word">app</div>
+        <div class="memory-word">month</div>
+        <div class="memory-word">week</div>
+        <div class="memory-word">not</div>
+        <div class="memory-word">easy</div>
+        <div class="memory-word">times</div>
+        <div class="memory-word">reached</div>
+        <div class="memory-word">without</div>
+        <div class="memory-word">thinking</div>
+        <div class="memory-word">Sometimes</div>
+        <div class="memory-word">forgot</div>
+        <div class="memory-word">gone</div>
+        <div class="memory-word">But</div>
+        <div class="memory-word">two</div>
+        <div class="memory-word">weeks</div>
+        <div class="memory-word">changed</div>
+        <div class="memory-word">could</div>
+        <div class="memory-word">read</div>
+        <div class="memory-word">longer</div>
+        <div class="memory-word">finished</div>
+        <div class="memory-word">quickly</div>
+        <div class="memory-word">also</div>
+        <div class="memory-word">enjoyed</div>
+        <div class="memory-word">talking</div>
+        <div class="memory-word">with</div>
+        <div class="memory-word">friends</div>
+        <div class="memory-word">always</div>
+        <div class="memory-word">bad</div>
+        <div class="memory-word">They</div>
+        <div class="memory-word">can</div>
+        <div class="memory-word">teach</div>
+        <div class="memory-word">things</div>
+        <div class="memory-word">make</div>
+        <div class="memory-word">laugh</div>
+        <div class="memory-word">help</div>
+        <div class="memory-word">begins</div>
+        <div class="memory-word">much</div>
+        <div class="memory-word">our</div>
+        <div class="memory-word">attention</div>
+        <div class="memory-word">Phones</div>
+        <div class="memory-word">useful</div>
+        <div class="memory-word">tools</div>
+        <div class="memory-word">should</div>
+        <div class="memory-word">be</div>
+        <div class="memory-word">careful</div>
+        <div class="memory-word">better</div>
+        <div class="memory-word">choose</div>
+        <div class="memory-word">how</div>
+        <div class="memory-word">use</div>
+        <div class="memory-word">instead</div>
+        <div class="memory-word">letting</div>
+    </div>
+</div>
+
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+      <div class="browser-note">
+🔊 Vietnamese audio: Chrome or Edge recommended.  
+</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">Trong văn bản:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<script>
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        document.querySelectorAll('.vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                const isEnInput = document.documentElement.lang === 'en';
+                document.getElementById('popup-definition').innerHTML = isEnInput
+                    ? el.dataset.defVn + hr + el.dataset.defEn
+                    : el.dataset.defEn + hr + el.dataset.defVn;
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextVn || el.dataset.wordVn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        document.querySelectorAll('.memory-word').forEach(item => {
+            item.addEventListener('click', () => {
+                const targetWord = item.innerText.trim().toLowerCase();
+                const match = Array.from(document.querySelectorAll('.vocab')).find(el => 
+                    el.dataset.wordEn.trim().toLowerCase() === targetWord
+                );
+
+                if (match) {
+                    match.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    match.classList.add('highlight-flash');
+                    setTimeout(() => match.classList.remove('highlight-flash'), 1500);
+                }
+            });
+        });
+    });
+</script>
+</body>
+</html>
