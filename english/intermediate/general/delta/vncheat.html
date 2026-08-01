@@ -1,0 +1,1623 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Viet Nam Cheating Epidemic</title>
+<style>
+
+        body {
+            background-color: #2b2b2b;
+            color: #1a0e00;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            transition: max-width 0.25s ease;
+        }
+        .page-container.practice-on {
+            max-width: 700px;
+        }
+        .story-and-bank {
+            display: block;
+        }
+        .page-container.practice-on .story-and-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .page-container.practice-on .story-main {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+            color: #1a0e00;
+        }
+        .read-hint {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #5c3a14;
+            font-style: italic;
+            margin: -10px 0 22px;
+            padding: 0 8px;
+        }
+        .page-container.practice-on .read-hint {
+            display: none;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: rgba(122, 78, 26, 0.05);
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn, .practice-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover, .practice-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .practice-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .practice-btn.primary {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border: 2px solid #7a4e1a !important;
+            font-weight: bold;
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            box-shadow: none;
+        }
+        .practice-btn.large {
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            font-weight: bold;
+        }
+        .practice-btn.primary:hover:not(:disabled) {
+            background: #e8d9b0 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+        }
+        .practice-btn.primary:disabled {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+            opacity: 0.5;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        .vocab.is-blank {
+            display: inline-block;
+            min-width: 5.2em;
+            height: 1.35em;
+            line-height: 1.35em;
+            vertical-align: baseline;
+            margin: 0 2px;
+            padding: 0 6px;
+            background-color: #fffdf6;
+            border: 2px solid #5c3a14;
+            border-radius: 3px;
+            color: transparent;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            box-sizing: border-box;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+        .vocab.is-blank::after {
+            content: none;
+        }
+        .vocab.is-blank.active-blank {
+            background-color: #fff8e0;
+            border-color: #2e1f0a;
+            box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.45);
+        }
+        .vocab.is-blank.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 4px #e6b800 !important;
+            border-color: #c9a000 !important;
+        }
+        .vocab.is-blank input.blank-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font: inherit;
+            color: #1a0e00;
+            outline: none;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: text;
+        }
+        .vocab.is-blank.wrong-shake {
+            animation: blankShake 0.3s;
+            border-color: #a33b2e !important;
+            box-shadow: 0 0 0 3px rgba(163, 59, 46, 0.35) !important;
+        }
+        @keyframes blankShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .vocab.filled {
+            border: none;
+            border-bottom: 2px solid #1a5c20;
+            background-color: rgba(26, 92, 32, 0.12);
+            color: #1a3c10;
+            font-weight: 600;
+            cursor: default;
+            padding: 0;
+            min-width: 0;
+            height: auto;
+        }
+        .vocab.filled:hover {
+            background-color: rgba(26, 92, 32, 0.18);
+        }
+        .vocab.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 5px #ffc107 !important;
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .practice-controls {
+            margin: 30px 0 20px;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            text-align: center;
+        }
+        .collect-status {
+            font-size: 1rem;
+            color: #3a1f00;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .collect-status span {
+            color: #7a4e1a;
+            font-size: 1.15rem;
+        }
+        .back-btn-container {
+            text-align: center;
+            margin: 28px 0 8px;
+            padding-top: 16px;
+            border-top: 1px dashed #a0845a;
+        }
+        .back-btn-container .back-btn {
+            font-size: 1rem;
+            padding: 10px 22px;
+        }
+        .practice-btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .word-bank-section {
+            display: none;
+            margin: 20px 0 10px;
+            padding: 14px;
+            background: rgba(122, 78, 26, 0.06);
+            border: 1px solid #a0845a;
+            border-radius: 6px;
+        }
+        .word-bank-section.visible {
+            display: block;
+        }
+        /* Horizontal word bank above the story when practice is active */
+        .page-container.practice-on .word-bank-section.visible {
+            display: block;
+            width: 100%;
+            margin: 0 0 4px;
+            position: sticky;
+            top: 0;
+            z-index: 20;
+            max-height: none;
+            overflow: visible;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            background: #f5ecd4;
+        }
+        .bank-grid {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .bank-word {
+            font-size: 0.92rem;
+            border: 1px solid #7a4e1a;
+            cursor: pointer;
+            padding: 7px 12px;
+            text-align: center;
+            background: #f8f0d8;
+            border-radius: 4px;
+            color: #2a1500;
+            transition: all 0.15s;
+            user-select: none;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+        .bank-word:hover {
+            background: #e8d8b0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .practice-progress {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .practice-complete {
+            display: none;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(26, 92, 32, 0.12);
+            border: 2px solid #1a5c20;
+            border-radius: 6px;
+            text-align: center;
+            color: #1a3c10;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .practice-complete.visible {
+            display: block;
+        }
+        .mode-banner {
+            display: none;
+            background: #7a4e1a;
+            color: #f0e6c8;
+            text-align: center;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .mode-banner.visible {
+            display: block;
+        }
+        .practice-instruction {
+            display: none;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #7a4e1a;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        .practice-instruction.visible {
+            display: block;
+        }
+       @media (max-width: 820px) {
+          .page-container.practice-on {
+              max-width: 700px;
+          }
+          .page-container.practice-on .word-bank-section.visible {
+              position: sticky;
+              top: 0;
+              max-height: none;
+          }
+       }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .bank-word {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ========== SPACED REPETITION (Section 3) ========== */
+#srs-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 4, 0.72);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+#srs-overlay.visible {
+    display: flex;
+}
+.srs-card {
+    background-color: #f0e6c8;
+    color: #1a0e00;
+    border: 3px solid #7a4e1a;
+    border-radius: 6px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 25px;
+    box-sizing: border-box;
+    position: relative;
+}
+.srs-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #7a4e1a;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+}
+.srs-close-btn:hover {
+    color: #3a1f00;
+}
+.srs-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.srs-header h3 {
+    margin: 0 0 6px;
+    color: #3a1f00;
+    font-size: 1.25rem;
+}
+.srs-progress-track {
+    background: rgba(122, 78, 26, 0.18);
+    border-radius: 8px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+.srs-progress-fill {
+    background: #1a5c20;
+    height: 100%;
+    width: 0%;
+    transition: width 0.25s ease;
+}
+.srs-progress-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    margin-top: 6px;
+}
+.srs-direction-label {
+    text-align: center;
+    font-size: 0.8rem;
+    color: #7a4e1a;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 6px;
+}
+.srs-prompt-word {
+    text-align: center;
+    font-size: 2rem;
+    font-weight: bold;
+    color: #3a1f00;
+    margin: 10px 0 18px;
+    word-break: break-word;
+}
+.srs-audio-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.srs-reveal-btn {
+    display: block;
+    width: 100%;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 12px;
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+.srs-reveal-btn:hover {
+    background: #422d12;
+    color: #ffe6b3;
+}
+.srs-answer {
+    display: none;
+    border-top: 1px dashed #7a4e1a;
+    padding-top: 16px;
+    margin-top: 4px;
+}
+.srs-answer.visible {
+    display: block;
+}
+.srs-answer-word {
+    text-align: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #1a5c20;
+    margin-bottom: 10px;
+}
+.srs-pos {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #7a4e1a;
+    margin-bottom: 8px;
+    text-align: center;
+}
+.srs-def {
+    font-size: 0.98rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+.srs-def-secondary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #7a4e1a;
+    font-style: italic;
+    margin-top: 4px;
+}
+.srs-context-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #3a1f00;
+}
+.srs-context {
+    font-size: 0.9rem;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 4px 0 18px;
+}
+.srs-rate-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 8px;
+}
+.srs-rate-btn {
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #fff;
+    text-align: center;
+    line-height: 1.3;
+}
+.srs-rate-btn small {
+    display: block;
+    font-weight: normal;
+    font-size: 0.72rem;
+    opacity: 0.9;
+    margin-top: 2px;
+}
+.srs-rate-again { background: #a33b2e; }
+.srs-rate-again:hover { background: #872f24; }
+.srs-rate-hard { background: #b5762b; }
+.srs-rate-hard:hover { background: #96611f; }
+.srs-rate-good { background: #1a5c20; }
+.srs-rate-good:hover { background: #144917; }
+.srs-rate-easy { background: #2d6ea3; }
+.srs-rate-easy:hover { background: #24597f; }
+.srs-done {
+    text-align: center;
+}
+.srs-done h3 {
+    color: #3a1f00;
+    margin-bottom: 10px;
+}
+.srs-done p {
+    text-align: center;
+    line-height: 1.5;
+}
+.srs-done-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.srs-type-area {
+    display: none;
+    margin: 12px 0 8px;
+}
+.srs-type-area.visible {
+    display: block;
+}
+.srs-type-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.15rem;
+    padding: 12px 14px;
+    border: 2px solid #7a4e1a;
+    border-radius: 4px;
+    background: #fffdf6;
+    color: #1a0e00;
+    text-align: center;
+    font-family: inherit;
+    outline: none;
+}
+.srs-type-input:focus {
+    border-color: #2e1f0a;
+    box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.35);
+}
+.srs-type-input.wrong {
+    border-color: #a33b2e;
+    animation: blankShake 0.3s;
+}
+.srs-type-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.srs-mode-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.srs-feedback {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #a33b2e;
+    min-height: 1.2em;
+    margin-top: 6px;
+}
+
+.srs-feedback.wrong-feedback {
+    color: #a33b2e;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+.srs-feedback.success {
+    color: #1a5c20;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+@media (max-width: 480px) {
+    .srs-rate-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    .srs-prompt-word {
+        font-size: 1.6rem;
+    }
+}
+
+</style>
+</head>
+<body>
+<div class="page-container">
+<h1><span class="vocab" data-word-en="Viet Nam" data-word-vn="Việt Nam" data-pos="proper noun / danh từ riêng" data-def-en="A country in Southeast Asia." data-def-vn="Quốc gia ở Đông Nam Á." data-context-en="Viet Nam Cheating Epidemic" data-context-vn="Viet Nam Cheating Epidemic">Viet Nam</span> <span class="vocab" data-word-en="Cheating" data-word-vn="gian lận" data-pos="noun / danh từ" data-def-en="Acting dishonestly to gain an advantage." data-def-vn="Hành vi không trung thực để được lợi." data-context-en="Viet Nam Cheating Epidemic" data-context-vn="Viet Nam Cheating Epidemic">Cheating</span> <span class="vocab" data-word-en="Epidemic" data-word-vn="dịch / nạn" data-pos="noun / danh từ" data-def-en="A widespread problem affecting many people." data-def-vn="Vấn đề lan rộng ảnh hưởng nhiều người." data-context-en="Viet Nam Cheating Epidemic" data-context-vn="Viet Nam Cheating Epidemic">Epidemic</span></h1>
+<div class="mode-banner" id="mode-banner">Hover/click (desktop) or tap (phone) a blank, then choose the matching word from Word Bank</div>
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen (if audio file available)</div>
+        <audio id="audio-player" src="" controls></audio>
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration||0,a.currentTime+20);">⇢ 20 sec</button>
+        </div>
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+    <div class="read-hint" id="read-hint">Click/tap any word with dotted underline to see definition.</div>
+    <div class="story-and-bank">
+        <div class="word-bank-section" id="word-bank-section">
+            <div class="audio-label">Word Bank</div>
+            <div class="bank-grid" id="bank-words"></div>
+        </div>
+    <div class="story-main">
+    <div id="story-content">
+<p>
+<span class="vocab" data-word-en="The" data-word-vn="" data-pos="article / mạo từ" data-def-en="Used before a specific noun." data-def-vn="Dùng trước danh từ cụ thể." data-context-en="The 2026 high school graduation exam" data-context-vn="The 2026 high school graduation exam">The</span> <span class="vocab" data-word-en="2026" data-word-vn="năm 2026" data-pos="numeral / số từ" data-def-en="The year two thousand twenty-six." data-def-vn="Năm hai nghìn không trăm hai mươi sáu." data-context-en="The 2026 high school graduation exam" data-context-vn="The 2026 high school graduation exam">2026</span> <span class="vocab" data-word-en="high school" data-word-vn="trung học phổ thông" data-pos="noun / danh từ" data-def-en="Secondary school before university." data-def-vn="Cấp học trước đại học." data-context-en="High school graduation exam" data-context-vn="High school graduation exam">high school</span> <span class="vocab" data-word-en="graduation" data-word-vn="tốt nghiệp" data-pos="noun / danh từ" data-def-en="Successfully completing a course of study." data-def-vn="Hoàn thành khóa học thành công." data-context-en="Graduation exam" data-context-vn="Graduation exam">graduation</span> <span class="vocab" data-word-en="exam" data-word-vn="kỳ thi" data-pos="noun / danh từ" data-def-en="A formal test of knowledge or ability." data-def-vn="Bài kiểm tra chính thức về kiến thức." data-context-en="Graduation exam in Tuyên Quang" data-context-vn="Graduation exam in Tuyên Quang">exam</span> <span class="vocab" data-word-en="in" data-word-vn="ở" data-pos="preposition / giới từ" data-def-en="Located within a place." data-def-vn="Nằm trong một nơi." data-context-en="Exam in Tuyên Quang Province" data-context-vn="Exam in Tuyên Quang Province">in</span> <span class="vocab" data-word-en="Tuyên Quang" data-word-vn="Tuyên Quang" data-pos="proper noun / danh từ riêng" data-def-en="A province in northern Vietnam." data-def-vn="Một tỉnh ở miền Bắc Việt Nam." data-context-en="Tuyên Quang Province" data-context-vn="Tuyên Quang Province">Tuyên Quang</span> <span class="vocab" data-word-en="Province" data-word-vn="tỉnh" data-pos="noun / danh từ" data-def-en="An administrative region of a country." data-def-vn="Đơn vị hành chính của quốc gia." data-context-en="Tuyên Quang Province" data-context-vn="Tuyên Quang Province">Province</span> <span class="vocab" data-word-en="created" data-word-vn="gây ra" data-pos="verb / động từ" data-def-en="Brought into existence; caused." data-def-vn="Làm phát sinh; gây ra." data-context-en="Created a public outcry" data-context-vn="Created a public outcry">created</span> a <span class="vocab" data-word-en="public" data-word-vn="công chúng" data-pos="adjective / tính từ" data-def-en="Relating to people in general." data-def-vn="Liên quan đến mọi người." data-context-en="Public outcry" data-context-vn="Public outcry">public</span> <span class="vocab" data-word-en="outcry" data-word-vn="sự phản đối mạnh" data-pos="noun / danh từ" data-def-en="A strong expression of public anger or protest." data-def-vn="Biểu hiện giận dữ hoặc phản đối mạnh của công chúng." data-context-en="Public outcry due to an unusual number" data-context-vn="Public outcry due to an unusual number">outcry</span> <span class="vocab" data-word-en="due to" data-word-vn="do" data-pos="preposition / giới từ" data-def-en="Because of." data-def-vn="Vì; bởi vì." data-context-en="Due to an unusual number of perfect scores" data-context-vn="Due to an unusual number of perfect scores">due to</span> an <span class="vocab" data-word-en="unusual" data-word-vn="bất thường" data-pos="adjective / tính từ" data-def-en="Not common or ordinary." data-def-vn="Không phổ biến hoặc bình thường." data-context-en="Unusual number of perfect scores" data-context-vn="Unusual number of perfect scores">unusual</span> <span class="vocab" data-word-en="number" data-word-vn="số lượng" data-pos="noun / danh từ" data-def-en="An amount or quantity." data-def-vn="Một lượng hoặc số lượng." data-context-en="Number of perfect scores" data-context-vn="Number of perfect scores">number</span> of <span class="vocab" data-word-en="perfect" data-word-vn="hoàn hảo" data-pos="adjective / tính từ" data-def-en="Without any mistakes; maximum." data-def-vn="Không có lỗi; tối đa." data-context-en="Perfect scores" data-context-vn="Perfect scores">perfect</span> <span class="vocab" data-word-en="scores" data-word-vn="điểm số" data-pos="noun / danh từ" data-def-en="Marks given in a test." data-def-vn="Điểm được cho trong bài thi." data-context-en="Perfect scores" data-context-vn="Perfect scores">scores</span>. At one <span class="vocab" data-word-en="exam site" data-word-vn="điểm thi" data-pos="noun / danh từ" data-def-en="A location where an exam is held." data-def-vn="Nơi tổ chức kỳ thi." data-context-en="At one exam site" data-context-vn="At one exam site">exam site</span>, <span class="vocab" data-word-en="154" data-word-vn="một trăm năm mươi tư" data-pos="numeral / số từ" data-def-en="The number one hundred fifty-four." data-def-vn="Con số 154." data-context-en="154 students received a score of 10" data-context-vn="154 students received a score of 10">154</span> <span class="vocab" data-word-en="students" data-word-vn="học sinh" data-pos="noun / danh từ" data-def-en="People who are studying at a school." data-def-vn="Người đang học tại trường." data-context-en="154 students received a score" data-context-vn="154 students received a score">students</span> <span class="vocab" data-word-en="received" data-word-vn="nhận được" data-pos="verb / động từ" data-def-en="Got or were given something." data-def-vn="Được cho hoặc nhận." data-context-en="Received a score of 10" data-context-vn="Received a score of 10">received</span> a <span class="vocab" data-word-en="score" data-word-vn="điểm" data-pos="noun / danh từ" data-def-en="A mark showing performance on a test." data-def-vn="Điểm thể hiện kết quả bài thi." data-context-en="A score of 10 in Mathematics" data-context-vn="A score of 10 in Mathematics">score</span> of 10 in <span class="vocab" data-word-en="Mathematics" data-word-vn="Toán học" data-pos="noun / danh từ" data-def-en="The study of numbers, quantities, and shapes." data-def-vn="Môn học về số, lượng và hình." data-context-en="Score of 10 in Mathematics" data-context-vn="Score of 10 in Mathematics">Mathematics</span>, with <span class="vocab" data-word-en="147" data-word-vn="một trăm bốn mươi bảy" data-pos="numeral / số từ" data-def-en="The number one hundred forty-seven." data-def-vn="Con số 147." data-context-en="147 of them coming from" data-context-vn="147 of them coming from">147</span> of <span class="vocab" data-word-en="them" data-word-vn="họ" data-pos="pronoun / đại từ" data-def-en="Referring to the students just mentioned." data-def-vn="Chỉ các học sinh vừa nêu." data-context-en="147 of them coming from" data-context-vn="147 of them coming from">them</span> <span class="vocab" data-word-en="coming from" data-word-vn="đến từ" data-pos="phrasal verb / cụm động từ" data-def-en="Originating at a place." data-def-vn="Xuất thân từ một nơi." data-context-en="Coming from Tuyên Quang Gifted High School" data-context-vn="Coming from Tuyên Quang Gifted High School">coming from</span> <span class="vocab" data-word-en="Tuyên Quang Gifted High School" data-word-vn="Trường THPT Chuyên Tuyên Quang" data-pos="proper noun / danh từ riêng" data-def-en="A selective high school for high-achieving students in Tuyên Quang." data-def-vn="Trường chuyên dành cho học sinh xuất sắc ở Tuyên Quang." data-context-en="Tuyên Quang Gifted High School" data-context-vn="Tuyên Quang Gifted High School">Tuyên Quang Gifted High School</span>. <span class="vocab" data-word-en="Soon after" data-word-vn="không lâu sau" data-pos="adverb / phó từ" data-def-en="A short time later." data-def-vn="Một thời gian ngắn sau đó." data-context-en="Soon after, the police investigated" data-context-vn="Soon after, the police investigated">Soon after</span>, the <span class="vocab" data-word-en="police" data-word-vn="cảnh sát" data-pos="noun / danh từ" data-def-en="The official organization that enforces the law." data-def-vn="Cơ quan thực thi pháp luật." data-context-en="The police investigated the case" data-context-vn="The police investigated the case">police</span> <span class="vocab" data-word-en="investigated" data-word-vn="điều tra" data-pos="verb / động từ" data-def-en="Examined carefully to discover facts." data-def-vn="Xem xét kỹ để tìm ra sự thật." data-context-en="Investigated the case" data-context-vn="Investigated the case">investigated</span> the <span class="vocab" data-word-en="case" data-word-vn="vụ việc" data-pos="noun / danh từ" data-def-en="A particular situation under official examination." data-def-vn="Tình huống đang được cơ quan xem xét." data-context-en="Investigated the case and arrested" data-context-vn="Investigated the case and arrested">case</span> and <span class="vocab" data-word-en="arrested" data-word-vn="bắt giữ" data-pos="verb / động từ" data-def-en="Took someone into police custody." data-def-vn="Đưa người vào tạm giữ của cảnh sát." data-context-en="Arrested a teacher" data-context-vn="Arrested a teacher">arrested</span> a <span class="vocab" data-word-en="teacher" data-word-vn="giáo viên" data-pos="noun / danh từ" data-def-en="A person who teaches in a school." data-def-vn="Người dạy học ở trường." data-context-en="Arrested a teacher named" data-context-vn="Arrested a teacher named">teacher</span> named Nguyễn Hà Duy <span class="vocab" data-word-en="along with" data-word-vn="cùng với" data-pos="preposition / giới từ" data-def-en="Together with; in company with." data-def-vn="Cùng với." data-context-en="Along with the exam site head" data-context-vn="Along with the exam site head">along with</span> the <span class="vocab" data-word-en="exam site head" data-word-vn="trưởng điểm thi" data-pos="noun / danh từ" data-def-en="The official in charge of an exam location." data-def-vn="Người phụ trách một điểm thi." data-context-en="The exam site head" data-context-vn="The exam site head">exam site head</span>, Trần Thị Thu Hằng. <span class="vocab" data-word-en="Officials" data-word-vn="cơ quan chức năng" data-pos="noun / danh từ" data-def-en="People in positions of authority in government." data-def-vn="Người có thẩm quyền trong chính quyền." data-context-en="Officials discovered that" data-context-vn="Officials discovered that">Officials</span> <span class="vocab" data-word-en="discovered" data-word-vn="phát hiện" data-pos="verb / động từ" data-def-en="Found out something previously unknown." data-def-vn="Tìm ra điều trước đó chưa biết." data-context-en="Discovered that supervisors gave answers" data-context-vn="Discovered that supervisors gave answers">discovered</span> that <span class="vocab" data-word-en="supervisors" data-word-vn="giám thị" data-pos="noun / danh từ" data-def-en="People who oversee an exam to prevent cheating." data-def-vn="Người trông thi để ngăn gian lận." data-context-en="Supervisors directly gave answers" data-context-vn="Supervisors directly gave answers">supervisors</span> <span class="vocab" data-word-en="directly" data-word-vn="trực tiếp" data-pos="adverb / phó từ" data-def-en="Without anyone or anything in between." data-def-vn="Không qua trung gian." data-context-en="Directly gave answers to students" data-context-vn="Directly gave answers to students">directly</span> <span class="vocab" data-word-en="gave" data-word-vn="đưa" data-pos="verb / động từ" data-def-en="Provided or handed over." data-def-vn="Cung cấp hoặc trao." data-context-en="Gave answers to students" data-context-vn="Gave answers to students">gave</span> <span class="vocab" data-word-en="answers" data-word-vn="đáp án" data-pos="noun / danh từ" data-def-en="Correct responses to test questions." data-def-vn="Câu trả lời đúng cho câu hỏi thi." data-context-en="Gave answers to students during the exam" data-context-vn="Gave answers to students during the exam">answers</span> to students <span class="vocab" data-word-en="during" data-word-vn="trong lúc" data-pos="preposition / giới từ" data-def-en="Throughout the time of an event." data-def-vn="Trong suốt thời gian của sự kiện." data-context-en="During the exam" data-context-vn="During the exam">during</span> the exam.
+</p>
+<p>
+<span class="vocab" data-word-en="This" data-word-vn="này" data-pos="determiner / từ hạn định" data-def-en="Referring to the incident just described." data-def-vn="Chỉ sự việc vừa nêu." data-context-en="This incident is similar to" data-context-vn="This incident is similar to">This</span> <span class="vocab" data-word-en="incident" data-word-vn="sự việc" data-pos="noun / danh từ" data-def-en="An event, especially one that is noteworthy." data-def-vn="Một sự kiện đáng chú ý." data-context-en="This incident is similar" data-context-vn="This incident is similar">incident</span> is <span class="vocab" data-word-en="similar to" data-word-vn="tương tự như" data-pos="adjective / tính từ" data-def-en="Having a likeness or resemblance to." data-def-vn="Có sự giống nhau với." data-context-en="Similar to the famous 2018 exam scandal" data-context-vn="Similar to the famous 2018 exam scandal">similar to</span> the <span class="vocab" data-word-en="famous" data-word-vn="nổi tiếng" data-pos="adjective / tính từ" data-def-en="Known by many people." data-def-vn="Được nhiều người biết đến." data-context-en="The famous 2018 exam scandal" data-context-vn="The famous 2018 exam scandal">famous</span> <span class="vocab" data-word-en="2018" data-word-vn="năm 2018" data-pos="numeral / số từ" data-def-en="The year two thousand eighteen." data-def-vn="Năm hai nghìn không trăm mười tám." data-context-en="The 2018 exam scandal" data-context-vn="The 2018 exam scandal">2018</span> exam <span class="vocab" data-word-en="scandal" data-word-vn="bê bối" data-pos="noun / danh từ" data-def-en="An action that shocks the public and damages reputation." data-def-vn="Hành vi gây sốc dư luận và làm hại uy tín." data-context-en="Exam scandal in Hà Giang" data-context-vn="Exam scandal in Hà Giang">scandal</span> in <span class="vocab" data-word-en="Hà Giang" data-word-vn="Hà Giang" data-pos="proper noun / danh từ riêng" data-def-en="A province in northern Vietnam." data-def-vn="Một tỉnh ở miền Bắc Việt Nam." data-context-en="Scandal in Hà Giang, Sơn La, and Hòa Bình" data-context-vn="Scandal in Hà Giang, Sơn La, and Hòa Bình">Hà Giang</span>, <span class="vocab" data-word-en="Sơn La" data-word-vn="Sơn La" data-pos="proper noun / danh từ riêng" data-def-en="A province in northwestern Vietnam." data-def-vn="Một tỉnh ở Tây Bắc Việt Nam." data-context-en="Hà Giang, Sơn La, and Hòa Bình" data-context-vn="Hà Giang, Sơn La, and Hòa Bình">Sơn La</span>, and <span class="vocab" data-word-en="Hòa Bình" data-word-vn="Hòa Bình" data-pos="proper noun / danh từ riêng" data-def-en="A province in northern Vietnam." data-def-vn="Một tỉnh ở miền Bắc Việt Nam." data-context-en="Hà Giang, Sơn La, and Hòa Bình" data-context-vn="Hà Giang, Sơn La, and Hòa Bình">Hòa Bình</span>. <span class="vocab" data-word-en="Back then" data-word-vn="hồi đó" data-pos="adverb / phó từ" data-def-en="At that earlier time." data-def-vn="Vào thời điểm trước đó." data-context-en="Back then, corrupt officials illegally changed" data-context-vn="Back then, corrupt officials illegally changed">Back then</span>, <span class="vocab" data-word-en="corrupt" data-word-vn="tham nhũng" data-pos="adjective / tính từ" data-def-en="Willing to act dishonestly for personal gain." data-def-vn="Sẵn sàng làm điều không trung thực vì lợi ích cá nhân." data-context-en="Corrupt officials illegally changed test scores" data-context-vn="Corrupt officials illegally changed test scores">corrupt</span> officials <span class="vocab" data-word-en="illegally" data-word-vn="bất hợp pháp" data-pos="adverb / phó từ" data-def-en="In a way that breaks the law." data-def-vn="Theo cách vi phạm pháp luật." data-context-en="Illegally changed test scores" data-context-vn="Illegally changed test scores">illegally</span> <span class="vocab" data-word-en="changed" data-word-vn="thay đổi" data-pos="verb / động từ" data-def-en="Made different; altered." data-def-vn="Làm khác đi; sửa đổi." data-context-en="Changed test scores on computers" data-context-vn="Changed test scores on computers">changed</span> <span class="vocab" data-word-en="test scores" data-word-vn="điểm thi" data-pos="noun / danh từ" data-def-en="Marks obtained on an examination." data-def-vn="Điểm đạt được trong kỳ thi." data-context-en="Changed test scores on computers" data-context-vn="Changed test scores on computers">test scores</span> on <span class="vocab" data-word-en="computers" data-word-vn="máy tính" data-pos="noun / danh từ" data-def-en="Electronic devices for processing data." data-def-vn="Thiết bị điện tử xử lý dữ liệu." data-context-en="Scores on computers for hundreds of students" data-context-vn="Scores on computers for hundreds of students">computers</span> for <span class="vocab" data-word-en="hundreds" data-word-vn="hàng trăm" data-pos="noun / danh từ" data-def-en="A large number, many groups of one hundred." data-def-vn="Số lượng lớn, nhiều nhóm một trăm." data-context-en="Hundreds of students" data-context-vn="Hundreds of students">hundreds</span> of students, <span class="vocab" data-word-en="leading to" data-word-vn="dẫn đến" data-pos="phrasal verb / cụm động từ" data-def-en="Resulting in." data-def-vn="Kết quả là." data-context-en="Leading to long prison sentences" data-context-vn="Leading to long prison sentences">leading to</span> <span class="vocab" data-word-en="long" data-word-vn="dài / lâu" data-pos="adjective / tính từ" data-def-en="Lasting a great amount of time." data-def-vn="Kéo dài nhiều thời gian." data-context-en="Long prison sentences" data-context-vn="Long prison sentences">long</span> <span class="vocab" data-word-en="prison sentences" data-word-vn="án tù" data-pos="noun / danh từ" data-def-en="Periods of time that must be spent in prison." data-def-vn="Thời gian phải ở tù." data-context-en="Long prison sentences for those involved" data-context-vn="Long prison sentences for those involved">prison sentences</span> for those <span class="vocab" data-word-en="involved" data-word-vn="liên quan" data-pos="adjective / tính từ" data-def-en="Connected with or taking part in something." data-def-vn="Có liên hệ hoặc tham gia." data-context-en="Those involved" data-context-vn="Those involved">involved</span>. <span class="vocab" data-word-en="While" data-word-vn="trong khi" data-pos="conjunction / liên từ" data-def-en="Although; whereas." data-def-vn="Mặc dù; trong khi đó." data-context-en="While the 2018 scandal relied on" data-context-vn="While the 2018 scandal relied on">While</span> the 2018 scandal <span class="vocab" data-word-en="relied on" data-word-vn="dựa vào" data-pos="phrasal verb / cụm động từ" data-def-en="Depended on for support or success." data-def-vn="Phụ thuộc vào." data-context-en="Relied on high-tech software manipulation" data-context-vn="Relied on high-tech software manipulation">relied on</span> <span class="vocab" data-word-en="high-tech" data-word-vn="công nghệ cao" data-pos="adjective / tính từ" data-def-en="Using advanced technology." data-def-vn="Sử dụng công nghệ tiên tiến." data-context-en="High-tech software manipulation" data-context-vn="High-tech software manipulation">high-tech</span> <span class="vocab" data-word-en="software" data-word-vn="phần mềm" data-pos="noun / danh từ" data-def-en="Programs used by a computer." data-def-vn="Chương trình máy tính sử dụng." data-context-en="Software manipulation" data-context-vn="Software manipulation">software</span> <span class="vocab" data-word-en="manipulation" data-word-vn="thao túng" data-pos="noun / danh từ" data-def-en="Controlling or changing something unfairly." data-def-vn="Kiểm soát hoặc thay đổi không công bằng." data-context-en="Software manipulation" data-context-vn="Software manipulation">manipulation</span>, the 2026 case involved <span class="vocab" data-word-en="direct" data-word-vn="trực tiếp" data-pos="adjective / tính từ" data-def-en="Happening without an intermediary." data-def-vn="Xảy ra không qua trung gian." data-context-en="Direct cheating" data-context-vn="Direct cheating">direct</span> <span class="vocab" data-word-en="cheating" data-word-vn="gian lận" data-pos="noun / danh từ" data-def-en="Acting dishonestly to gain an unfair advantage." data-def-vn="Hành vi không trung thực để được lợi thế không công bằng." data-context-en="Direct cheating inside the classroom" data-context-vn="Direct cheating inside the classroom">cheating</span> <span class="vocab" data-word-en="inside" data-word-vn="bên trong" data-pos="preposition / giới từ" data-def-en="Within the interior of." data-def-vn="Trong phần bên trong của." data-context-en="Inside the classroom" data-context-vn="Inside the classroom">inside</span> the <span class="vocab" data-word-en="classroom" data-word-vn="lớp học" data-pos="noun / danh từ" data-def-en="A room where students are taught." data-def-vn="Phòng nơi học sinh được dạy." data-context-en="Inside the classroom" data-context-vn="Inside the classroom">classroom</span>. <span class="vocab" data-word-en="Both" data-word-vn="cả hai" data-pos="determiner / từ hạn định" data-def-en="The two together." data-def-vn="Hai cái cùng nhau." data-context-en="Both cases show that" data-context-vn="Both cases show that">Both</span> cases <span class="vocab" data-word-en="show" data-word-vn="cho thấy" data-pos="verb / động từ" data-def-en="Make clear; demonstrate." data-def-vn="Làm rõ; chứng minh." data-context-en="Show that heavy pressure for high achievements" data-context-vn="Show that heavy pressure for high achievements">show</span> that <span class="vocab" data-word-en="heavy" data-word-vn="nặng nề" data-pos="adjective / tính từ" data-def-en="Intense or severe." data-def-vn="Mạnh hoặc nghiêm trọng." data-context-en="Heavy pressure for high achievements" data-context-vn="Heavy pressure for high achievements">heavy</span> <span class="vocab" data-word-en="pressure" data-word-vn="áp lực" data-pos="noun / danh từ" data-def-en="Strong influence or stress to achieve something." data-def-vn="Sức ép mạnh để đạt được điều gì." data-context-en="Pressure for high achievements" data-context-vn="Pressure for high achievements">pressure</span> for <span class="vocab" data-word-en="high achievements" data-word-vn="thành tích cao" data-pos="noun / danh từ" data-def-en="Very successful results." data-def-vn="Kết quả rất thành công." data-context-en="High achievements and weak supervision" data-context-vn="High achievements and weak supervision">high achievements</span> and <span class="vocab" data-word-en="weak" data-word-vn="yếu" data-pos="adjective / tính từ" data-def-en="Not strong or effective." data-def-vn="Không mạnh hoặc hiệu quả." data-context-en="Weak supervision" data-context-vn="Weak supervision">weak</span> <span class="vocab" data-word-en="supervision" data-word-vn="giám sát" data-pos="noun / danh từ" data-def-en="The act of watching and directing to ensure proper behavior." data-def-vn="Việc theo dõi và chỉ đạo để đảm bảo hành vi đúng." data-context-en="Weak supervision still harm" data-context-vn="Weak supervision still harm">supervision</span> <span class="vocab" data-word-en="still" data-word-vn="vẫn" data-pos="adverb / phó từ" data-def-en="Continuing to happen or be true." data-def-vn="Vẫn còn xảy ra hoặc đúng." data-context-en="Still harm the education system" data-context-vn="Still harm the education system">still</span> <span class="vocab" data-word-en="harm" data-word-vn="gây hại" data-pos="verb / động từ" data-def-en="Cause damage or injury to." data-def-vn="Gây thiệt hại hoặc tổn thương." data-context-en="Harm the education system" data-context-vn="Harm the education system">harm</span> the <span class="vocab" data-word-en="education system" data-word-vn="hệ thống giáo dục" data-pos="noun / danh từ" data-def-en="The organized structure of schools and learning in a country." data-def-vn="Cơ cấu tổ chức trường học và việc học của một quốc gia." data-context-en="The education system" data-context-vn="The education system">education system</span>.
+</p>
+<p>
+<span class="vocab" data-word-en="From" data-word-vn="từ" data-pos="preposition / giới từ" data-def-en="Indicating the starting point of a perspective." data-def-vn="Chỉ điểm xuất phát của một góc nhìn." data-context-en="From a legal perspective" data-context-vn="From a legal perspective">From</span> a <span class="vocab" data-word-en="legal" data-word-vn="pháp lý" data-pos="adjective / tính từ" data-def-en="Relating to the law." data-def-vn="Liên quan đến pháp luật." data-context-en="Legal perspective" data-context-vn="Legal perspective">legal</span> <span class="vocab" data-word-en="perspective" data-word-vn="góc nhìn" data-pos="noun / danh từ" data-def-en="A particular way of regarding something." data-def-vn="Cách nhìn nhận cụ thể về điều gì." data-context-en="From a legal perspective" data-context-vn="From a legal perspective">perspective</span>, exam cheating is not <span class="vocab" data-word-en="just" data-word-vn="chỉ" data-pos="adverb / phó từ" data-def-en="Only; merely." data-def-vn="Chỉ; đơn thuần." data-context-en="Not just a rule violation" data-context-vn="Not just a rule violation">just</span> a <span class="vocab" data-word-en="rule violation" data-word-vn="vi phạm quy chế" data-pos="noun / danh từ" data-def-en="Breaking an official regulation." data-def-vn="Vi phạm quy định chính thức." data-context-en="A rule violation" data-context-vn="A rule violation">rule violation</span>; it is a <span class="vocab" data-word-en="serious" data-word-vn="nghiêm trọng" data-pos="adjective / tính từ" data-def-en="Important and needing careful attention." data-def-vn="Quan trọng và cần chú ý kỹ." data-context-en="A serious form of corruption" data-context-vn="A serious form of corruption">serious</span> <span class="vocab" data-word-en="form" data-word-vn="hình thức" data-pos="noun / danh từ" data-def-en="A type or variety of something." data-def-vn="Một loại hoặc biến thể." data-context-en="Form of corruption" data-context-vn="Form of corruption">form</span> of <span class="vocab" data-word-en="corruption" data-word-vn="tham nhũng" data-pos="noun / danh từ" data-def-en="Dishonest or fraudulent conduct by those in power." data-def-vn="Hành vi không trung thực của người có quyền lực." data-context-en="Form of corruption that breaches" data-context-vn="Form of corruption that breaches">corruption</span> that <span class="vocab" data-word-en="breaches" data-word-vn="vi phạm" data-pos="verb / động từ" data-def-en="Breaks or fails to observe a law or right." data-def-vn="Phá vỡ hoặc không tuân thủ luật hoặc quyền." data-context-en="Breaches the constitutional right" data-context-vn="Breaches the constitutional right">breaches</span> the <span class="vocab" data-word-en="constitutional" data-word-vn="hiến định" data-pos="adjective / tính từ" data-def-en="Relating to a constitution." data-def-vn="Liên quan đến hiến pháp." data-context-en="Constitutional right to equal education" data-context-vn="Constitutional right to equal education">constitutional</span> <span class="vocab" data-word-en="right" data-word-vn="quyền" data-pos="noun / danh từ" data-def-en="A legal or moral entitlement." data-def-vn="Quyền lợi pháp lý hoặc đạo đức." data-context-en="Right to equal education" data-context-vn="Right to equal education">right</span> to <span class="vocab" data-word-en="equal" data-word-vn="bình đẳng" data-pos="adjective / tính từ" data-def-en="The same in status or opportunity." data-def-vn="Như nhau về địa vị hoặc cơ hội." data-context-en="Equal education" data-context-vn="Equal education">equal</span> <span class="vocab" data-word-en="education" data-word-vn="giáo dục" data-pos="noun / danh từ" data-def-en="The process of teaching and learning." data-def-vn="Quá trình dạy và học." data-context-en="Equal education" data-context-vn="Equal education">education</span>. <span class="vocab" data-word-en="Under" data-word-vn="theo" data-pos="preposition / giới từ" data-def-en="According to; governed by." data-def-vn="Theo; bị chi phối bởi." data-context-en="Under Article 356 of the Criminal Code" data-context-vn="Under Article 356 of the Criminal Code">Under</span> <span class="vocab" data-word-en="Article" data-word-vn="Điều" data-pos="noun / danh từ" data-def-en="A numbered section of a legal document." data-def-vn="Phần được đánh số trong văn bản pháp lý." data-context-en="Article 356 of the Criminal Code" data-context-vn="Article 356 of the Criminal Code">Article</span> <span class="vocab" data-word-en="356" data-word-vn="356" data-pos="numeral / số từ" data-def-en="The number three hundred fifty-six." data-def-vn="Con số 356." data-context-en="Article 356" data-context-vn="Article 356">356</span> of the <span class="vocab" data-word-en="Criminal Code" data-word-vn="Bộ luật Hình sự" data-pos="noun / danh từ" data-def-en="The body of law defining crimes and punishments." data-def-vn="Tập hợp luật định tội và hình phạt." data-context-en="The Criminal Code" data-context-vn="The Criminal Code">Criminal Code</span>, <span class="vocab" data-word-en="abusing" data-word-vn="lạm dụng" data-pos="verb / động từ" data-def-en="Using power in a wrong or harmful way." data-def-vn="Dùng quyền lực sai hoặc có hại." data-context-en="Abusing power while performing official duties" data-context-vn="Abusing power while performing official duties">abusing</span> <span class="vocab" data-word-en="power" data-word-vn="quyền lực" data-pos="noun / danh từ" data-def-en="Authority or influence over others." data-def-vn="Thẩm quyền hoặc ảnh hưởng đối với người khác." data-context-en="Abusing power" data-context-vn="Abusing power">power</span> while <span class="vocab" data-word-en="performing" data-word-vn="thực hiện" data-pos="verb / động từ" data-def-en="Carrying out a task or duty." data-def-vn="Tiến hành nhiệm vụ." data-context-en="Performing official duties" data-context-vn="Performing official duties">performing</span> <span class="vocab" data-word-en="official duties" data-word-vn="công vụ" data-pos="noun / danh từ" data-def-en="Tasks required by a public position." data-def-vn="Nhiệm vụ của chức vụ công." data-context-en="Official duties" data-context-vn="Official duties">official duties</span> can <span class="vocab" data-word-en="lead to" data-word-vn="dẫn đến" data-pos="phrasal verb / cụm động từ" data-def-en="Result in." data-def-vn="Kết quả là." data-context-en="Can lead to up to 15 years in prison" data-context-vn="Can lead to up to 15 years in prison">lead to</span> <span class="vocab" data-word-en="up to" data-word-vn="tối đa" data-pos="preposition / giới từ" data-def-en="As much as; a maximum of." data-def-vn="Nhiều nhất là." data-context-en="Up to 15 years in prison" data-context-vn="Up to 15 years in prison">up to</span> <span class="vocab" data-word-en="15" data-word-vn="mười lăm" data-pos="numeral / số từ" data-def-en="The number fifteen." data-def-vn="Con số 15." data-context-en="15 years in prison" data-context-vn="15 years in prison">15</span> <span class="vocab" data-word-en="years" data-word-vn="năm" data-pos="noun / danh từ" data-def-en="Periods of twelve months." data-def-vn="Khoảng mười hai tháng." data-context-en="Years in prison" data-context-vn="Years in prison">years</span> in <span class="vocab" data-word-en="prison" data-word-vn="tù" data-pos="noun / danh từ" data-def-en="A place where people are held as punishment." data-def-vn="Nơi giam giữ người như hình phạt." data-context-en="Years in prison" data-context-vn="Years in prison">prison</span>. <span class="vocab" data-word-en="However" data-word-vn="tuy nhiên" data-pos="conjunction / liên từ" data-def-en="Introduces a contrasting point." data-def-vn="Đưa ra điểm tương phản." data-context-en="However, current laws still have gaps" data-context-vn="However, current laws still have gaps">However</span>, <span class="vocab" data-word-en="current" data-word-vn="hiện hành" data-pos="adjective / tính từ" data-def-en="Existing at the present time." data-def-vn="Tồn tại ở thời điểm hiện tại." data-context-en="Current laws still have gaps" data-context-vn="Current laws still have gaps">current</span> <span class="vocab" data-word-en="laws" data-word-vn="luật" data-pos="noun / danh từ" data-def-en="Rules established by a government." data-def-vn="Quy tắc do chính quyền đặt ra." data-context-en="Current laws" data-context-vn="Current laws">laws</span> still have <span class="vocab" data-word-en="gaps" data-word-vn="lỗ hổng" data-pos="noun / danh từ" data-def-en="Missing parts that leave something incomplete." data-def-vn="Phần thiếu làm cho cái gì không đầy đủ." data-context-en="Still have gaps" data-context-vn="Still have gaps">gaps</span>:
+</p>
+<p>
+<span class="vocab" data-word-en="Lack of" data-word-vn="thiếu" data-pos="noun phrase / cụm danh từ" data-def-en="Absence or shortage of something." data-def-vn="Sự vắng mặt hoặc thiếu hụt." data-context-en="Lack of specific laws" data-context-vn="Lack of specific laws">Lack of</span> <span class="vocab" data-word-en="specific" data-word-vn="cụ thể" data-pos="adjective / tính từ" data-def-en="Clearly defined or identified." data-def-vn="Được định nghĩa hoặc xác định rõ." data-context-en="Specific laws" data-context-vn="Specific laws">specific</span> laws: There are no <span class="vocab" data-word-en="distinct" data-word-vn="riêng biệt" data-pos="adjective / tính từ" data-def-en="Clearly different or separate." data-def-vn="Rõ ràng khác hoặc tách biệt." data-context-en="Distinct legal categories" data-context-vn="Distinct legal categories">distinct</span> <span class="vocab" data-word-en="legal categories" data-word-vn="phân loại pháp lý" data-pos="noun / danh từ" data-def-en="Official groups under the law." data-def-vn="Nhóm chính thức theo luật." data-context-en="Legal categories for organized exam cheating" data-context-vn="Legal categories for organized exam cheating">legal categories</span> for <span class="vocab" data-word-en="organized" data-word-vn="có tổ chức" data-pos="adjective / tính từ" data-def-en="Planned and coordinated." data-def-vn="Được lên kế hoạch và phối hợp." data-context-en="Organized exam cheating" data-context-vn="Organized exam cheating">organized</span> exam cheating or <span class="vocab" data-word-en="classroom assistance" data-word-vn="trợ giúp trong lớp" data-pos="noun / danh từ" data-def-en="Help given to students during an exam in class." data-def-vn="Sự giúp đỡ học sinh trong giờ thi." data-context-en="Classroom assistance" data-context-vn="Classroom assistance">classroom assistance</span>.
+</p>
+<p>
+<span class="vocab" data-word-en="Unclear" data-word-vn="không rõ ràng" data-pos="adjective / tính từ" data-def-en="Not easy to understand or define." data-def-vn="Không dễ hiểu hoặc định nghĩa." data-context-en="Unclear leadership accountability" data-context-vn="Unclear leadership accountability">Unclear</span> <span class="vocab" data-word-en="leadership" data-word-vn="lãnh đạo" data-pos="noun / danh từ" data-def-en="People in charge of an organization." data-def-vn="Người đứng đầu tổ chức." data-context-en="Leadership accountability" data-context-vn="Leadership accountability">leadership</span> <span class="vocab" data-word-en="accountability" data-word-vn="trách nhiệm giải trình" data-pos="noun / danh từ" data-def-en="The obligation to accept responsibility for actions." data-def-vn="Nghĩa vụ chịu trách nhiệm về hành động." data-context-en="Leadership accountability" data-context-vn="Leadership accountability">accountability</span>: <span class="vocab" data-word-en="High-level" data-word-vn="cấp cao" data-pos="adjective / tính từ" data-def-en="At a senior rank in an organization." data-def-vn="Ở cấp bậc cao trong tổ chức." data-context-en="High-level leaders" data-context-vn="High-level leaders">High-level</span> <span class="vocab" data-word-en="leaders" data-word-vn="lãnh đạo" data-pos="noun / danh từ" data-def-en="People who guide or command others." data-def-vn="Người chỉ đạo hoặc chỉ huy người khác." data-context-en="High-level leaders often face" data-context-vn="High-level leaders often face">leaders</span> often <span class="vocab" data-word-en="face" data-word-vn="đối mặt" data-pos="verb / động từ" data-def-en="Have to deal with something." data-def-vn="Phải đối phó với điều gì." data-context-en="Face minor administrative penalties" data-context-vn="Face minor administrative penalties">face</span> <span class="vocab" data-word-en="minor" data-word-vn="nhẹ" data-pos="adjective / tính từ" data-def-en="Small in importance or seriousness." data-def-vn="Nhỏ về tầm quan trọng hoặc mức nghiêm trọng." data-context-en="Minor administrative penalties" data-context-vn="Minor administrative penalties">minor</span> <span class="vocab" data-word-en="administrative" data-word-vn="hành chính" data-pos="adjective / tính từ" data-def-en="Relating to the management of public affairs." data-def-vn="Liên quan đến quản lý công vụ." data-context-en="Administrative penalties" data-context-vn="Administrative penalties">administrative</span> <span class="vocab" data-word-en="penalties" data-word-vn="hình phạt" data-pos="noun / danh từ" data-def-en="Punishments for breaking a rule or law." data-def-vn="Hình phạt vì vi phạm quy tắc hoặc luật." data-context-en="Administrative penalties rather than" data-context-vn="Administrative penalties rather than">penalties</span> <span class="vocab" data-word-en="rather than" data-word-vn="thay vì" data-pos="conjunction / liên từ" data-def-en="Instead of." data-def-vn="Thay cho." data-context-en="Rather than strict legal liability" data-context-vn="Rather than strict legal liability">rather than</span> <span class="vocab" data-word-en="strict" data-word-vn="nghiêm ngặt" data-pos="adjective / tính từ" data-def-en="Demanding that rules be obeyed exactly." data-def-vn="Yêu cầu tuân thủ quy tắc đúng đắn." data-context-en="Strict legal liability" data-context-vn="Strict legal liability">strict</span> <span class="vocab" data-word-en="legal liability" data-word-vn="trách nhiệm pháp lý" data-pos="noun / danh từ" data-def-en="Legal responsibility for one's actions." data-def-vn="Trách nhiệm theo luật về hành động của mình." data-context-en="Legal liability" data-context-vn="Legal liability">legal liability</span>.
+</p>
+<p>
+Weak <span class="vocab" data-word-en="protection" data-word-vn="bảo vệ" data-pos="noun / danh từ" data-def-en="Measures that keep someone safe from harm." data-def-vn="Biện pháp giữ an toàn khỏi tổn hại." data-context-en="Weak protection for whistleblowers" data-context-vn="Weak protection for whistleblowers">protection</span> for <span class="vocab" data-word-en="whistleblowers" data-word-vn="người tố giác" data-pos="noun / danh từ" data-def-en="People who report wrongdoing inside an organization." data-def-vn="Người báo cáo hành vi sai trái trong tổ chức." data-context-en="Whistleblowers" data-context-vn="Whistleblowers">whistleblowers</span>: Teachers who want to <span class="vocab" data-word-en="report" data-word-vn="tố cáo" data-pos="verb / động từ" data-def-en="Make an official statement about wrongdoing." data-def-vn="Đưa ra tuyên bố chính thức về hành vi sai trái." data-context-en="Report cheating" data-context-vn="Report cheating">report</span> cheating often <span class="vocab" data-word-en="feel" data-word-vn="cảm thấy" data-pos="verb / động từ" data-def-en="Experience an emotion." data-def-vn="Trải qua một cảm xúc." data-context-en="Feel unsafe to speak out" data-context-vn="Feel unsafe to speak out">feel</span> <span class="vocab" data-word-en="unsafe" data-word-vn="không an toàn" data-pos="adjective / tính từ" data-def-en="In danger; not protected." data-def-vn="Đang gặp nguy hiểm; không được bảo vệ." data-context-en="Feel unsafe to speak out" data-context-vn="Feel unsafe to speak out">unsafe</span> to <span class="vocab" data-word-en="speak out" data-word-vn="lên tiếng" data-pos="phrasal verb / cụm động từ" data-def-en="Express an opinion publicly, especially against wrongdoing." data-def-vn="Bày tỏ ý kiến công khai, đặc biệt chống sai trái." data-context-en="Speak out" data-context-vn="Speak out">speak out</span>.
+</p>
+<p>
+<span class="vocab" data-word-en="To" data-word-vn="để" data-pos="preposition / giới từ" data-def-en="Indicating purpose." data-def-vn="Chỉ mục đích." data-context-en="To solve this problem permanently" data-context-vn="To solve this problem permanently">To</span> <span class="vocab" data-word-en="solve" data-word-vn="giải quyết" data-pos="verb / động từ" data-def-en="Find an answer to a problem." data-def-vn="Tìm ra câu trả lời cho vấn đề." data-context-en="Solve this problem permanently" data-context-vn="Solve this problem permanently">solve</span> this <span class="vocab" data-word-en="problem" data-word-vn="vấn đề" data-pos="noun / danh từ" data-def-en="A difficult situation that needs attention." data-def-vn="Tình huống khó khăn cần được chú ý." data-context-en="This problem permanently" data-context-vn="This problem permanently">problem</span> <span class="vocab" data-word-en="permanently" data-word-vn="vĩnh viễn" data-pos="adverb / phó từ" data-def-en="In a way that lasts forever." data-def-vn="Theo cách kéo dài mãi mãi." data-context-en="Permanently" data-context-vn="Permanently">permanently</span>, <span class="vocab" data-word-en="experts" data-word-vn="chuyên gia" data-pos="noun / danh từ" data-def-en="People with special knowledge in a field." data-def-vn="Người có kiến thức chuyên môn." data-context-en="Experts suggest three main solutions" data-context-vn="Experts suggest three main solutions">experts</span> <span class="vocab" data-word-en="suggest" data-word-vn="đề xuất" data-pos="verb / động từ" data-def-en="Put forward an idea for consideration." data-def-vn="Đưa ra ý tưởng để xem xét." data-context-en="Suggest three main solutions" data-context-vn="Suggest three main solutions">suggest</span> <span class="vocab" data-word-en="three" data-word-vn="ba" data-pos="numeral / số từ" data-def-en="The number 3." data-def-vn="Con số 3." data-context-en="Three main solutions" data-context-vn="Three main solutions">three</span> <span class="vocab" data-word-en="main" data-word-vn="chính" data-pos="adjective / tính từ" data-def-en="Most important." data-def-vn="Quan trọng nhất." data-context-en="Main solutions" data-context-vn="Main solutions">main</span> <span class="vocab" data-word-en="solutions" data-word-vn="giải pháp" data-pos="noun / danh từ" data-def-en="Ways of dealing with a problem." data-def-vn="Cách xử lý vấn đề." data-context-en="Three main solutions" data-context-vn="Three main solutions">solutions</span>:
+</p>
+<p>
+<span class="vocab" data-word-en="Short-term" data-word-vn="ngắn hạn" data-pos="adjective / tính từ" data-def-en="Lasting for a limited period." data-def-vn="Kéo dài trong thời gian có hạn." data-context-en="Short-term technical solutions" data-context-vn="Short-term technical solutions">Short-term</span> <span class="vocab" data-word-en="technical" data-word-vn="kỹ thuật" data-pos="adjective / tính từ" data-def-en="Relating to practical skills or machinery." data-def-vn="Liên quan đến kỹ năng thực tế hoặc máy móc." data-context-en="Technical solutions" data-context-vn="Technical solutions">technical</span> solutions: <span class="vocab" data-word-en="Use" data-word-vn="sử dụng" data-pos="verb / động từ" data-def-en="Employ for a purpose." data-def-vn="Dùng vào một mục đích." data-context-en="Use AI cameras in classrooms" data-context-vn="Use AI cameras in classrooms">Use</span> <span class="vocab" data-word-en="AI" data-word-vn="trí tuệ nhân tạo" data-pos="noun / danh từ" data-def-en="Artificial intelligence; computer systems that perform tasks needing human-like thinking." data-def-vn="Hệ thống máy tính thực hiện nhiệm vụ cần tư duy giống người." data-context-en="AI cameras" data-context-vn="AI cameras">AI</span> <span class="vocab" data-word-en="cameras" data-word-vn="camera" data-pos="noun / danh từ" data-def-en="Devices that record video." data-def-vn="Thiết bị ghi hình." data-context-en="AI cameras in classrooms" data-context-vn="AI cameras in classrooms">cameras</span> in classrooms, <span class="vocab" data-word-en="centralize" data-word-vn="tập trung hóa" data-pos="verb / động từ" data-def-en="Bring under one central control." data-def-vn="Đưa về một sự kiểm soát trung tâm." data-context-en="Centralize the grading system" data-context-vn="Centralize the grading system">centralize</span> the <span class="vocab" data-word-en="grading system" data-word-vn="hệ thống chấm điểm" data-pos="noun / danh từ" data-def-en="The organized process of marking exams." data-def-vn="Quy trình tổ chức chấm bài thi." data-context-en="The grading system" data-context-vn="The grading system">grading system</span>, and <span class="vocab" data-word-en="analyze" data-word-vn="phân tích" data-pos="verb / động từ" data-def-en="Examine carefully to understand." data-def-vn="Xem xét kỹ để hiểu." data-context-en="Analyze score patterns with software" data-context-vn="Analyze score patterns with software">analyze</span> <span class="vocab" data-word-en="score patterns" data-word-vn="mẫu điểm số" data-pos="noun / danh từ" data-def-en="Recurring arrangements in test results." data-def-vn="Sắp xếp lặp lại trong kết quả thi." data-context-en="Score patterns" data-context-vn="Score patterns">score patterns</span> with software to <span class="vocab" data-word-en="flag" data-word-vn="đánh dấu" data-pos="verb / động từ" data-def-en="Mark something as needing attention." data-def-vn="Đánh dấu cái cần chú ý." data-context-en="Flag anomalies instantly" data-context-vn="Flag anomalies instantly">flag</span> <span class="vocab" data-word-en="anomalies" data-word-vn="bất thường" data-pos="noun / danh từ" data-def-en="Things that deviate from what is standard." data-def-vn="Những gì lệch khỏi chuẩn." data-context-en="Anomalies" data-context-vn="Anomalies">anomalies</span> <span class="vocab" data-word-en="instantly" data-word-vn="ngay lập tức" data-pos="adverb / phó từ" data-def-en="Immediately; at once." data-def-vn="Ngay tức thì." data-context-en="Instantly" data-context-vn="Instantly">instantly</span>.
+</p>
+<p>
+<span class="vocab" data-word-en="Medium-term" data-word-vn="trung hạn" data-pos="adjective / tính từ" data-def-en="Lasting for an intermediate period." data-def-vn="Kéo dài trong khoảng thời gian trung bình." data-context-en="Medium-term legal changes" data-context-vn="Medium-term legal changes">Medium-term</span> <span class="vocab" data-word-en="legal changes" data-word-vn="thay đổi pháp lý" data-pos="noun / danh từ" data-def-en="Modifications to the law." data-def-vn="Sửa đổi luật pháp." data-context-en="Legal changes" data-context-vn="Legal changes">legal changes</span>: <span class="vocab" data-word-en="Create" data-word-vn="tạo ra" data-pos="verb / động từ" data-def-en="Bring into existence." data-def-vn="Làm cho tồn tại." data-context-en="Create clear criminal punishments" data-context-vn="Create clear criminal punishments">Create</span> <span class="vocab" data-word-en="clear" data-word-vn="rõ ràng" data-pos="adjective / tính từ" data-def-en="Easy to understand; unambiguous." data-def-vn="Dễ hiểu; không mơ hồ." data-context-en="Clear criminal punishments" data-context-vn="Clear criminal punishments">clear</span> <span class="vocab" data-word-en="criminal punishments" data-word-vn="hình phạt hình sự" data-pos="noun / danh từ" data-def-en="Penalties under criminal law." data-def-vn="Hình phạt theo luật hình sự." data-context-en="Criminal punishments for classroom cheating" data-context-vn="Criminal punishments for classroom cheating">criminal punishments</span> for classroom cheating and <span class="vocab" data-word-en="strictly" data-word-vn="nghiêm ngặt" data-pos="adverb / phó từ" data-def-en="In a firm, exact way." data-def-vn="Theo cách cứng rắn, chính xác." data-context-en="Strictly hold test site leaders accountable" data-context-vn="Strictly hold test site leaders accountable">strictly</span> <span class="vocab" data-word-en="hold" data-word-vn="giữ" data-pos="verb / động từ" data-def-en="Keep someone in a state of responsibility." data-def-vn="Giữ ai ở trạng thái chịu trách nhiệm." data-context-en="Hold test site leaders accountable" data-context-vn="Hold test site leaders accountable">hold</span> <span class="vocab" data-word-en="test site leaders" data-word-vn="lãnh đạo điểm thi" data-pos="noun / danh từ" data-def-en="Officials in charge of exam locations." data-def-vn="Người phụ trách các điểm thi." data-context-en="Test site leaders" data-context-vn="Test site leaders">test site leaders</span> <span class="vocab" data-word-en="accountable" data-word-vn="chịu trách nhiệm" data-pos="adjective / tính từ" data-def-en="Required to justify actions." data-def-vn="Phải giải trình hành động." data-context-en="Accountable" data-context-vn="Accountable">accountable</span>.
+</p>
+<p>
+<span class="vocab" data-word-en="Long-term" data-word-vn="dài hạn" data-pos="adjective / tính từ" data-def-en="Lasting or effective over a long period." data-def-vn="Kéo dài hoặc hiệu quả trong thời gian dài." data-context-en="Long-term educational reforms" data-context-vn="Long-term educational reforms">Long-term</span> <span class="vocab" data-word-en="educational" data-word-vn="giáo dục" data-pos="adjective / tính từ" data-def-en="Relating to education." data-def-vn="Liên quan đến giáo dục." data-context-en="Educational reforms" data-context-vn="Educational reforms">educational</span> <span class="vocab" data-word-en="reforms" data-word-vn="cải cách" data-pos="noun / danh từ" data-def-en="Changes made to improve a system." data-def-vn="Thay đổi để cải thiện hệ thống." data-context-en="Educational reforms" data-context-vn="Educational reforms">reforms</span>: <span class="vocab" data-word-en="Separate" data-word-vn="tách rời" data-pos="verb / động từ" data-def-en="Keep apart; divide." data-def-vn="Giữ cách nhau; chia tách." data-context-en="Separate the high school graduation exam" data-context-vn="Separate the high school graduation exam">Separate</span> the high school graduation exam from <span class="vocab" data-word-en="university admissions" data-word-vn="tuyển sinh đại học" data-pos="noun / danh từ" data-def-en="The process of accepting students into universities." data-def-vn="Quy trình nhận học sinh vào đại học." data-context-en="University admissions" data-context-vn="University admissions">university admissions</span>. <span class="vocab" data-word-en="Reducing" data-word-vn="giảm" data-pos="verb / động từ" data-def-en="Making smaller in amount or intensity." data-def-vn="Làm nhỏ hơn về lượng hoặc mức độ." data-context-en="Reducing score pressure" data-context-vn="Reducing score pressure">Reducing</span> <span class="vocab" data-word-en="score pressure" data-word-vn="áp lực điểm số" data-pos="noun / danh từ" data-def-en="Stress caused by the need for high marks." data-def-vn="Căng thẳng do nhu cầu điểm cao." data-context-en="Score pressure" data-context-vn="Score pressure">score pressure</span> will <span class="vocab" data-word-en="help" data-word-vn="giúp" data-pos="verb / động từ" data-def-en="Make it easier for someone to do something." data-def-vn="Làm cho ai dễ làm việc gì hơn." data-context-en="Help schools focus on genuine learning" data-context-vn="Help schools focus on genuine learning">help</span> <span class="vocab" data-word-en="schools" data-word-vn="trường học" data-pos="noun / danh từ" data-def-en="Institutions for educating children." data-def-vn="Cơ sở giáo dục trẻ em." data-context-en="Schools focus on" data-context-vn="Schools focus on">schools</span> <span class="vocab" data-word-en="focus on" data-word-vn="tập trung vào" data-pos="phrasal verb / cụm động từ" data-def-en="Direct attention toward." data-def-vn="Hướng sự chú ý vào." data-context-en="Focus on genuine learning and honesty" data-context-vn="Focus on genuine learning and honesty">focus on</span> <span class="vocab" data-word-en="genuine" data-word-vn="thật sự" data-pos="adjective / tính từ" data-def-en="Real and sincere; not fake." data-def-vn="Thật và chân thành; không giả." data-context-en="Genuine learning" data-context-vn="Genuine learning">genuine</span> <span class="vocab" data-word-en="learning" data-word-vn="học tập" data-pos="noun / danh từ" data-def-en="The acquisition of knowledge or skills." data-def-vn="Sự tiếp thu kiến thức hoặc kỹ năng." data-context-en="Genuine learning and honesty" data-context-vn="Genuine learning and honesty">learning</span> and <span class="vocab" data-word-en="honesty" data-word-vn="sự trung thực" data-pos="noun / danh từ" data-def-en="The quality of being truthful and fair." data-def-vn="Phẩm chất trung thực và công bằng." data-context-en="Learning and honesty" data-context-vn="Learning and honesty">honesty</span>.
+</p>
+<p>
+<span class="vocab" data-word-en="Restoring" data-word-vn="khôi phục" data-pos="verb / động từ" data-def-en="Bringing back to a former good condition." data-def-vn="Đưa trở lại trạng thái tốt trước đây." data-context-en="Restoring fairness to state examinations" data-context-vn="Restoring fairness to state examinations">Restoring</span> <span class="vocab" data-word-en="fairness" data-word-vn="công bằng" data-pos="noun / danh từ" data-def-en="The quality of treating people equally." data-def-vn="Phẩm chất đối xử mọi người như nhau." data-context-en="Fairness to state examinations" data-context-vn="Fairness to state examinations">fairness</span> to <span class="vocab" data-word-en="state examinations" data-word-vn="kỳ thi quốc gia" data-pos="noun / danh từ" data-def-en="Official exams organized by the government." data-def-vn="Kỳ thi do chính phủ tổ chức." data-context-en="State examinations" data-context-vn="State examinations">state examinations</span> is <span class="vocab" data-word-en="essential" data-word-vn="thiết yếu" data-pos="adjective / tính từ" data-def-en="Absolutely necessary." data-def-vn="Hoàn toàn cần thiết." data-context-en="Essential to building public trust" data-context-vn="Essential to building public trust">essential</span> to <span class="vocab" data-word-en="building" data-word-vn="xây dựng" data-pos="verb / động từ" data-def-en="Creating or developing over time." data-def-vn="Tạo ra hoặc phát triển theo thời gian." data-context-en="Building public trust" data-context-vn="Building public trust">building</span> <span class="vocab" data-word-en="public trust" data-word-vn="niềm tin công chúng" data-pos="noun / danh từ" data-def-en="Confidence that people have in institutions." data-def-vn="Sự tin tưởng của người dân vào các tổ chức." data-context-en="Public trust" data-context-vn="Public trust">public trust</span> and <span class="vocab" data-word-en="protecting" data-word-vn="bảo vệ" data-pos="verb / động từ" data-def-en="Keeping safe from harm." data-def-vn="Giữ an toàn khỏi tổn hại." data-context-en="Protecting the quality of future generations" data-context-vn="Protecting the quality of future generations">protecting</span> the <span class="vocab" data-word-en="quality" data-word-vn="chất lượng" data-pos="noun / danh từ" data-def-en="The standard of something as measured against others." data-def-vn="Mức độ tốt được đo so với cái khác." data-context-en="Quality of future generations" data-context-vn="Quality of future generations">quality</span> of <span class="vocab" data-word-en="future" data-word-vn="tương lai" data-pos="adjective / tính từ" data-def-en="Coming after the present." data-def-vn="Đến sau hiện tại." data-context-en="Future generations" data-context-vn="Future generations">future</span> <span class="vocab" data-word-en="generations" data-word-vn="thế hệ" data-pos="noun / danh từ" data-def-en="All the people born and living around the same time." data-def-vn="Tất cả người sinh ra và sống cùng thời." data-context-en="Future generations" data-context-vn="Future generations">generations</span>.
+</p>
+    </div>
+            <div class="practice-controls" id="practice-controls">
+                <div class="practice-btn-row">
+                    <button id="start-practice-btn" class="practice-btn primary" disabled>Practice Your New Words</button>
+                    <button id="reset-practice-btn" class="practice-btn" style="display:none;">Practice these words again</button>
+                    <button id="toggle-bank-btn" class="practice-btn" style="display:none;">Hide Word Bank</button>
+                    <button id="exit-practice-btn" class="practice-btn large" style="display:none;">Start Over</button>
+                    <button id="start-srs-btn" class="practice-btn primary" disabled>Standard Review Level</button>
+                    <button id="start-srs-challenge-btn" class="practice-btn primary" disabled style="line-height:1.25;">Genius Level<br><span style="font-weight:normal;font-size:0.78rem;">Show us what you got!</span></button>
+                </div>
+            </div>
+    </div>
+    </div>
+        <div class="back-btn-container">
+        <button type="button" class="back-btn" onclick="history.back()">Exit this Lesson</button>
+    </div>
+</div>
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+    <div class="browser-note">🔊 Vietnamese audio: Chrome or Edge recommended.</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the text:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+<div id="srs-overlay">
+    <div class="srs-card">
+        <button class="srs-close-btn" id="srs-close-btn" title="Close review">✕</button>
+
+        <div id="srs-review-view">
+            <div class="srs-header">
+                <h3>Spaced Repetition Review</h3>
+                <div class="srs-progress-track"><div class="srs-progress-fill" id="srs-progress-fill"></div></div>
+                <div class="srs-progress-label" id="srs-progress-label"></div>
+            </div>
+
+            <div class="srs-direction-label" id="srs-direction-label"></div>
+            <div class="srs-prompt-word" id="srs-prompt-word"></div>
+            <div class="srs-audio-row" id="srs-audio-row"></div>
+
+            <div class="srs-type-area" id="srs-type-area">
+                <input type="text" class="srs-type-input" id="srs-type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Type answer, then Check or Enter">
+                <div class="srs-type-actions">
+                    <button class="srs-reveal-btn" id="srs-check-btn" type="button" style="width:auto; padding:10px 18px;">Check your answer</button>
+                    <button class="practice-btn" id="srs-giveup-btn" style="display:none;">Show answer</button>
+                </div>
+                <div class="srs-feedback" id="srs-feedback"></div>
+            </div>
+
+            <button class="srs-reveal-btn" id="srs-reveal-btn">Show Answer</button>
+
+            <div class="srs-answer" id="srs-answer">
+                <div class="srs-answer-word" id="srs-answer-word"></div>
+                <div class="srs-pos" id="srs-pos"></div>
+                <div class="srs-def" id="srs-def"></div>
+                <div class="srs-context-label">In the text:</div>
+                <div class="srs-context" id="srs-context"></div>
+
+                <div class="srs-rate-row">
+                    <button class="srs-rate-btn srs-rate-again" data-rating="again">Again<small>soon</small></button>
+                    <button class="srs-rate-btn srs-rate-hard" data-rating="hard">Hard<small>a bit later</small></button>
+                    <button class="srs-rate-btn srs-rate-good" data-rating="good">Good<small>later on</small></button>
+                    <button class="srs-rate-btn srs-rate-easy" data-rating="easy">Easy<small>mastered</small></button>
+                </div>
+                <div class="srs-feedback" id="srs-advance-hint" style="display:none; margin-top:12px;">Click any blank spot to advance to next word</div>
+            </div>
+        </div>
+
+        <div id="srs-done-view" class="srs-done" style="display:none;">
+            <h3>Session complete! 🎉</h3>
+            <p id="srs-done-summary"></p>
+            <div class="srs-done-actions">
+                <button class="practice-btn primary" id="srs-again-btn">Review Again</button>
+                <button class="practice-btn large" id="srs-back-btn">Back to Reading</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // ========== STATE ==========
+    let practiceMode = false;
+    let clickedIds = new Set();          // ids of vocab spans the user clicked
+    let orderedBlanks = [];              // array of vocab elements currently blanked (document order)
+    let activeBlankEl = null;            // the blank the user has selected (click any blank)
+    let originalTexts = new Map();       // id -> original innerText
+
+    // ========== SPEECH & AUDIO HELPERS (unchanged) ==========
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    // ========== UI HELPERS ==========
+    function updateWordCount() {
+        document.getElementById('start-practice-btn').disabled = clickedIds.size === 0;
+        document.getElementById('start-srs-btn').disabled = clickedIds.size === 0;
+        const ch = document.getElementById('start-srs-challenge-btn');
+        if (ch) ch.disabled = clickedIds.size === 0;
+    }
+
+    function updateProgress() {
+        // completion UI removed — blanks simply fill until done
+    }
+
+    // ========== PRACTICE MODE LOGIC ==========
+    function setActiveBlank(el) {
+        document.querySelectorAll('.vocab.active-blank').forEach(n => n.classList.remove('active-blank'));
+        activeBlankEl = null;
+        if (el && el.classList.contains('is-blank')) {
+            el.classList.add('active-blank');
+            activeBlankEl = el;
+        }
+    }
+
+    // Turns a blank into a real text input (used when the word bank is hidden,
+    // so there's nothing to click — the user must type the exact word).
+    function makeBlankTypeable(el) {
+        el.innerHTML = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onclick = null;
+        el.onmouseenter = null;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'blank-input';
+        input.setAttribute('autocomplete', 'off');
+        input.setAttribute('autocapitalize', 'off');
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('spellcheck', 'false');
+        input.addEventListener('click', (e) => e.stopPropagation());
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkTypedAnswer(el, input);
+            }
+        });
+        input.addEventListener('blur', () => checkTypedAnswer(el, input));
+        el.appendChild(input);
+    }
+
+    // Case-insensitive + hyphen-insensitive match (shared by story typing
+    // and SRS Level 2 challenge).
+    function normalizeAnswer(s) {
+        // Case, hyphen, and space insensitive: rapid-fire ≈ rapid fire ≈ RapidFire
+        let t = (s || '').trim().toLowerCase().replace(/-/g, '').replace(/\s+/g, '');
+        // Strip trailing -ly so meticulously ≈ meticulous, safely ≈ safe
+        if (t.length > 4 && t.endsWith('ly')) t = t.slice(0, -2);
+        return t;
+    }
+
+    function answersMatch(typed, correct) {
+        return normalizeAnswer(typed) === normalizeAnswer(correct);
+    }
+
+    function checkTypedAnswer(el, input) {
+        if (!el.classList.contains('is-blank')) return; // already filled, ignore
+        const typed = input.value.trim();
+        if (!typed) return;
+        const correct = (el.dataset.wordEn || '').trim();
+        if (answersMatch(typed, correct)) {
+            fillBlank(el, correct);
+        } else {
+            el.classList.remove('wrong-shake');
+            void el.offsetWidth; // restart the animation if triggered again
+            el.classList.add('wrong-shake');
+            setTimeout(() => el.classList.remove('wrong-shake'), 350);
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    // Restores a blank to the original click-to-select behavior (used when the
+    // word bank is shown again).
+    function makeBlankClickable(el) {
+        el.innerHTML = '';
+        el.textContent = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onmouseenter = () => {
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+        el.onclick = (e) => {
+            e.stopPropagation();
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+    }
+
+    function enterPracticeMode() {
+        if (clickedIds.size === 0) return;
+        practiceMode = true;
+
+        // Widen layout + show sidebar
+        document.querySelector('.page-container').classList.add('practice-on');
+
+        // Banner + buttons
+        document.getElementById('mode-banner').classList.add('visible');
+        document.getElementById('start-practice-btn').style.display = 'none';
+        document.getElementById('reset-practice-btn').style.display = 'inline-block';
+        document.getElementById('toggle-bank-btn').style.display = 'inline-block';
+        document.getElementById('exit-practice-btn').style.display = 'inline-block';
+        document.getElementById('word-bank-section').classList.add('visible');
+        document.getElementById('toggle-bank-btn').textContent = 'Hide Word Bank';
+
+        // Collect the clicked spans in document order
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        orderedBlanks = allVocab.filter(el => clickedIds.has(el.id));
+
+        // Blank them; activate on hover or click
+        orderedBlanks.forEach(el => {
+            if (!originalTexts.has(el.id)) {
+                originalTexts.set(el.id, el.textContent);
+            }
+            el.textContent = '';
+            el.classList.add('is-blank');
+            el.classList.remove('filled', 'highlight-flash', 'active-blank');
+            el.onmouseenter = () => {
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+            el.onclick = (e) => {
+                e.stopPropagation();
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+        });
+
+        // Build shuffled word bank
+        buildWordBank();
+
+        updateProgress();
+
+        // Select first blank and scroll to it
+        if (orderedBlanks.length > 0) {
+            setActiveBlank(orderedBlanks[0]);
+            setTimeout(() => {
+                orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 150);
+        }
+    }
+
+    function buildWordBank() {
+        const bank = document.getElementById('bank-words');
+        bank.innerHTML = '';
+
+        // Shuffle a copy of the ordered blanks for the bank display
+        const words = orderedBlanks.map(el => ({
+            id: el.id,
+            wordEn: el.dataset.wordEn,
+            wordVn: el.dataset.wordVn
+        }));
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+        shuffle(words);
+        shuffle(words);
+
+        words.forEach(item => {
+            const btn = document.createElement('div');
+            btn.className = 'bank-word';
+            btn.textContent = item.wordEn;
+            btn.dataset.wordEn = item.wordEn;
+            btn.dataset.targetId = item.id;
+            btn.addEventListener('click', onBankWordClick);
+            bank.appendChild(btn);
+        });
+    }
+
+    function fillBlank(blank, word) {
+        blank.textContent = word;
+        blank.classList.remove('is-blank', 'highlight-flash', 'active-blank');
+        blank.classList.add('filled');
+        blank.onclick = null;
+        blank.onmouseenter = null;
+        if (activeBlankEl === blank) activeBlankEl = null;
+        updateProgress();
+    }
+
+    function onBankWordClick(e) {
+        if (!practiceMode) return;
+        const btn = e.currentTarget;
+        const chosenWord = (btn.dataset.wordEn || '').trim();
+        if (!chosenWord) return;
+
+        // Need an active blank; if none, activate the first remaining one
+        let activeBlank = (activeBlankEl && activeBlankEl.classList.contains('is-blank'))
+            ? activeBlankEl
+            : null;
+        if (!activeBlank) {
+            const remaining = orderedBlanks.filter(el => el.classList.contains('is-blank'));
+            if (remaining.length === 0) return;
+            setActiveBlank(remaining[0]);
+            activeBlank = remaining[0];
+        }
+
+        // Correct for active blank → fill. Wrong word → do nothing.
+        if ((activeBlank.dataset.wordEn || '').trim().toLowerCase() === chosenWord.toLowerCase()) {
+            fillBlank(activeBlank, chosenWord);
+        }
+    }
+
+    function resetPractice() {
+        if (!practiceMode) return;
+        const bankVisible = document.getElementById('word-bank-section').classList.contains('visible');
+        // Re-blank everything that was in the original clicked set, matching
+        // whatever mode the word bank is currently in (shown vs hidden)
+        if (bankVisible) {
+            orderedBlanks.forEach(el => makeBlankClickable(el));
+            buildWordBank();
+        } else {
+            orderedBlanks.forEach(el => makeBlankTypeable(el));
+        }
+        updateProgress();
+        if (orderedBlanks.length > 0) {
+            if (bankVisible) {
+                setActiveBlank(orderedBlanks[0]);
+            } else {
+                const inp = orderedBlanks[0].querySelector('input.blank-input');
+                if (inp) inp.focus();
+            }
+            orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            activeBlankEl = null;
+        }
+    }
+
+    function exitPracticeMode() {
+        practiceMode = false;
+        document.querySelector('.page-container').classList.remove('practice-on');
+        document.getElementById('mode-banner').classList.remove('visible');
+        document.getElementById('start-practice-btn').style.display = 'inline-block';
+        document.getElementById('reset-practice-btn').style.display = 'none';
+        document.getElementById('toggle-bank-btn').style.display = 'none';
+        document.getElementById('exit-practice-btn').style.display = 'none';
+        document.getElementById('word-bank-section').classList.remove('visible');
+
+        // Restore original text on all previously blanked spans
+        orderedBlanks.forEach(el => {
+            const orig = originalTexts.get(el.id);
+            if (orig !== undefined) {
+                el.textContent = orig;
+            }
+            el.classList.remove('is-blank', 'filled', 'highlight-flash', 'active-blank');
+            el.onclick = null;
+            el.onmouseenter = null;
+        });
+        orderedBlanks = [];
+        activeBlankEl = null;
+
+        // Fresh cycle: clear collected words so next Lock-in uses only
+        // words clicked during the new reading pass
+        clickedIds.clear();
+        originalTexts.clear();
+        document.getElementById('bank-words').innerHTML = '';
+        updateWordCount();
+    }
+
+    // ========== SPACED REPETITION (Section 3) ==========
+    // Session-only, position-based review. Cards you miss resurface a few
+    // cards later in the SAME session; cards you know well drop out of the
+    // queue ("mastered") once you've gotten them right twice in a row.
+    let srsDeck = [];
+    let srsQueue = [];
+    let srsTotal = 0;
+    let srsMasteredCount = 0;
+    let srsCurrentCard = null;
+    let srsCurrentDirection = 'en2vn'; // alternates each card: 'en2vn' or 'vn2en'
+    let srsMode = 'review'; // 'review' (Level 1) or 'challenge' (Level 2 type-in)
+    let srsExpectedAnswer = '';
+
+    function srsBuildDeck() {
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        return allVocab
+            .filter(el => clickedIds.has(el.id))
+            .map(el => ({
+                id: el.id,
+                wordEn: el.dataset.wordEn || '',
+                wordVn: el.dataset.wordVn || '',
+                pos: el.dataset.pos || '',
+                defEn: el.dataset.defEn || '',
+                defVn: el.dataset.defVn || '',
+                contextEn: el.dataset.contextEn || el.dataset.wordEn || '',
+                contextVn: el.dataset.contextVn || el.dataset.wordVn || '',
+                streak: 0
+            }));
+    }
+
+    function srsShuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function srsStartSession(mode) {
+        srsMode = (mode === 'challenge') ? 'challenge' : 'review';
+        srsDeck = srsBuildDeck();
+        if (srsDeck.length === 0) return;
+        srsQueue = srsShuffle(srsDeck);
+        srsTotal = srsDeck.length;
+        srsMasteredCount = 0;
+
+        document.getElementById('srs-done-view').style.display = 'none';
+        document.getElementById('srs-review-view').style.display = 'block';
+        const header = document.querySelector('#srs-review-view .srs-header h3');
+        if (header) {
+            header.textContent = srsMode === 'challenge'
+                ? 'Challenge Review — Type the answer'
+                : 'Spaced Repetition Review';
+        }
+        document.getElementById('srs-overlay').classList.add('visible');
+
+        srsShowNextCard();
+    }
+
+    function srsRenderProgress() {
+        const pct = srsTotal === 0 ? 0 : Math.round((srsMasteredCount / srsTotal) * 100);
+        document.getElementById('srs-progress-fill').style.width = pct + '%';
+        document.getElementById('srs-progress-label').textContent =
+            srsMasteredCount + ' of ' + srsTotal + ' mastered \u00b7 ' + srsQueue.length + ' left in this round';
+    }
+
+    function srsShowNextCard() {
+        if (srsQueue.length === 0) {
+            srsFinishSession();
+            return;
+        }
+        srsCurrentCard = srsQueue.shift();
+        const isEnInput = document.documentElement.lang === 'en';
+
+        // Level 1 (review): random direction. Level 2 (challenge): always
+        // show the OPPOSITE language on the front; user types the study language.
+        if (srsMode === 'challenge') {
+            srsCurrentDirection = isEnInput ? 'vn2en' : 'en2vn';
+        } else {
+            srsCurrentDirection = Math.random() < 0.5 ? 'en2vn' : 'vn2en';
+        }
+
+        const frontWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordEn : srsCurrentCard.wordVn;
+        const backWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordVn : srsCurrentCard.wordEn;
+        srsExpectedAnswer = backWord;
+
+        // No direction label / Listen on either level — prompt word is enough.
+        const frontLangLabel = srsMode === 'challenge'
+            ? 'Type in answer and press Enter'
+            : '';
+
+        document.getElementById('srs-direction-label').textContent = frontLangLabel;
+        document.getElementById('srs-prompt-word').textContent = frontWord;
+
+        const audioRow = document.getElementById('srs-audio-row');
+        audioRow.innerHTML = '';
+
+        document.getElementById('srs-answer-word').textContent = backWord;
+        document.getElementById('srs-pos').textContent = srsCurrentCard.pos;
+        document.getElementById('srs-def').innerHTML = isEnInput
+            ? '<div>' + (srsCurrentCard.defEn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defVn || '') + '</div>'
+            : '<div>' + (srsCurrentCard.defVn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defEn || '') + '</div>';
+        document.getElementById('srs-context').textContent =
+            isEnInput ? srsCurrentCard.contextEn : (srsCurrentCard.contextVn || srsCurrentCard.contextEn);
+
+        document.getElementById('srs-answer').classList.remove('visible');
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-feedback').classList.remove('wrong-feedback');
+        srsChallengeSolved = false;
+        srsAnswerRevealed = false;
+        var advanceHint = document.getElementById("srs-advance-hint");
+        if (advanceHint) advanceHint.style.display = "none";
+
+        const typeArea = document.getElementById('srs-type-area');
+        const revealBtn = document.getElementById('srs-reveal-btn');
+        const typeInput = document.getElementById('srs-type-input');
+
+        if (srsMode === 'challenge') {
+            typeArea.classList.add('visible');
+            revealBtn.style.display = 'none';
+            typeInput.value = '';
+            typeInput.classList.remove('wrong');
+            typeInput.disabled = false;
+            document.getElementById('srs-giveup-btn').style.display = 'inline-block';
+            const chkBtn = document.getElementById('srs-check-btn');
+            if (chkBtn) chkBtn.style.display = 'inline-block';
+            setTimeout(() => typeInput.focus(), 50);
+        } else {
+            typeArea.classList.remove('visible');
+            revealBtn.style.display = 'block';
+        }
+
+        srsRenderProgress();
+    }
+
+    function srsCheckTypedAnswer() {
+        if (srsMode !== 'challenge' || !srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        const typed = input.value.trim();
+        if (!typed) return;
+        const fb = document.getElementById('srs-feedback');
+        if (answersMatch(typed, srsExpectedAnswer)) {
+            const cheers = ['You got it!', 'Good job!', 'Answer correct!', 'Dynamite!', "You're hot!", 'Perfect!', "You're a genius!"];
+            fb.textContent = cheers[Math.floor(Math.random() * cheers.length)];
+            fb.classList.remove('wrong-feedback');
+            fb.classList.add('success');
+            input.disabled = true;
+            input.classList.remove('wrong');
+            document.getElementById('srs-answer').classList.add('visible');
+            document.getElementById('srs-giveup-btn').style.display = 'none';
+            const chk = document.getElementById('srs-check-btn');
+            if (chk) chk.style.display = 'none';
+            srsChallengeSolved = true;
+            srsAnswerRevealed = true;
+            var h = document.getElementById('srs-advance-hint');
+            if (h) h.style.display = 'block';
+        } else {
+            const misses = [
+                'Not quite — try again',
+                'Give up?',
+                'Close but no cigar!',
+                "C'mon, you can do better than that!",
+                'Hey, nobody said this would be easy!',
+                'Throw in the towel?'
+            ];
+            fb.textContent = misses[Math.floor(Math.random() * misses.length)];
+            fb.classList.remove('success');
+            fb.classList.add('wrong-feedback');
+            input.classList.remove('wrong');
+            void input.offsetWidth;
+            input.classList.add('wrong');
+            input.value = '';
+            input.focus();
+            setTimeout(() => input.classList.remove('wrong'), 350);
+        }
+    }
+
+    function srsGiveUp() {
+        if (!srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        if (input) {
+            input.disabled = true;
+            input.value = srsExpectedAnswer;
+        }
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-giveup-btn').style.display = 'none';
+        const chk2 = document.getElementById('srs-check-btn');
+        if (chk2) chk2.style.display = 'none';
+        // Allow click-anywhere to advance (counts as Again — they needed the answer)
+        srsChallengeSolved = false;
+        srsAnswerRevealed = true;
+        var h = document.getElementById("srs-advance-hint");
+        if (h) h.style.display = "block";
+    }
+
+    function srsRevealAnswer() {
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-reveal-btn').style.display = 'none';
+        srsAnswerRevealed = true;
+        var h = document.getElementById('srs-advance-hint');
+        if (h) h.style.display = 'block';
+    }
+
+    function srsRateCard(rating) {
+        if (!srsCurrentCard) return;
+        const card = srsCurrentCard;
+
+        if (rating === 'again') {
+            card.streak = 0;
+            srsQueue.splice(Math.min(3, srsQueue.length), 0, card);
+        } else if (rating === 'hard') {
+            card.streak = 0;
+            srsQueue.splice(Math.min(5, srsQueue.length), 0, card);
+        } else if (rating === 'good') {
+            card.streak += 1;
+            if (card.streak >= 2) {
+                srsMasteredCount++;
+            } else {
+                srsQueue.splice(Math.min(7, srsQueue.length), 0, card);
+            }
+        } else if (rating === 'easy') {
+            srsMasteredCount++;
+        }
+
+        srsCurrentCard = null;
+        srsShowNextCard();
+    }
+
+    function srsFinishSession() {
+        document.getElementById('srs-review-view').style.display = 'none';
+        document.getElementById('srs-done-view').style.display = 'block';
+        document.getElementById('srs-done-summary').textContent =
+            'You reviewed ' + srsTotal + ' word' + (srsTotal === 1 ? '' : 's') + ' and mastered all of them this round. Nice work!';
+    }
+
+    function srsCloseOverlay() {
+        document.getElementById('srs-overlay').classList.remove('visible');
+    }
+
+    // ========== INITIALIZATION ==========
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        // Assign stable ids and wire click handlers
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                // In practice mode we ignore clicks on vocab (they are blanks or filled)
+                if (practiceMode) return;
+
+                // Track this word for the word bank
+                if (!clickedIds.has(el.id)) {
+                    clickedIds.add(el.id);
+                    updateWordCount();
+                }
+
+                // Show / toggle popup (existing behaviour)
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                const isEnInput = document.documentElement.lang === 'en';
+                document.getElementById('popup-definition').innerHTML = isEnInput
+                    ? (el.dataset.defVn || '') + hr + (el.dataset.defEn || '')
+                    : (el.dataset.defEn || '') + hr + (el.dataset.defVn || '');
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordEn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        // Close popup on outside click
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        // Practice control buttons
+        // Practice control buttons
+        function toggleWordBank() {
+            const bank = document.getElementById('word-bank-section');
+            const btn = document.getElementById('toggle-bank-btn');
+            if (bank.classList.contains('visible')) {
+                // Hide bank + re-blank the story as typeable inputs for a
+                // real memory challenge (nothing to click anymore)
+                bank.classList.remove('visible');
+                btn.textContent = 'Show Word Bank';
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankTypeable(el));
+                    const firstBlank = orderedBlanks[0];
+                    if (firstBlank) {
+                        firstBlank.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const inp = firstBlank.querySelector('input.blank-input');
+                        if (inp) inp.focus();
+                    }
+                    updateProgress();
+                }
+            } else {
+                bank.classList.add('visible');
+                btn.textContent = 'Hide Word Bank';
+                // Fresh round again, same as the hide direction: re-blank
+                // everything back to click-to-select and rebuild the bank,
+                // rather than leaving previously-typed answers in place.
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankClickable(el));
+                    buildWordBank();
+                    setActiveBlank(orderedBlanks[0]);
+                    orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    updateProgress();
+                }
+            }
+        }
+
+        document.getElementById('start-practice-btn').addEventListener('click', enterPracticeMode);
+        document.getElementById('reset-practice-btn').addEventListener('click', resetPractice);
+        document.getElementById('toggle-bank-btn').addEventListener('click', toggleWordBank);
+        document.getElementById('exit-practice-btn').addEventListener('click', exitPracticeMode);
+
+        // Spaced Repetition controls
+        document.getElementById('start-srs-btn').addEventListener('click', () => srsStartSession('review'));
+        document.getElementById('start-srs-challenge-btn').addEventListener('click', () => srsStartSession('challenge'));
+        document.getElementById('srs-close-btn').addEventListener('click', srsCloseOverlay);
+        document.getElementById('srs-reveal-btn').addEventListener('click', srsRevealAnswer);
+        document.getElementById('srs-check-btn').addEventListener('click', srsCheckTypedAnswer);
+        const typeAreaEl = document.getElementById('srs-type-area');
+        if (typeAreaEl) {
+            typeAreaEl.addEventListener('click', (e) => e.stopPropagation());
+            typeAreaEl.addEventListener('touchend', (e) => e.stopPropagation());
+        }
+        // srs-type-area-stop
+
+        document.getElementById('srs-giveup-btn').addEventListener('click', srsGiveUp);
+        const srsTypeInput = document.getElementById('srs-type-input');
+        const submitTyped = (e) => {
+            if (e) e.preventDefault();
+            srsCheckTypedAnswer();
+        };
+        srsTypeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        // Mobile keyboards often only fire keyup / change for the Done key
+        srsTypeInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        document.getElementById('srs-again-btn').addEventListener('click', () => srsStartSession(srsMode));
+        document.getElementById('srs-back-btn').addEventListener('click', srsCloseOverlay);
+        document.querySelectorAll('.srs-rate-btn').forEach(btn => {
+            btn.addEventListener('click', () => srsRateCard(btn.dataset.rating));
+        });
+        // Click anywhere in the review card that isn't a button dismisses it
+        // (mirrors the vocab popup's behavior) — no button clicks close it,
+        // since those (Show Answer, ratings, audio) have their own actions.
+        // Backdrop closes session. Once an answer is showing (Level 1 reveal,
+        // Level 2 correct, or Show answer), click anywhere on the card (not a
+        // rating button / input) advances — no need to hunt for the X.
+        document.getElementById('srs-overlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('srs-overlay')) {
+                srsCloseOverlay();
+                return;
+            }
+            // Never advance from a tap while the type-in field is active (mobile
+            // keyboard dismiss often hits the card behind the keyboard).
+            const typeInput = document.getElementById('srs-type-input');
+            if (typeInput && document.activeElement === typeInput) return;
+            if (e.target.closest('#srs-type-area')) return;
+            if (srsAnswerRevealed && !e.target.closest('button') && !e.target.closest('input')) {
+                const rating = (srsChallengeSolved || srsMode === 'review') ? 'good' : 'again';
+                srsAnswerRevealed = false;
+                srsChallengeSolved = false;
+                srsRateCard(rating);
+            }
+        });
+
+                updateWordCount();
+    });
+
+</script>
+</body>
+</html>
