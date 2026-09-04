@@ -1,0 +1,2371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>An F1 for Emily</title>
+<style>
+
+        body {
+            background-color: #2b2b2b;
+            color: #1a0e00;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            transition: max-width 0.25s ease;
+        }
+        .page-container.practice-on {
+            max-width: 700px;
+        }
+        .story-and-bank {
+            display: block;
+        }
+        .page-container.practice-on .story-and-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .page-container.practice-on .story-main {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+            color: #1a0e00;
+        }
+        .read-hint {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #5c3a14;
+            font-style: italic;
+            margin: -10px 0 22px;
+            padding: 0 8px;
+        }
+        .page-container.practice-on .read-hint {
+            display: none;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: #f0e6c8;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn, .practice-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover, .practice-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .practice-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .practice-btn.primary {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border: 2px solid #7a4e1a !important;
+            font-weight: bold;
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            box-shadow: none;
+        }
+        .practice-btn.large {
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            font-weight: bold;
+        }
+        .practice-btn.primary:hover:not(:disabled) {
+            background: #e8d9b0 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+        }
+        .practice-btn.primary:disabled {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+            opacity: 0.5;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        .vocab.is-blank {
+            display: inline-block;
+            min-width: 5.2em;
+            height: 1.35em;
+            line-height: 1.35em;
+            vertical-align: baseline;
+            margin: 0 2px;
+            padding: 0 6px;
+            background-color: #fffdf6;
+            border: 2px solid #5c3a14;
+            border-radius: 3px;
+            color: transparent;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            box-sizing: border-box;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+        .vocab.is-blank::after {
+            content: none;
+        }
+        .vocab.is-blank.active-blank {
+            background-color: #fff8e0;
+            border-color: #2e1f0a;
+            box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.45);
+        }
+        .vocab.is-blank.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 4px #e6b800 !important;
+            border-color: #c9a000 !important;
+        }
+        .vocab.is-blank input.blank-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font: inherit;
+            color: #1a0e00;
+            outline: none;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: text;
+        }
+        .vocab.is-blank.wrong-shake {
+            animation: blankShake 0.3s;
+            border-color: #a33b2e !important;
+            box-shadow: 0 0 0 3px rgba(163, 59, 46, 0.35) !important;
+        }
+        @keyframes blankShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .vocab.filled {
+            border: none;
+            border-bottom: 2px solid #1a5c20;
+            background-color: rgba(26, 92, 32, 0.12);
+            color: #1a3c10;
+            font-weight: 600;
+            cursor: default;
+            padding: 0;
+            min-width: 0;
+            height: auto;
+        }
+        .vocab.filled:hover {
+            background-color: rgba(26, 92, 32, 0.18);
+        }
+        .vocab.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 5px #ffc107 !important;
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .practice-controls {
+            margin: 30px 0 20px;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            text-align: center;
+        }
+        .collect-status {
+            font-size: 1rem;
+            color: #3a1f00;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .collect-status span {
+            color: #7a4e1a;
+            font-size: 1.15rem;
+        }
+        .back-btn-container {
+            text-align: center;
+            margin: 28px 0 8px;
+            padding-top: 16px;
+            border-top: 1px dashed #a0845a;
+        }
+        .back-btn-container .back-btn {
+            font-size: 1rem;
+            padding: 10px 22px;
+        }
+        .practice-btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .word-bank-section {
+            display: none;
+            margin: 20px 0 10px;
+            padding: 14px;
+            background: rgba(122, 78, 26, 0.06);
+            border: 1px solid #a0845a;
+            border-radius: 6px;
+        }
+        .word-bank-section.visible {
+            display: block;
+        }
+        /* Horizontal word bank above the story when practice is active */
+        .page-container.practice-on .word-bank-section.visible {
+            display: block;
+            width: 100%;
+            margin: 0 0 4px;
+            position: sticky;
+            top: 160px;
+            z-index: 20;
+            max-height: none;
+            overflow: visible;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            background: #f5ecd4;
+        }
+        .bank-grid {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .bank-word {
+            font-size: 0.92rem;
+            border: 1px solid #7a4e1a;
+            cursor: pointer;
+            padding: 7px 12px;
+            text-align: center;
+            background: #f8f0d8;
+            border-radius: 4px;
+            color: #2a1500;
+            transition: all 0.15s;
+            user-select: none;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+        .bank-word:hover {
+            background: #e8d8b0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .practice-progress {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .practice-complete {
+            display: none;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(26, 92, 32, 0.12);
+            border: 2px solid #1a5c20;
+            border-radius: 6px;
+            text-align: center;
+            color: #1a3c10;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .practice-complete.visible {
+            display: block;
+        }
+        .mode-banner {
+            display: none;
+            background: #7a4e1a;
+            color: #f0e6c8;
+            text-align: center;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .mode-banner.visible {
+            display: block;
+        }
+        .practice-instruction {
+            display: none;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #7a4e1a;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        .practice-instruction.visible {
+            display: block;
+        }
+       @media (max-width: 820px) {
+          .page-container.practice-on {
+              max-width: 700px;
+          }
+          .page-container.practice-on .word-bank-section.visible {
+              position: sticky;
+              top: 160px;
+              max-height: none;
+          }
+       }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .bank-word {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ========== SPACED REPETITION (Section 3) ========== */
+#srs-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 4, 0.72);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+#srs-overlay.visible {
+    display: flex;
+}
+.srs-card {
+    background-color: #f0e6c8;
+    color: #1a0e00;
+    border: 3px solid #7a4e1a;
+    border-radius: 6px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 25px;
+    box-sizing: border-box;
+    position: relative;
+}
+.srs-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #7a4e1a;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+}
+.srs-close-btn:hover {
+    color: #3a1f00;
+}
+.srs-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.srs-header h3 {
+    margin: 0 0 6px;
+    color: #3a1f00;
+    font-size: 1.25rem;
+}
+.srs-progress-track {
+    background: rgba(122, 78, 26, 0.18);
+    border-radius: 8px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+.srs-progress-fill {
+    background: #1a5c20;
+    height: 100%;
+    width: 0%;
+    transition: width 0.25s ease;
+}
+.srs-progress-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    margin-top: 6px;
+}
+.srs-direction-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    font-style: italic;
+    text-align: center;
+    min-height: 1.2em;
+}
+.srs-prompt-word {
+    font-size: 1.55rem;
+    font-weight: bold;
+    color: #000000;
+    margin: 8px 0 6px;
+    line-height: 1.35;
+}
+.srs-audio-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.srs-reveal-btn {
+    display: block;
+    width: 100%;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 12px;
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+.srs-reveal-btn:hover {
+    background: #422d12;
+    color: #ffe6b3;
+}
+.srs-answer {
+    display: none;
+    border-top: 1px dashed #7a4e1a;
+    padding-top: 16px;
+    margin-top: 4px;
+}
+.srs-answer.visible {
+    display: block;
+}
+.srs-answer-word {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 4px;
+}
+.srs-pos {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #7a4e1a;
+    margin-bottom: 8px;
+    text-align: center;
+}
+.srs-def {
+    font-size: 0.98rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+.srs-def-secondary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #7a4e1a;
+    font-style: italic;
+    margin-top: 4px;
+}
+.srs-context-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #3a1f00;
+}
+.srs-context {
+    font-size: 0.9rem;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 4px 0 18px;
+}
+.srs-rate-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.srs-rate-btn {
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #2a1500;
+    text-align: center;
+    line-height: 1.3;
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-rate-btn small {
+    display: block;
+    font-weight: normal;
+    font-size: 0.72rem;
+    opacity: 0.85;
+    margin-top: 2px;
+    color: #4a3010;
+}
+.srs-rate-again,
+.srs-rate-hard,
+.srs-rate-good,
+.srs-rate-easy {
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-rate-again:hover,
+.srs-rate-hard:hover,
+.srs-rate-good:hover,
+.srs-rate-easy:hover {
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-done {
+    text-align: center;
+}
+.srs-done h3 {
+    color: #3a1f00;
+    margin-bottom: 10px;
+}
+.srs-done p {
+    text-align: center;
+    line-height: 1.5;
+}
+.srs-done-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.srs-type-area {
+    display: none;
+    margin: 12px 0 8px;
+}
+.srs-type-area.visible {
+    display: block;
+}
+.srs-type-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.15rem;
+    padding: 12px 14px;
+    border: 2px solid #7a4e1a;
+    border-radius: 4px;
+    background: #fffdf6;
+    color: #1a0e00;
+    text-align: center;
+    font-family: inherit;
+    outline: none;
+}
+.srs-type-input:focus {
+    border-color: #2e1f0a;
+    box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.35);
+}
+.srs-type-input.wrong {
+    border-color: #a33b2e;
+    animation: blankShake 0.3s;
+}
+.srs-type-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.srs-mode-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.srs-feedback {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #a33b2e;
+    min-height: 1.2em;
+    margin-top: 6px;
+}
+
+.srs-feedback.wrong-feedback {
+    color: #a33b2e;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+.srs-feedback.success {
+    color: #1a5c20;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+@media (max-width: 480px) {
+    .srs-rate-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    .srs-prompt-word { font-size: 1.35rem; color: #000000; }
+}
+
+
+    /* ===== CROSSWORD ===== */
+    #cw-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 12, 4, 0.72);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        box-sizing: border-box;
+        overflow: auto;
+    }
+    #cw-overlay.visible { display: flex; }
+    .cw-panel {
+        background: #f0e6c8;
+        color: #1a0e00;
+        border: 3px solid #7a4e1a;
+        border-radius: 6px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        width: 100%;
+        max-width: 640px;
+        max-height: 94vh;
+        overflow: auto;
+        padding: 16px 16px 20px;
+        box-sizing: border-box;
+    }
+    .cw-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    .cw-title {
+        font-size: 1.15rem;
+        font-weight: bold;
+        color: #3a1f00;
+        margin: 0;
+    }
+    .cw-sub {
+        text-align: center;
+        font-size: 0.98rem;
+        color: #3a1f00;
+        font-style: italic;
+        font-weight: 600;
+        margin: 0 0 12px;
+    }
+    .cw-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+    .cw-grid-wrap {
+        display: flex;
+        justify-content: center;
+        overflow: auto;
+        margin-bottom: 12px;
+    }
+    .cw-grid {
+        display: grid;
+        gap: 0;
+        background: #2e1f0a;
+        border: 2px solid #2e1f0a;
+        width: max-content;
+        margin: 0 auto;
+    }
+    .cw-cell {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 28px;
+        max-height: 28px;
+        box-sizing: border-box;
+        position: relative;
+        background: #2e1f0a;
+        padding: 0;
+        margin: 0;
+    }
+    .cw-cell.block { background: #2e1f0a; }
+    .cw-cell.letter {
+        background: #fffdf6;
+        border: 1px solid #5c3a14;
+    }
+    .cw-cell.letter input {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        border: none;
+        border-radius: 0;
+        background: #fffdf6;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a0e00;
+        text-transform: uppercase;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        caret-color: #7a4e1a;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    .cw-cell.letter input:focus {
+        outline: 2px solid #c8a060;
+        background: #fff8e0;
+    }
+    .cw-cell.correct {
+        background: #eaf6e0 !important;
+        border-color: #3d7a2f !important;
+    }
+    .cw-cell.correct input {
+        color: #1a3c10 !important;
+        font-weight: 700;
+        background: transparent !important;
+    }
+    .cw-cell.wrong-flash {
+        background: #fde8e4 !important;
+        border-color: #a33b2e !important;
+    }
+    .cw-cell.wrong-flash input {
+        color: #6b1c14 !important;
+    }
+    .cw-status.success {
+        color: #1a5c20;
+        background: #eaf6e0;
+        border: 1px solid #3d7a2f;
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+
+    .cw-cell.letter.cw-active-word {
+        background: #fff3bf !important;
+        border-color: #c9a000 !important;
+        box-shadow: inset 0 0 0 2px #e6b800;
+    }
+    .cw-cell.letter.cw-active-word input {
+        background: #fff3bf !important;
+    }
+
+    .cw-status.bad {
+        color: #6b1c14;
+        background: #fde8e4;
+        border: 1px solid #a33b2e;
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+    .cw-num {
+        position: absolute;
+        top: 1px;
+        left: 2px;
+        font-size: 8px;
+        line-height: 1;
+        color: #5c3a14;
+        pointer-events: none;
+        font-weight: bold;
+    }
+    .cw-bank {
+        display: none;
+        margin: 10px 0;
+        padding: 10px;
+        background: rgba(122, 78, 26, 0.06);
+        border: 1px solid #a0845a;
+        border-radius: 6px;
+    }
+    .cw-bank.visible { display: block; }
+    .cw-bank-label {
+        font-size: 0.85rem;
+        color: #7a4e1a;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .cw-bank-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .cw-bank-word {
+        font-size: 0.85rem;
+        border: 1px solid #7a4e1a;
+        padding: 5px 10px;
+        background: #f8f0d8;
+        border-radius: 4px;
+        color: #2a1500;
+        user-select: none;
+    }
+    .cw-bank-word.used {
+        opacity: 0.35;
+        text-decoration: line-through;
+    }
+    .cw-status {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #3a1f00;
+        font-weight: bold;
+        min-height: 1.3em;
+        margin: 8px 0;
+    }
+    .cw-status.success { color: #1a5c20; }
+
+    .cw-cell.letter.cw-active-word {
+        background: #fff3bf !important;
+        border-color: #c9a000 !important;
+        box-shadow: inset 0 0 0 2px #e6b800;
+    }
+    .cw-cell.letter.cw-active-word input {
+        background: #fff3bf !important;
+    }
+
+    .cw-status.bad { color: #a33b2e; }
+    @media (max-width: 500px) {
+        .cw-cell, .cw-cell.block, .cw-cell.letter {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            min-height: 28px;
+            max-width: 28px;
+            max-height: 28px;
+        }
+        .cw-cell.letter input { font-size: 14px; }
+        .cw-grid-wrap {
+            justify-content: flex-start;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+
+    .cw-hint {
+        text-align: center;
+        font-size: 0.88rem;
+        color: #7a4e1a;
+        font-style: italic;
+        margin: 8px 0 0;
+        min-height: 1.2em;
+    }
+    .cw-hint.ready {
+        color: #1a5c20;
+        font-style: normal;
+        font-weight: bold;
+    }
+
+</style>
+</head>
+<body>
+<div class="page-container">
+<h1><span class="vocab" data-word-en="An" data-word-vn="Một" data-pos="article / mạo từ" data-def-en="Used before vowel sounds." data-def-vn="Dùng trước âm nguyên âm." data-context-en="An F1 for Emily" data-context-vn="An F1 for Emily">An</span> <span class="vocab" data-word-en="F1" data-word-vn="F1" data-pos="noun / danh từ" data-def-en="A U.S. student visa category for academic study." data-def-vn="Loại visa du học Mỹ cho chương trình học thuật." data-context-en="An F1 for Emily" data-context-vn="An F1 for Emily">F1</span> <span class="vocab" data-word-en="for" data-word-vn="cho" data-pos="preposition / giới từ" data-def-en="Intended to benefit someone." data-def-vn="Dành cho ai đó." data-context-en="An F1 for Emily" data-context-vn="An F1 for Emily">for</span> Emily</h1>
+<div class="mode-banner" id="mode-banner">Hover/click (desktop) or tap (phone) a blank, then choose the matching word from Word Bank</div>
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen (if audio file available)</div>
+        <audio id="audio-player" src="emily.mp3" controls></audio>
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration||0,a.currentTime+20);">⇢ 20 sec</button>
+        </div>
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+    <div class="read-hint" id="read-hint">Click/tap any word with dotted underline to see definition.</div>
+    <div class="story-and-bank">
+        <div class="word-bank-section" id="word-bank-section">
+            <div class="audio-label">Word Bank</div>
+            <div class="bank-grid" id="bank-words"></div>
+        </div>
+    <div class="story-main">
+    <div id="story-content">
+<p>
+<span class="vocab" data-word-en="Receiving" data-word-vn="Nhận được" data-pos="verb / động từ" data-def-en="Getting or being given something." data-def-vn="Được cho hoặc nhận." data-context-en="Receiving an F1 student visa" data-context-vn="Receiving an F1 student visa">Receiving</span> an F1 <span class="vocab" data-word-en="student visa" data-word-vn="visa du học" data-pos="noun / danh từ" data-def-en="Official permission for a foreigner to study in a country." data-def-vn="Giấy phép chính thức cho người nước ngoài học tại một nước." data-context-en="F1 student visa to study in America" data-context-vn="F1 student visa to study in America">student visa</span> to <span class="vocab" data-word-en="study" data-word-vn="học" data-pos="verb / động từ" data-def-en="Learn at a school or university." data-def-vn="Học tại trường hoặc đại học." data-context-en="Study in America" data-context-vn="Study in America">study</span> in <span class="vocab" data-word-en="America" data-word-vn="Mỹ" data-pos="proper noun / danh từ riêng" data-def-en="The United States." data-def-vn="Hoa Kỳ." data-context-en="Study in America" data-context-vn="Study in America">America</span> is the '<span class="vocab" data-word-en="holy grail" data-word-vn="thánh tích / mục tiêu tối thượng" data-pos="idiom / thành ngữ" data-def-en="Something highly sought after but hard to obtain." data-def-vn="Thứ được khao khát nhưng khó đạt được." data-context-en="The holy grail for thousands of high school students" data-context-vn="The holy grail for thousands of high school students">holy grail</span>' for <span class="vocab" data-word-en="thousands" data-word-vn="hàng nghìn" data-pos="noun / danh từ" data-def-en="A very large number." data-def-vn="Một số lượng rất lớn." data-context-en="Thousands of high school students" data-context-vn="Thousands of high school students">thousands</span> of <span class="vocab" data-word-en="high school" data-word-vn="trung học phổ thông" data-pos="noun / danh từ" data-def-en="Secondary school before university." data-def-vn="Cấp học trước đại học." data-context-en="High school students in Sài gòn" data-context-vn="High school students in Sài gòn">high school</span> <span class="vocab" data-word-en="students" data-word-vn="học sinh" data-pos="noun / danh từ" data-def-en="People who are studying." data-def-vn="Người đang học." data-context-en="High school students" data-context-vn="High school students">students</span> in <span class="vocab" data-word-en="Sài gòn" data-word-vn="Sài Gòn" data-pos="proper noun / danh từ riêng" data-def-en="Former name of Ho Chi Minh City." data-def-vn="Tên cũ của TP. Hồ Chí Minh." data-context-en="Students in Sài gòn" data-context-vn="Students in Sài gòn">Sài gòn</span>. <span class="vocab" data-word-en="Only" data-word-vn="Chỉ" data-pos="adverb / phó từ" data-def-en="No more than." data-def-vn="Không hơn." data-context-en="Only a small percentage" data-context-vn="Only a small percentage">Only</span> a <span class="vocab" data-word-en="small" data-word-vn="nhỏ" data-pos="adjective / tính từ" data-def-en="Not large." data-def-vn="Không lớn." data-context-en="A small percentage of them" data-context-vn="A small percentage of them">small</span> <span class="vocab" data-word-en="percentage" data-word-vn="tỷ lệ phần trăm" data-pos="noun / danh từ" data-def-en="A rate or portion per hundred." data-def-vn="Tỷ lệ trên một trăm." data-context-en="A small percentage of them get it" data-context-vn="A small percentage of them get it">percentage</span> of them <span class="vocab" data-word-en="get" data-word-vn="nhận được" data-pos="verb / động từ" data-def-en="Obtain; receive." data-def-vn="Đạt được; nhận." data-context-en="Get it" data-context-vn="Get it">get</span> it. This is the <span class="vocab" data-word-en="story" data-word-vn="câu chuyện" data-pos="noun / danh từ" data-def-en="An account of events." data-def-vn="Bài kể về sự kiện." data-context-en="This is the story of one student" data-context-vn="This is the story of one student">story</span> of <span class="vocab" data-word-en="one" data-word-vn="một" data-pos="numeral / số từ" data-def-en="A single." data-def-vn="Một." data-context-en="One student who did receive it" data-context-vn="One student who did receive it">one</span> student who <span class="vocab" data-word-en="did" data-word-vn="đã" data-pos="verb / động từ" data-def-en="Emphasizes that the action really happened." data-def-vn="Nhấn mạnh hành động thật sự xảy ra." data-context-en="Who did receive it" data-context-vn="Who did receive it">did</span> <span class="vocab" data-word-en="receive" data-word-vn="nhận" data-pos="verb / động từ" data-def-en="Be given something." data-def-vn="Được cho cái gì." data-context-en="Receive it" data-context-vn="Receive it">receive</span> it. Her name is Emily and her <span class="vocab" data-word-en="home town" data-word-vn="quê nhà" data-pos="noun / danh từ" data-def-en="The town where someone grew up." data-def-vn="Thị trấn nơi ai lớn lên." data-context-en="Her home town is Dak Lak" data-context-vn="Her home town is Dak Lak">home town</span> is <span class="vocab" data-word-en="Dak Lak" data-word-vn="Đắk Lắk" data-pos="proper noun / danh từ riêng" data-def-en="A province in the Central Highlands of Vietnam." data-def-vn="Tỉnh ở Tây Nguyên Việt Nam." data-context-en="Her home town is Dak Lak" data-context-vn="Her home town is Dak Lak">Dak Lak</span>. Her story is <span class="vocab" data-word-en="proof" data-word-vn="bằng chứng" data-pos="noun / danh từ" data-def-en="Evidence that something is true." data-def-vn="Bằng chứng điều gì là đúng." data-context-en="Proof that instead of being an obstacle" data-context-vn="Proof that instead of being an obstacle">proof</span> that <span class="vocab" data-word-en="instead of" data-word-vn="thay vì" data-pos="preposition / giới từ" data-def-en="In place of; rather than." data-def-vn="Thay cho." data-context-en="Instead of being an obstacle to success" data-context-vn="Instead of being an obstacle to success">instead of</span> being an <span class="vocab" data-word-en="obstacle" data-word-vn="trở ngại" data-pos="noun / danh từ" data-def-en="Something that blocks progress." data-def-vn="Thứ cản trở tiến bộ." data-context-en="An obstacle to success" data-context-vn="An obstacle to success">obstacle</span> to <span class="vocab" data-word-en="success" data-word-vn="thành công" data-pos="noun / danh từ" data-def-en="The achievement of a goal." data-def-vn="Việc đạt được mục tiêu." data-context-en="Obstacle to success" data-context-vn="Obstacle to success">success</span>, <span class="vocab" data-word-en="failure" data-word-vn="thất bại" data-pos="noun / danh từ" data-def-en="Lack of success." data-def-vn="Thiếu thành công." data-context-en="Failure is part of success" data-context-vn="Failure is part of success">failure</span> is <span class="vocab" data-word-en="part" data-word-vn="phần" data-pos="noun / danh từ" data-def-en="A piece or component of something." data-def-vn="Một mảnh hoặc thành phần." data-context-en="Part of success" data-context-vn="Part of success">part</span> of success!
+</p>
+<p>
+<span class="vocab" data-word-en="On" data-word-vn="Vào" data-pos="preposition / giới từ" data-def-en="During; at the time of." data-def-vn="Trong; vào lúc." data-context-en="On her first attempt" data-context-vn="On her first attempt">On</span> her <span class="vocab" data-word-en="first" data-word-vn="đầu tiên" data-pos="adjective / tính từ" data-def-en="Coming before all others." data-def-vn="Đến trước tất cả." data-context-en="Her first attempt" data-context-vn="Her first attempt">first</span> <span class="vocab" data-word-en="attempt" data-word-vn="nỗ lực / lần thử" data-pos="noun / danh từ" data-def-en="An act of trying to do something." data-def-vn="Hành động cố gắng làm gì." data-context-en="First attempt" data-context-vn="First attempt">attempt</span> the <span class="vocab" data-word-en="consular officer" data-word-vn="viên chức lãnh sự" data-pos="noun / danh từ" data-def-en="A government official who interviews visa applicants." data-def-vn="Công chức phỏng vấn người xin visa." data-context-en="The consular officer failed her" data-context-vn="The consular officer failed her">consular officer</span> <span class="vocab" data-word-en="failed" data-word-vn="trượt" data-pos="verb / động từ" data-def-en="Did not approve; rejected." data-def-vn="Không phê duyệt; từ chối." data-context-en="Failed her" data-context-vn="Failed her">failed</span> her. They <span class="vocab" data-word-en="never" data-word-vn="không bao giờ" data-pos="adverb / phó từ" data-def-en="At no time." data-def-vn="Không lúc nào." data-context-en="They never give reasons" data-context-vn="They never give reasons">never</span> <span class="vocab" data-word-en="give" data-word-vn="đưa" data-pos="verb / động từ" data-def-en="Provide." data-def-vn="Cung cấp." data-context-en="Never give reasons why" data-context-vn="Never give reasons why">give</span> <span class="vocab" data-word-en="reasons" data-word-vn="lý do" data-pos="noun / danh từ" data-def-en="Explanations for a decision." data-def-vn="Giải thích cho quyết định." data-context-en="Reasons why the student failed" data-context-vn="Reasons why the student failed">reasons</span> why the student failed. The student and his <span class="vocab" data-word-en="family" data-word-vn="gia đình" data-pos="noun / danh từ" data-def-en="Parents and relatives." data-def-vn="Cha mẹ và họ hàng." data-context-en="The student and his family" data-context-vn="The student and his family">family</span> must <span class="vocab" data-word-en="decide" data-word-vn="quyết định" data-pos="verb / động từ" data-def-en="Make a choice." data-def-vn="Đưa ra lựa chọn." data-context-en="Must decide whether to try again" data-context-vn="Must decide whether to try again">decide</span> <span class="vocab" data-word-en="whether" data-word-vn="liệu" data-pos="conjunction / liên từ" data-def-en="If or not." data-def-vn="Có hay không." data-context-en="Whether to try again" data-context-vn="Whether to try again">whether</span> to <span class="vocab" data-word-en="try again" data-word-vn="thử lại" data-pos="phrasal verb / cụm động từ" data-def-en="Make another attempt." data-def-vn="Cố gắng lần nữa." data-context-en="Try again" data-context-vn="Try again">try again</span>. This is a <span class="vocab" data-word-en="tough" data-word-vn="khó khăn" data-pos="adjective / tính từ" data-def-en="Difficult." data-def-vn="Khó." data-context-en="A tough decision" data-context-vn="A tough decision">tough</span> <span class="vocab" data-word-en="decision" data-word-vn="quyết định" data-pos="noun / danh từ" data-def-en="A choice made after thinking." data-def-vn="Lựa chọn sau khi suy nghĩ." data-context-en="A tough decision" data-context-vn="A tough decision">decision</span> because the <span class="vocab" data-word-en="interview" data-word-vn="buổi phỏng vấn" data-pos="noun / danh từ" data-def-en="A formal meeting with questions." data-def-vn="Cuộc gặp chính thức có câu hỏi." data-context-en="The interview is not free" data-context-vn="The interview is not free">interview</span> is not <span class="vocab" data-word-en="free" data-word-vn="miễn phí" data-pos="adjective / tính từ" data-def-en="Costing nothing." data-def-vn="Không tốn tiền." data-context-en="Is not free" data-context-vn="Is not free">free</span>. It <span class="vocab" data-word-en="costs" data-word-vn="tốn" data-pos="verb / động từ" data-def-en="Requires payment of." data-def-vn="Cần trả." data-context-en="It costs about two hundred dollars" data-context-vn="It costs about two hundred dollars">costs</span> <span class="vocab" data-word-en="about" data-word-vn="khoảng" data-pos="adverb / phó từ" data-def-en="Approximately." data-def-vn="Xấp xỉ." data-context-en="About two hundred dollars" data-context-vn="About two hundred dollars">about</span> <span class="vocab" data-word-en="two hundred" data-word-vn="hai trăm" data-pos="numeral / số từ" data-def-en="The number 200." data-def-vn="Con số 200." data-context-en="Two hundred dollars" data-context-vn="Two hundred dollars">two hundred</span> <span class="vocab" data-word-en="dollars" data-word-vn="đô la" data-pos="noun / danh từ" data-def-en="Units of U.S. currency." data-def-vn="Đơn vị tiền Mỹ." data-context-en="Two hundred dollars" data-context-vn="Two hundred dollars">dollars</span>. If the student is <span class="vocab" data-word-en="under" data-word-vn="dưới" data-pos="preposition / giới từ" data-def-en="Younger than." data-def-vn="Nhỏ tuổi hơn." data-context-en="Under seventeen years old" data-context-vn="Under seventeen years old">under</span> <span class="vocab" data-word-en="seventeen" data-word-vn="mười bảy" data-pos="numeral / số từ" data-def-en="The number 17." data-def-vn="Con số 17." data-context-en="Seventeen years old" data-context-vn="Seventeen years old">seventeen</span> <span class="vocab" data-word-en="years old" data-word-vn="tuổi" data-pos="phrase / cụm từ" data-def-en="Of a certain age." data-def-vn="Ở một độ tuổi." data-context-en="Seventeen years old" data-context-vn="Seventeen years old">years old</span>, a <span class="vocab" data-word-en="parent" data-word-vn="phụ huynh" data-pos="noun / danh từ" data-def-en="A mother or father." data-def-vn="Mẹ hoặc cha." data-context-en="A parent is allowed to accompany" data-context-vn="A parent is allowed to accompany">parent</span> is <span class="vocab" data-word-en="allowed" data-word-vn="được phép" data-pos="verb / động từ" data-def-en="Given permission." data-def-vn="Được cho phép." data-context-en="Is allowed to accompany" data-context-vn="Is allowed to accompany">allowed</span> to <span class="vocab" data-word-en="accompany" data-word-vn="đi cùng" data-pos="verb / động từ" data-def-en="Go with someone." data-def-vn="Đi với ai." data-context-en="Accompany him or her" data-context-vn="Accompany him or her">accompany</span> him or her.
+</p>
+<p>
+Emily and her family did not <span class="vocab" data-word-en="give up" data-word-vn="bỏ cuộc" data-pos="phrasal verb / cụm động từ" data-def-en="Stop trying." data-def-vn="Ngừng cố gắng." data-context-en="Did not give up" data-context-vn="Did not give up">give up</span>. She <span class="vocab" data-word-en="went back" data-word-vn="trở về" data-pos="phrasal verb / cụm động từ" data-def-en="Returned." data-def-vn="Quay lại." data-context-en="Went back to her home town" data-context-vn="Went back to her home town">went back</span> to her home town and <span class="vocab" data-word-en="kept" data-word-vn="tiếp tục" data-pos="verb / động từ" data-def-en="Continued." data-def-vn="Tiếp tục." data-context-en="Kept studying English" data-context-vn="Kept studying English">kept</span> <span class="vocab" data-word-en="studying" data-word-vn="học" data-pos="verb / động từ" data-def-en="Learning by reading and practice." data-def-vn="Học bằng đọc và luyện tập." data-context-en="Studying English" data-context-vn="Studying English">studying</span> <span class="vocab" data-word-en="English" data-word-vn="tiếng Anh" data-pos="noun / danh từ" data-def-en="The English language." data-def-vn="Ngôn ngữ tiếng Anh." data-context-en="Studying English" data-context-vn="Studying English">English</span>. She also <span class="vocab" data-word-en="worked" data-word-vn="làm việc" data-pos="verb / động từ" data-def-en="Put effort into a task." data-def-vn="Nỗ lực vào nhiệm vụ." data-context-en="Worked diligently with a coach" data-context-vn="Worked diligently with a coach">worked</span> <span class="vocab" data-word-en="diligently" data-word-vn="chăm chỉ" data-pos="adverb / phó từ" data-def-en="With careful and persistent effort." data-def-vn="Với nỗ lực cẩn thận và bền bỉ." data-context-en="Worked diligently with a coach" data-context-vn="Worked diligently with a coach">diligently</span> with a <span class="vocab" data-word-en="coach" data-word-vn="huấn luyện viên" data-pos="noun / danh từ" data-def-en="A person who trains someone for a goal." data-def-vn="Người đào tạo ai cho một mục tiêu." data-context-en="With a coach who helped her" data-context-vn="With a coach who helped her">coach</span> who <span class="vocab" data-word-en="helped" data-word-vn="giúp" data-pos="verb / động từ" data-def-en="Made it easier for someone." data-def-vn="Làm cho ai dễ hơn." data-context-en="Helped her prepare good answers" data-context-vn="Helped her prepare good answers">helped</span> her <span class="vocab" data-word-en="prepare" data-word-vn="chuẩn bị" data-pos="verb / động từ" data-def-en="Make ready." data-def-vn="Làm sẵn sàng." data-context-en="Prepare good answers" data-context-vn="Prepare good answers">prepare</span> <span class="vocab" data-word-en="good" data-word-vn="tốt" data-pos="adjective / tính từ" data-def-en="Of high quality." data-def-vn="Chất lượng cao." data-context-en="Good answers to a wide range" data-context-vn="Good answers to a wide range">good</span> <span class="vocab" data-word-en="answers" data-word-vn="câu trả lời" data-pos="noun / danh từ" data-def-en="Responses to questions." data-def-vn="Phản hồi cho câu hỏi." data-context-en="Good answers" data-context-vn="Good answers">answers</span> to a <span class="vocab" data-word-en="wide range" data-word-vn="phạm vi rộng" data-pos="noun / danh từ" data-def-en="A large variety." data-def-vn="Nhiều loại khác nhau." data-context-en="A wide range of potential questions" data-context-vn="A wide range of potential questions">wide range</span> of <span class="vocab" data-word-en="potential" data-word-vn="tiềm năng" data-pos="adjective / tính từ" data-def-en="Possible; that might happen." data-def-vn="Có thể xảy ra." data-context-en="Potential questions" data-context-vn="Potential questions">potential</span> <span class="vocab" data-word-en="questions" data-word-vn="câu hỏi" data-pos="noun / danh từ" data-def-en="Sentences asking for information." data-def-vn="Câu xin thông tin." data-context-en="Questions the officer might ask" data-context-vn="Questions the officer might ask">questions</span> the officer <span class="vocab" data-word-en="might" data-word-vn="có thể" data-pos="verb / động từ" data-def-en="Expresses possibility." data-def-vn="Chỉ khả năng." data-context-en="Might ask" data-context-vn="Might ask">might</span> <span class="vocab" data-word-en="ask" data-word-vn="hỏi" data-pos="verb / động từ" data-def-en="Put a question to someone." data-def-vn="Đặt câu hỏi cho ai." data-context-en="Might ask" data-context-vn="Might ask">ask</span>.
+</p>
+<p>
+Emily's <span class="vocab" data-word-en="challenge" data-word-vn="thách thức" data-pos="noun / danh từ" data-def-en="A difficult task that tests ability." data-def-vn="Nhiệm vụ khó kiểm tra năng lực." data-context-en="Emily's challenge was especially difficult" data-context-vn="Emily's challenge was especially difficult">challenge</span> was <span class="vocab" data-word-en="especially" data-word-vn="đặc biệt" data-pos="adverb / phó từ" data-def-en="To a greater degree than usual." data-def-vn="Ở mức cao hơn bình thường." data-context-en="Especially difficult" data-context-vn="Especially difficult">especially</span> <span class="vocab" data-word-en="difficult" data-word-vn="khó" data-pos="adjective / tính từ" data-def-en="Hard to do or deal with." data-def-vn="Khó làm hoặc xử lý." data-context-en="Especially difficult" data-context-vn="Especially difficult">difficult</span> because she was <span class="vocab" data-word-en="asking" data-word-vn="xin" data-pos="verb / động từ" data-def-en="Requesting." data-def-vn="Yêu cầu." data-context-en="Asking to be allowed to repeat" data-context-vn="Asking to be allowed to repeat">asking</span> to be allowed to <span class="vocab" data-word-en="repeat" data-word-vn="học lại" data-pos="verb / động từ" data-def-en="Do the same school year again." data-def-vn="Làm lại cùng năm học." data-context-en="Repeat her final year of high school" data-context-vn="Repeat her final year of high school">repeat</span> her <span class="vocab" data-word-en="final year" data-word-vn="năm cuối" data-pos="noun / danh từ" data-def-en="The last year of a course of study." data-def-vn="Năm cuối của khóa học." data-context-en="Her final year of high school" data-context-vn="Her final year of high school">final year</span> of high school. The <span class="vocab" data-word-en="consulate" data-word-vn="lãnh sự quán" data-pos="noun / danh từ" data-def-en="The office of a consul in a foreign city." data-def-vn="Văn phòng lãnh sự ở thành phố nước ngoài." data-context-en="The consulate has a general policy" data-context-vn="The consulate has a general policy">consulate</span> has a <span class="vocab" data-word-en="general" data-word-vn="chung" data-pos="adjective / tính từ" data-def-en="Applying to most cases." data-def-vn="Áp dụng cho hầu hết trường hợp." data-context-en="A general policy" data-context-vn="A general policy">general</span> <span class="vocab" data-word-en="policy" data-word-vn="chính sách" data-pos="noun / danh từ" data-def-en="An official rule or approach." data-def-vn="Quy tắc hoặc cách tiếp cận chính thức." data-context-en="A general policy" data-context-vn="A general policy">policy</span> that when a student goes to study in the US, he must <span class="vocab" data-word-en="move forward" data-word-vn="tiến lên" data-pos="phrasal verb / cụm động từ" data-def-en="Progress to the next stage." data-def-vn="Tiến đến giai đoạn tiếp theo." data-context-en="Must move forward in his academic development" data-context-vn="Must move forward in his academic development">move forward</span> in his <span class="vocab" data-word-en="academic" data-word-vn="học thuật" data-pos="adjective / tính từ" data-def-en="Relating to education and study." data-def-vn="Liên quan đến giáo dục và học tập." data-context-en="Academic development" data-context-vn="Academic development">academic</span> <span class="vocab" data-word-en="development" data-word-vn="phát triển" data-pos="noun / danh từ" data-def-en="Growth or progress." data-def-vn="Sự tăng trưởng hoặc tiến bộ." data-context-en="Academic development" data-context-vn="Academic development">development</span>. <span class="vocab" data-word-en="Therefore" data-word-vn="Do đó" data-pos="adverb / phó từ" data-def-en="For that reason." data-def-vn="Vì lý do đó." data-context-en="Therefore it frowns on students" data-context-vn="Therefore it frowns on students">Therefore</span> it <span class="vocab" data-word-en="frowns on" data-word-vn="không tán thành" data-pos="phrasal verb / cụm động từ" data-def-en="Disapproves of." data-def-vn="Không đồng ý với." data-context-en="Frowns on students who have graduated" data-context-vn="Frowns on students who have graduated">frowns on</span> students who have <span class="vocab" data-word-en="graduated" data-word-vn="tốt nghiệp" data-pos="verb / động từ" data-def-en="Successfully completed a course of study." data-def-vn="Hoàn thành khóa học thành công." data-context-en="Who have graduated from high school" data-context-vn="Who have graduated from high school">graduated</span> from high school <span class="vocab" data-word-en="repeating" data-word-vn="học lại" data-pos="verb / động từ" data-def-en="Doing again." data-def-vn="Làm lại." data-context-en="Repeating grade twelve" data-context-vn="Repeating grade twelve">repeating</span> <span class="vocab" data-word-en="grade twelve" data-word-vn="lớp mười hai" data-pos="noun / danh từ" data-def-en="The final year of high school in many systems." data-def-vn="Năm cuối trung học ở nhiều hệ thống." data-context-en="Repeating grade twelve" data-context-vn="Repeating grade twelve">grade twelve</span>. <span class="vocab" data-word-en="Although" data-word-vn="Mặc dù" data-pos="conjunction / liên từ" data-def-en="In spite of the fact that." data-def-vn="Bất chấp sự thật là." data-context-en="Although consulate officers can override" data-context-vn="Although consulate officers can override">Although</span> consulate officers can <span class="vocab" data-word-en="override" data-word-vn="bác bỏ / vượt" data-pos="verb / động từ" data-def-en="Decide not to follow a rule in a special case." data-def-vn="Quyết định không theo quy tắc trong trường hợp đặc biệt." data-context-en="Can override the policy" data-context-vn="Can override the policy">override</span> the policy and <span class="vocab" data-word-en="make an exception" data-word-vn="đưa ra ngoại lệ" data-pos="phrase / cụm từ" data-def-en="Allow something that is usually not allowed." data-def-vn="Cho phép điều thường không được phép." data-context-en="Make an exception for an especially deserving student" data-context-vn="Make an exception for an especially deserving student">make an exception</span> for an especially <span class="vocab" data-word-en="deserving" data-word-vn="xứng đáng" data-pos="adjective / tính từ" data-def-en="Worthy of special treatment." data-def-vn="Đáng được đối xử đặc biệt." data-context-en="An especially deserving student" data-context-vn="An especially deserving student">deserving</span> student, it is <span class="vocab" data-word-en="rare" data-word-vn="hiếm" data-pos="adjective / tính từ" data-def-en="Not common." data-def-vn="Không phổ biến." data-context-en="It is rare" data-context-vn="It is rare">rare</span>. This <span class="vocab" data-word-en="meant" data-word-vn="có nghĩa là" data-pos="verb / động từ" data-def-en="Had the meaning or result that." data-def-vn="Có nghĩa hoặc kết quả là." data-context-en="This meant Emily had two strikes" data-context-vn="This meant Emily had two strikes">meant</span> Emily had '<span class="vocab" data-word-en="two strikes against her" data-word-vn="hai điểm bất lợi" data-pos="idiom / thành ngữ" data-def-en="Two existing disadvantages (from baseball)." data-def-vn="Hai điểm bất lợi sẵn có (từ bóng chày)." data-context-en="Two strikes against her from the get-go" data-context-vn="Two strikes against her from the get-go">two strikes against her</span>' '<span class="vocab" data-word-en="from the get-go" data-word-vn="từ đầu" data-pos="idiom / thành ngữ" data-def-en="From the very beginning." data-def-vn="Ngay từ lúc bắt đầu." data-context-en="From the get-go" data-context-vn="From the get-go">from the get-go</span>'.
+</p>
+<p>
+<span class="vocab" data-word-en="Nonetheless" data-word-vn="Dù vậy" data-pos="adverb / phó từ" data-def-en="In spite of that; however." data-def-vn="Mặc dù vậy; tuy nhiên." data-context-en="Nonetheless, she persevered" data-context-vn="Nonetheless, she persevered">Nonetheless</span>, she <span class="vocab" data-word-en="persevered" data-word-vn="kiên trì" data-pos="verb / động từ" data-def-en="Continued despite difficulty." data-def-vn="Tiếp tục bất chấp khó khăn." data-context-en="She persevered" data-context-vn="She persevered">persevered</span>. She '<span class="vocab" data-word-en="went back to the drawing board" data-word-vn="bắt đầu lại từ đầu" data-pos="idiom / thành ngữ" data-def-en="Started over with a new plan after a failure." data-def-vn="Bắt đầu lại với kế hoạch mới sau thất bại." data-context-en="Went back to the drawing board" data-context-vn="Went back to the drawing board">went back to the drawing board</span>'. She worked more with her coach on her <span class="vocab" data-word-en="presentation" data-word-vn="phần trình bày" data-pos="noun / danh từ" data-def-en="The way she would present herself and her answers." data-def-vn="Cách cô trình bày bản thân và câu trả lời." data-context-en="Her presentation" data-context-vn="Her presentation">presentation</span> and <span class="vocab" data-word-en="scheduled" data-word-vn="đặt lịch" data-pos="verb / động từ" data-def-en="Arranged for a particular time." data-def-vn="Sắp xếp vào thời điểm cụ thể." data-context-en="Scheduled another interview" data-context-vn="Scheduled another interview">scheduled</span> <span class="vocab" data-word-en="another" data-word-vn="một buổi nữa" data-pos="determiner / hạn định từ" data-def-en="One more." data-def-vn="Thêm một." data-context-en="Another interview" data-context-vn="Another interview">another</span> interview at the <span class="vocab" data-word-en="US Consulate" data-word-vn="Lãnh sự quán Mỹ" data-pos="noun / danh từ" data-def-en="The U.S. government office that handles visas." data-def-vn="Văn phòng chính phủ Mỹ xử lý visa." data-context-en="At the US Consulate" data-context-vn="At the US Consulate">US Consulate</span>. She also <span class="vocab" data-word-en="prayed" data-word-vn="cầu nguyện" data-pos="verb / động từ" data-def-en="Spoke to God to ask for help." data-def-vn="Nói với Chúa để xin giúp đỡ." data-context-en="Prayed for help from God" data-context-vn="Prayed for help from God">prayed</span> for <span class="vocab" data-word-en="help" data-word-vn="sự giúp đỡ" data-pos="noun / danh từ" data-def-en="Assistance." data-def-vn="Hỗ trợ." data-context-en="Help from God" data-context-vn="Help from God">help</span> from <span class="vocab" data-word-en="God" data-word-vn="Chúa" data-pos="noun / danh từ" data-def-en="The supreme being in many religions." data-def-vn="Đấng tối cao trong nhiều tôn giáo." data-context-en="Help from God" data-context-vn="Help from God">God</span>.
+</p>
+<p>
+<span class="vocab" data-word-en="When" data-word-vn="Khi" data-pos="conjunction / liên từ" data-def-en="At the time that." data-def-vn="Vào lúc mà." data-context-en="When interview day came" data-context-vn="When interview day came">When</span> <span class="vocab" data-word-en="interview day" data-word-vn="ngày phỏng vấn" data-pos="noun / danh từ" data-def-en="The day of the formal meeting." data-def-vn="Ngày của cuộc gặp chính thức." data-context-en="When interview day came" data-context-vn="When interview day came">interview day</span> <span class="vocab" data-word-en="came" data-word-vn="đến" data-pos="verb / động từ" data-def-en="Arrived." data-def-vn="Tới." data-context-en="Interview day came" data-context-vn="Interview day came">came</span>, Emily was <span class="vocab" data-word-en="quite" data-word-vn="khá" data-pos="adverb / phó từ" data-def-en="To a fairly large degree." data-def-vn="Ở mức khá lớn." data-context-en="Was quite nervous" data-context-vn="Was quite nervous">quite</span> <span class="vocab" data-word-en="nervous" data-word-vn="lo lắng" data-pos="adjective / tính từ" data-def-en="Worried or anxious." data-def-vn="Lo âu." data-context-en="Quite nervous" data-context-vn="Quite nervous">nervous</span>, but kept her <span class="vocab" data-word-en="composure" data-word-vn="sự bình tĩnh" data-pos="noun / danh từ" data-def-en="Calm self-control." data-def-vn="Sự tự chủ bình tĩnh." data-context-en="Kept her composure" data-context-vn="Kept her composure">composure</span>. This <span class="vocab" data-word-en="time" data-word-vn="lần" data-pos="noun / danh từ" data-def-en="Occasion." data-def-vn="Dịp." data-context-en="This time the officer approved" data-context-vn="This time the officer approved">time</span> the officer <span class="vocab" data-word-en="approved" data-word-vn="phê duyệt" data-pos="verb / động từ" data-def-en="Officially accepted." data-def-vn="Chấp nhận chính thức." data-context-en="Approved her visa to America" data-context-vn="Approved her visa to America">approved</span> her <span class="vocab" data-word-en="visa" data-word-vn="visa" data-pos="noun / danh từ" data-def-en="An official stamp allowing entry for a purpose." data-def-vn="Con dấu chính thức cho phép nhập cảnh." data-context-en="Her visa to America" data-context-vn="Her visa to America">visa</span> to America. After the <span class="vocab" data-word-en="morning" data-word-vn="buổi sáng" data-pos="noun / danh từ" data-def-en="The early part of the day." data-def-vn="Phần đầu của ngày." data-context-en="After the morning interview" data-context-vn="After the morning interview">morning</span> interview, her family, her <span class="vocab" data-word-en="pastor" data-word-vn="mục sư" data-pos="noun / danh từ" data-def-en="A Christian minister who leads a church." data-def-vn="Thầy giảng Cơ đốc lãnh đạo nhà thờ." data-context-en="Her pastor and her coach" data-context-vn="Her pastor and her coach">pastor</span> and her coach <span class="vocab" data-word-en="enjoyed" data-word-vn="tận hưởng" data-pos="verb / động từ" data-def-en="Took pleasure in." data-def-vn="Thấy vui thích." data-context-en="Enjoyed a celebration lunch" data-context-vn="Enjoyed a celebration lunch">enjoyed</span> a <span class="vocab" data-word-en="celebration" data-word-vn="ăn mừng" data-pos="noun / danh từ" data-def-en="A joyful gathering for a special event." data-def-vn="Cuộc họp vui cho sự kiện đặc biệt." data-context-en="A celebration lunch" data-context-vn="A celebration lunch">celebration</span> <span class="vocab" data-word-en="lunch" data-word-vn="bữa trưa" data-pos="noun / danh từ" data-def-en="The midday meal." data-def-vn="Bữa ăn giữa ngày." data-context-en="Celebration lunch at a Dim Sum restaurant" data-context-vn="Celebration lunch at a Dim Sum restaurant">lunch</span> at a <span class="vocab" data-word-en="Dim Sum" data-word-vn="Dim Sum" data-pos="noun / danh từ" data-def-en="A style of Chinese small-plate dishes." data-def-vn="Phong cách món nhỏ Trung Hoa." data-context-en="Dim Sum restaurant" data-context-vn="Dim Sum restaurant">Dim Sum</span> <span class="vocab" data-word-en="restaurant" data-word-vn="nhà hàng" data-pos="noun / danh từ" data-def-en="A place where meals are served to customers." data-def-vn="Nơi phục vụ bữa ăn cho khách." data-context-en="Dim Sum restaurant" data-context-vn="Dim Sum restaurant">restaurant</span>. They had all prayed for her. Emily is <span class="vocab" data-word-en="ecstatic" data-word-vn="hân hoan" data-pos="adjective / tính từ" data-def-en="Extremely happy and excited." data-def-vn="Cực kỳ vui và phấn khích." data-context-en="Emily is ecstatic" data-context-vn="Emily is ecstatic">ecstatic</span> <span class="vocab" data-word-en="grateful" data-word-vn="biết ơn" data-pos="adjective / tính từ" data-def-en="Feeling thankful." data-def-vn="Cảm thấy biết ơn." data-context-en="Grateful to God" data-context-vn="Grateful to God">grateful</span> to God for her <span class="vocab" data-word-en="opportunity" data-word-vn="cơ hội" data-pos="noun / danh từ" data-def-en="A chance to do something." data-def-vn="Dịp để làm gì." data-context-en="Her opportunity to study in America" data-context-vn="Her opportunity to study in America">opportunity</span> to study in America and <span class="vocab" data-word-en="fulfill" data-word-vn="thực hiện" data-pos="verb / động từ" data-def-en="Achieve or complete." data-def-vn="Đạt được hoặc hoàn thành." data-context-en="Fulfill her goal" data-context-vn="Fulfill her goal">fulfill</span> her <span class="vocab" data-word-en="goal" data-word-vn="mục tiêu" data-pos="noun / danh từ" data-def-en="Something you want to achieve." data-def-vn="Điều bạn muốn đạt được." data-context-en="Her goal of becoming an American-trained doctor" data-context-vn="Her goal of becoming an American-trained doctor">goal</span> of <span class="vocab" data-word-en="becoming" data-word-vn="trở thành" data-pos="verb / động từ" data-def-en="Starting to be." data-def-vn="Bắt đầu là." data-context-en="Becoming an American-trained doctor" data-context-vn="Becoming an American-trained doctor">becoming</span> an <span class="vocab" data-word-en="American-trained" data-word-vn="được đào tạo ở Mỹ" data-pos="adjective / tính từ" data-def-en="Educated in the United States." data-def-vn="Được giáo dục tại Hoa Kỳ." data-context-en="An American-trained doctor" data-context-vn="An American-trained doctor">American-trained</span> <span class="vocab" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="A person qualified to treat the sick." data-def-vn="Người đủ tư cách chữa bệnh." data-context-en="American-trained doctor" data-context-vn="American-trained doctor">doctor</span>.
+</p>
+    </div>
+            <div class="practice-controls" id="practice-controls">
+                <div class="practice-btn-row">
+                    <button id="start-practice-btn" class="practice-btn primary" disabled>Practice Your New Words</button>
+                    <button id="reset-practice-btn" class="practice-btn" style="display:none;">Practice these words again</button>
+                    <button id="toggle-bank-btn" class="practice-btn" style="display:none;">Hide Word Bank</button>
+                    <button id="exit-practice-btn" class="practice-btn large" style="display:none;">Start Over</button>
+                    <button id="start-srs-btn" class="practice-btn primary" disabled>Standard Review Level</button>
+                    <button id="start-srs-challenge-btn" class="practice-btn primary" disabled style="line-height:1.25;">Genius Level<br><span style="font-weight:normal;font-size:0.78rem;">Show us what you got!</span></button>
+                    <button id="start-cw-btn" class="practice-btn primary" disabled style="line-height:1.25;" title="Need 4 clicked words with 4+ letters each">Crossword<br><span style="font-weight:normal;font-size:0.78rem;">Minimum 4 words</span></button>
+                </div>
+                <div class="cw-hint" id="cw-hint">From words you click in the story (4+ letters each)</div>
+            </div>
+    </div>
+    </div>
+        <div class="back-btn-container">
+        <button type="button" class="back-btn" onclick="history.back()">Exit this Lesson</button>
+    </div>
+</div>
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+    <div class="browser-note">🔊 Vietnamese audio: Chrome or Edge recommended.</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the text:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+
+<div id="cw-overlay">
+    <div class="cw-panel" onclick="event.stopPropagation()">
+        <div class="cw-header">
+            <h3 class="cw-title">Crossword</h3>
+            <button type="button" class="practice-btn" id="cw-close-btn">Close</button>
+        </div>
+        <p class="cw-sub" id="cw-sub">From words you clicked · type one letter per square</p>
+        <div class="cw-toolbar">
+            <button type="button" class="practice-btn" id="cw-toggle-bank-btn">Hide Word Bank</button>
+            <button type="button" class="practice-btn" id="cw-check-btn">Check puzzle</button>
+            <button type="button" class="practice-btn" id="cw-solve-btn">See Solution</button>
+            <button type="button" class="practice-btn" id="cw-new-btn">New layout</button>
+        </div>
+        <div class="cw-bank visible" id="cw-bank">
+            <div class="cw-bank-label">Word Bank</div>
+            <div class="cw-bank-grid" id="cw-bank-grid"></div>
+        </div>
+        <div class="cw-grid-wrap">
+            <div class="cw-grid" id="cw-grid"></div>
+        </div>
+        <div class="cw-status" id="cw-status"></div>
+    </div>
+</div>
+
+<div id="srs-overlay">
+    <div class="srs-card">
+        <button class="srs-close-btn" id="srs-close-btn" title="Close review">✕</button>
+
+        <div id="srs-review-view">
+            <div class="srs-header">
+                <h3>Spaced Repetition Review</h3>
+                <div class="srs-progress-track"><div class="srs-progress-fill" id="srs-progress-fill"></div></div>
+                <div class="srs-progress-label" id="srs-progress-label"></div>
+            </div>
+
+            <div class="srs-direction-label" id="srs-direction-label"></div>
+            <div class="srs-prompt-word" id="srs-prompt-word"></div>
+            <div class="srs-audio-row" id="srs-audio-row"></div>
+
+            <div class="srs-type-area" id="srs-type-area">
+                <input type="text" class="srs-type-input" id="srs-type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Type answer, then Check or Enter">
+                <div class="srs-type-actions">
+                    <button class="srs-reveal-btn" id="srs-check-btn" type="button" style="width:auto; padding:10px 18px;">Check your answer</button>
+                    <button class="practice-btn" id="srs-giveup-btn" style="display:none;">Show answer</button>
+                </div>
+                <div class="srs-feedback" id="srs-feedback"></div>
+            </div>
+
+            <button class="srs-reveal-btn" id="srs-reveal-btn">Show Answer</button>
+
+            <div class="srs-answer" id="srs-answer">
+                <div class="srs-answer-word" id="srs-answer-word"></div>
+                <div class="srs-pos" id="srs-pos"></div>
+                <div class="srs-def" id="srs-def"></div>
+                <div class="srs-context-label">In the text:</div>
+                <div class="srs-context" id="srs-context"></div>
+
+                <div class="srs-rate-row">
+                    <button class="srs-rate-btn srs-rate-again" data-rating="again">Show More<small>need more practice</small></button>
+                    <button class="srs-rate-btn srs-rate-easy" data-rating="easy">Show Less<small>I know this well</small></button>
+                </div>
+                <div class="srs-feedback" id="srs-advance-hint" style="display:none; margin-top:12px;">Click any blank spot to advance to next word</div>
+            </div>
+        </div>
+
+        <div id="srs-done-view" class="srs-done" style="display:none;">
+            <h3>Session complete! 🎉</h3>
+            <p id="srs-done-summary"></p>
+            <div class="srs-done-actions">
+                <button class="practice-btn primary" id="srs-again-btn">Review Again</button>
+                <button class="practice-btn large" id="srs-back-btn">Back to Reading</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // ========== STATE ==========
+    let practiceMode = false;
+    let clickedIds = new Set();          // ids of vocab spans the user clicked
+    let orderedBlanks = [];              // array of vocab elements currently blanked (document order)
+    let activeBlankEl = null;            // the blank the user has selected (click any blank)
+    let originalTexts = new Map();       // id -> original innerText
+
+    // ========== SPEECH & AUDIO HELPERS (unchanged) ==========
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    // ========== UI HELPERS ==========
+    function updateWordCount() {
+        document.getElementById('start-practice-btn').disabled = clickedIds.size === 0;
+        const cwBtn = document.getElementById('start-cw-btn');
+        if (cwBtn) {
+            const n = cwEligibleWords().length;
+            cwBtn.disabled = n < 4;
+            cwBtn.title = n < 4
+                ? 'Need 4 clicked words with 4+ letters each (now have ' + n + ')'
+                : 'Build a crossword from the words you clicked';
+        }
+        const cwHint = document.getElementById('cw-hint');
+        if (cwHint) {
+            const nH = cwEligibleWords().length;
+            if (nH < 4) {
+                cwHint.textContent = 'From words you click in the story — ' + nH + ' of 4 needed';
+                cwHint.classList.remove('ready');
+            } else {
+                cwHint.textContent = 'From words you click in the story — ' + nH + ' available';
+                cwHint.classList.add('ready');
+            }
+        }
+
+        document.getElementById('start-srs-btn').disabled = clickedIds.size === 0;
+        const ch = document.getElementById('start-srs-challenge-btn');
+        if (ch) ch.disabled = clickedIds.size === 0;
+        const cwBtn2 = document.getElementById('start-cw-btn');
+        if (cwBtn2) {
+            const n2 = cwEligibleWords().length;
+            cwBtn2.disabled = n2 < 4;
+            cwBtn2.title = n2 < 4
+                ? 'Need 4 clicked words with 4+ letters each (now have ' + n2 + ')'
+                : 'Build a crossword from the words you clicked';
+        }
+    }
+
+    function updateProgress() {
+        // completion UI removed — blanks simply fill until done
+    }
+
+    // ========== PRACTICE MODE LOGIC ==========
+    function setActiveBlank(el) {
+        document.querySelectorAll('.vocab.active-blank').forEach(n => n.classList.remove('active-blank'));
+        activeBlankEl = null;
+        if (el && el.classList.contains('is-blank')) {
+            el.classList.add('active-blank');
+            activeBlankEl = el;
+        }
+    }
+
+    // Turns a blank into a real text input (used when the word bank is hidden,
+    // so there's nothing to click — the user must type the exact word).
+    function makeBlankTypeable(el) {
+        el.innerHTML = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onclick = null;
+        el.onmouseenter = null;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'blank-input';
+        input.setAttribute('autocomplete', 'off');
+        input.setAttribute('autocapitalize', 'off');
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('spellcheck', 'false');
+        input.addEventListener('click', (e) => e.stopPropagation());
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkTypedAnswer(el, input);
+            }
+        });
+        input.addEventListener('blur', () => checkTypedAnswer(el, input));
+        el.appendChild(input);
+    }
+
+    // Case-insensitive + hyphen-insensitive match (shared by story typing
+    // and SRS Level 2 challenge).
+    function normalizeAnswer(s) {
+        // Case, hyphen, and space insensitive: rapid-fire ≈ rapid fire ≈ RapidFire
+        let t = (s || '').trim().toLowerCase().replace(/-/g, '').replace(/\s+/g, '');
+        // Strip trailing -ly so meticulously ≈ meticulous, safely ≈ safe
+        if (t.length > 4 && t.endsWith('ly')) t = t.slice(0, -2);
+        return t;
+    }
+
+    function answersMatch(typed, correct) {
+        return normalizeAnswer(typed) === normalizeAnswer(correct);
+    }
+
+    function checkTypedAnswer(el, input) {
+        if (!el.classList.contains('is-blank')) return; // already filled, ignore
+        const typed = input.value.trim();
+        if (!typed) return;
+        const correct = (el.dataset.wordEn || '').trim();
+        if (answersMatch(typed, correct)) {
+            fillBlank(el, correct);
+        } else {
+            el.classList.remove('wrong-shake');
+            void el.offsetWidth; // restart the animation if triggered again
+            el.classList.add('wrong-shake');
+            setTimeout(() => el.classList.remove('wrong-shake'), 350);
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    // Restores a blank to the original click-to-select behavior (used when the
+    // word bank is shown again).
+    function makeBlankClickable(el) {
+        el.innerHTML = '';
+        el.textContent = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onmouseenter = () => {
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+        el.onclick = (e) => {
+            e.stopPropagation();
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+    }
+
+    function enterPracticeMode() {
+        if (clickedIds.size === 0) return;
+        practiceMode = true;
+
+        // Widen layout + show sidebar
+        document.querySelector('.page-container').classList.add('practice-on');
+
+        // Banner + buttons
+        document.getElementById('mode-banner').classList.add('visible');
+        document.getElementById('start-practice-btn').style.display = 'none';
+        document.getElementById('reset-practice-btn').style.display = 'inline-block';
+        document.getElementById('toggle-bank-btn').style.display = 'inline-block';
+        document.getElementById('exit-practice-btn').style.display = 'inline-block';
+        document.getElementById('word-bank-section').classList.add('visible');
+        document.getElementById('toggle-bank-btn').textContent = 'Hide Word Bank';
+
+        // Collect the clicked spans in document order
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        orderedBlanks = allVocab.filter(el => clickedIds.has(el.id));
+
+        // Blank them; activate on hover or click
+        orderedBlanks.forEach(el => {
+            if (!originalTexts.has(el.id)) {
+                originalTexts.set(el.id, el.textContent);
+            }
+            el.textContent = '';
+            el.classList.add('is-blank');
+            el.classList.remove('filled', 'highlight-flash', 'active-blank');
+            el.onmouseenter = () => {
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+            el.onclick = (e) => {
+                e.stopPropagation();
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+        });
+
+        // Build shuffled word bank
+        buildWordBank();
+
+        updateProgress();
+
+        // Select first blank and scroll to it
+        if (orderedBlanks.length > 0) {
+            setActiveBlank(orderedBlanks[0]);
+            setTimeout(() => {
+                orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 150);
+        }
+    }
+
+    function buildWordBank() {
+        const bank = document.getElementById('bank-words');
+        bank.innerHTML = '';
+
+        // Shuffle a copy of the ordered blanks for the bank display
+        const words = orderedBlanks.map(el => ({
+            id: el.id,
+            wordEn: el.dataset.wordEn,
+            wordVn: el.dataset.wordVn
+        }));
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+        shuffle(words);
+        shuffle(words);
+
+        words.forEach(item => {
+            const btn = document.createElement('div');
+            btn.className = 'bank-word';
+            btn.textContent = item.wordEn;
+            btn.dataset.wordEn = item.wordEn;
+            btn.dataset.targetId = item.id;
+            btn.addEventListener('click', onBankWordClick);
+            bank.appendChild(btn);
+        });
+    }
+
+    function fillBlank(blank, word) {
+        blank.textContent = word;
+        blank.classList.remove('is-blank', 'highlight-flash', 'active-blank');
+        blank.classList.add('filled');
+        blank.onclick = null;
+        blank.onmouseenter = null;
+        if (activeBlankEl === blank) activeBlankEl = null;
+        updateProgress();
+    }
+
+    function onBankWordClick(e) {
+        if (!practiceMode) return;
+        const btn = e.currentTarget;
+        const chosenWord = (btn.dataset.wordEn || '').trim();
+        if (!chosenWord) return;
+
+        // Need an active blank; if none, activate the first remaining one
+        let activeBlank = (activeBlankEl && activeBlankEl.classList.contains('is-blank'))
+            ? activeBlankEl
+            : null;
+        if (!activeBlank) {
+            const remaining = orderedBlanks.filter(el => el.classList.contains('is-blank'));
+            if (remaining.length === 0) return;
+            setActiveBlank(remaining[0]);
+            activeBlank = remaining[0];
+        }
+
+        // Correct for active blank → fill. Wrong word → do nothing.
+        if ((activeBlank.dataset.wordEn || '').trim().toLowerCase() === chosenWord.toLowerCase()) {
+            fillBlank(activeBlank, chosenWord);
+        }
+    }
+
+    function resetPractice() {
+        if (!practiceMode) return;
+        const bankVisible = document.getElementById('word-bank-section').classList.contains('visible');
+        // Re-blank everything that was in the original clicked set, matching
+        // whatever mode the word bank is currently in (shown vs hidden)
+        if (bankVisible) {
+            orderedBlanks.forEach(el => makeBlankClickable(el));
+            buildWordBank();
+        } else {
+            orderedBlanks.forEach(el => makeBlankTypeable(el));
+        }
+        updateProgress();
+        if (orderedBlanks.length > 0) {
+            if (bankVisible) {
+                setActiveBlank(orderedBlanks[0]);
+            } else {
+                const inp = orderedBlanks[0].querySelector('input.blank-input');
+                if (inp) inp.focus();
+            }
+            orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            activeBlankEl = null;
+        }
+    }
+
+    function exitPracticeMode() {
+        practiceMode = false;
+        document.querySelector('.page-container').classList.remove('practice-on');
+        document.getElementById('mode-banner').classList.remove('visible');
+        document.getElementById('start-practice-btn').style.display = 'inline-block';
+        document.getElementById('reset-practice-btn').style.display = 'none';
+        document.getElementById('toggle-bank-btn').style.display = 'none';
+        document.getElementById('exit-practice-btn').style.display = 'none';
+        document.getElementById('word-bank-section').classList.remove('visible');
+
+        // Restore original text on all previously blanked spans
+        orderedBlanks.forEach(el => {
+            const orig = originalTexts.get(el.id);
+            if (orig !== undefined) {
+                el.textContent = orig;
+            }
+            el.classList.remove('is-blank', 'filled', 'highlight-flash', 'active-blank');
+            el.onclick = null;
+            el.onmouseenter = null;
+        });
+        orderedBlanks = [];
+        activeBlankEl = null;
+
+        // Fresh cycle: clear collected words so next Lock-in uses only
+        // words clicked during the new reading pass
+        clickedIds.clear();
+        originalTexts.clear();
+        document.getElementById('bank-words').innerHTML = '';
+        updateWordCount();
+    }
+
+    // ========== SPACED REPETITION (Section 3) ==========
+    // Session-only, position-based review. Cards you miss resurface a few
+    // cards later in the SAME session; cards you know well drop out of the
+    // queue ("mastered") once you've gotten them right twice in a row.
+    let srsDeck = [];
+    let srsQueue = [];
+    let srsTotal = 0;
+    let srsMasteredCount = 0;
+    let srsCurrentCard = null;
+    let srsCurrentDirection = 'en2vn'; // alternates each card: 'en2vn' or 'vn2en'
+    let srsMode = 'review'; // 'review' (Level 1) or 'challenge' (Level 2 type-in)
+    let srsExpectedAnswer = '';
+
+    function srsBuildDeck() {
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        return allVocab
+            .filter(el => clickedIds.has(el.id))
+            .map(el => ({
+                id: el.id,
+                wordEn: el.dataset.wordEn || '',
+                wordVn: el.dataset.wordVn || '',
+                pos: el.dataset.pos || '',
+                defEn: el.dataset.defEn || '',
+                defVn: el.dataset.defVn || '',
+                contextEn: el.dataset.contextEn || el.dataset.wordEn || '',
+                contextVn: el.dataset.contextVn || el.dataset.wordVn || '',
+                streak: 0
+            }));
+    }
+
+    function srsShuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function srsStartSession(mode) {
+        srsMode = (mode === 'challenge') ? 'challenge' : 'review';
+        srsDeck = srsBuildDeck();
+        if (srsDeck.length === 0) return;
+        srsQueue = srsShuffle(srsDeck);
+        srsTotal = srsDeck.length;
+        srsMasteredCount = 0;
+
+        document.getElementById('srs-done-view').style.display = 'none';
+        document.getElementById('srs-review-view').style.display = 'block';
+        const header = document.querySelector('#srs-review-view .srs-header h3');
+        if (header) {
+            header.textContent = srsMode === 'challenge'
+                ? 'Challenge Review — Type the answer'
+                : 'Spaced Repetition Review';
+        }
+        document.getElementById('srs-overlay').classList.add('visible');
+
+        srsShowNextCard();
+    }
+
+    function srsRenderProgress() {
+        const pct = srsTotal === 0 ? 0 : Math.round((srsMasteredCount / srsTotal) * 100);
+        document.getElementById('srs-progress-fill').style.width = pct + '%';
+        document.getElementById('srs-progress-label').textContent =
+            srsMasteredCount + ' of ' + srsTotal + ' mastered \u00b7 ' + srsQueue.length + ' left in this round';
+    }
+
+    function srsShowNextCard() {
+        if (srsQueue.length === 0) {
+            srsFinishSession();
+            return;
+        }
+        srsCurrentCard = srsQueue.shift();
+        const isEnInput = document.documentElement.lang === 'en';
+
+        // Level 1 (review): random direction. Level 2 (challenge): always
+        // show the OPPOSITE language on the front; user types the study language.
+        if (srsMode === 'challenge') {
+            srsCurrentDirection = isEnInput ? 'vn2en' : 'en2vn';
+        } else {
+            srsCurrentDirection = Math.random() < 0.5 ? 'en2vn' : 'vn2en';
+        }
+
+        const frontWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordEn : srsCurrentCard.wordVn;
+        const backWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordVn : srsCurrentCard.wordEn;
+        srsExpectedAnswer = backWord;
+
+        // No direction label / Listen on either level — prompt word is enough.
+        const frontLangLabel = srsMode === 'challenge'
+            ? 'Type in answer and press Enter'
+            : '';
+
+        document.getElementById('srs-direction-label').textContent = frontLangLabel;
+        document.getElementById('srs-prompt-word').textContent = frontWord;
+
+        const audioRow = document.getElementById('srs-audio-row');
+        audioRow.innerHTML = '';
+
+        document.getElementById('srs-answer-word').textContent = backWord;
+        document.getElementById('srs-answer-word').style.display = '';
+        document.getElementById('srs-pos').textContent = srsCurrentCard.pos;
+        document.getElementById('srs-def').innerHTML = isEnInput
+            ? '<div>' + (srsCurrentCard.defEn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defVn || '') + '</div>'
+            : '<div>' + (srsCurrentCard.defVn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defEn || '') + '</div>';
+        document.getElementById('srs-context').textContent =
+            isEnInput ? srsCurrentCard.contextEn : (srsCurrentCard.contextVn || srsCurrentCard.contextEn);
+
+        document.getElementById('srs-answer').classList.remove('visible');
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-feedback').classList.remove('wrong-feedback');
+        srsChallengeSolved = false;
+        srsAnswerRevealed = false;
+        var advanceHint = document.getElementById("srs-advance-hint");
+        if (advanceHint) advanceHint.style.display = "none";
+
+        const typeArea = document.getElementById('srs-type-area');
+        const revealBtn = document.getElementById('srs-reveal-btn');
+        const typeInput = document.getElementById('srs-type-input');
+
+        if (srsMode === 'challenge') {
+            typeArea.classList.add('visible');
+            revealBtn.style.display = 'none';
+            typeInput.value = '';
+            typeInput.classList.remove('wrong');
+            typeInput.disabled = false;
+            document.getElementById('srs-giveup-btn').style.display = 'inline-block';
+            const chkBtn = document.getElementById('srs-check-btn');
+            if (chkBtn) chkBtn.style.display = 'inline-block';
+            setTimeout(() => typeInput.focus(), 50);
+        } else {
+            typeArea.classList.remove('visible');
+            revealBtn.style.display = 'block';
+        }
+
+        srsRenderProgress();
+    }
+
+    function srsCheckTypedAnswer() {
+        if (srsMode !== 'challenge' || !srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        const typed = input.value.trim();
+        if (!typed) return;
+        const fb = document.getElementById('srs-feedback');
+        if (answersMatch(typed, srsExpectedAnswer)) {
+            const cheers = ['You got it!', 'Good job!', 'Answer correct!', 'Dynamite!', "You're hot!", 'Perfect!', "You're a genius!"];
+            fb.textContent = cheers[Math.floor(Math.random() * cheers.length)];
+            fb.classList.remove('wrong-feedback');
+            fb.classList.add('success');
+            input.disabled = true;
+            input.classList.remove('wrong');
+            document.getElementById('srs-answer-word').style.display = 'none';
+        document.getElementById('srs-answer').classList.add('visible');
+            document.getElementById('srs-giveup-btn').style.display = 'none';
+            const chk = document.getElementById('srs-check-btn');
+            if (chk) chk.style.display = 'none';
+            srsChallengeSolved = true;
+            srsAnswerRevealed = true;
+            // Put correct answer in top position
+            (function() {
+                const prompt = document.getElementById('srs-prompt-word');
+                const frontWas = prompt.textContent;
+                prompt.textContent = srsExpectedAnswer || '';
+                document.getElementById('srs-direction-label').textContent =
+                    frontWas ? ('was: ' + frontWas) : '';
+            })();
+            var h = document.getElementById('srs-advance-hint');
+            if (h) h.style.display = 'block';
+        } else {
+            const misses = [
+                'Not quite — try again',
+                'Give up?',
+                'Close but no cigar!',
+                "C'mon, you can do better than that!",
+                'Hey, nobody said this would be easy!',
+                'Throw in the towel?'
+            ];
+            fb.textContent = misses[Math.floor(Math.random() * misses.length)];
+            fb.classList.remove('success');
+            fb.classList.add('wrong-feedback');
+            input.classList.remove('wrong');
+            void input.offsetWidth;
+            input.classList.add('wrong');
+            input.value = '';
+            input.focus();
+            setTimeout(() => input.classList.remove('wrong'), 350);
+        }
+    }
+
+    function srsGiveUp() {
+        if (!srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        if (input) {
+            input.disabled = true;
+            input.value = srsExpectedAnswer;
+        }
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-giveup-btn').style.display = 'none';
+        const chk2 = document.getElementById('srs-check-btn');
+        if (chk2) chk2.style.display = 'none';
+        // Allow click-anywhere to advance (counts as Again — they needed the answer)
+        srsChallengeSolved = false;
+        srsAnswerRevealed = true;
+        var h = document.getElementById("srs-advance-hint");
+        if (h) h.style.display = "block";
+    }
+
+    function srsRevealAnswer() {
+        // Answer word takes the top (prompt) position — large black type
+        const prompt = document.getElementById('srs-prompt-word');
+        const frontWas = prompt.textContent;
+        prompt.textContent = srsExpectedAnswer || '';
+        document.getElementById('srs-direction-label').textContent =
+            frontWas ? ('was: ' + frontWas) : '';
+        const aw = document.getElementById('srs-answer-word');
+        if (aw) aw.style.display = 'none';
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-reveal-btn').style.display = 'none';
+        srsAnswerRevealed = true;
+        var h = document.getElementById('srs-advance-hint');
+        if (h) h.style.display = 'block';
+    }
+
+    function srsRateCard(rating) {
+        if (!srsCurrentCard) return;
+        const card = srsCurrentCard;
+
+        // Two-button system:
+        // Show More  → again (reappear soon)
+        // Show Less  → easy  (done for this session)
+        if (rating === 'again' || rating === 'hard') {
+            card.streak = 0;
+            srsQueue.splice(Math.min(3, srsQueue.length), 0, card);
+        } else {
+            // good / easy / anything else → mastered for this session
+            srsMasteredCount++;
+        }
+
+        srsCurrentCard = null;
+        srsShowNextCard();
+    }
+
+    function srsFinishSession() {
+        document.getElementById('srs-review-view').style.display = 'none';
+        document.getElementById('srs-done-view').style.display = 'block';
+        document.getElementById('srs-done-summary').textContent =
+            'You reviewed ' + srsTotal + ' word' + (srsTotal === 1 ? '' : 's') + ' and mastered all of them this round. Nice work!';
+    }
+
+    function srsCloseOverlay() {
+        document.getElementById('srs-overlay').classList.remove('visible');
+    }
+
+    
+    // ========== CROSSWORD ==========
+    let cwShowBank = true;
+    let cwPlacements = []; // {word, row, col, dir, num}
+    let cwRows = 0, cwCols = 0;
+    let cwSolution = {}; // "r,c" -> letter
+
+    function cwEligibleWords() {
+        const isEn = document.documentElement.lang !== 'vi';
+        const seen = new Set();
+        const words = [];
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach(el => {
+            if (!clickedIds.has(el.id)) return;
+            let w = (isEn ? el.dataset.wordEn : el.dataset.wordVn) || '';
+            w = w.trim();
+            // single token only (allow hyphen → strip for grid letters)
+            if (/\s/.test(w)) return;
+            const letters = w.replace(/-/g, '');
+            if (letters.length < 4) return;
+            const key = letters.toUpperCase();
+            if (seen.has(key)) return;
+            seen.add(key);
+            words.push({ display: w, letters: key });
+        });
+        return words;
+    }
+
+    function cwTryPlace(grid, rows, cols, word, row, col, dir) {
+        const dr = dir === 'across' ? 0 : 1;
+        const dc = dir === 'across' ? 1 : 0;
+        const L = word.length;
+        if (row < 0 || col < 0 || row + dr * (L - 1) >= rows || col + dc * (L - 1) >= cols) return null;
+        let crosses = 0;
+        for (let i = 0; i < L; i++) {
+            const r = row + dr * i, c = col + dc * i;
+            const cell = grid[r][c];
+            if (cell === null) {
+                // empty — ok, but check neighbors perpendicular aren't letters (loose check)
+            } else if (cell === word[i]) {
+                crosses++;
+            } else {
+                return null; // conflict
+            }
+        }
+        // Prefer at least one cross for non-first words
+        return crosses;
+    }
+
+    function cwBuildGrid(wordList) {
+        // wordList: array of {display, letters}
+        const words = wordList.slice().sort((a, b) => b.letters.length - a.letters.length);
+        if (!words.length) return null;
+
+        const maxLen = Math.max(...words.map(w => w.letters.length));
+        const size = Math.min(22, Math.max(12, maxLen + 4 + Math.floor(words.length / 2)));
+        let best = null;
+
+        for (let attempt = 0; attempt < 40; attempt++) {
+            const order = words.slice();
+            // shuffle slightly after first
+            if (attempt > 0) {
+                for (let i = order.length - 1; i > 0; i--) {
+                    if (Math.random() < 0.5) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [order[i], order[j]] = [order[j], order[i]];
+                    }
+                }
+            }
+            const grid = Array.from({ length: size }, () => Array(size).fill(null));
+            const placements = [];
+            let num = 1;
+
+            // first word centered horizontally
+            const w0 = order[0].letters;
+            let r0 = Math.floor(size / 2);
+            let c0 = Math.floor((size - w0.length) / 2);
+            for (let i = 0; i < w0.length; i++) grid[r0][c0 + i] = w0[i];
+            placements.push({ word: order[0].display, letters: w0, row: r0, col: c0, dir: 'across', num: num++ });
+
+            for (let wi = 1; wi < order.length; wi++) {
+                const letters = order[wi].letters;
+                let candidates = [];
+                for (let i = 0; i < letters.length; i++) {
+                    for (let r = 0; r < size; r++) {
+                        for (let c = 0; c < size; c++) {
+                            if (grid[r][c] !== letters[i]) continue;
+                            // try across with letter i at (r,c)
+                            const ca = c - i;
+                            const xa = cwTryPlace(grid, size, size, letters, r, ca, 'across');
+                            if (xa !== null && (placements.length === 0 || xa > 0)) {
+                                candidates.push({ row: r, col: ca, dir: 'across', crosses: xa });
+                            }
+                            const cr = r - i;
+                            const xd = cwTryPlace(grid, size, size, letters, cr, c, 'down');
+                            if (xd !== null && (placements.length === 0 || xd > 0)) {
+                                candidates.push({ row: cr, col: c, dir: 'down', crosses: xd });
+                            }
+                        }
+                    }
+                }
+                if (!candidates.length) continue;
+                candidates.sort((a, b) => b.crosses - a.crosses);
+                const pick = candidates[Math.floor(Math.random() * Math.min(3, candidates.length))];
+                const dr = pick.dir === 'across' ? 0 : 1;
+                const dc = pick.dir === 'across' ? 1 : 0;
+                for (let i = 0; i < letters.length; i++) {
+                    grid[pick.row + dr * i][pick.col + dc * i] = letters[i];
+                }
+                placements.push({
+                    word: order[wi].display,
+                    letters,
+                    row: pick.row,
+                    col: pick.col,
+                    dir: pick.dir,
+                    num: num++
+                });
+            }
+
+            if (!best || placements.length > best.placements.length) {
+                best = { grid, placements, size };
+            }
+            if (placements.length === order.length) break;
+        }
+
+        if (!best || best.placements.length < 2) return null;
+
+        // Trim empty border
+        let minR = best.size, maxR = 0, minC = best.size, maxC = 0;
+        for (let r = 0; r < best.size; r++) {
+            for (let c = 0; c < best.size; c++) {
+                if (best.grid[r][c] !== null) {
+                    minR = Math.min(minR, r); maxR = Math.max(maxR, r);
+                    minC = Math.min(minC, c); maxC = Math.max(maxC, c);
+                }
+            }
+        }
+        const rows = maxR - minR + 1;
+        const cols = maxC - minC + 1;
+        const trimmed = Array.from({ length: rows }, (_, r) =>
+            Array.from({ length: cols }, (_, c) => best.grid[r + minR][c + minC])
+        );
+        const placements = best.placements.map(p => ({
+            ...p,
+            row: p.row - minR,
+            col: p.col - minC
+        }));
+        // renumber by reading order
+        placements.sort((a, b) => a.row - b.row || a.col - b.col);
+        placements.forEach((p, i) => { p.num = i + 1; });
+
+        return { grid: trimmed, placements, rows, cols };
+    }
+
+    function cwRender(result) {
+        cwPlacements = result.placements;
+        cwRows = result.rows;
+        cwCols = result.cols;
+        cwSolution = {};
+        for (let r = 0; r < result.rows; r++) {
+            for (let c = 0; c < result.cols; c++) {
+                if (result.grid[r][c] !== null) cwSolution[r + ',' + c] = result.grid[r][c];
+            }
+        }
+
+        const gridEl = document.getElementById('cw-grid');
+        gridEl.style.gridTemplateColumns = 'repeat(' + result.cols + ', 28px)';
+        gridEl.style.gap = '0';
+        gridEl.style.columnGap = '0';
+        gridEl.style.rowGap = '0';
+        gridEl.innerHTML = '';
+
+        // number map
+        const numAt = {};
+        result.placements.forEach(p => {
+            const k = p.row + ',' + p.col;
+            if (!numAt[k] || p.num < numAt[k]) numAt[k] = p.num;
+        });
+
+        for (let r = 0; r < result.rows; r++) {
+            for (let c = 0; c < result.cols; c++) {
+                const cell = document.createElement('div');
+                const letter = result.grid[r][c];
+                if (letter === null) {
+                    cell.className = 'cw-cell block';
+                } else {
+                    cell.className = 'cw-cell letter';
+                    const key = r + ',' + c;
+                    if (numAt[key]) {
+                        const n = document.createElement('span');
+                        n.className = 'cw-num';
+                        n.textContent = numAt[key];
+                        cell.appendChild(n);
+                    }
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.maxLength = 1;
+                    inp.autocomplete = 'off';
+                    inp.autocapitalize = 'characters';
+                    inp.dataset.r = r;
+                    inp.dataset.c = c;
+                    inp.addEventListener('focus', (e) => {
+                        const r = +e.target.dataset.r, c = +e.target.dataset.c;
+                        cwSetDirFromClick(r, c);
+                        cwHighlightWordAt(r, c);
+                    });
+                    inp.addEventListener('input', (e) => {
+                        let v = (e.target.value || '').slice(-1).toUpperCase();
+                        v = v.replace(/[^A-Za-zÀ-ỹĂăÂâÊêÔôƠơƯưĐđ]/g, '');
+                        e.target.value = v;
+                        e.target.parentElement.classList.remove('correct', 'wrong-flash');
+                        if (v) {
+                            const next = cwNextCell(+e.target.dataset.r, +e.target.dataset.c);
+                            if (next) next.focus();
+                        }
+                    });
+                    inp.addEventListener('keydown', (e) => {
+                        const r = +e.target.dataset.r, c = +e.target.dataset.c;
+                        if (e.key === 'ArrowRight') { cwDir = 'across'; const n = cwCellInput(r, c + 1); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowLeft') { cwDir = 'across'; const n = cwCellInput(r, c - 1); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowDown') { cwDir = 'down'; const n = cwCellInput(r + 1, c); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowUp') { cwDir = 'down'; const n = cwCellInput(r - 1, c); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'Backspace' && !e.target.value) {
+                            const prev = cwPrevCell(r, c);
+                            if (prev) { prev.focus(); e.preventDefault(); }
+                        }
+                    });
+                    cell.appendChild(inp);
+                }
+                gridEl.appendChild(cell);
+            }
+        }
+
+        // bank
+        const bank = document.getElementById('cw-bank-grid');
+        bank.innerHTML = '';
+        const shuffled = result.placements.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        shuffled.forEach(p => {
+            const d = document.createElement('div');
+            d.className = 'cw-bank-word';
+            d.textContent = p.word;
+            d.dataset.letters = p.letters;
+            bank.appendChild(d);
+        });
+
+        document.getElementById('cw-status').textContent =
+            'Placed ' + result.placements.length + ' words · fill every square';
+        document.getElementById('cw-status').className = 'cw-status';
+        cwApplyBankVisibility();
+    }
+
+    // Track typing direction so junctions continue the same way
+    let cwDir = 'across'; // 'across' | 'down'
+
+    function cwCellInput(r, c) {
+        return document.querySelector('.cw-cell.letter input[data-r="'+r+'"][data-c="'+c+'"]');
+    }
+    function cwNextCell(r, c) {
+        if (cwDir === 'down') {
+            const down = cwCellInput(r + 1, c);
+            if (down) return down;
+            const right = cwCellInput(r, c + 1);
+            if (right) { cwDir = 'across'; return right; }
+        } else {
+            const right = cwCellInput(r, c + 1);
+            if (right) return right;
+            const down = cwCellInput(r + 1, c);
+            if (down) { cwDir = 'down'; return down; }
+        }
+        return null;
+    }
+    function cwPrevCell(r, c) {
+        if (cwDir === 'down') {
+            const up = cwCellInput(r - 1, c);
+            if (up) return up;
+            const left = cwCellInput(r, c - 1);
+            if (left) { cwDir = 'across'; return left; }
+        } else {
+            const left = cwCellInput(r, c - 1);
+            if (left) return left;
+            const up = cwCellInput(r - 1, c);
+            if (up) { cwDir = 'down'; return up; }
+        }
+        return null;
+    }
+
+    function cwClearActiveWord() {
+        document.querySelectorAll('.cw-cell.cw-active-word').forEach(el => el.classList.remove('cw-active-word'));
+    }
+    function cwHighlightWordAt(r, c) {
+        cwClearActiveWord();
+        // Find placement(s) covering this cell in current direction; prefer cwDir
+        const covering = cwPlacements.filter(p => {
+            const dr = p.dir === 'across' ? 0 : 1;
+            const dc = p.dir === 'across' ? 1 : 0;
+            for (let i = 0; i < p.letters.length; i++) {
+                if (p.row + dr * i === r && p.col + dc * i === c) return true;
+            }
+            return false;
+        });
+        let place = covering.find(p => p.dir === cwDir) || covering[0];
+        if (!place) return;
+        cwDir = place.dir;
+        const dr = place.dir === 'across' ? 0 : 1;
+        const dc = place.dir === 'across' ? 1 : 0;
+        for (let i = 0; i < place.letters.length; i++) {
+            const rr = place.row + dr * i, cc = place.col + dc * i;
+            const inp = cwCellInput(rr, cc);
+            if (inp) inp.parentElement.classList.add('cw-active-word');
+        }
+    }
+
+    function cwSetDirFromClick(r, c) {
+        // If this cell is the start of a placed word, adopt that word's direction.
+        const starts = cwPlacements.filter(p => p.row === r && p.col === c);
+        if (starts.length === 1) {
+            cwDir = starts[0].dir;
+            return;
+        }
+        if (starts.length > 1) {
+            // both across & down start here — keep current dir
+            return;
+        }
+        // Mid-word: only one axis may continue
+        const hasAcross = !!(cwCellInput(r, c - 1) || cwCellInput(r, c + 1));
+        const hasDown = !!(cwCellInput(r - 1, c) || cwCellInput(r + 1, c));
+        if (hasAcross && !hasDown) cwDir = 'across';
+        else if (hasDown && !hasAcross) cwDir = 'down';
+        // if both (junction), keep current cwDir so progress continues straight
+    }
+
+    function cwApplyBankVisibility() {
+        const bank = document.getElementById('cw-bank');
+        const btn = document.getElementById('cw-toggle-bank-btn');
+        if (cwShowBank) {
+            bank.classList.add('visible');
+            btn.textContent = 'Hide Word Bank';
+        } else {
+            bank.classList.remove('visible');
+            btn.textContent = 'Show Word Bank';
+        }
+    }
+
+    function cwOpen() {
+        const words = cwEligibleWords();
+        if (words.length < 4) {
+            alert('Need at least 4 clicked words with 4+ letters each to build a crossword.');
+            return;
+        }
+        // Cap at 15 for density
+        let list = words.slice();
+        if (list.length > 15) {
+            // shuffle and take 15
+            for (let i = list.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [list[i], list[j]] = [list[j], list[i]];
+            }
+            list = list.slice(0, 15);
+        }
+        const result = cwBuildGrid(list);
+        if (!result) {
+            alert('Could not build a crossword from those words. Click a few more, or try again.');
+            return;
+        }
+        cwRender(result);
+        document.getElementById('cw-sub').textContent =
+            'From words you clicked · ' + result.placements.length + ' words in the puzzle';
+        document.getElementById('cw-overlay').classList.add('visible');
+    }
+
+    function cwClose() {
+        cwClearActiveWord();
+        document.getElementById('cw-overlay').classList.remove('visible');
+    }
+
+    function cwCheck() {
+        let total = 0, ok = 0;
+        document.querySelectorAll('.cw-cell.letter input').forEach(inp => {
+            total++;
+            const key = inp.dataset.r + ',' + inp.dataset.c;
+            const want = cwSolution[key];
+            const got = (inp.value || '').toUpperCase();
+            inp.parentElement.classList.remove('correct', 'wrong-flash');
+            if (got && got === want) {
+                ok++;
+                inp.parentElement.classList.add('correct');
+            } else if (got) {
+                inp.parentElement.classList.add('wrong-flash');
+            }
+        });
+        const st = document.getElementById('cw-status');
+        if (ok === total && total > 0) {
+            st.textContent = "You got it! Crossword complete.";
+            st.className = 'cw-status success';
+            // mark bank used
+            document.querySelectorAll('.cw-bank-word').forEach(w => w.classList.add('used'));
+        } else {
+            st.textContent = ok + ' / ' + total + ' letters correct — keep going';
+            st.className = 'cw-status bad';
+        }
+    }
+
+
+    function cwShowSolution() {
+        document.querySelectorAll('.cw-cell.letter input').forEach(inp => {
+            const key = inp.dataset.r + ',' + inp.dataset.c;
+            const want = cwSolution[key];
+            if (want) {
+                inp.value = want;
+                inp.parentElement.classList.remove('wrong-flash');
+                inp.parentElement.classList.add('correct');
+            }
+        });
+        document.querySelectorAll('.cw-bank-word').forEach(w => w.classList.add('used'));
+        const st = document.getElementById('cw-status');
+        st.textContent = 'Solution shown — try New layout for another puzzle';
+        st.className = 'cw-status success';
+    }
+
+    function cwNewLayout() {
+        cwOpen();
+    }
+
+    // ========== INITIALIZATION ==========
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        // Assign stable ids and wire click handlers
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                // In practice mode we ignore clicks on vocab (they are blanks or filled)
+                if (practiceMode) return;
+
+                // Track this word for the word bank
+                if (!clickedIds.has(el.id)) {
+                    clickedIds.add(el.id);
+                    updateWordCount();
+                }
+
+                // Show / toggle popup (existing behaviour)
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                document.getElementById('popup-title').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                const isEnInput = document.documentElement.lang === 'en';
+                document.getElementById('popup-definition').innerHTML = isEnInput
+                    ? (el.dataset.defVn || '') + hr + (el.dataset.defEn || '')
+                    : (el.dataset.defEn || '') + hr + (el.dataset.defVn || '');
+                
+                document.getElementById('popup-context-text').innerText = el.dataset.contextEn || el.dataset.wordEn || '';
+
+                popup.style.display = 'block';
+            });
+        });
+
+        // Close popup on outside click
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        // Practice control buttons
+        // Practice control buttons
+        function toggleWordBank() {
+            const bank = document.getElementById('word-bank-section');
+            const btn = document.getElementById('toggle-bank-btn');
+            if (bank.classList.contains('visible')) {
+                // Hide bank + re-blank the story as typeable inputs for a
+                // real memory challenge (nothing to click anymore)
+                bank.classList.remove('visible');
+                btn.textContent = 'Show Word Bank';
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankTypeable(el));
+                    const firstBlank = orderedBlanks[0];
+                    if (firstBlank) {
+                        firstBlank.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const inp = firstBlank.querySelector('input.blank-input');
+                        if (inp) inp.focus();
+                    }
+                    updateProgress();
+                }
+            } else {
+                bank.classList.add('visible');
+                btn.textContent = 'Hide Word Bank';
+                // Fresh round again, same as the hide direction: re-blank
+                // everything back to click-to-select and rebuild the bank,
+                // rather than leaving previously-typed answers in place.
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankClickable(el));
+                    buildWordBank();
+                    setActiveBlank(orderedBlanks[0]);
+                    orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    updateProgress();
+                }
+            }
+        }
+
+        document.getElementById('start-practice-btn').addEventListener('click', enterPracticeMode);
+        document.getElementById('reset-practice-btn').addEventListener('click', resetPractice);
+        document.getElementById('toggle-bank-btn').addEventListener('click', toggleWordBank);
+        document.getElementById('exit-practice-btn').addEventListener('click', exitPracticeMode);
+
+        // Spaced Repetition controls
+        document.getElementById('start-srs-btn').addEventListener('click', () => srsStartSession('review'));
+        document.getElementById('start-srs-challenge-btn').addEventListener('click', () => srsStartSession('challenge'));
+        document.getElementById('srs-close-btn').addEventListener('click', srsCloseOverlay);
+        document.getElementById('srs-reveal-btn').addEventListener('click', srsRevealAnswer);
+        document.getElementById('srs-check-btn').addEventListener('click', srsCheckTypedAnswer);
+        const typeAreaEl = document.getElementById('srs-type-area');
+        if (typeAreaEl) {
+            typeAreaEl.addEventListener('click', (e) => e.stopPropagation());
+            typeAreaEl.addEventListener('touchend', (e) => e.stopPropagation());
+        }
+        // srs-type-area-stop
+
+        document.getElementById('srs-giveup-btn').addEventListener('click', srsGiveUp);
+        const srsTypeInput = document.getElementById('srs-type-input');
+        const submitTyped = (e) => {
+            if (e) e.preventDefault();
+            srsCheckTypedAnswer();
+        };
+        srsTypeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        // Mobile keyboards often only fire keyup / change for the Done key
+        srsTypeInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        document.getElementById('srs-again-btn').addEventListener('click', () => srsStartSession(srsMode));
+        document.getElementById('srs-back-btn').addEventListener('click', srsCloseOverlay);
+        document.querySelectorAll('.srs-rate-btn').forEach(btn => {
+            btn.addEventListener('click', () => srsRateCard(btn.dataset.rating));
+        });
+        // Click anywhere in the review card that isn't a button dismisses it
+        // (mirrors the vocab popup's behavior) — no button clicks close it,
+        // since those (Show Answer, ratings, audio) have their own actions.
+        // Backdrop closes session. Once an answer is showing (Level 1 reveal,
+        // Level 2 correct, or Show answer), click anywhere on the card (not a
+        // rating button / input) advances — no need to hunt for the X.
+        document.getElementById('srs-overlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('srs-overlay')) {
+                srsCloseOverlay();
+                return;
+            }
+            // Never advance from a tap while the type-in field is active (mobile
+            // keyboard dismiss often hits the card behind the keyboard).
+            const typeInput = document.getElementById('srs-type-input');
+            if (typeInput && document.activeElement === typeInput) return;
+            if (e.target.closest('#srs-type-area')) return;
+            if (srsAnswerRevealed && !e.target.closest('button') && !e.target.closest('input')) {
+                const rating = (srsChallengeSolved || srsMode === 'review') ? 'easy' : 'again';
+                srsAnswerRevealed = false;
+                srsChallengeSolved = false;
+                srsRateCard(rating);
+            }
+        });
+
+        const cwStart = document.getElementById('start-cw-btn');
+        if (cwStart) cwStart.addEventListener('click', cwOpen);
+        const cwCloseBtn = document.getElementById('cw-close-btn');
+        if (cwCloseBtn) cwCloseBtn.addEventListener('click', cwClose);
+        const cwCheckBtn = document.getElementById('cw-check-btn');
+        if (cwCheckBtn) cwCheckBtn.addEventListener('click', cwCheck);
+        const cwSolveBtn = document.getElementById('cw-solve-btn');
+        if (cwSolveBtn) cwSolveBtn.addEventListener('click', cwShowSolution);
+        const cwNewBtn = document.getElementById('cw-new-btn');
+        if (cwNewBtn) cwNewBtn.addEventListener('click', cwNewLayout);
+        const cwToggleBank = document.getElementById('cw-toggle-bank-btn');
+        if (cwToggleBank) cwToggleBank.addEventListener('click', () => {
+            cwShowBank = !cwShowBank;
+            cwApplyBankVisibility();
+        });
+        const cwOverlay = document.getElementById('cw-overlay');
+        if (cwOverlay) cwOverlay.addEventListener('click', (e) => {
+            if (e.target === cwOverlay) cwClose();
+        });
+
+
+        updateWordCount();
+    });
+
+</script>
+</body>
+</html>
