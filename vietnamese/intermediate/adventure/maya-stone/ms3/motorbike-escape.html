@@ -1,0 +1,2414 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tập 3: Cuộc chạy trốn bằng xe máy</title>
+<style>
+
+        body {
+            background-color: #2b2b2b;
+            color: #1a0e00;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            transition: max-width 0.25s ease;
+        }
+        .page-container.practice-on {
+            max-width: 700px;
+        }
+        .story-and-bank {
+            display: block;
+        }
+        .page-container.practice-on .story-and-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .page-container.practice-on .story-main {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+            color: #1a0e00;
+        }
+        .read-hint {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #5c3a14;
+            font-style: italic;
+            margin: -10px 0 22px;
+            padding: 0 8px;
+        }
+        .page-container.practice-on .read-hint {
+            display: none;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: #f0e6c8;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn, .practice-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover, .practice-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .practice-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .practice-btn.primary {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border: 2px solid #7a4e1a !important;
+            font-weight: bold;
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            box-shadow: none;
+        }
+        .practice-btn.large {
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            font-weight: bold;
+        }
+        .practice-btn.primary:hover:not(:disabled) {
+            background: #e8d9b0 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+        }
+        .practice-btn.primary:disabled {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+            opacity: 0.5;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        .vocab.is-blank {
+            display: inline-block;
+            min-width: 5.2em;
+            height: 1.35em;
+            line-height: 1.35em;
+            vertical-align: baseline;
+            margin: 0 2px;
+            padding: 0 6px;
+            background-color: #fffdf6;
+            border: 2px solid #5c3a14;
+            border-radius: 3px;
+            color: transparent;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            box-sizing: border-box;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+        .vocab.is-blank::after {
+            content: none;
+        }
+        .vocab.is-blank.active-blank {
+            background-color: #fff8e0;
+            border-color: #2e1f0a;
+            box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.45);
+        }
+        .vocab.is-blank.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 4px #e6b800 !important;
+            border-color: #c9a000 !important;
+        }
+        .vocab.is-blank input.blank-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font: inherit;
+            color: #1a0e00;
+            outline: none;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: text;
+        }
+        .vocab.is-blank.wrong-shake {
+            animation: blankShake 0.3s;
+            border-color: #a33b2e !important;
+            box-shadow: 0 0 0 3px rgba(163, 59, 46, 0.35) !important;
+        }
+        @keyframes blankShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .vocab.filled {
+            border: none;
+            border-bottom: 2px solid #1a5c20;
+            background-color: rgba(26, 92, 32, 0.12);
+            color: #1a3c10;
+            font-weight: 600;
+            cursor: default;
+            padding: 0;
+            min-width: 0;
+            height: auto;
+        }
+        .vocab.filled:hover {
+            background-color: rgba(26, 92, 32, 0.18);
+        }
+        .vocab.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 5px #ffc107 !important;
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .practice-controls {
+            margin: 30px 0 20px;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            text-align: center;
+        }
+        .collect-status {
+            font-size: 1rem;
+            color: #3a1f00;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .collect-status span {
+            color: #7a4e1a;
+            font-size: 1.15rem;
+        }
+        .back-btn-container {
+            text-align: center;
+            margin: 28px 0 8px;
+            padding-top: 16px;
+            border-top: 1px dashed #a0845a;
+        }
+        .back-btn-container .back-btn {
+            font-size: 1rem;
+            padding: 10px 22px;
+        }
+        .practice-btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .word-bank-section {
+            display: none;
+            margin: 20px 0 10px;
+            padding: 14px;
+            background: rgba(122, 78, 26, 0.06);
+            border: 1px solid #a0845a;
+            border-radius: 6px;
+        }
+        .word-bank-section.visible {
+            display: block;
+        }
+        /* Horizontal word bank above the story when practice is active */
+        .page-container.practice-on .word-bank-section.visible {
+            display: block;
+            width: 100%;
+            margin: 0 0 4px;
+            position: sticky;
+            top: 160px;
+            z-index: 20;
+            max-height: none;
+            overflow: visible;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            background: #f5ecd4;
+        }
+        .bank-grid {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .bank-word {
+            font-size: 0.92rem;
+            border: 1px solid #7a4e1a;
+            cursor: pointer;
+            padding: 7px 12px;
+            text-align: center;
+            background: #f8f0d8;
+            border-radius: 4px;
+            color: #2a1500;
+            transition: all 0.15s;
+            user-select: none;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+        .bank-word:hover {
+            background: #e8d8b0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .practice-progress {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .practice-complete {
+            display: none;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(26, 92, 32, 0.12);
+            border: 2px solid #1a5c20;
+            border-radius: 6px;
+            text-align: center;
+            color: #1a3c10;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .practice-complete.visible {
+            display: block;
+        }
+        .mode-banner {
+            display: none;
+            background: #7a4e1a;
+            color: #f0e6c8;
+            text-align: center;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .mode-banner.visible {
+            display: block;
+        }
+        .practice-instruction {
+            display: none;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #7a4e1a;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        .practice-instruction.visible {
+            display: block;
+        }
+       @media (max-width: 820px) {
+          .page-container.practice-on {
+              max-width: 700px;
+          }
+          .page-container.practice-on .word-bank-section.visible {
+              position: sticky;
+              top: 160px;
+              max-height: none;
+          }
+       }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .bank-word {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ========== SPACED REPETITION (Section 3) ========== */
+#srs-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 4, 0.72);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+#srs-overlay.visible {
+    display: flex;
+}
+.srs-card {
+    background-color: #f0e6c8;
+    color: #1a0e00;
+    border: 3px solid #7a4e1a;
+    border-radius: 6px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 25px;
+    box-sizing: border-box;
+    position: relative;
+}
+.srs-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #7a4e1a;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+}
+.srs-close-btn:hover {
+    color: #3a1f00;
+}
+.srs-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.srs-header h3 {
+    margin: 0 0 6px;
+    color: #3a1f00;
+    font-size: 1.25rem;
+}
+.srs-progress-track {
+    background: rgba(122, 78, 26, 0.18);
+    border-radius: 8px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+.srs-progress-fill {
+    background: #1a5c20;
+    height: 100%;
+    width: 0%;
+    transition: width 0.25s ease;
+}
+.srs-progress-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    margin-top: 6px;
+}
+.srs-direction-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    font-style: italic;
+    text-align: center;
+    min-height: 1.2em;
+}
+.srs-prompt-word {
+    font-size: 1.55rem;
+    font-weight: bold;
+    color: #000000;
+    margin: 8px 0 6px;
+    line-height: 1.35;
+}
+.srs-audio-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.srs-reveal-btn {
+    display: block;
+    width: 100%;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 12px;
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+.srs-reveal-btn:hover {
+    background: #422d12;
+    color: #ffe6b3;
+}
+.srs-answer {
+    display: none;
+    border-top: 1px dashed #7a4e1a;
+    padding-top: 16px;
+    margin-top: 4px;
+}
+.srs-answer.visible {
+    display: block;
+}
+.srs-answer-word {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 4px;
+}
+.srs-pos {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #7a4e1a;
+    margin-bottom: 8px;
+    text-align: center;
+}
+.srs-def {
+    font-size: 0.98rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+.srs-def-secondary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #7a4e1a;
+    font-style: italic;
+    margin-top: 4px;
+}
+.srs-context-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #3a1f00;
+}
+.srs-context {
+    font-size: 0.9rem;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 4px 0 18px;
+}
+.srs-rate-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.srs-rate-btn {
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #2a1500;
+    text-align: center;
+    line-height: 1.3;
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-rate-btn small {
+    display: block;
+    font-weight: normal;
+    font-size: 0.72rem;
+    opacity: 0.85;
+    margin-top: 2px;
+    color: #4a3010;
+}
+.srs-rate-again,
+.srs-rate-hard,
+.srs-rate-good,
+.srs-rate-easy {
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-rate-again:hover,
+.srs-rate-hard:hover,
+.srs-rate-good:hover,
+.srs-rate-easy:hover {
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-done {
+    text-align: center;
+}
+.srs-done h3 {
+    color: #3a1f00;
+    margin-bottom: 10px;
+}
+.srs-done p {
+    text-align: center;
+    line-height: 1.5;
+}
+.srs-done-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.srs-type-area {
+    display: none;
+    margin: 12px 0 8px;
+}
+.srs-type-area.visible {
+    display: block;
+}
+.srs-type-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.15rem;
+    padding: 12px 14px;
+    border: 2px solid #7a4e1a;
+    border-radius: 4px;
+    background: #fffdf6;
+    color: #1a0e00;
+    text-align: center;
+    font-family: inherit;
+    outline: none;
+}
+.srs-type-input:focus {
+    border-color: #2e1f0a;
+    box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.35);
+}
+.srs-type-input.wrong {
+    border-color: #a33b2e;
+    animation: blankShake 0.3s;
+}
+.srs-type-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.srs-mode-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.srs-feedback {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #a33b2e;
+    min-height: 1.2em;
+    margin-top: 6px;
+}
+
+.srs-feedback.wrong-feedback {
+    color: #a33b2e;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+.srs-feedback.success {
+    color: #1a5c20;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+@media (max-width: 480px) {
+    .srs-rate-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    .srs-prompt-word { font-size: 1.35rem; color: #000000; }
+}
+
+
+    /* ===== CROSSWORD ===== */
+    #cw-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 12, 4, 0.72);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        box-sizing: border-box;
+        overflow: auto;
+    }
+    #cw-overlay.visible { display: flex; }
+    .cw-panel {
+        background: #f0e6c8;
+        color: #1a0e00;
+        border: 3px solid #7a4e1a;
+        border-radius: 6px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        width: 100%;
+        max-width: 640px;
+        max-height: 94vh;
+        overflow: auto;
+        padding: 16px 16px 20px;
+        box-sizing: border-box;
+    }
+    .cw-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    .cw-title {
+        font-size: 1.15rem;
+        font-weight: bold;
+        color: #3a1f00;
+        margin: 0;
+    }
+    .cw-sub {
+        text-align: center;
+        font-size: 0.98rem;
+        color: #3a1f00;
+        font-style: italic;
+        font-weight: 600;
+        margin: 0 0 12px;
+    }
+    .cw-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+    .cw-grid-wrap {
+        display: flex;
+        justify-content: center;
+        overflow: auto;
+        margin-bottom: 12px;
+    }
+    .cw-grid {
+        display: grid;
+        gap: 0;
+        background: #2e1f0a;
+        border: 2px solid #2e1f0a;
+        width: max-content;
+        margin: 0 auto;
+    }
+    .cw-cell {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 28px;
+        max-height: 28px;
+        box-sizing: border-box;
+        position: relative;
+        background: #2e1f0a;
+        padding: 0;
+        margin: 0;
+    }
+    .cw-cell.block { background: #2e1f0a; }
+    .cw-cell.letter {
+        background: #fffdf6;
+        border: 1px solid #5c3a14;
+    }
+    .cw-cell.letter input {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        border: none;
+        border-radius: 0;
+        background: #fffdf6;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a0e00;
+        text-transform: uppercase;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        caret-color: #7a4e1a;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    .cw-cell.letter input:focus {
+        outline: 2px solid #c8a060;
+        background: #fff8e0;
+    }
+    .cw-cell.correct {
+        background: #eaf6e0 !important;
+        border-color: #3d7a2f !important;
+    }
+    .cw-cell.correct input {
+        color: #1a3c10 !important;
+        font-weight: 700;
+        background: transparent !important;
+    }
+    .cw-cell.wrong-flash {
+        background: #fde8e4 !important;
+        border-color: #a33b2e !important;
+    }
+    .cw-cell.wrong-flash input {
+        color: #6b1c14 !important;
+    }
+    .cw-status.success {
+        color: #1a5c20;
+        background: #eaf6e0;
+        border: 1px solid #3d7a2f;
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+
+    .cw-cell.letter.cw-active-word {
+        background: #fff3bf !important;
+        border-color: #c9a000 !important;
+        box-shadow: inset 0 0 0 2px #e6b800;
+    }
+    .cw-cell.letter.cw-active-word input {
+        background: #fff3bf !important;
+    }
+
+    .cw-status.bad {
+        color: #6b1c14;
+        background: #fde8e4;
+        border: 1px solid #a33b2e;
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+    .cw-num {
+        position: absolute;
+        top: 1px;
+        left: 2px;
+        font-size: 8px;
+        line-height: 1;
+        color: #5c3a14;
+        pointer-events: none;
+        font-weight: bold;
+    }
+    .cw-bank {
+        display: none;
+        margin: 10px 0;
+        padding: 10px;
+        background: rgba(122, 78, 26, 0.06);
+        border: 1px solid #a0845a;
+        border-radius: 6px;
+    }
+    .cw-bank.visible { display: block; }
+    .cw-bank-label {
+        font-size: 0.85rem;
+        color: #7a4e1a;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .cw-bank-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .cw-bank-word {
+        font-size: 0.85rem;
+        border: 1px solid #7a4e1a;
+        padding: 5px 10px;
+        background: #f8f0d8;
+        border-radius: 4px;
+        color: #2a1500;
+        user-select: none;
+    }
+    .cw-bank-word.used {
+        opacity: 0.35;
+        text-decoration: line-through;
+    }
+    .cw-status {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #3a1f00;
+        font-weight: bold;
+        min-height: 1.3em;
+        margin: 8px 0;
+    }
+    .cw-status.success { color: #1a5c20; }
+
+    .cw-cell.letter.cw-active-word {
+        background: #fff3bf !important;
+        border-color: #c9a000 !important;
+        box-shadow: inset 0 0 0 2px #e6b800;
+    }
+    .cw-cell.letter.cw-active-word input {
+        background: #fff3bf !important;
+    }
+
+    .cw-status.bad { color: #a33b2e; }
+    @media (max-width: 500px) {
+        .cw-cell, .cw-cell.block, .cw-cell.letter {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            min-height: 28px;
+            max-width: 28px;
+            max-height: 28px;
+        }
+        .cw-cell.letter input { font-size: 14px; }
+        .cw-grid-wrap {
+            justify-content: flex-start;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+
+    .cw-hint {
+        text-align: center;
+        font-size: 0.88rem;
+        color: #7a4e1a;
+        font-style: italic;
+        margin: 8px 0 0;
+        min-height: 1.2em;
+    }
+    .cw-hint.ready {
+        color: #1a5c20;
+        font-style: normal;
+        font-weight: bold;
+    }
+
+</style>
+</head>
+<body>
+<div class="page-container">
+<h1>Tập 3</h1>
+    <h2 class="subtitle">Cuộc chạy trốn bằng xe máy</h2>
+    <div class="mode-banner" id="mode-banner">Hover/click (desktop) or tap (phone) a blank, then choose the matching word from Word Bank</div>
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen</div>
+        <audio id="audio-player" src="motorbike-escape.mp3" controls></audio>
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration||0,a.currentTime+20);">⇢ 20 sec</button>
+        </div>
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+    <div class="read-hint" id="read-hint">Click/tap any word with dotted underline to see definition.</div>
+    <div class="story-and-bank">
+        <div class="word-bank-section" id="word-bank-section">
+            <div class="audio-label">Word Bank</div>
+            <div class="bank-grid" id="bank-words"></div>
+        </div>
+    <div class="story-main">
+    <div id="story-content">
+<p>
+        Sau khi <span class="vocab" data-word-vn="rời" data-word-en="leave / depart" data-pos="động từ / verb" data-def-vn="Đi khỏi một nơi nào đó." data-def-en="To go away from a place." data-context-vn="Sau khi rời máy bay, Maya phải xếp hàng rất lâu.">rời</span> <span class="vocab" data-word-vn="máy bay" data-word-en="airplane" data-pos="danh từ / noun" data-def-vn="Phương tiện giao thông đường hàng không." data-def-en="A powered flying vehicle with fixed wings." data-context-vn="Sau khi rời máy bay, Maya phải xếp hàng rất lâu.">máy bay</span>, Maya phải <span class="vocab" data-word-vn="xếp hàng" data-word-en="queue / line up" data-pos="động từ / verb" data-def-vn="Đứng thành hàng để chờ đến lượt." data-def-en="To stand in a line waiting for one's turn." data-context-vn="Maya phải xếp hàng rất lâu tại quầy làm thủ tục hải quan.">xếp hàng</span> rất <span class="vocab" data-word-vn="lâu" data-word-en="long (time)" data-pos="tính từ / adjective" data-def-vn="Kéo dài trong một khoảng thời gian đáng kể." data-def-en="Lasting for a considerable period of time." data-context-vn="Maya phải xếp hàng rất lâu tại quầy làm thủ tục hải quan.">lâu</span> tại <span class="vocab" data-word-vn="quầy" data-word-en="counter / booth" data-pos="danh từ / noun" data-def-vn="Bàn hoặc khu vực làm việc chính thức tại cơ quan, sân bay." data-def-en="An official service desk or station at an airport or office." data-context-vn="Tại quầy làm thủ tục hải quan.">quầy</span> làm <span class="vocab" data-word-vn="thủ tục" data-word-en="procedure / formalities" data-pos="danh từ / noun" data-def-vn="Các bước bắt buộc phải thực hiện theo quy định." data-def-en="Required steps or formalities to be completed officially." data-context-vn="Quầy làm thủ tục hải quan.">thủ tục</span> <span class="vocab" data-word-vn="hải quan" data-word-en="customs" data-pos="danh từ / noun" data-def-vn="Cơ quan kiểm soát hàng hoá và người qua biên giới." data-def-en="The government authority controlling goods and people crossing borders." data-context-vn="Quầy làm thủ tục hải quan.">hải quan</span>. Những <span class="vocab" data-word-vn="hành khách" data-word-en="passenger" data-pos="danh từ / noun" data-def-vn="Người đi trên phương tiện giao thông." data-def-en="A person travelling on a vehicle such as a plane or train." data-context-vn="Những hành khách mệt mỏi đang lo lắng đợi.">hành khách</span> <span class="vocab" data-word-vn="mệt mỏi" data-word-en="tired / weary" data-pos="tính từ / adjective" data-def-vn="Cảm thấy kiệt sức sau khi làm việc hay di chuyển nhiều." data-def-en="Feeling exhausted after much effort or travel." data-context-vn="Những hành khách mệt mỏi đang lo lắng đợi.">mệt mỏi</span> đang <span class="vocab" data-word-vn="lo lắng" data-word-en="anxious / worried" data-pos="tính từ / adjective" data-def-vn="Cảm thấy bất an, băn khoăn về điều gì đó." data-def-en="Feeling uneasy or troubled about something uncertain." data-context-vn="Những hành khách mệt mỏi đang lo lắng đợi.">lo lắng</span> đợi các <span class="vocab" data-word-vn="sĩ quan" data-word-en="officer" data-pos="danh từ / noun" data-def-vn="Người có chức vụ trong lực lượng chính phủ hoặc quân đội." data-def-en="A person holding an official rank in a government or military body." data-context-vn="Đợi các sĩ quan kiểm tra hộ chiếu và thị thực.">sĩ quan</span> <span class="vocab" data-word-vn="kiểm tra" data-word-en="check / inspect" data-pos="động từ / verb" data-def-vn="Xem xét kỹ lưỡng để xác nhận tính hợp lệ." data-def-en="To examine carefully in order to verify validity." data-context-vn="Các sĩ quan kiểm tra hộ chiếu và thị thực.">kiểm tra</span> <span class="vocab" data-word-vn="hộ chiếu" data-word-en="passport" data-pos="danh từ / noun" data-def-vn="Tài liệu chính thức xác nhận danh tính và quốc tịch khi ra nước ngoài." data-def-en="An official document certifying identity and nationality for international travel." data-context-vn="Kiểm tra hộ chiếu và thị thực.">hộ chiếu</span> và <span class="vocab" data-word-vn="thị thực" data-word-en="visa" data-pos="danh từ / noun" data-def-vn="Giấy phép cho phép nhập cảnh vào một quốc gia." data-def-en="An official permit allowing entry into a country." data-context-vn="Kiểm tra hộ chiếu và thị thực.">thị thực</span>. Suốt thời gian đó, Maya luôn có <span class="vocab" data-word-vn="cảm giác" data-word-en="feeling / sense" data-pos="danh từ / noun" data-def-vn="Nhận thức hoặc ấn tượng chủ quan về điều gì đó." data-def-en="A subjective awareness or impression of something." data-context-vn="Maya luôn có cảm giác mình đang bị theo dõi.">cảm giác</span> mình đang bị <span class="vocab" data-word-vn="theo dõi" data-word-en="watched / followed" data-pos="động từ / verb" data-def-vn="Bị quan sát hoặc giám sát bí mật bởi ai đó." data-def-en="Being secretly observed or monitored by someone." data-context-vn="Maya luôn có cảm giác mình đang bị theo dõi.">theo dõi</span>.
+    </p>
+
+<p>
+        Khi cuối cùng cũng <span class="vocab" data-word-vn="bước chân" data-word-en="step out / walk out" data-pos="động từ / verb phrase" data-def-vn="Đặt chân ra khỏi một nơi; đi ra ngoài." data-def-en="To step out of a place; to walk outside." data-context-vn="Khi cuối cùng cũng bước chân ra khỏi sân bay.">bước chân</span> ra khỏi <span class="vocab" data-word-vn="sân bay" data-word-en="airport" data-pos="danh từ / noun" data-def-vn="Nơi máy bay cất cánh và hạ cánh, có nhà ga hành khách." data-def-en="A facility where aircraft take off and land, with passenger terminals." data-context-vn="Bước chân ra khỏi sân bay.">sân bay</span>, Maya lập tức <span class="vocab" data-word-vn="cảm nhận" data-word-en="feel / sense" data-pos="động từ / verb" data-def-vn="Nhận ra hoặc trải nghiệm điều gì đó qua giác quan." data-def-en="To become aware of something through the senses." data-context-vn="Maya lập tức cảm nhận được cái không khí nóng bức, ngột ngạt.">cảm nhận</span> được cái <span class="vocab" data-word-vn="không khí" data-word-en="air / atmosphere" data-pos="danh từ / noun" data-def-vn="Hỗn hợp khí bao quanh trái đất; không gian xung quanh ta." data-def-en="The mixture of gases surrounding the earth; the ambient environment." data-context-vn="Cảm nhận được cái không khí nóng bức, ngột ngạt đặc trưng.">không khí</span> <span class="vocab" data-word-vn="nóng bức" data-word-en="hot and stuffy" data-pos="tính từ / adjective" data-def-vn="Nhiệt độ cao gây khó chịu, oi ả." data-def-en="Uncomfortably high temperature; sweltering heat." data-context-vn="Không khí nóng bức, ngột ngạt đặc trưng của Thành phố Hồ Chí Minh.">nóng bức</span>, <span class="vocab" data-word-vn="ngột ngạt" data-word-en="suffocating / stifling" data-pos="tính từ / adjective" data-def-vn="Cảm giác thiếu không khí trong lành, khó thở." data-def-en="Feeling of stifling heat with no fresh air; hard to breathe." data-context-vn="Không khí nóng bức, ngột ngạt đặc trưng của Thành phố Hồ Chí Minh.">ngột ngạt</span> <span class="vocab" data-word-vn="đặc trưng" data-word-en="characteristic / typical" data-pos="tính từ / adjective" data-def-vn="Nét riêng biệt gắn liền với một nơi hoặc sự vật." data-def-en="A distinctive quality strongly associated with a particular place or thing." data-context-vn="Không khí nóng bức, ngột ngạt đặc trưng của Thành phố Hồ Chí Minh.">đặc trưng</span> của Thành phố Hồ Chí Minh. <span class="vocab" data-word-vn="Cảnh tượng" data-word-en="scene / sight" data-pos="danh từ / noun" data-def-vn="Quang cảnh hoặc khung cảnh được nhìn thấy tại một thời điểm." data-def-en="A view or spectacle visible at a particular moment." data-context-vn="Cảnh tượng thật hỗn loạn với những đám đông chen chúc.">Cảnh tượng</span> thật <span class="vocab" data-word-vn="hỗn loạn" data-word-en="chaotic / frantic" data-pos="tính từ / adjective" data-def-vn="Ở trạng thái vô trật tự, ồn ào và khó kiểm soát." data-def-en="In a state of disorder, noise, and confusion difficult to control." data-context-vn="Cảnh tượng thật hỗn loạn với những đám đông chen chúc.">hỗn loạn</span> với những <span class="vocab" data-word-vn="đám đông" data-word-en="crowd" data-pos="danh từ / noun" data-def-vn="Tập hợp đông người tập trung ở một nơi." data-def-en="A large group of people gathered together in one place." data-context-vn="Những đám đông chen chúc, tiếng còi xe inh ỏi.">đám đông</span> <span class="vocab" data-word-vn="chen chúc" data-word-en="jostling / crowding" data-pos="động từ / verb" data-def-vn="Xô đẩy nhau trong không gian chật hẹp." data-def-en="Pushing and squeezing against each other in a tight space." data-context-vn="Những đám đông chen chúc, tiếng còi xe inh ỏi.">chen chúc</span>, tiếng <span class="vocab" data-word-vn="còi xe" data-word-en="car horn" data-pos="danh từ / noun" data-def-vn="Thiết bị phát ra tiếng để cảnh báo trên xe cộ." data-def-en="A device on a vehicle that makes a loud warning sound." data-context-vn="Tiếng còi xe inh ỏi.">còi xe</span> <span class="vocab" data-word-vn="inh ỏi" data-word-en="blaring / deafening" data-pos="tính từ / adjective" data-def-vn="Âm thanh to, chói tai, liên tục và khó chịu." data-def-en="Loud, piercing, and continuous sound that is unpleasant to hear." data-context-vn="Tiếng còi xe inh ỏi.">inh ỏi</span> và những <span class="vocab" data-word-vn="tài xế" data-word-en="driver" data-pos="danh từ / noun" data-def-vn="Người lái xe, đặc biệt là xe taxi hoặc xe dịch vụ." data-def-en="A person who drives a vehicle, especially a taxi or service car." data-context-vn="Những tài xế taxi đang cố chèo kéo hành khách.">tài xế</span> taxi đang cố <span class="vocab" data-word-vn="chèo kéo" data-word-en="tout / solicit" data-pos="động từ / verb" data-def-vn="Cố gắng thu hút khách hàng một cách dai dẳng, không từ bỏ." data-def-en="To persistently try to attract customers, often aggressively." data-context-vn="Tài xế taxi đang cố chèo kéo những hành khách ngây thơ.">chèo kéo</span> những hành khách <span class="vocab" data-word-vn="ngây thơ" data-word-en="naive / innocent" data-pos="tính từ / adjective" data-def-vn="Thiếu kinh nghiệm, dễ bị lừa gạt." data-def-en="Lacking experience and easily deceived." data-context-vn="Chèo kéo những hành khách ngây thơ với giá cao gấp ba lần bình thường.">ngây thơ</span> với <span class="vocab" data-word-vn="giá" data-word-en="price / fare" data-pos="danh từ / noun" data-def-vn="Số tiền phải trả cho hàng hoá hoặc dịch vụ." data-def-en="The amount of money required to pay for goods or a service." data-context-vn="Với giá cao gấp ba lần bình thường.">giá</span> cao gấp <span class="vocab" data-word-vn="ba lần" data-word-en="three times" data-pos="cụm từ / phrase" data-def-vn="Gấp ba so với mức thông thường." data-def-en="Three times the usual or normal amount." data-context-vn="Giá cao gấp ba lần bình thường.">ba lần</span> <span class="vocab" data-word-vn="bình thường" data-word-en="normal / usual" data-pos="tính từ / adjective" data-def-vn="Mức độ thông thường, không có gì đặc biệt." data-def-en="The standard or usual level; nothing out of the ordinary." data-context-vn="Giá cao gấp ba lần bình thường.">bình thường</span>. Maya không biết <span class="vocab" data-word-vn="liệu" data-word-en="whether" data-pos="liên từ / conjunction" data-def-vn="Từ dùng để diễn đạt sự không chắc chắn hoặc lựa chọn." data-def-en="A word expressing uncertainty or introducing an indirect question." data-context-vn="Maya không biết liệu mình có nên tin Jack hay không.">liệu</span> mình có nên <span class="vocab" data-word-vn="tin" data-word-en="trust / believe" data-pos="động từ / verb" data-def-vn="Đặt niềm tin vào ai đó hoặc điều gì đó." data-def-en="To place confidence in someone or something." data-context-vn="Không biết liệu mình có nên tin Jack hay không.">tin</span> Jack hay không, nhưng người <span class="vocab" data-word-vn="đàn ông" data-word-en="man" data-pos="danh từ / noun" data-def-vn="Người trưởng thành giống đực." data-def-en="An adult male human being." data-context-vn="Người đàn ông mặc vest bám theo họ từ sân bay.">đàn ông</span> mặc <span class="vocab" data-word-vn="vest" data-word-en="suit jacket / vest" data-pos="danh từ / noun" data-def-vn="Áo khoác lịch sự, thường mặc trong bộ comple." data-def-en="A formal jacket, typically part of a business suit." data-context-vn="Người đàn ông mặc vest bám theo họ từ sân bay đang áp sát rất nhanh.">vest</span> <span class="vocab" data-word-vn="bám theo" data-word-en="follow / trail" data-pos="động từ / verb" data-def-vn="Đi theo sát phía sau ai đó không rời." data-def-en="To follow closely behind someone without losing them." data-context-vn="Người đàn ông mặc vest bám theo họ từ sân bay.">bám theo</span> họ từ sân bay đang <span class="vocab" data-word-vn="áp sát" data-word-en="closing in / pressing close" data-pos="động từ / verb" data-def-vn="Tiến gần lại một cách nhanh chóng và đe doạ." data-def-en="Moving rapidly and threateningly closer to someone." data-context-vn="Đang áp sát rất nhanh.">áp sát</span> rất nhanh!
+    </p>
+
+<p>
+        "Lối này, Maya!" Jack nói, <span class="vocab" data-word-vn="nắm lấy" data-word-en="grab / take hold of" data-pos="động từ / verb" data-def-vn="Cầm chặt lấy ai hoặc vật gì đó." data-def-en="To seize and hold tightly onto someone or something." data-context-vn="Jack nắm lấy cánh tay cô và gần như kéo cô ra phía lề đường.">nắm lấy</span> <span class="vocab" data-word-vn="cánh tay" data-word-en="arm" data-pos="danh từ / noun" data-def-vn="Chi phần trên của cơ thể từ vai đến bàn tay." data-def-en="The upper limb of the body from shoulder to hand." data-context-vn="Nắm lấy cánh tay cô và gần như kéo cô ra phía lề đường.">cánh tay</span> cô và gần như <span class="vocab" data-word-vn="kéo" data-word-en="pull / drag" data-pos="động từ / verb" data-def-vn="Dùng sức lôi kéo ai hoặc vật về phía mình." data-def-en="To exert force drawing someone or something toward oneself." data-context-vn="Gần như kéo cô ra phía lề đường.">kéo</span> cô ra phía <span class="vocab" data-word-vn="lề đường" data-word-en="roadside / curb" data-pos="danh từ / noun" data-def-vn="Phần rìa của đường dành cho người đi bộ." data-def-en="The edge of a road, typically a pavement or kerb area." data-context-vn="Kéo cô ra phía lề đường.">lề đường</span>.
+    </p>
+
+<p>
+        Thay vì một chiếc <span class="vocab" data-word-vn="xe hơi" data-word-en="car" data-pos="danh từ / noun" data-def-vn="Phương tiện giao thông bốn bánh có động cơ." data-def-en="A four-wheeled motor vehicle used for transport." data-context-vn="Thay vì một chiếc xe hơi, Jack chỉ vào một chiếc xe máy màu đỏ tươi.">xe hơi</span>, Jack <span class="vocab" data-word-vn="chỉ vào" data-word-en="point to / indicate" data-pos="động từ / verb" data-def-vn="Dùng tay hoặc ngón tay hướng về phía vật gì." data-def-en="To direct attention toward something using a finger or gesture." data-context-vn="Jack chỉ vào một chiếc xe máy màu đỏ tươi.">chỉ vào</span> một chiếc <span class="vocab" data-word-vn="xe máy" data-word-en="motorbike / motorcycle" data-pos="danh từ / noun" data-def-vn="Phương tiện giao thông hai bánh có động cơ." data-def-en="A two-wheeled motor vehicle." data-context-vn="Jack chỉ vào một chiếc xe máy màu đỏ tươi.">xe máy</span> màu <span class="vocab" data-word-vn="đỏ tươi" data-word-en="bright red" data-pos="tính từ / adjective" data-def-vn="Màu đỏ rực, nổi bật và sặc sỡ." data-def-en="A vivid, striking shade of red." data-context-vn="Một chiếc xe máy màu đỏ tươi.">đỏ tươi</span>.
+    </p>
+
+<p>
+        "<span class="vocab" data-word-vn="Nhảy lên" data-word-en="Jump on / Get on" data-pos="động từ / verb" data-def-vn="Leo lên phương tiện hoặc vật gì một cách nhanh chóng." data-def-en="To get onto a vehicle or object quickly." data-context-vn="Nhảy lên! Và bám chắc vào!">Nhảy lên</span>! Và <span class="vocab" data-word-vn="bám chắc" data-word-en="hold on tight" data-pos="động từ / verb" data-def-vn="Nắm giữ chặt chẽ, không để bị rời ra." data-def-en="To grip firmly and not let go." data-context-vn="Nhảy lên! Và bám chắc vào!">bám chắc</span> vào!" Jack <span class="vocab" data-word-vn="hét lên" data-word-en="shout / yell" data-pos="động từ / verb" data-def-vn="Nói to và mạnh, thường vì cần được nghe trong tiếng ồn." data-def-en="To call out loudly, often to be heard above noise." data-context-vn="Jack hét lên giữa tiếng ồn.">hét lên</span> giữa <span class="vocab" data-word-vn="tiếng ồn" data-word-en="noise" data-pos="danh từ / noun" data-def-vn="Âm thanh to và khó chịu từ môi trường xung quanh." data-def-en="Loud, unpleasant sound from the surrounding environment." data-context-vn="Jack hét lên giữa tiếng ồn.">tiếng ồn</span>.
+    </p>
+
+<p>
+        Maya <span class="vocab" data-word-vn="trèo lên" data-word-en="climb onto" data-pos="động từ / verb" data-def-vn="Leo hoặc bước lên một vật hoặc phương tiện giao thông." data-def-en="To get up onto something by climbing or stepping." data-context-vn="Maya trèo lên phía sau xe.">trèo lên</span> phía sau xe. Cô phải <span class="vocab" data-word-vn="vòng tay" data-word-en="wrap one's arms" data-pos="động từ / verb phrase" data-def-vn="Đưa hai tay quanh người ai đó để ôm." data-def-en="To place one's arms around someone in an embrace." data-context-vn="Cô phải vòng tay ôm lấy eo Jack để giữ thăng bằng.">vòng tay</span> <span class="vocab" data-word-vn="ôm lấy" data-word-en="hold / embrace" data-pos="động từ / verb" data-def-vn="Dùng tay giữ chặt lấy ai hoặc vật gì." data-def-en="To hold someone or something tightly with one's arms." data-context-vn="Vòng tay ôm lấy eo Jack để giữ thăng bằng.">ôm lấy</span> <span class="vocab" data-word-vn="eo" data-word-en="waist" data-pos="danh từ / noun" data-def-vn="Phần giữa cơ thể, giữa ngực và hông." data-def-en="The narrow part of the body between the chest and hips." data-context-vn="Vòng tay ôm lấy eo Jack để giữ thăng bằng.">eo</span> Jack để giữ <span class="vocab" data-word-vn="thăng bằng" data-word-en="balance" data-pos="danh từ / noun" data-def-vn="Trạng thái ổn định, không bị ngã hoặc nghiêng." data-def-en="A state of equilibrium; not falling or tipping over." data-context-vn="Ôm lấy eo Jack để giữ thăng bằng.">thăng bằng</span>. Anh có <span class="vocab" data-word-vn="mùi" data-word-en="smell / scent" data-pos="danh từ / noun" data-def-vn="Mùi hương nhận biết qua khứu giác." data-def-en="An odour or scent detected through the sense of smell." data-context-vn="Anh có mùi kết hợp lạ lùng giữa xà phòng đắt tiền và những cuốn sách cũ.">mùi</span> <span class="vocab" data-word-vn="kết hợp" data-word-en="combined / mixed" data-pos="tính từ / adjective" data-def-vn="Được trộn lẫn hoặc kết hợp lại với nhau." data-def-en="Mixed or blended together from two or more elements." data-context-vn="Mùi kết hợp lạ lùng giữa xà phòng đắt tiền và những cuốn sách cũ.">kết hợp</span> <span class="vocab" data-word-vn="lạ lùng" data-word-en="strange / peculiar" data-pos="tính từ / adjective" data-def-vn="Kỳ lạ, không bình thường, gây ngạc nhiên." data-def-en="Unusual, odd, causing surprise or curiosity." data-context-vn="Mùi kết hợp lạ lùng giữa xà phòng đắt tiền và những cuốn sách cũ.">lạ lùng</span> giữa <span class="vocab" data-word-vn="xà phòng" data-word-en="soap" data-pos="danh từ / noun" data-def-vn="Chất dùng để tắm rửa và làm sạch." data-def-en="A cleansing substance used for washing." data-context-vn="Giữa xà phòng đắt tiền và những cuốn sách cũ.">xà phòng</span> <span class="vocab" data-word-vn="đắt tiền" data-word-en="expensive" data-pos="tính từ / adjective" data-def-vn="Có giá cao, tốn nhiều tiền." data-def-en="Costing a lot of money; high-priced." data-context-vn="Xà phòng đắt tiền và những cuốn sách cũ.">đắt tiền</span> và những cuốn <span class="vocab" data-word-vn="sách" data-word-en="book" data-pos="danh từ / noun" data-def-vn="Tập hợp các trang giấy được đóng lại, chứa nội dung viết." data-def-en="A set of printed pages bound together containing written content." data-context-vn="Những cuốn sách cũ.">sách</span> <span class="vocab" data-word-vn="cũ" data-word-en="old" data-pos="tính từ / adjective" data-def-vn="Đã qua sử dụng lâu ngày, không còn mới." data-def-en="Having existed for a long time; not new." data-context-vn="Những cuốn sách cũ.">cũ</span>.
+    </p>
+
+<p>
+        Họ <span class="vocab" data-word-vn="lạng lách" data-word-en="weave / zigzag" data-pos="động từ / verb" data-def-vn="Đi theo đường ngoằn ngoèo, tránh các chướng ngại vật." data-def-en="To move in a winding path, avoiding obstacles." data-context-vn="Họ lạng lách qua biển xe máy.">lạng lách</span> qua <span class="vocab" data-word-vn="biển" data-word-en="sea / mass" data-pos="danh từ / noun" data-def-vn="Lượng rất lớn, dùng để chỉ số đông dày đặc." data-def-en="A vast mass or quantity; used figuratively for a dense crowd." data-context-vn="Lạng lách qua biển xe máy.">biển</span> xe máy. Maya thấy người đàn ông mặc vest chạy ra khỏi sân bay, <span class="vocab" data-word-vn="hét" data-word-en="shout / yell" data-pos="động từ / verb" data-def-vn="Nói to, kêu lớn tiếng." data-def-en="To speak very loudly; to cry out." data-context-vn="Hét vào bộ đàm.">hét</span> vào <span class="vocab" data-word-vn="bộ đàm" data-word-en="walkie-talkie / radio" data-pos="danh từ / noun" data-def-vn="Thiết bị liên lạc vô tuyến cầm tay." data-def-en="A handheld two-way radio communication device." data-context-vn="Hét vào bộ đàm.">bộ đàm</span>, nhưng hắn sớm bị <span class="vocab" data-word-vn="mất dấu" data-word-en="lose track / disappear" data-pos="động từ / verb" data-def-vn="Không còn nhìn hoặc theo dõi được nữa." data-def-en="To no longer be visible or traceable." data-context-vn="Hắn sớm bị mất dấu trong dòng xe cộ.">mất dấu</span> trong <span class="vocab" data-word-vn="dòng" data-word-en="flow / stream" data-pos="danh từ / noun" data-def-vn="Luồng di chuyển liên tục của người hoặc phương tiện." data-def-en="A continuous moving stream of people or vehicles." data-context-vn="Mất dấu trong dòng xe cộ.">dòng</span> <span class="vocab" data-word-vn="xe cộ" data-word-en="traffic / vehicles" data-pos="danh từ / noun" data-def-vn="Các phương tiện giao thông đang di chuyển trên đường." data-def-en="Vehicles moving on the road; traffic." data-context-vn="Mất dấu trong dòng xe cộ.">xe cộ</span>.
+    </p>
+
+<p>
+        "Chúng ta đang đi <span class="vocab" data-word-vn="đâu" data-word-en="where" data-pos="đại từ / pronoun" data-def-vn="Từ hỏi về địa điểm hoặc hướng đi." data-def-en="A question word asking about a location or destination." data-context-vn="Chúng ta đang đi đâu vậy?">đâu</span> vậy?" Maya hét lên giữa <span class="vocab" data-word-vn="luồng" data-word-en="rush / stream" data-pos="danh từ / noun" data-def-vn="Dòng chảy mạnh và nhanh của không khí hoặc chất lỏng." data-def-en="A strong, fast-moving current of air or liquid." data-context-vn="Giữa luồng không khí tạt vào mặt.">luồng</span> không khí <span class="vocab" data-word-vn="tạt vào" data-word-en="hit / blow against" data-pos="động từ / verb" data-def-vn="Đánh hoặc thổi mạnh vào một bề mặt." data-def-en="To strike or blow forcefully against a surface." data-context-vn="Luồng không khí tạt vào mặt.">tạt vào</span> mặt. "Đến một nơi <span class="vocab" data-word-vn="an toàn" data-word-en="safe" data-pos="tính từ / adjective" data-def-vn="Không có nguy hiểm hoặc rủi ro; được bảo vệ." data-def-en="Free from danger or risk; protected." data-context-vn="Đến một nơi an toàn ở Quận 1.">an toàn</span> ở <span class="vocab" data-word-vn="Quận 1" data-word-en="District 1" data-pos="danh từ riêng / proper noun" data-def-vn="Trung tâm thành phố của Thành phố Hồ Chí Minh." data-def-en="The central urban district of Ho Chi Minh City." data-context-vn="Đến một nơi an toàn ở Quận 1.">Quận 1</span>," Jack trả lời. "Tôi biết cô là ai, Maya. Và tôi biết về <span class="vocab" data-word-vn="Thanh Ngọc Long" data-word-en="Thanh Ngọc Long" data-pos="danh từ riêng / proper noun" data-def-vn="Tên của một hiện vật hoặc bí mật quan trọng trong câu chuyện." data-def-en="The name of an important artefact or secret in the story." data-context-vn="Tôi biết về Thanh Ngọc Long.">Thanh Ngọc Long</span>. <span class="vocab" data-word-vn="Ông nội" data-word-en="grandfather (paternal)" data-pos="danh từ / noun" data-def-vn="Cha của cha; người thân lớn tuổi trong gia đình." data-def-en="The father of one's father; a senior family member." data-context-vn="Ông nội cô không chỉ là một nhà thám hiểm.">Ông nội</span> cô không chỉ là một <span class="vocab" data-word-vn="nhà thám hiểm" data-word-en="explorer" data-pos="danh từ / noun" data-def-vn="Người đi khám phá những vùng đất chưa biết." data-def-en="A person who travels to unknown places in search of discovery." data-context-vn="Ông nội cô không chỉ là một nhà thám hiểm.">nhà thám hiểm</span>. Ông ấy là một <span class="vocab" data-word-vn="anh hùng" data-word-en="hero" data-pos="danh từ / noun" data-def-vn="Người có hành động dũng cảm và cao cả, được mọi người kính trọng." data-def-en="A person admired for their courage and noble actions." data-context-vn="Ông ấy là một anh hùng.">anh hùng</span>."
+    </p>
+
+<p>
+        Maya cảm thấy vừa <span class="vocab" data-word-vn="nhẹ nhõm" data-word-en="relieved" data-pos="tính từ / adjective" data-def-vn="Cảm thấy thoải mái hơn sau khi căng thẳng hoặc lo lắng giảm đi." data-def-en="Feeling a sense of ease after tension or worry has passed." data-context-vn="Maya cảm thấy vừa nhẹ nhõm vừa nghi ngờ.">nhẹ nhõm</span> vừa <span class="vocab" data-word-vn="nghi ngờ" data-word-en="suspicious / doubtful" data-pos="tính từ / adjective" data-def-vn="Không tin tưởng hoàn toàn, có cảm giác có điều gì đó không đúng." data-def-en="Not fully trusting; feeling something may be wrong or untrue." data-context-vn="Cảm thấy vừa nhẹ nhõm vừa nghi ngờ.">nghi ngờ</span>: "Sao anh biết điều đó?" "Tôi sẽ <span class="vocab" data-word-vn="giải thích" data-word-en="explain" data-pos="động từ / verb" data-def-vn="Làm cho ai đó hiểu rõ bằng cách trình bày chi tiết." data-def-en="To make something clear by giving a detailed account." data-context-vn="Tôi sẽ giải thích mọi thứ khi chúng ta dừng lại.">giải thích</span> mọi thứ khi chúng ta <span class="vocab" data-word-vn="dừng lại" data-word-en="stop" data-pos="động từ / verb" data-def-vn="Ngừng di chuyển hoặc hoạt động." data-def-en="To cease moving or doing something." data-context-vn="Khi chúng ta dừng lại.">dừng lại</span>," Jack <span class="vocab" data-word-vn="hứa" data-word-en="promise" data-pos="động từ / verb" data-def-vn="Cam kết sẽ thực hiện điều gì đó." data-def-en="To commit to doing something; to give one's word." data-context-vn="Jack hứa.">hứa</span>.
+    </p>
+
+<p>
+        Họ lái xe qua những khu <span class="vocab" data-word-vn="chợ" data-word-en="market" data-pos="danh từ / noun" data-def-vn="Nơi mua bán hàng hoá, thường sầm uất và đông đúc." data-def-en="A place where goods are bought and sold, usually busy." data-context-vn="Lái xe qua những khu chợ rực rỡ sắc màu.">chợ</span> <span class="vocab" data-word-vn="rực rỡ" data-word-en="vibrant / brilliant" data-pos="tính từ / adjective" data-def-vn="Sáng đẹp, nổi bật với màu sắc sinh động." data-def-en="Bright and striking with vivid colours." data-context-vn="Những khu chợ rực rỡ sắc màu.">rực rỡ</span> <span class="vocab" data-word-vn="sắc màu" data-word-en="colours" data-pos="danh từ / noun" data-def-vn="Nhiều màu sắc phong phú và đa dạng." data-def-en="A variety of vivid and diverse colours." data-context-vn="Những khu chợ rực rỡ sắc màu.">sắc màu</span> và những <span class="vocab" data-word-vn="tòa nhà" data-word-en="building" data-pos="danh từ / noun" data-def-vn="Công trình kiến trúc lớn, thường nhiều tầng." data-def-en="A large structure with multiple floors." data-context-vn="Những tòa nhà chọc trời.">tòa nhà</span> <span class="vocab" data-word-vn="chọc trời" data-word-en="skyscraper" data-pos="tính từ / adjective" data-def-vn="Rất cao, vươn lên bầu trời; dùng để chỉ cao ốc." data-def-en="Reaching up to the sky; used to describe very tall buildings." data-context-vn="Những tòa nhà chọc trời.">chọc trời</span>. Nhưng <span class="vocab" data-word-vn="đột nhiên" data-word-en="suddenly" data-pos="trạng từ / adverb" data-def-vn="Xảy ra một cách bất ngờ, không báo trước." data-def-en="Happening unexpectedly, without warning." data-context-vn="Nhưng đột nhiên, hai chiếc SUV màu đen xuất hiện phía sau.">đột nhiên</span>, hai chiếc <span class="vocab" data-word-vn="SUV" data-word-en="SUV (sport utility vehicle)" data-pos="danh từ / noun" data-def-vn="Xe hơi lớn kiểu thể thao đa dụng." data-def-en="A large sport utility vehicle." data-context-vn="Hai chiếc SUV màu đen xuất hiện phía sau.">SUV</span> màu <span class="vocab" data-word-vn="đen" data-word-en="black" data-pos="tính từ / adjective" data-def-vn="Màu tối nhất, không phản chiếu ánh sáng." data-def-en="The darkest colour; the absence of reflected light." data-context-vn="Hai chiếc SUV màu đen xuất hiện phía sau.">đen</span> <span class="vocab" data-word-vn="xuất hiện" data-word-en="appear / emerge" data-pos="động từ / verb" data-def-vn="Bắt đầu được nhìn thấy; hiện ra." data-def-en="To come into view; to become visible." data-context-vn="Hai chiếc SUV màu đen xuất hiện phía sau.">xuất hiện</span> phía sau, <span class="vocab" data-word-vn="lao nhanh" data-word-en="speed up / rush" data-pos="động từ / verb" data-def-vn="Di chuyển rất nhanh và mạnh về phía trước." data-def-en="To move very quickly and forcefully forward." data-context-vn="Lao nhanh để cố vượt lên họ.">lao nhanh</span> để cố <span class="vocab" data-word-vn="vượt lên" data-word-en="overtake / get ahead" data-pos="động từ / verb" data-def-vn="Tiến lên phía trước, vượt qua người hoặc xe khác." data-def-en="To move ahead of and pass someone else." data-context-vn="Lao nhanh để cố vượt lên họ.">vượt lên</span> họ. Một chiếc SUV áp sát, <span class="vocab" data-word-vn="cửa sổ" data-word-en="window" data-pos="danh từ / noun" data-def-vn="Ô kính trên xe hoặc tường để nhìn ra ngoài." data-def-en="A glass panel in a vehicle or wall for looking through." data-context-vn="Cửa sổ hạ xuống, một bàn tay đưa ra.">cửa sổ</span> <span class="vocab" data-word-vn="hạ xuống" data-word-en="lower / roll down" data-pos="động từ / verb" data-def-vn="Kéo hoặc di chuyển thứ gì đó xuống phía dưới." data-def-en="To move something downward." data-context-vn="Cửa sổ hạ xuống, một bàn tay đưa ra.">hạ xuống</span>, một <span class="vocab" data-word-vn="bàn tay" data-word-en="hand" data-pos="danh từ / noun" data-def-vn="Bộ phận ở cuối cánh tay, dùng để cầm nắm." data-def-en="The part at the end of the arm used for gripping." data-context-vn="Một bàn tay đưa ra cầm một sợi xích sắt nặng.">bàn tay</span> đưa ra cầm một <span class="vocab" data-word-vn="sợi xích" data-word-en="chain" data-pos="danh từ / noun" data-def-vn="Dây kim loại gồm các mắt xích liên kết với nhau." data-def-en="A metal rope made of linked rings." data-context-vn="Một bàn tay đưa ra cầm một sợi xích sắt nặng.">sợi xích</span> <span class="vocab" data-word-vn="sắt" data-word-en="iron / metal" data-pos="danh từ / noun" data-def-vn="Kim loại cứng màu xám, dùng để chế tạo nhiều vật dụng." data-def-en="A hard grey metal used to make many objects." data-context-vn="Sợi xích sắt nặng.">sắt</span> <span class="vocab" data-word-vn="nặng" data-word-en="heavy" data-pos="tính từ / adjective" data-def-vn="Có trọng lượng lớn, khó nâng hoặc mang." data-def-en="Having great weight; difficult to lift or carry." data-context-vn="Sợi xích sắt nặng.">nặng</span>.
+    </p>
+
+<p>
+        Xoảng! Sợi xích <span class="vocab" data-word-vn="đập vào" data-word-en="smash into / slam against" data-pos="động từ / verb" data-def-vn="Va chạm mạnh vào một vật." data-def-en="To strike hard against something." data-context-vn="Sợi xích đập vào đuôi xe máy.">đập vào</span> <span class="vocab" data-word-vn="đuôi xe" data-word-en="rear of the vehicle" data-pos="danh từ / noun" data-def-vn="Phần phía sau của xe." data-def-en="The back end of a vehicle." data-context-vn="Sợi xích đập vào đuôi xe máy.">đuôi xe</span> máy, khiến <span class="vocab" data-word-vn="bánh xe" data-word-en="wheel / tyre" data-pos="danh từ / noun" data-def-vn="Bộ phận hình tròn giúp xe di chuyển." data-def-en="The round component that allows a vehicle to move." data-context-vn="Khiến bánh xe loạng choạng.">bánh xe</span> <span class="vocab" data-word-vn="loạng choạng" data-word-en="wobble / swerve" data-pos="động từ / verb" data-def-vn="Di chuyển không ổn định, lảo đảo qua lại." data-def-en="To move unsteadily from side to side." data-context-vn="Khiến bánh xe loạng choạng.">loạng choạng</span>.
+    </p>
+
+<p>
+        "Bám chắc!" Jack <span class="vocab" data-word-vn="quát lên" data-word-en="bark / shout sharply" data-pos="động từ / verb" data-def-vn="Nói to và mạnh mẽ, ra lệnh một cách dứt khoát." data-def-en="To speak sharply and commandingly in a loud voice." data-context-vn="Jack quát lên.">quát lên</span>. Anh <span class="vocab" data-word-vn="bẻ lái" data-word-en="swerve / turn sharply" data-pos="động từ / verb" data-def-vn="Xoay tay lái đột ngột sang một bên." data-def-en="To turn the handlebars or steering wheel sharply to one side." data-context-vn="Anh bẻ lái gấp vào một con hẻm hẹp và đông đúc.">bẻ lái</span> <span class="vocab" data-word-vn="gấp" data-word-en="sharply / abruptly" data-pos="trạng từ / adverb" data-def-vn="Một cách đột ngột và nhanh chóng." data-def-en="Suddenly and quickly, without warning." data-context-vn="Bẻ lái gấp vào một con hẻm hẹp và đông đúc.">gấp</span> vào một con <span class="vocab" data-word-vn="hẻm" data-word-en="alley / lane" data-pos="danh từ / noun" data-def-vn="Đường nhỏ hẹp giữa các nhà trong thành phố." data-def-en="A narrow lane between buildings in a city." data-context-vn="Bẻ lái gấp vào một con hẻm hẹp và đông đúc.">hẻm</span> <span class="vocab" data-word-vn="hẹp" data-word-en="narrow" data-pos="tính từ / adjective" data-def-vn="Có chiều rộng nhỏ, không rộng rãi." data-def-en="Having a small width; not wide." data-context-vn="Một con hẻm hẹp và đông đúc.">hẹp</span> và <span class="vocab" data-word-vn="đông đúc" data-word-en="crowded / busy" data-pos="tính từ / adjective" data-def-vn="Có nhiều người hoặc vật, chật chội." data-def-en="Full of people or things; congested." data-context-vn="Một con hẻm hẹp và đông đúc.">đông đúc</span>. Nó hẹp đến mức xe hơi không thể <span class="vocab" data-word-vn="đuổi theo" data-word-en="chase / pursue" data-pos="động từ / verb" data-def-vn="Chạy theo sau để bắt kịp hoặc bắt giữ." data-def-en="To follow rapidly in order to catch up or capture." data-context-vn="Xe hơi không thể đuổi theo.">đuổi theo</span>, nhưng <span class="vocab" data-word-vn="tên" data-word-en="the guy / that person (derogatory)" data-pos="danh từ / noun" data-def-vn="Từ chỉ người, thường có hàm ý khinh thường hoặc đối lập." data-def-en="A word for a person, often with a contemptuous or adversarial tone." data-context-vn="Tên lái xe SUV không dừng lại.">tên</span> lái xe SUV không dừng lại. Hắn <span class="vocab" data-word-vn="đâm thẳng" data-word-en="ram straight into" data-pos="động từ / verb" data-def-vn="Lao thẳng vào một vật với lực mạnh." data-def-en="To drive directly into something with great force." data-context-vn="Hắn đâm thẳng vào một sạp trái cây.">đâm thẳng</span> vào một <span class="vocab" data-word-vn="sạp" data-word-en="stall / vendor stand" data-pos="danh từ / noun" data-def-vn="Bàn hoặc khung bày bán hàng ở chợ hoặc vỉa hè." data-def-en="A small table or stand for selling goods at a market." data-context-vn="Đâm thẳng vào một sạp trái cây.">sạp</span> <span class="vocab" data-word-vn="trái cây" data-word-en="fruit" data-pos="danh từ / noun" data-def-vn="Phần ăn được của cây, thường ngọt và có hạt." data-def-en="The edible part of a plant, usually sweet and containing seeds." data-context-vn="Một sạp trái cây, làm những quả dứa bay tứ tung.">trái cây</span>, làm những quả <span class="vocab" data-word-vn="dứa" data-word-en="pineapple" data-pos="danh từ / noun" data-def-vn="Loại trái cây nhiệt đới có vỏ gai và ruột vàng ngọt." data-def-en="A tropical fruit with a spiky exterior and sweet yellow flesh." data-context-vn="Làm những quả dứa bay tứ tung.">dứa</span> bay <span class="vocab" data-word-vn="tứ tung" data-word-en="in all directions / flying everywhere" data-pos="trạng từ / adverb" data-def-vn="Theo mọi hướng một cách hỗn loạn." data-def-en="Flying or scattering in all directions chaotically." data-context-vn="Làm những quả dứa bay tứ tung.">tứ tung</span>.
+    </p>
+
+<p>
+        Chiếc xe máy lao sâu hơn vào <span class="vocab" data-word-vn="mê cung" data-word-en="labyrinth / maze" data-pos="danh từ / noun" data-def-vn="Hệ thống đường đi phức tạp, khó tìm lối ra." data-def-en="A complex network of paths that is difficult to navigate." data-context-vn="Chiếc xe máy lao sâu hơn vào mê cung của thành phố.">mê cung</span> của thành phố. Đột nhiên, Jack <span class="vocab" data-word-vn="phanh gấp" data-word-en="brake hard / slam the brakes" data-pos="động từ / verb" data-def-vn="Dừng xe đột ngột bằng cách đạp phanh mạnh." data-def-en="To stop a vehicle suddenly by pressing the brakes hard." data-context-vn="Jack phanh gấp.">phanh gấp</span>. Con hẻm <span class="vocab" data-word-vn="kết thúc" data-word-en="end / terminate" data-pos="động từ / verb" data-def-vn="Đến điểm cuối cùng, không tiếp tục được nữa." data-def-en="To come to a final point; to go no further." data-context-vn="Con hẻm kết thúc bằng một bức tường gạch cao.">kết thúc</span> bằng một <span class="vocab" data-word-vn="bức tường" data-word-en="wall" data-pos="danh từ / noun" data-def-vn="Vật cản thẳng đứng bằng gạch hoặc đá, bao quanh hoặc ngăn cách không gian." data-def-en="A vertical barrier of brick or stone enclosing or separating a space." data-context-vn="Một bức tường gạch cao.">bức tường</span> <span class="vocab" data-word-vn="gạch" data-word-en="brick" data-pos="danh từ / noun" data-def-vn="Vật liệu xây dựng hình chữ nhật làm từ đất nung." data-def-en="A rectangular building material made from fired clay." data-context-vn="Bức tường gạch cao.">gạch</span> cao. Họ đang ở trong một <span class="vocab" data-word-vn="ngõ cụt" data-word-en="dead end / cul-de-sac" data-pos="danh từ / noun" data-def-vn="Đường hoặc lối đi không có lối thoát phía trước." data-def-en="A road or passage with no exit at the far end." data-context-vn="Họ đang ở trong một ngõ cụt.">ngõ cụt</span>.
+    </p>
+
+<p>
+        Maya nhìn lại. Những người đàn ông từ chiếc SUV đang <span class="vocab" data-word-vn="nhảy ra" data-word-en="jump out" data-pos="động từ / verb" data-def-vn="Bước hoặc nhảy ra khỏi phương tiện một cách nhanh chóng." data-def-en="To leap out of a vehicle quickly." data-context-vn="Những người đàn ông đang nhảy ra khỏi xe.">nhảy ra</span> khỏi xe, chạy về phía họ với <span class="vocab" data-word-vn="khuôn mặt" data-word-en="face / expression" data-pos="danh từ / noun" data-def-vn="Phần trước của đầu; biểu lộ cảm xúc." data-def-en="The front of the head; an expression of emotion." data-context-vn="Chạy về phía họ với khuôn mặt dữ tợn.">khuôn mặt</span> <span class="vocab" data-word-vn="dữ tợn" data-word-en="fierce / menacing" data-pos="tính từ / adjective" data-def-vn="Trông rất hung hãn, đáng sợ và đe doạ." data-def-en="Looking very fierce, frightening, and threatening." data-context-vn="Khuôn mặt dữ tợn và đang chĩa súng về phía họ.">dữ tợn</span> và đang <span class="vocab" data-word-vn="chĩa súng" data-word-en="aim a gun / point a gun" data-pos="động từ / verb" data-def-vn="Hướng nòng súng về phía mục tiêu một cách đe doạ." data-def-en="To direct a firearm menacingly at a target." data-context-vn="Đang chĩa súng về phía họ.">chĩa súng</span> về phía họ.
+    </p>
+
+<p>
+        "Jack, không còn <span class="vocab" data-word-vn="lối thoát" data-word-en="way out / escape route" data-pos="danh từ / noun" data-def-vn="Đường hoặc cách để thoát khỏi tình huống nguy hiểm." data-def-en="A route or means to escape from a dangerous situation." data-context-vn="Không còn lối thoát nào cả!">lối thoát</span> nào cả!" Maya <span class="vocab" data-word-vn="kêu lên" data-word-en="cry out / exclaim" data-pos="động từ / verb" data-def-vn="Thốt lên tiếng kêu vì sợ hãi hoặc ngạc nhiên." data-def-en="To exclaim suddenly from fear or distress." data-context-vn="Maya kêu lên.">kêu lên</span>. Jack nhìn lên một <span class="vocab" data-word-vn="ban công" data-word-en="balcony" data-pos="danh từ / noun" data-def-vn="Sàn nhô ra ngoài trên tầng cao của tòa nhà." data-def-en="A platform projecting from the upper floor of a building." data-context-vn="Jack nhìn lên một ban công thấp phía trên.">ban công</span> <span class="vocab" data-word-vn="thấp" data-word-en="low" data-pos="tính từ / adjective" data-def-vn="Ở vị trí gần mặt đất, không cao." data-def-en="Close to the ground; not high up." data-context-vn="Một ban công thấp phía trên.">thấp</span> phía trên: "Cô có <span class="vocab" data-word-vn="leo" data-word-en="climb" data-pos="động từ / verb" data-def-vn="Dùng tay và chân để trèo lên cao." data-def-en="To go upward using hands and feet." data-context-vn="Cô có leo được không, Giáo sư?">leo</span> được không, <span class="vocab" data-word-vn="Giáo sư" data-word-en="Professor" data-pos="danh từ / noun (title)" data-def-vn="Chức danh học thuật cao cấp; người dạy học ở bậc đại học." data-def-en="A senior academic title; a university-level teacher." data-context-vn="Cô có leo được không, Giáo sư?">Giáo sư</span>?" anh hỏi với giọng <span class="vocab" data-word-vn="khẩn thiết" data-word-en="urgent / earnest" data-pos="tính từ / adjective" data-def-vn="Mang tính cấp bách, thể hiện sự lo lắng và cần hành động ngay." data-def-en="Showing urgency and earnestness; requiring immediate action." data-context-vn="Anh hỏi với giọng khẩn thiết.">khẩn thiết</span>.
+    </p>
+    </div>
+            <div class="practice-controls" id="practice-controls">
+                <div class="practice-btn-row">
+                    <button id="start-practice-btn" class="practice-btn primary" disabled>Practice Your New Words</button>
+                    <button id="reset-practice-btn" class="practice-btn" style="display:none;">Practice these words again</button>
+                    <button id="toggle-bank-btn" class="practice-btn" style="display:none;">Hide Word Bank</button>
+                    <button id="exit-practice-btn" class="practice-btn large" style="display:none;">Start Over</button>
+                    <button id="start-srs-btn" class="practice-btn primary" disabled>Standard Review Level</button>
+                    <button id="start-srs-challenge-btn" class="practice-btn primary" disabled style="line-height:1.25;">Genius Level<br><span style="font-weight:normal;font-size:0.78rem;">Show us what you got!</span></button>
+                    <button id="start-cw-btn" class="practice-btn primary" disabled style="line-height:1.25;" title="Need 4 clicked words with 4+ letters each">Crossword<br><span style="font-weight:normal;font-size:0.78rem;">Minimum 4 words</span></button>
+                </div>
+                <div class="cw-hint" id="cw-hint">From words you click in the story (4+ letters each)</div>
+            </div>
+    </div>
+    </div>
+        <div class="back-btn-container">
+        <button type="button" class="back-btn" onclick="history.back()">Exit this Lesson</button>
+    </div>
+</div>
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+    <div class="browser-note">🔊 Vietnamese audio: Chrome or Edge recommended.</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the text:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+
+<div id="cw-overlay">
+    <div class="cw-panel" onclick="event.stopPropagation()">
+        <div class="cw-header">
+            <h3 class="cw-title">Crossword</h3>
+            <button type="button" class="practice-btn" id="cw-close-btn">Close</button>
+        </div>
+        <p class="cw-sub" id="cw-sub">From words you clicked · type one letter per square</p>
+        <div class="cw-toolbar">
+            <button type="button" class="practice-btn" id="cw-toggle-bank-btn">Hide Word Bank</button>
+            <button type="button" class="practice-btn" id="cw-check-btn">Check puzzle</button>
+            <button type="button" class="practice-btn" id="cw-solve-btn">See Solution</button>
+            <button type="button" class="practice-btn" id="cw-new-btn">New layout</button>
+        </div>
+        <div class="cw-bank visible" id="cw-bank">
+            <div class="cw-bank-label">Word Bank</div>
+            <div class="cw-bank-grid" id="cw-bank-grid"></div>
+        </div>
+        <div class="cw-grid-wrap">
+            <div class="cw-grid" id="cw-grid"></div>
+        </div>
+        <div class="cw-status" id="cw-status"></div>
+    </div>
+</div>
+
+<div id="srs-overlay">
+    <div class="srs-card">
+        <button class="srs-close-btn" id="srs-close-btn" title="Close review">✕</button>
+
+        <div id="srs-review-view">
+            <div class="srs-header">
+                <h3>Spaced Repetition Review</h3>
+                <div class="srs-progress-track"><div class="srs-progress-fill" id="srs-progress-fill"></div></div>
+                <div class="srs-progress-label" id="srs-progress-label"></div>
+            </div>
+
+            <div class="srs-direction-label" id="srs-direction-label"></div>
+            <div class="srs-prompt-word" id="srs-prompt-word"></div>
+            <div class="srs-audio-row" id="srs-audio-row"></div>
+
+            <div class="srs-type-area" id="srs-type-area">
+                <input type="text" class="srs-type-input" id="srs-type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Type answer, then Check or Enter">
+                <div class="srs-type-actions">
+                    <button class="srs-reveal-btn" id="srs-check-btn" type="button" style="width:auto; padding:10px 18px;">Check your answer</button>
+                    <button class="practice-btn" id="srs-giveup-btn" style="display:none;">Show answer</button>
+                </div>
+                <div class="srs-feedback" id="srs-feedback"></div>
+            </div>
+
+            <button class="srs-reveal-btn" id="srs-reveal-btn">Show Answer</button>
+
+            <div class="srs-answer" id="srs-answer">
+                <div class="srs-answer-word" id="srs-answer-word"></div>
+                <div class="srs-pos" id="srs-pos"></div>
+                <div class="srs-def" id="srs-def"></div>
+                <div class="srs-context-label">In the text:</div>
+                <div class="srs-context" id="srs-context"></div>
+
+                <div class="srs-rate-row">
+                    <button class="srs-rate-btn srs-rate-again" data-rating="again">Show More<small>need more practice</small></button>
+                    <button class="srs-rate-btn srs-rate-easy" data-rating="easy">Show Less<small>I know this well</small></button>
+                </div>
+                <div class="srs-feedback" id="srs-advance-hint" style="display:none; margin-top:12px;">Click any blank spot to advance to next word</div>
+            </div>
+        </div>
+
+        <div id="srs-done-view" class="srs-done" style="display:none;">
+            <h3>Session complete! 🎉</h3>
+            <p id="srs-done-summary"></p>
+            <div class="srs-done-actions">
+                <button class="practice-btn primary" id="srs-again-btn">Review Again</button>
+                <button class="practice-btn large" id="srs-back-btn">Back to Reading</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // ========== STATE ==========
+    let practiceMode = false;
+    let clickedIds = new Set();          // ids of vocab spans the user clicked
+    let orderedBlanks = [];              // array of vocab elements currently blanked (document order)
+    let activeBlankEl = null;            // the blank the user has selected (click any blank)
+    let originalTexts = new Map();       // id -> original innerText
+
+    // ========== SPEECH & AUDIO HELPERS (unchanged) ==========
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    // ========== UI HELPERS ==========
+    function updateWordCount() {
+        document.getElementById('start-practice-btn').disabled = clickedIds.size === 0;
+        const cwBtn = document.getElementById('start-cw-btn');
+        if (cwBtn) {
+            const n = cwEligibleWords().length;
+            cwBtn.disabled = n < 4;
+            cwBtn.title = n < 4
+                ? 'Need 4 clicked words with 4+ letters each (now have ' + n + ')'
+                : 'Build a crossword from the words you clicked';
+        }
+        const cwHint = document.getElementById('cw-hint');
+        if (cwHint) {
+            const nH = cwEligibleWords().length;
+            if (nH < 4) {
+                cwHint.textContent = 'From words you click in the story — ' + nH + ' of 4 needed';
+                cwHint.classList.remove('ready');
+            } else {
+                cwHint.textContent = 'From words you click in the story — ' + nH + ' available';
+                cwHint.classList.add('ready');
+            }
+        }
+
+        document.getElementById('start-srs-btn').disabled = clickedIds.size === 0;
+        const ch = document.getElementById('start-srs-challenge-btn');
+        if (ch) ch.disabled = clickedIds.size === 0;
+        const cwBtn2 = document.getElementById('start-cw-btn');
+        if (cwBtn2) {
+            const n2 = cwEligibleWords().length;
+            cwBtn2.disabled = n2 < 4;
+            cwBtn2.title = n2 < 4
+                ? 'Need 4 clicked words with 4+ letters each (now have ' + n2 + ')'
+                : 'Build a crossword from the words you clicked';
+        }
+    }
+
+    function updateProgress() {
+        // completion UI removed — blanks simply fill until done
+    }
+
+    // ========== PRACTICE MODE LOGIC ==========
+    function setActiveBlank(el) {
+        document.querySelectorAll('.vocab.active-blank').forEach(n => n.classList.remove('active-blank'));
+        activeBlankEl = null;
+        if (el && el.classList.contains('is-blank')) {
+            el.classList.add('active-blank');
+            activeBlankEl = el;
+        }
+    }
+
+    // Turns a blank into a real text input (used when the word bank is hidden,
+    // so there's nothing to click — the user must type the exact word).
+    function makeBlankTypeable(el) {
+        el.innerHTML = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onclick = null;
+        el.onmouseenter = null;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'blank-input';
+        input.setAttribute('autocomplete', 'off');
+        input.setAttribute('autocapitalize', 'off');
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('spellcheck', 'false');
+        input.addEventListener('click', (e) => e.stopPropagation());
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkTypedAnswer(el, input);
+            }
+        });
+        input.addEventListener('blur', () => checkTypedAnswer(el, input));
+        el.appendChild(input);
+    }
+
+    // Case-insensitive + hyphen-insensitive match (shared by story typing
+    // and SRS Level 2 challenge).
+    function normalizeAnswer(s) {
+        // Case, hyphen, and space insensitive: rapid-fire ≈ rapid fire ≈ RapidFire
+        let t = (s || '').trim().toLowerCase().replace(/-/g, '').replace(/\s+/g, '');
+        // Strip trailing -ly so meticulously ≈ meticulous, safely ≈ safe
+        if (t.length > 4 && t.endsWith('ly')) t = t.slice(0, -2);
+        return t;
+    }
+
+    function answersMatch(typed, correct) {
+        return normalizeAnswer(typed) === normalizeAnswer(correct);
+    }
+
+    function checkTypedAnswer(el, input) {
+        if (!el.classList.contains('is-blank')) return; // already filled, ignore
+        const typed = input.value.trim();
+        if (!typed) return;
+        const correct = (el.dataset.wordEn || '').trim();
+        if (answersMatch(typed, correct)) {
+            fillBlank(el, correct);
+        } else {
+            el.classList.remove('wrong-shake');
+            void el.offsetWidth; // restart the animation if triggered again
+            el.classList.add('wrong-shake');
+            setTimeout(() => el.classList.remove('wrong-shake'), 350);
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    // Restores a blank to the original click-to-select behavior (used when the
+    // word bank is shown again).
+    function makeBlankClickable(el) {
+        el.innerHTML = '';
+        el.textContent = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onmouseenter = () => {
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+        el.onclick = (e) => {
+            e.stopPropagation();
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+    }
+
+    function enterPracticeMode() {
+        if (clickedIds.size === 0) return;
+        practiceMode = true;
+
+        // Widen layout + show sidebar
+        document.querySelector('.page-container').classList.add('practice-on');
+
+        // Banner + buttons
+        document.getElementById('mode-banner').classList.add('visible');
+        document.getElementById('start-practice-btn').style.display = 'none';
+        document.getElementById('reset-practice-btn').style.display = 'inline-block';
+        document.getElementById('toggle-bank-btn').style.display = 'inline-block';
+        document.getElementById('exit-practice-btn').style.display = 'inline-block';
+        document.getElementById('word-bank-section').classList.add('visible');
+        document.getElementById('toggle-bank-btn').textContent = 'Hide Word Bank';
+
+        // Collect the clicked spans in document order
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        orderedBlanks = allVocab.filter(el => clickedIds.has(el.id));
+
+        // Blank them; activate on hover or click
+        orderedBlanks.forEach(el => {
+            if (!originalTexts.has(el.id)) {
+                originalTexts.set(el.id, el.textContent);
+            }
+            el.textContent = '';
+            el.classList.add('is-blank');
+            el.classList.remove('filled', 'highlight-flash', 'active-blank');
+            el.onmouseenter = () => {
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+            el.onclick = (e) => {
+                e.stopPropagation();
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+        });
+
+        // Build shuffled word bank
+        buildWordBank();
+
+        updateProgress();
+
+        // Select first blank and scroll to it
+        if (orderedBlanks.length > 0) {
+            setActiveBlank(orderedBlanks[0]);
+            setTimeout(() => {
+                orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 150);
+        }
+    }
+
+    function buildWordBank() {
+        const bank = document.getElementById('bank-words');
+        bank.innerHTML = '';
+
+        // Shuffle a copy of the ordered blanks for the bank display
+        const words = orderedBlanks.map(el => ({
+            id: el.id,
+            wordEn: el.dataset.wordEn,
+            wordVn: el.dataset.wordVn
+        }));
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+        shuffle(words);
+        shuffle(words);
+
+        words.forEach(item => {
+            const btn = document.createElement('div');
+            btn.className = 'bank-word';
+            btn.textContent = item.wordEn;
+            btn.dataset.wordEn = item.wordEn;
+            btn.dataset.targetId = item.id;
+            btn.addEventListener('click', onBankWordClick);
+            bank.appendChild(btn);
+        });
+    }
+
+    function fillBlank(blank, word) {
+        blank.textContent = word;
+        blank.classList.remove('is-blank', 'highlight-flash', 'active-blank');
+        blank.classList.add('filled');
+        blank.onclick = null;
+        blank.onmouseenter = null;
+        if (activeBlankEl === blank) activeBlankEl = null;
+        updateProgress();
+    }
+
+    function onBankWordClick(e) {
+        if (!practiceMode) return;
+        const btn = e.currentTarget;
+        const chosenWord = (btn.dataset.wordEn || '').trim();
+        if (!chosenWord) return;
+
+        // Need an active blank; if none, activate the first remaining one
+        let activeBlank = (activeBlankEl && activeBlankEl.classList.contains('is-blank'))
+            ? activeBlankEl
+            : null;
+        if (!activeBlank) {
+            const remaining = orderedBlanks.filter(el => el.classList.contains('is-blank'));
+            if (remaining.length === 0) return;
+            setActiveBlank(remaining[0]);
+            activeBlank = remaining[0];
+        }
+
+        // Correct for active blank → fill. Wrong word → do nothing.
+        if ((activeBlank.dataset.wordEn || '').trim().toLowerCase() === chosenWord.toLowerCase()) {
+            fillBlank(activeBlank, chosenWord);
+        }
+    }
+
+    function resetPractice() {
+        if (!practiceMode) return;
+        const bankVisible = document.getElementById('word-bank-section').classList.contains('visible');
+        // Re-blank everything that was in the original clicked set, matching
+        // whatever mode the word bank is currently in (shown vs hidden)
+        if (bankVisible) {
+            orderedBlanks.forEach(el => makeBlankClickable(el));
+            buildWordBank();
+        } else {
+            orderedBlanks.forEach(el => makeBlankTypeable(el));
+        }
+        updateProgress();
+        if (orderedBlanks.length > 0) {
+            if (bankVisible) {
+                setActiveBlank(orderedBlanks[0]);
+            } else {
+                const inp = orderedBlanks[0].querySelector('input.blank-input');
+                if (inp) inp.focus();
+            }
+            orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            activeBlankEl = null;
+        }
+    }
+
+    function exitPracticeMode() {
+        practiceMode = false;
+        document.querySelector('.page-container').classList.remove('practice-on');
+        document.getElementById('mode-banner').classList.remove('visible');
+        document.getElementById('start-practice-btn').style.display = 'inline-block';
+        document.getElementById('reset-practice-btn').style.display = 'none';
+        document.getElementById('toggle-bank-btn').style.display = 'none';
+        document.getElementById('exit-practice-btn').style.display = 'none';
+        document.getElementById('word-bank-section').classList.remove('visible');
+
+        // Restore original text on all previously blanked spans
+        orderedBlanks.forEach(el => {
+            const orig = originalTexts.get(el.id);
+            if (orig !== undefined) {
+                el.textContent = orig;
+            }
+            el.classList.remove('is-blank', 'filled', 'highlight-flash', 'active-blank');
+            el.onclick = null;
+            el.onmouseenter = null;
+        });
+        orderedBlanks = [];
+        activeBlankEl = null;
+
+        // Fresh cycle: clear collected words so next Lock-in uses only
+        // words clicked during the new reading pass
+        clickedIds.clear();
+        originalTexts.clear();
+        document.getElementById('bank-words').innerHTML = '';
+        updateWordCount();
+    }
+
+    // ========== SPACED REPETITION (Section 3) ==========
+    // Session-only, position-based review. Cards you miss resurface a few
+    // cards later in the SAME session; cards you know well drop out of the
+    // queue ("mastered") once you've gotten them right twice in a row.
+    let srsDeck = [];
+    let srsQueue = [];
+    let srsTotal = 0;
+    let srsMasteredCount = 0;
+    let srsCurrentCard = null;
+    let srsCurrentDirection = 'en2vn'; // alternates each card: 'en2vn' or 'vn2en'
+    let srsMode = 'review'; // 'review' (Level 1) or 'challenge' (Level 2 type-in)
+    let srsExpectedAnswer = '';
+
+    function srsBuildDeck() {
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        return allVocab
+            .filter(el => clickedIds.has(el.id))
+            .map(el => ({
+                id: el.id,
+                wordEn: el.dataset.wordEn || '',
+                wordVn: el.dataset.wordVn || '',
+                pos: el.dataset.pos || '',
+                defEn: el.dataset.defEn || '',
+                defVn: el.dataset.defVn || '',
+                contextEn: el.dataset.contextEn || el.dataset.wordEn || '',
+                contextVn: el.dataset.contextVn || el.dataset.wordVn || '',
+                streak: 0
+            }));
+    }
+
+    function srsShuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function srsStartSession(mode) {
+        srsMode = (mode === 'challenge') ? 'challenge' : 'review';
+        srsDeck = srsBuildDeck();
+        if (srsDeck.length === 0) return;
+        srsQueue = srsShuffle(srsDeck);
+        srsTotal = srsDeck.length;
+        srsMasteredCount = 0;
+
+        document.getElementById('srs-done-view').style.display = 'none';
+        document.getElementById('srs-review-view').style.display = 'block';
+        const header = document.querySelector('#srs-review-view .srs-header h3');
+        if (header) {
+            header.textContent = srsMode === 'challenge'
+                ? 'Challenge Review — Type the answer'
+                : 'Spaced Repetition Review';
+        }
+        document.getElementById('srs-overlay').classList.add('visible');
+
+        srsShowNextCard();
+    }
+
+    function srsRenderProgress() {
+        const pct = srsTotal === 0 ? 0 : Math.round((srsMasteredCount / srsTotal) * 100);
+        document.getElementById('srs-progress-fill').style.width = pct + '%';
+        document.getElementById('srs-progress-label').textContent =
+            srsMasteredCount + ' of ' + srsTotal + ' mastered \u00b7 ' + srsQueue.length + ' left in this round';
+    }
+
+    function srsShowNextCard() {
+        if (srsQueue.length === 0) {
+            srsFinishSession();
+            return;
+        }
+        srsCurrentCard = srsQueue.shift();
+        const isEnInput = document.documentElement.lang === 'en';
+
+        // Level 1 (review): random direction. Level 2 (challenge): always
+        // show the OPPOSITE language on the front; user types the study language.
+        if (srsMode === 'challenge') {
+            srsCurrentDirection = isEnInput ? 'vn2en' : 'en2vn';
+        } else {
+            srsCurrentDirection = Math.random() < 0.5 ? 'en2vn' : 'vn2en';
+        }
+
+        const frontWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordEn : srsCurrentCard.wordVn;
+        const backWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordVn : srsCurrentCard.wordEn;
+        srsExpectedAnswer = backWord;
+
+        // No direction label / Listen on either level — prompt word is enough.
+        const frontLangLabel = srsMode === 'challenge'
+            ? 'Type in answer and press Enter'
+            : '';
+
+        document.getElementById('srs-direction-label').textContent = frontLangLabel;
+        document.getElementById('srs-prompt-word').textContent = frontWord;
+
+        const audioRow = document.getElementById('srs-audio-row');
+        audioRow.innerHTML = '';
+
+        document.getElementById('srs-answer-word').textContent = backWord;
+        document.getElementById('srs-answer-word').style.display = '';
+        document.getElementById('srs-pos').textContent = srsCurrentCard.pos;
+        document.getElementById('srs-def').innerHTML = isEnInput
+            ? '<div>' + (srsCurrentCard.defEn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defVn || '') + '</div>'
+            : '<div>' + (srsCurrentCard.defVn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defEn || '') + '</div>';
+        document.getElementById('srs-context').textContent =
+            isEnInput ? srsCurrentCard.contextEn : (srsCurrentCard.contextVn || srsCurrentCard.contextEn);
+
+        document.getElementById('srs-answer').classList.remove('visible');
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-feedback').classList.remove('wrong-feedback');
+        srsChallengeSolved = false;
+        srsAnswerRevealed = false;
+        var advanceHint = document.getElementById("srs-advance-hint");
+        if (advanceHint) advanceHint.style.display = "none";
+
+        const typeArea = document.getElementById('srs-type-area');
+        const revealBtn = document.getElementById('srs-reveal-btn');
+        const typeInput = document.getElementById('srs-type-input');
+
+        if (srsMode === 'challenge') {
+            typeArea.classList.add('visible');
+            revealBtn.style.display = 'none';
+            typeInput.value = '';
+            typeInput.classList.remove('wrong');
+            typeInput.disabled = false;
+            document.getElementById('srs-giveup-btn').style.display = 'inline-block';
+            const chkBtn = document.getElementById('srs-check-btn');
+            if (chkBtn) chkBtn.style.display = 'inline-block';
+            setTimeout(() => typeInput.focus(), 50);
+        } else {
+            typeArea.classList.remove('visible');
+            revealBtn.style.display = 'block';
+        }
+
+        srsRenderProgress();
+    }
+
+    function srsCheckTypedAnswer() {
+        if (srsMode !== 'challenge' || !srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        const typed = input.value.trim();
+        if (!typed) return;
+        const fb = document.getElementById('srs-feedback');
+        if (answersMatch(typed, srsExpectedAnswer)) {
+            const cheers = ['You got it!', 'Good job!', 'Answer correct!', 'Dynamite!', "You're hot!", 'Perfect!', "You're a genius!"];
+            fb.textContent = cheers[Math.floor(Math.random() * cheers.length)];
+            fb.classList.remove('wrong-feedback');
+            fb.classList.add('success');
+            input.disabled = true;
+            input.classList.remove('wrong');
+            document.getElementById('srs-answer-word').style.display = 'none';
+        document.getElementById('srs-answer').classList.add('visible');
+            document.getElementById('srs-giveup-btn').style.display = 'none';
+            const chk = document.getElementById('srs-check-btn');
+            if (chk) chk.style.display = 'none';
+            srsChallengeSolved = true;
+            srsAnswerRevealed = true;
+            // Put correct answer in top position
+            (function() {
+                const prompt = document.getElementById('srs-prompt-word');
+                const frontWas = prompt.textContent;
+                prompt.textContent = srsExpectedAnswer || '';
+                document.getElementById('srs-direction-label').textContent =
+                    frontWas ? ('was: ' + frontWas) : '';
+            })();
+            var h = document.getElementById('srs-advance-hint');
+            if (h) h.style.display = 'block';
+        } else {
+            const misses = [
+                'Not quite — try again',
+                'Give up?',
+                'Close but no cigar!',
+                "C'mon, you can do better than that!",
+                'Hey, nobody said this would be easy!',
+                'Throw in the towel?'
+            ];
+            fb.textContent = misses[Math.floor(Math.random() * misses.length)];
+            fb.classList.remove('success');
+            fb.classList.add('wrong-feedback');
+            input.classList.remove('wrong');
+            void input.offsetWidth;
+            input.classList.add('wrong');
+            input.value = '';
+            input.focus();
+            setTimeout(() => input.classList.remove('wrong'), 350);
+        }
+    }
+
+    function srsGiveUp() {
+        if (!srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        if (input) {
+            input.disabled = true;
+            input.value = srsExpectedAnswer;
+        }
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-giveup-btn').style.display = 'none';
+        const chk2 = document.getElementById('srs-check-btn');
+        if (chk2) chk2.style.display = 'none';
+        // Allow click-anywhere to advance (counts as Again — they needed the answer)
+        srsChallengeSolved = false;
+        srsAnswerRevealed = true;
+        var h = document.getElementById("srs-advance-hint");
+        if (h) h.style.display = "block";
+    }
+
+    function srsRevealAnswer() {
+        // Answer word takes the top (prompt) position — large black type
+        const prompt = document.getElementById('srs-prompt-word');
+        const frontWas = prompt.textContent;
+        prompt.textContent = srsExpectedAnswer || '';
+        document.getElementById('srs-direction-label').textContent =
+            frontWas ? ('was: ' + frontWas) : '';
+        const aw = document.getElementById('srs-answer-word');
+        if (aw) aw.style.display = 'none';
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-reveal-btn').style.display = 'none';
+        srsAnswerRevealed = true;
+        var h = document.getElementById('srs-advance-hint');
+        if (h) h.style.display = 'block';
+    }
+
+    function srsRateCard(rating) {
+        if (!srsCurrentCard) return;
+        const card = srsCurrentCard;
+
+        // Two-button system:
+        // Show More  → again (reappear soon)
+        // Show Less  → easy  (done for this session)
+        if (rating === 'again' || rating === 'hard') {
+            card.streak = 0;
+            srsQueue.splice(Math.min(3, srsQueue.length), 0, card);
+        } else {
+            // good / easy / anything else → mastered for this session
+            srsMasteredCount++;
+        }
+
+        srsCurrentCard = null;
+        srsShowNextCard();
+    }
+
+    function srsFinishSession() {
+        document.getElementById('srs-review-view').style.display = 'none';
+        document.getElementById('srs-done-view').style.display = 'block';
+        document.getElementById('srs-done-summary').textContent =
+            'You reviewed ' + srsTotal + ' word' + (srsTotal === 1 ? '' : 's') + ' and mastered all of them this round. Nice work!';
+    }
+
+    function srsCloseOverlay() {
+        document.getElementById('srs-overlay').classList.remove('visible');
+    }
+
+    
+    // ========== CROSSWORD ==========
+    let cwShowBank = true;
+    let cwPlacements = []; // {word, row, col, dir, num}
+    let cwRows = 0, cwCols = 0;
+    let cwSolution = {}; // "r,c" -> letter
+
+    function cwEligibleWords() {
+        const isEn = document.documentElement.lang !== 'vi';
+        const seen = new Set();
+        const words = [];
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach(el => {
+            if (!clickedIds.has(el.id)) return;
+            let w = (isEn ? el.dataset.wordEn : el.dataset.wordVn) || '';
+            w = w.trim();
+            // single token only (allow hyphen → strip for grid letters)
+            if (/\s/.test(w)) return;
+            const letters = w.replace(/-/g, '');
+            if (letters.length < 4) return;
+            const key = letters.toUpperCase();
+            if (seen.has(key)) return;
+            seen.add(key);
+            words.push({ display: w, letters: key });
+        });
+        return words;
+    }
+
+    function cwTryPlace(grid, rows, cols, word, row, col, dir) {
+        const dr = dir === 'across' ? 0 : 1;
+        const dc = dir === 'across' ? 1 : 0;
+        const L = word.length;
+        if (row < 0 || col < 0 || row + dr * (L - 1) >= rows || col + dc * (L - 1) >= cols) return null;
+        let crosses = 0;
+        for (let i = 0; i < L; i++) {
+            const r = row + dr * i, c = col + dc * i;
+            const cell = grid[r][c];
+            if (cell === null) {
+                // empty — ok, but check neighbors perpendicular aren't letters (loose check)
+            } else if (cell === word[i]) {
+                crosses++;
+            } else {
+                return null; // conflict
+            }
+        }
+        // Prefer at least one cross for non-first words
+        return crosses;
+    }
+
+    function cwBuildGrid(wordList) {
+        // wordList: array of {display, letters}
+        const words = wordList.slice().sort((a, b) => b.letters.length - a.letters.length);
+        if (!words.length) return null;
+
+        const maxLen = Math.max(...words.map(w => w.letters.length));
+        const size = Math.min(22, Math.max(12, maxLen + 4 + Math.floor(words.length / 2)));
+        let best = null;
+
+        for (let attempt = 0; attempt < 40; attempt++) {
+            const order = words.slice();
+            // shuffle slightly after first
+            if (attempt > 0) {
+                for (let i = order.length - 1; i > 0; i--) {
+                    if (Math.random() < 0.5) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [order[i], order[j]] = [order[j], order[i]];
+                    }
+                }
+            }
+            const grid = Array.from({ length: size }, () => Array(size).fill(null));
+            const placements = [];
+            let num = 1;
+
+            // first word centered horizontally
+            const w0 = order[0].letters;
+            let r0 = Math.floor(size / 2);
+            let c0 = Math.floor((size - w0.length) / 2);
+            for (let i = 0; i < w0.length; i++) grid[r0][c0 + i] = w0[i];
+            placements.push({ word: order[0].display, letters: w0, row: r0, col: c0, dir: 'across', num: num++ });
+
+            for (let wi = 1; wi < order.length; wi++) {
+                const letters = order[wi].letters;
+                let candidates = [];
+                for (let i = 0; i < letters.length; i++) {
+                    for (let r = 0; r < size; r++) {
+                        for (let c = 0; c < size; c++) {
+                            if (grid[r][c] !== letters[i]) continue;
+                            // try across with letter i at (r,c)
+                            const ca = c - i;
+                            const xa = cwTryPlace(grid, size, size, letters, r, ca, 'across');
+                            if (xa !== null && (placements.length === 0 || xa > 0)) {
+                                candidates.push({ row: r, col: ca, dir: 'across', crosses: xa });
+                            }
+                            const cr = r - i;
+                            const xd = cwTryPlace(grid, size, size, letters, cr, c, 'down');
+                            if (xd !== null && (placements.length === 0 || xd > 0)) {
+                                candidates.push({ row: cr, col: c, dir: 'down', crosses: xd });
+                            }
+                        }
+                    }
+                }
+                if (!candidates.length) continue;
+                candidates.sort((a, b) => b.crosses - a.crosses);
+                const pick = candidates[Math.floor(Math.random() * Math.min(3, candidates.length))];
+                const dr = pick.dir === 'across' ? 0 : 1;
+                const dc = pick.dir === 'across' ? 1 : 0;
+                for (let i = 0; i < letters.length; i++) {
+                    grid[pick.row + dr * i][pick.col + dc * i] = letters[i];
+                }
+                placements.push({
+                    word: order[wi].display,
+                    letters,
+                    row: pick.row,
+                    col: pick.col,
+                    dir: pick.dir,
+                    num: num++
+                });
+            }
+
+            if (!best || placements.length > best.placements.length) {
+                best = { grid, placements, size };
+            }
+            if (placements.length === order.length) break;
+        }
+
+        if (!best || best.placements.length < 2) return null;
+
+        // Trim empty border
+        let minR = best.size, maxR = 0, minC = best.size, maxC = 0;
+        for (let r = 0; r < best.size; r++) {
+            for (let c = 0; c < best.size; c++) {
+                if (best.grid[r][c] !== null) {
+                    minR = Math.min(minR, r); maxR = Math.max(maxR, r);
+                    minC = Math.min(minC, c); maxC = Math.max(maxC, c);
+                }
+            }
+        }
+        const rows = maxR - minR + 1;
+        const cols = maxC - minC + 1;
+        const trimmed = Array.from({ length: rows }, (_, r) =>
+            Array.from({ length: cols }, (_, c) => best.grid[r + minR][c + minC])
+        );
+        const placements = best.placements.map(p => ({
+            ...p,
+            row: p.row - minR,
+            col: p.col - minC
+        }));
+        // renumber by reading order
+        placements.sort((a, b) => a.row - b.row || a.col - b.col);
+        placements.forEach((p, i) => { p.num = i + 1; });
+
+        return { grid: trimmed, placements, rows, cols };
+    }
+
+    function cwRender(result) {
+        cwPlacements = result.placements;
+        cwRows = result.rows;
+        cwCols = result.cols;
+        cwSolution = {};
+        for (let r = 0; r < result.rows; r++) {
+            for (let c = 0; c < result.cols; c++) {
+                if (result.grid[r][c] !== null) cwSolution[r + ',' + c] = result.grid[r][c];
+            }
+        }
+
+        const gridEl = document.getElementById('cw-grid');
+        gridEl.style.gridTemplateColumns = 'repeat(' + result.cols + ', 28px)';
+        gridEl.style.gap = '0';
+        gridEl.style.columnGap = '0';
+        gridEl.style.rowGap = '0';
+        gridEl.innerHTML = '';
+
+        // number map
+        const numAt = {};
+        result.placements.forEach(p => {
+            const k = p.row + ',' + p.col;
+            if (!numAt[k] || p.num < numAt[k]) numAt[k] = p.num;
+        });
+
+        for (let r = 0; r < result.rows; r++) {
+            for (let c = 0; c < result.cols; c++) {
+                const cell = document.createElement('div');
+                const letter = result.grid[r][c];
+                if (letter === null) {
+                    cell.className = 'cw-cell block';
+                } else {
+                    cell.className = 'cw-cell letter';
+                    const key = r + ',' + c;
+                    if (numAt[key]) {
+                        const n = document.createElement('span');
+                        n.className = 'cw-num';
+                        n.textContent = numAt[key];
+                        cell.appendChild(n);
+                    }
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.maxLength = 1;
+                    inp.autocomplete = 'off';
+                    inp.autocapitalize = 'characters';
+                    inp.dataset.r = r;
+                    inp.dataset.c = c;
+                    inp.addEventListener('focus', (e) => {
+                        const r = +e.target.dataset.r, c = +e.target.dataset.c;
+                        cwSetDirFromClick(r, c);
+                        cwHighlightWordAt(r, c);
+                    });
+                    inp.addEventListener('input', (e) => {
+                        let v = (e.target.value || '').slice(-1).toUpperCase();
+                        v = v.replace(/[^A-Za-zÀ-ỹĂăÂâÊêÔôƠơƯưĐđ]/g, '');
+                        e.target.value = v;
+                        e.target.parentElement.classList.remove('correct', 'wrong-flash');
+                        if (v) {
+                            const next = cwNextCell(+e.target.dataset.r, +e.target.dataset.c);
+                            if (next) next.focus();
+                        }
+                    });
+                    inp.addEventListener('keydown', (e) => {
+                        const r = +e.target.dataset.r, c = +e.target.dataset.c;
+                        if (e.key === 'ArrowRight') { cwDir = 'across'; const n = cwCellInput(r, c + 1); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowLeft') { cwDir = 'across'; const n = cwCellInput(r, c - 1); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowDown') { cwDir = 'down'; const n = cwCellInput(r + 1, c); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowUp') { cwDir = 'down'; const n = cwCellInput(r - 1, c); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'Backspace' && !e.target.value) {
+                            const prev = cwPrevCell(r, c);
+                            if (prev) { prev.focus(); e.preventDefault(); }
+                        }
+                    });
+                    cell.appendChild(inp);
+                }
+                gridEl.appendChild(cell);
+            }
+        }
+
+        // bank
+        const bank = document.getElementById('cw-bank-grid');
+        bank.innerHTML = '';
+        const shuffled = result.placements.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        shuffled.forEach(p => {
+            const d = document.createElement('div');
+            d.className = 'cw-bank-word';
+            d.textContent = p.word;
+            d.dataset.letters = p.letters;
+            bank.appendChild(d);
+        });
+
+        document.getElementById('cw-status').textContent =
+            'Placed ' + result.placements.length + ' words · fill every square';
+        document.getElementById('cw-status').className = 'cw-status';
+        cwApplyBankVisibility();
+    }
+
+    // Track typing direction so junctions continue the same way
+    let cwDir = 'across'; // 'across' | 'down'
+
+    function cwCellInput(r, c) {
+        return document.querySelector('.cw-cell.letter input[data-r="'+r+'"][data-c="'+c+'"]');
+    }
+    function cwNextCell(r, c) {
+        if (cwDir === 'down') {
+            const down = cwCellInput(r + 1, c);
+            if (down) return down;
+            const right = cwCellInput(r, c + 1);
+            if (right) { cwDir = 'across'; return right; }
+        } else {
+            const right = cwCellInput(r, c + 1);
+            if (right) return right;
+            const down = cwCellInput(r + 1, c);
+            if (down) { cwDir = 'down'; return down; }
+        }
+        return null;
+    }
+    function cwPrevCell(r, c) {
+        if (cwDir === 'down') {
+            const up = cwCellInput(r - 1, c);
+            if (up) return up;
+            const left = cwCellInput(r, c - 1);
+            if (left) { cwDir = 'across'; return left; }
+        } else {
+            const left = cwCellInput(r, c - 1);
+            if (left) return left;
+            const up = cwCellInput(r - 1, c);
+            if (up) { cwDir = 'down'; return up; }
+        }
+        return null;
+    }
+
+    function cwClearActiveWord() {
+        document.querySelectorAll('.cw-cell.cw-active-word').forEach(el => el.classList.remove('cw-active-word'));
+    }
+    function cwHighlightWordAt(r, c) {
+        cwClearActiveWord();
+        // Find placement(s) covering this cell in current direction; prefer cwDir
+        const covering = cwPlacements.filter(p => {
+            const dr = p.dir === 'across' ? 0 : 1;
+            const dc = p.dir === 'across' ? 1 : 0;
+            for (let i = 0; i < p.letters.length; i++) {
+                if (p.row + dr * i === r && p.col + dc * i === c) return true;
+            }
+            return false;
+        });
+        let place = covering.find(p => p.dir === cwDir) || covering[0];
+        if (!place) return;
+        cwDir = place.dir;
+        const dr = place.dir === 'across' ? 0 : 1;
+        const dc = place.dir === 'across' ? 1 : 0;
+        for (let i = 0; i < place.letters.length; i++) {
+            const rr = place.row + dr * i, cc = place.col + dc * i;
+            const inp = cwCellInput(rr, cc);
+            if (inp) inp.parentElement.classList.add('cw-active-word');
+        }
+    }
+
+    function cwSetDirFromClick(r, c) {
+        // If this cell is the start of a placed word, adopt that word's direction.
+        const starts = cwPlacements.filter(p => p.row === r && p.col === c);
+        if (starts.length === 1) {
+            cwDir = starts[0].dir;
+            return;
+        }
+        if (starts.length > 1) {
+            // both across & down start here — keep current dir
+            return;
+        }
+        // Mid-word: only one axis may continue
+        const hasAcross = !!(cwCellInput(r, c - 1) || cwCellInput(r, c + 1));
+        const hasDown = !!(cwCellInput(r - 1, c) || cwCellInput(r + 1, c));
+        if (hasAcross && !hasDown) cwDir = 'across';
+        else if (hasDown && !hasAcross) cwDir = 'down';
+        // if both (junction), keep current cwDir so progress continues straight
+    }
+
+    function cwApplyBankVisibility() {
+        const bank = document.getElementById('cw-bank');
+        const btn = document.getElementById('cw-toggle-bank-btn');
+        if (cwShowBank) {
+            bank.classList.add('visible');
+            btn.textContent = 'Hide Word Bank';
+        } else {
+            bank.classList.remove('visible');
+            btn.textContent = 'Show Word Bank';
+        }
+    }
+
+    function cwOpen() {
+        const words = cwEligibleWords();
+        if (words.length < 4) {
+            alert('Need at least 4 clicked words with 4+ letters each to build a crossword.');
+            return;
+        }
+        // Cap at 15 for density
+        let list = words.slice();
+        if (list.length > 15) {
+            // shuffle and take 15
+            for (let i = list.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [list[i], list[j]] = [list[j], list[i]];
+            }
+            list = list.slice(0, 15);
+        }
+        const result = cwBuildGrid(list);
+        if (!result) {
+            alert('Could not build a crossword from those words. Click a few more, or try again.');
+            return;
+        }
+        cwRender(result);
+        document.getElementById('cw-sub').textContent =
+            'From words you clicked · ' + result.placements.length + ' words in the puzzle';
+        document.getElementById('cw-overlay').classList.add('visible');
+    }
+
+    function cwClose() {
+        cwClearActiveWord();
+        document.getElementById('cw-overlay').classList.remove('visible');
+    }
+
+    function cwCheck() {
+        let total = 0, ok = 0;
+        document.querySelectorAll('.cw-cell.letter input').forEach(inp => {
+            total++;
+            const key = inp.dataset.r + ',' + inp.dataset.c;
+            const want = cwSolution[key];
+            const got = (inp.value || '').toUpperCase();
+            inp.parentElement.classList.remove('correct', 'wrong-flash');
+            if (got && got === want) {
+                ok++;
+                inp.parentElement.classList.add('correct');
+            } else if (got) {
+                inp.parentElement.classList.add('wrong-flash');
+            }
+        });
+        const st = document.getElementById('cw-status');
+        if (ok === total && total > 0) {
+            st.textContent = "You got it! Crossword complete.";
+            st.className = 'cw-status success';
+            // mark bank used
+            document.querySelectorAll('.cw-bank-word').forEach(w => w.classList.add('used'));
+        } else {
+            st.textContent = ok + ' / ' + total + ' letters correct — keep going';
+            st.className = 'cw-status bad';
+        }
+    }
+
+
+    function cwShowSolution() {
+        document.querySelectorAll('.cw-cell.letter input').forEach(inp => {
+            const key = inp.dataset.r + ',' + inp.dataset.c;
+            const want = cwSolution[key];
+            if (want) {
+                inp.value = want;
+                inp.parentElement.classList.remove('wrong-flash');
+                inp.parentElement.classList.add('correct');
+            }
+        });
+        document.querySelectorAll('.cw-bank-word').forEach(w => w.classList.add('used'));
+        const st = document.getElementById('cw-status');
+        st.textContent = 'Solution shown — try New layout for another puzzle';
+        st.className = 'cw-status success';
+    }
+
+    function cwNewLayout() {
+        cwOpen();
+    }
+
+    // ========== INITIALIZATION ==========
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        // Assign stable ids and wire click handlers
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                // In practice mode we ignore clicks on vocab (they are blanks or filled)
+                if (practiceMode) return;
+
+                // Track this word for the word bank
+                if (!clickedIds.has(el.id)) {
+                    clickedIds.add(el.id);
+                    updateWordCount();
+                }
+
+                // Show / toggle popup (existing behaviour)
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                // For Vietnamese input (lang=vi): title = English (opposite), sub = Vietnamese
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                const isEnInput = document.documentElement.lang === 'en';
+                document.getElementById('popup-definition').innerHTML = isEnInput
+                    ? (el.dataset.defVn || '') + hr + (el.dataset.defEn || '')
+                    : (el.dataset.defEn || '') + hr + (el.dataset.defVn || '');
+                
+                document.getElementById('popup-context-text').innerText = isEnInput ? (el.dataset.contextEn || el.dataset.wordEn || '') : (el.dataset.contextVn || el.dataset.wordVn || '');
+
+                popup.style.display = 'block';
+            });
+        });
+
+        // Close popup on outside click
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        // Practice control buttons
+        // Practice control buttons
+        function toggleWordBank() {
+            const bank = document.getElementById('word-bank-section');
+            const btn = document.getElementById('toggle-bank-btn');
+            if (bank.classList.contains('visible')) {
+                // Hide bank + re-blank the story as typeable inputs for a
+                // real memory challenge (nothing to click anymore)
+                bank.classList.remove('visible');
+                btn.textContent = 'Show Word Bank';
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankTypeable(el));
+                    const firstBlank = orderedBlanks[0];
+                    if (firstBlank) {
+                        firstBlank.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const inp = firstBlank.querySelector('input.blank-input');
+                        if (inp) inp.focus();
+                    }
+                    updateProgress();
+                }
+            } else {
+                bank.classList.add('visible');
+                btn.textContent = 'Hide Word Bank';
+                // Fresh round again, same as the hide direction: re-blank
+                // everything back to click-to-select and rebuild the bank,
+                // rather than leaving previously-typed answers in place.
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankClickable(el));
+                    buildWordBank();
+                    setActiveBlank(orderedBlanks[0]);
+                    orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    updateProgress();
+                }
+            }
+        }
+
+        document.getElementById('start-practice-btn').addEventListener('click', enterPracticeMode);
+        document.getElementById('reset-practice-btn').addEventListener('click', resetPractice);
+        document.getElementById('toggle-bank-btn').addEventListener('click', toggleWordBank);
+        document.getElementById('exit-practice-btn').addEventListener('click', exitPracticeMode);
+
+        // Spaced Repetition controls
+        document.getElementById('start-srs-btn').addEventListener('click', () => srsStartSession('review'));
+        document.getElementById('start-srs-challenge-btn').addEventListener('click', () => srsStartSession('challenge'));
+        document.getElementById('srs-close-btn').addEventListener('click', srsCloseOverlay);
+        document.getElementById('srs-reveal-btn').addEventListener('click', srsRevealAnswer);
+        document.getElementById('srs-check-btn').addEventListener('click', srsCheckTypedAnswer);
+        const typeAreaEl = document.getElementById('srs-type-area');
+        if (typeAreaEl) {
+            typeAreaEl.addEventListener('click', (e) => e.stopPropagation());
+            typeAreaEl.addEventListener('touchend', (e) => e.stopPropagation());
+        }
+        // srs-type-area-stop
+
+        document.getElementById('srs-giveup-btn').addEventListener('click', srsGiveUp);
+        const srsTypeInput = document.getElementById('srs-type-input');
+        const submitTyped = (e) => {
+            if (e) e.preventDefault();
+            srsCheckTypedAnswer();
+        };
+        srsTypeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        // Mobile keyboards often only fire keyup / change for the Done key
+        srsTypeInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        document.getElementById('srs-again-btn').addEventListener('click', () => srsStartSession(srsMode));
+        document.getElementById('srs-back-btn').addEventListener('click', srsCloseOverlay);
+        document.querySelectorAll('.srs-rate-btn').forEach(btn => {
+            btn.addEventListener('click', () => srsRateCard(btn.dataset.rating));
+        });
+        // Click anywhere in the review card that isn't a button dismisses it
+        // (mirrors the vocab popup's behavior) — no button clicks close it,
+        // since those (Show Answer, ratings, audio) have their own actions.
+        // Backdrop closes session. Once an answer is showing (Level 1 reveal,
+        // Level 2 correct, or Show answer), click anywhere on the card (not a
+        // rating button / input) advances — no need to hunt for the X.
+        document.getElementById('srs-overlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('srs-overlay')) {
+                srsCloseOverlay();
+                return;
+            }
+            // Never advance from a tap while the type-in field is active (mobile
+            // keyboard dismiss often hits the card behind the keyboard).
+            const typeInput = document.getElementById('srs-type-input');
+            if (typeInput && document.activeElement === typeInput) return;
+            if (e.target.closest('#srs-type-area')) return;
+            if (srsAnswerRevealed && !e.target.closest('button') && !e.target.closest('input')) {
+                const rating = (srsChallengeSolved || srsMode === 'review') ? 'easy' : 'again';
+                srsAnswerRevealed = false;
+                srsChallengeSolved = false;
+                srsRateCard(rating);
+            }
+        });
+
+        const cwStart = document.getElementById('start-cw-btn');
+        if (cwStart) cwStart.addEventListener('click', cwOpen);
+        const cwCloseBtn = document.getElementById('cw-close-btn');
+        if (cwCloseBtn) cwCloseBtn.addEventListener('click', cwClose);
+        const cwCheckBtn = document.getElementById('cw-check-btn');
+        if (cwCheckBtn) cwCheckBtn.addEventListener('click', cwCheck);
+        const cwSolveBtn = document.getElementById('cw-solve-btn');
+        if (cwSolveBtn) cwSolveBtn.addEventListener('click', cwShowSolution);
+        const cwNewBtn = document.getElementById('cw-new-btn');
+        if (cwNewBtn) cwNewBtn.addEventListener('click', cwNewLayout);
+        const cwToggleBank = document.getElementById('cw-toggle-bank-btn');
+        if (cwToggleBank) cwToggleBank.addEventListener('click', () => {
+            cwShowBank = !cwShowBank;
+            cwApplyBankVisibility();
+        });
+        const cwOverlay = document.getElementById('cw-overlay');
+        if (cwOverlay) cwOverlay.addEventListener('click', (e) => {
+            if (e.target === cwOverlay) cwClose();
+        });
+
+
+        updateWordCount();
+    });
+
+</script>
+</body>
+</html>
