@@ -1,0 +1,2674 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Biết Nhường Nhịn Em Nhỏ</title>
+<style>
+
+        body {
+            background-color: #2b2b2b;
+            color: #1a0e00;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            transition: max-width 0.25s ease;
+        }
+        .page-container.practice-on {
+            max-width: 700px;
+        }
+        .story-and-bank {
+            display: block;
+        }
+        .page-container.practice-on .story-and-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .page-container.practice-on .story-main {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+            color: #1a0e00;
+        }
+        .read-hint {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #5c3a14;
+            font-style: italic;
+            margin: -10px 0 22px;
+            padding: 0 8px;
+        }
+        .page-container.practice-on .read-hint {
+            display: none;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: #f0e6c8;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn, .practice-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover, .practice-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .practice-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .practice-btn.primary {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border: 2px solid #7a4e1a !important;
+            font-weight: bold;
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            box-shadow: none;
+        }
+        .practice-btn.large {
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            font-weight: bold;
+        }
+        .practice-btn.primary:hover:not(:disabled) {
+            background: #e8d9b0 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+        }
+        .practice-btn.primary:disabled {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+            opacity: 0.5;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        .vocab.is-blank {
+            display: inline-block;
+            min-width: 5.2em;
+            height: 1.35em;
+            line-height: 1.35em;
+            vertical-align: baseline;
+            margin: 0 2px;
+            padding: 0 6px;
+            background-color: #fffdf6;
+            border: 2px solid #5c3a14;
+            border-radius: 3px;
+            color: transparent;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            box-sizing: border-box;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+        .vocab.is-blank::after {
+            content: none;
+        }
+        .vocab.is-blank.active-blank {
+            background-color: #fff8e0;
+            border-color: #2e1f0a;
+            box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.45);
+        }
+        .vocab.is-blank.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 4px #e6b800 !important;
+            border-color: #c9a000 !important;
+        }
+        .vocab.is-blank input.blank-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font: inherit;
+            color: #1a0e00;
+            outline: none;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: text;
+        }
+        .vocab.is-blank.wrong-shake {
+            animation: blankShake 0.3s;
+            border-color: #a33b2e !important;
+            box-shadow: 0 0 0 3px rgba(163, 59, 46, 0.35) !important;
+        }
+        @keyframes blankShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .vocab.filled {
+            border: none;
+            border-bottom: 2px solid #1a5c20;
+            background-color: rgba(26, 92, 32, 0.12);
+            color: #1a3c10;
+            font-weight: 600;
+            cursor: default;
+            padding: 0;
+            min-width: 0;
+            height: auto;
+        }
+        .vocab.filled:hover {
+            background-color: rgba(26, 92, 32, 0.18);
+        }
+        .vocab.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 5px #ffc107 !important;
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .practice-controls {
+            margin: 30px 0 20px;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            text-align: center;
+        }
+        .collect-status {
+            font-size: 1rem;
+            color: #3a1f00;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .collect-status span {
+            color: #7a4e1a;
+            font-size: 1.15rem;
+        }
+        .back-btn-container {
+            text-align: center;
+            margin: 28px 0 8px;
+            padding-top: 16px;
+            border-top: 1px dashed #a0845a;
+        }
+        .back-btn-container .back-btn {
+            font-size: 1rem;
+            padding: 10px 22px;
+        }
+        .practice-btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .word-bank-section {
+            display: none;
+            margin: 20px 0 10px;
+            padding: 14px;
+            background: rgba(122, 78, 26, 0.06);
+            border: 1px solid #a0845a;
+            border-radius: 6px;
+        }
+        .word-bank-section.visible {
+            display: block;
+        }
+        /* Horizontal word bank above the story when practice is active */
+        .page-container.practice-on .word-bank-section.visible {
+            display: block;
+            width: 100%;
+            margin: 0 0 4px;
+            position: sticky;
+            top: 160px;
+            z-index: 20;
+            max-height: none;
+            overflow: visible;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            background: #f5ecd4;
+        }
+        .bank-grid {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .bank-word {
+            font-size: 0.92rem;
+            border: 1px solid #7a4e1a;
+            cursor: pointer;
+            padding: 7px 12px;
+            text-align: center;
+            background: #f8f0d8;
+            border-radius: 4px;
+            color: #2a1500;
+            transition: all 0.15s;
+            user-select: none;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+        .bank-word:hover {
+            background: #e8d8b0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .practice-progress {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .practice-complete {
+            display: none;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(26, 92, 32, 0.12);
+            border: 2px solid #1a5c20;
+            border-radius: 6px;
+            text-align: center;
+            color: #1a3c10;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .practice-complete.visible {
+            display: block;
+        }
+        .mode-banner {
+            display: none;
+            background: #7a4e1a;
+            color: #f0e6c8;
+            text-align: center;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .mode-banner.visible {
+            display: block;
+        }
+        .practice-instruction {
+            display: none;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #7a4e1a;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        .practice-instruction.visible {
+            display: block;
+        }
+       @media (max-width: 820px) {
+          .page-container.practice-on {
+              max-width: 700px;
+          }
+          .page-container.practice-on .word-bank-section.visible {
+              position: sticky;
+              top: 160px;
+              max-height: none;
+          }
+       }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .bank-word {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ========== SPACED REPETITION (Section 3) ========== */
+#srs-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 4, 0.72);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+#srs-overlay.visible {
+    display: flex;
+}
+.srs-card {
+    background-color: #f0e6c8;
+    color: #1a0e00;
+    border: 3px solid #7a4e1a;
+    border-radius: 6px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 25px;
+    box-sizing: border-box;
+    position: relative;
+}
+.srs-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #7a4e1a;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+}
+.srs-close-btn:hover {
+    color: #3a1f00;
+}
+.srs-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.srs-header h3 {
+    margin: 0 0 6px;
+    color: #3a1f00;
+    font-size: 1.25rem;
+}
+.srs-progress-track {
+    background: rgba(122, 78, 26, 0.18);
+    border-radius: 8px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+.srs-progress-fill {
+    background: #1a5c20;
+    height: 100%;
+    width: 0%;
+    transition: width 0.25s ease;
+}
+.srs-progress-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    margin-top: 6px;
+}
+.srs-direction-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    font-style: italic;
+    text-align: center;
+    min-height: 1.2em;
+}
+.srs-prompt-word {
+    font-size: 1.55rem;
+    font-weight: bold;
+    color: #000000;
+    margin: 8px 0 6px;
+    line-height: 1.35;
+}
+.srs-audio-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.srs-reveal-btn {
+    display: block;
+    width: 100%;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 12px;
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+.srs-reveal-btn:hover {
+    background: #422d12;
+    color: #ffe6b3;
+}
+.srs-answer {
+    display: none;
+    border-top: 1px dashed #7a4e1a;
+    padding-top: 16px;
+    margin-top: 4px;
+}
+.srs-answer.visible {
+    display: block;
+}
+.srs-answer-word {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 4px;
+}
+.srs-pos {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #7a4e1a;
+    margin-bottom: 8px;
+    text-align: center;
+}
+.srs-def {
+    font-size: 0.98rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+.srs-def-secondary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #7a4e1a;
+    font-style: italic;
+    margin-top: 4px;
+}
+.srs-context-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #3a1f00;
+}
+.srs-context {
+    font-size: 0.9rem;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 4px 0 18px;
+}
+.srs-rate-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.srs-rate-btn {
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #2a1500;
+    text-align: center;
+    line-height: 1.3;
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-rate-btn small {
+    display: block;
+    font-weight: normal;
+    font-size: 0.72rem;
+    opacity: 0.85;
+    margin-top: 2px;
+    color: #4a3010;
+}
+.srs-rate-again,
+.srs-rate-hard,
+.srs-rate-good,
+.srs-rate-easy {
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-rate-again:hover,
+.srs-rate-hard:hover,
+.srs-rate-good:hover,
+.srs-rate-easy:hover {
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-done {
+    text-align: center;
+}
+.srs-done h3 {
+    color: #3a1f00;
+    margin-bottom: 10px;
+}
+.srs-done p {
+    text-align: center;
+    line-height: 1.5;
+}
+.srs-done-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.srs-type-area {
+    display: none;
+    margin: 12px 0 8px;
+}
+.srs-type-area.visible {
+    display: block;
+}
+.srs-type-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.15rem;
+    padding: 12px 14px;
+    border: 2px solid #7a4e1a;
+    border-radius: 4px;
+    background: #fffdf6;
+    color: #1a0e00;
+    text-align: center;
+    font-family: inherit;
+    outline: none;
+}
+.srs-type-input:focus {
+    border-color: #2e1f0a;
+    box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.35);
+}
+.srs-type-input.wrong {
+    border-color: #a33b2e;
+    animation: blankShake 0.3s;
+}
+.srs-type-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.srs-mode-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.srs-feedback {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #a33b2e;
+    min-height: 1.2em;
+    margin-top: 6px;
+}
+
+.srs-feedback.wrong-feedback {
+    color: #a33b2e;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+.srs-feedback.success {
+    color: #1a5c20;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+@media (max-width: 480px) {
+    .srs-rate-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    .srs-prompt-word { font-size: 1.35rem; color: #000000; }
+}
+
+
+    /* ===== CROSSWORD ===== */
+    #cw-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 12, 4, 0.72);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        box-sizing: border-box;
+        overflow: auto;
+    }
+    #cw-overlay.visible { display: flex; }
+    .cw-panel {
+        background: #f0e6c8;
+        color: #1a0e00;
+        border: 3px solid #7a4e1a;
+        border-radius: 6px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        width: 100%;
+        max-width: 640px;
+        max-height: 94vh;
+        overflow: auto;
+        padding: 16px 16px 20px;
+        box-sizing: border-box;
+    }
+    .cw-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    .cw-title {
+        font-size: 1.15rem;
+        font-weight: bold;
+        color: #3a1f00;
+        margin: 0;
+    }
+    .cw-sub {
+        text-align: center;
+        font-size: 0.98rem;
+        color: #3a1f00;
+        font-style: italic;
+        font-weight: 600;
+        margin: 0 0 12px;
+    }
+    .cw-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+    .cw-grid-wrap {
+        display: flex;
+        justify-content: center;
+        overflow: auto;
+        margin-bottom: 12px;
+    }
+    .cw-grid {
+        display: grid;
+        gap: 0;
+        background: #2e1f0a;
+        border: 2px solid #2e1f0a;
+        width: max-content;
+        margin: 0 auto;
+    }
+    .cw-cell {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 28px;
+        max-height: 28px;
+        box-sizing: border-box;
+        position: relative;
+        background: #2e1f0a;
+        padding: 0;
+        margin: 0;
+    }
+    .cw-cell.block { background: #2e1f0a; }
+    .cw-cell.letter {
+        background: #fffdf6;
+        border: 1px solid #5c3a14;
+    }
+    .cw-cell.letter input {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        border: none;
+        border-radius: 0;
+        background: #fffdf6;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a0e00;
+        text-transform: uppercase;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        caret-color: #7a4e1a;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    .cw-cell.letter input:focus {
+        outline: 2px solid #c8a060;
+        background: #fff8e0;
+    }
+    .cw-cell.correct {
+        background: #eaf6e0 !important;
+        border-color: #3d7a2f !important;
+    }
+    .cw-cell.correct input {
+        color: #1a3c10 !important;
+        font-weight: 700;
+        background: transparent !important;
+    }
+    .cw-cell.wrong-flash {
+        background: #fde8e4 !important;
+        border-color: #a33b2e !important;
+    }
+    .cw-cell.wrong-flash input {
+        color: #6b1c14 !important;
+    }
+    .cw-status.success {
+        color: #1a5c20;
+        background: #eaf6e0;
+        border: 1px solid #3d7a2f;
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+
+    .cw-cell.letter.cw-active-word {
+        background: #fff3bf !important;
+        border-color: #c9a000 !important;
+        box-shadow: inset 0 0 0 2px #e6b800;
+    }
+    .cw-cell.letter.cw-active-word input {
+        background: #fff3bf !important;
+    }
+
+    .cw-status.bad {
+        color: #6b1c14;
+        background: #fde8e4;
+        border: 1px solid #a33b2e;
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+    .cw-num {
+        position: absolute;
+        top: 1px;
+        left: 2px;
+        font-size: 8px;
+        line-height: 1;
+        color: #5c3a14;
+        pointer-events: none;
+        font-weight: bold;
+    }
+    .cw-bank {
+        display: none;
+        margin: 10px 0;
+        padding: 10px;
+        background: rgba(122, 78, 26, 0.06);
+        border: 1px solid #a0845a;
+        border-radius: 6px;
+    }
+    .cw-bank.visible { display: block; }
+    .cw-bank-label {
+        font-size: 0.85rem;
+        color: #7a4e1a;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .cw-bank-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .cw-bank-word {
+        font-size: 0.85rem;
+        border: 1px solid #7a4e1a;
+        padding: 5px 10px;
+        background: #f8f0d8;
+        border-radius: 4px;
+        color: #2a1500;
+        user-select: none;
+    }
+    .cw-bank-word.used {
+        opacity: 0.35;
+        text-decoration: line-through;
+    }
+    .cw-status {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #3a1f00;
+        font-weight: bold;
+        min-height: 1.3em;
+        margin: 8px 0;
+    }
+    .cw-status.success { color: #1a5c20; }
+
+    .cw-cell.letter.cw-active-word {
+        background: #fff3bf !important;
+        border-color: #c9a000 !important;
+        box-shadow: inset 0 0 0 2px #e6b800;
+    }
+    .cw-cell.letter.cw-active-word input {
+        background: #fff3bf !important;
+    }
+
+    .cw-status.bad { color: #a33b2e; }
+    @media (max-width: 500px) {
+        .cw-cell, .cw-cell.block, .cw-cell.letter {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            min-height: 28px;
+            max-width: 28px;
+            max-height: 28px;
+        }
+        .cw-cell.letter input { font-size: 14px; }
+        .cw-grid-wrap {
+            justify-content: flex-start;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+
+    .cw-hint {
+        text-align: center;
+        font-size: 0.88rem;
+        color: #7a4e1a;
+        font-style: italic;
+        margin: 8px 0 0;
+        min-height: 1.2em;
+    }
+    .cw-hint.ready {
+        color: #1a5c20;
+        font-style: normal;
+        font-weight: bold;
+    }
+
+</style>
+</head>
+<body>
+<div class="page-container">
+<h1><span class="vocab" data-word-en="Knowing How to Yield to Younger Siblings" data-word-vn="Biết Nhường Nhịn Em Nhỏ" data-pos="noun phrase / cụm danh từ" data-def-en="The act of being considerate and giving way to younger or smaller siblings" data-def-vn="Hành động biết quan tâm và nhường nhịn em nhỏ hơn" data-context-en="This is the title of the story — it describes the lesson Trúc learns about yielding to her younger sister." data-context-vn="Đây là tiêu đề câu chuyện — mô tả bài học Trúc học về việc nhường nhịn em gái.">Biết Nhường Nhịn Em Nhỏ</span></h1>
+    <h2 class="subtitle">Biết Nhường Nhịn Em Nhỏ</h2>
+    <div class="mode-banner" id="mode-banner">Hover/click (desktop) or tap (phone) a blank, then choose the matching word from Word Bank</div>
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen</div>
+        <audio id="audio-player" src="nhuong.mp3" controls></audio>
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration||0,a.currentTime+20);">⇢ 20 sec</button>
+        </div>
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+    <div class="read-hint" id="read-hint">Click/tap any word with dotted underline to see definition.</div>
+    <div class="story-and-bank">
+        <div class="word-bank-section" id="word-bank-section">
+            <div class="audio-label">Word Bank</div>
+            <div class="bank-grid" id="bank-words"></div>
+        </div>
+    <div class="story-main">
+    <div id="story-content">
+<p>
+    <span class="vocab" id="w-homnay-1" data-word-en="today" data-word-vn="hôm nay" data-pos="adverb / trạng từ" data-def-en="on this day; referring to the current day" data-def-vn="vào ngày này; chỉ ngày hiện tại" data-context-en="Used to set the scene — the events of the story happen today." data-context-vn="Dùng để mở đầu câu chuyện — các sự kiện xảy ra vào ngày hôm nay.">Hôm nay</span>, 
+    <span class="vocab" id="w-me-1" data-word-en="mother / mom" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="one's mother; used as a respectful family term" data-def-vn="người mẹ; dùng như một danh xưng trong gia đình" data-context-en="Trúc's mother goes to the airport to pick up the father." data-context-vn="Mẹ của Trúc đi ra sân bay để đón ba.">mẹ</span> 
+    <span class="vocab" id="w-truc-go" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister's name in the story" data-def-vn="Tên của chị gái trong câu chuyện" data-context-en="Mẹ Trúc — Trúc's mother — goes to the airport." data-context-vn="Mẹ Trúc đi ra sân bay.">Trúc</span> 
+    <span class="vocab" id="w-di-1" data-word-en="go / leave" data-word-vn="đi" data-pos="verb / động từ" data-def-en="to go, to travel to a place" data-def-vn="di chuyển đến một nơi nào đó" data-context-en="The mother goes to the airport." data-context-vn="Mẹ đi ra sân bay.">đi</span> 
+    <span class="vocab" id="w-rasanbay" data-word-en="to the airport" data-word-vn="ra sân bay" data-pos="verb phrase / cụm động từ" data-def-en="to go out to the airport" data-def-vn="đi đến sân bay" data-context-en="The mother travels to the airport to pick up the father." data-context-vn="Mẹ đi ra sân bay để đón ba.">ra sân bay</span> 
+    <span class="vocab" id="w-don-1" data-word-en="pick up / receive / welcome" data-word-vn="đón" data-pos="verb / động từ" data-def-en="to go and meet someone who is arriving; to pick someone up" data-def-vn="đi gặp và đón người đang đến nơi" data-context-en="The mother goes to the airport to pick up the father." data-context-vn="Mẹ đi ra sân bay để đón ba.">đón</span> 
+    <span class="vocab" id="w-ba-1" data-word-en="father / dad" data-word-vn="ba" data-pos="noun / danh từ" data-def-en="father; a familiar, informal word for father used in southern Vietnam" data-def-vn="cha; từ thân mật dùng ở miền Nam Việt Nam" data-context-en="The mother goes to the airport to pick up the father." data-context-vn="Mẹ đi ra sân bay để đón ba.">ba</span>.
+  </p>
+
+<p>
+    <span class="speaker">Mẹ:</span> 
+    <span class="vocab" id="w-truc-1" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister being addressed by the mother" data-def-vn="Tên chị gái đang được mẹ gọi" data-context-en="The mother calls Trúc to give her instructions before leaving." data-context-vn="Mẹ gọi Trúc để dặn dò trước khi đi.">Trúc</span> à, 
+    <span class="vocab" id="w-me-2" data-word-en="mother / mom" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="one's mother; used in first person by the mother when speaking to children" data-def-vn="người mẹ; dùng ngôi thứ nhất khi mẹ nói chuyện với con" data-context-en="The mother refers to herself as 'mẹ' when speaking to Trúc." data-context-vn="Mẹ tự xưng là 'mẹ' khi nói chuyện với Trúc.">mẹ</span> 
+    <span class="vocab" id="w-di-2" data-word-en="go / leave" data-word-vn="đi" data-pos="verb / động từ" data-def-en="to go, to leave for a place" data-def-vn="đi, rời đi đến một nơi" data-context-en="The mother says she is leaving to pick up the father." data-context-vn="Mẹ nói mẹ đi đón ba.">đi</span> 
+    <span class="vocab" id="w-don-2" data-word-en="pick up / receive" data-word-vn="đón" data-pos="verb / động từ" data-def-en="to go meet and collect someone who is arriving" data-def-vn="đi gặp và đón người đang đến" data-context-en="The mother is going to pick up the father." data-context-vn="Mẹ đi đón ba.">đón</span> 
+    <span class="vocab" id="w-ba-2" data-word-en="father / dad" data-word-vn="ba" data-pos="noun / danh từ" data-def-en="father; familiar term used in southern Vietnam" data-def-vn="cha; từ thân mật dùng ở miền Nam" data-context-en="The mother is going to the airport to pick up the father." data-context-vn="Mẹ đi đón ba về.">ba</span>. 
+    <span class="vocab" id="w-con-1" data-word-en="child / you (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="a term used by parents to refer to their child, or by children to refer to themselves when speaking to parents" data-def-vn="từ cha mẹ dùng để gọi con, hoặc con dùng để tự xưng với cha mẹ" data-context-en="The mother tells Trúc (her child) to stay home and play with her younger sister." data-context-vn="Mẹ dặn con Trúc ở nhà chơi với em.">Con</span> 
+    <span class="vocab" id="w-o-1" data-word-en="stay / remain at" data-word-vn="ở" data-pos="verb / động từ" data-def-en="to stay, to remain in a place" data-def-vn="ở lại, không rời đi" data-context-en="Trúc is told to stay at home." data-context-vn="Con ở nhà chơi với em.">ở</span> 
+    <span class="vocab" id="w-nha-1" data-word-en="home / house" data-word-vn="nhà" data-pos="noun / danh từ" data-def-en="house; home" data-def-vn="ngôi nhà; nơi ở" data-context-en="Trúc is told to stay at home with her younger sister." data-context-vn="Con ở nhà chơi với em giúp mẹ.">nhà</span> 
+    <span class="vocab" id="w-choi-1" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play; to engage in recreational activity" data-def-vn="tham gia hoạt động vui chơi, giải trí" data-context-en="Trúc is told to stay home and play with her younger sister." data-context-vn="Con ở nhà chơi với em giúp mẹ.">chơi</span> 
+    <span class="vocab" id="w-voi-1" data-word-en="with / together with" data-word-vn="với" data-pos="preposition / giới từ" data-def-en="together with; in the company of someone" data-def-vn="cùng với; ở cạnh ai đó" data-context-en="Trúc is told to play with her younger sister." data-context-vn="Con ở nhà chơi với em giúp mẹ.">với</span> 
+    <span class="vocab" id="w-em-1" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling; younger brother or sister" data-def-vn="em trai hoặc em gái nhỏ hơn" data-context-en="Trúc is asked to play with her younger sister (Hạ My)." data-context-vn="Con ở nhà chơi với em giúp mẹ.">em</span> 
+    <span class="vocab" id="w-giup-1" data-word-en="help / do a favor for" data-word-vn="giúp" data-pos="verb / động từ" data-def-en="to help, to do something for someone as a favor" data-def-vn="hỗ trợ, làm gì đó giúp người khác" data-context-en="Trúc is asked to look after her sister as a favor to the mother." data-context-vn="Con ở nhà chơi với em giúp mẹ.">giúp</span> 
+    <span class="vocab" id="w-me-3" data-word-en="mom / mother" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="mother; the favor is done for the mother" data-def-vn="mẹ; người nhận sự giúp đỡ" data-context-en="Trúc is helping mom by watching her younger sister." data-context-vn="Con ở nhà chơi với em giúp mẹ.">mẹ</span> nha.
+  </p>
+
+<p>
+    <span class="speaker">Trúc:</span> Dạ, 
+    <span class="vocab" id="w-con-2" data-word-en="I / me (child speaking to parent)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="first-person pronoun used by a child when speaking respectfully to a parent" data-def-vn="đại từ ngôi thứ nhất dùng khi con nói chuyện lễ phép với cha mẹ" data-context-en="Trúc uses 'con' to refer to herself when responding to her mother." data-context-vn="Trúc dùng 'con' để tự xưng khi trả lời mẹ.">con</span> 
+    <span class="vocab" id="w-biet-1" data-word-en="know / understand" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know, to be aware of something" data-def-vn="biết, hiểu, nhận thức được điều gì đó" data-context-en="Trúc says she already knows (she understands the instruction)." data-context-vn="Trúc nói con biết rồi, nghĩa là đã hiểu lời mẹ dặn.">biết</span> rồi ạ.
+  </p>
+
+<p>
+    <span class="speaker">Mẹ:</span> 
+    <span class="vocab" id="w-hamy-1" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister's name" data-def-vn="Tên của em gái nhỏ" data-context-en="The mother speaks directly to Hạ My, the younger daughter." data-context-vn="Mẹ nói chuyện trực tiếp với Hạ My, cô con gái nhỏ hơn.">Hạ My</span> 
+    <span class="vocab" id="w-nho-1" data-word-en="remember / keep in mind" data-word-vn="nhớ" data-pos="verb / động từ" data-def-en="to remember; here used as an instruction to keep something in mind" data-def-vn="ghi nhớ; ở đây dùng như lời nhắc nhở" data-context-en="The mother tells Hạ My to remember to listen to her older sister." data-context-vn="Mẹ dặn Hạ My nhớ nghe lời chị.">nhớ</span> 
+    <span class="vocab" id="w-ngheloi-1" data-word-en="listen to / obey" data-word-vn="nghe lời" data-pos="verb phrase / cụm động từ" data-def-en="to listen to and obey someone; to follow instructions" data-def-vn="vâng lời, làm theo lời người khác" data-context-en="Hạ My is told to obey her older sister while the mother is away." data-context-vn="Hạ My được dặn phải nghe lời chị khi mẹ vắng nhà.">nghe lời</span> 
+    <span class="vocab" id="w-chi-1" data-word-en="older sister" data-word-vn="chị" data-pos="noun / danh từ" data-def-en="older sister; a term of address for an older female sibling" data-def-vn="chị gái lớn hơn; cách gọi người chị" data-context-en="Hạ My is told to obey her older sister Trúc." data-context-vn="Hạ My phải nghe lời chị Trúc.">chị</span> nha 
+    <span class="vocab" id="w-con-3" data-word-en="child / you (addressing child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="term used by a parent to address their child" data-def-vn="từ cha mẹ dùng để gọi con cái" data-context-en="The mother uses 'con' to address Hạ My affectionately." data-context-vn="Mẹ dùng 'con' để gọi Hạ My một cách trìu mến.">con</span>.
+  </p>
+
+<p>
+    <span class="speaker">Trúc và Hạ My:</span> 
+    <span class="vocab" id="w-me-4" data-word-en="mom / mother" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="mother; called out as the mother is leaving" data-def-vn="mẹ; gọi khi mẹ sắp đi" data-context-en="Both girls call out to their mother as she leaves." data-context-vn="Cả hai chị em gọi mẹ khi mẹ ra đi.">Mẹ</span> 
+    <span class="vocab" id="w-di-3" data-word-en="go / leave" data-word-vn="đi" data-pos="verb / động từ" data-def-en="to go; used here as a farewell — 'as you go'" data-def-vn="đi; dùng ở đây như lời chào tiễn" data-context-en="The girls say goodbye as the mother leaves." data-context-vn="Hai chị em nói lời tiễn mẹ đi.">đi</span> 
+    <span class="vocab" id="w-canthan-1" data-word-en="carefully / safely" data-word-vn="cẩn thận" data-pos="adverb / trạng từ" data-def-en="carefully; with caution; take care" data-def-vn="cẩn thận, thận trọng, giữ gìn an toàn" data-context-en="The children tell their mother to travel safely." data-context-vn="Hai chị em dặn mẹ đi cẩn thận.">cẩn thận</span> nha!
+  </p>
+
+<p>
+    <span class="vocab" id="w-saukhi-1" data-word-en="after" data-word-vn="sau khi" data-pos="conjunction / liên từ" data-def-en="after; following the time when something happens" data-def-vn="sau khi; tiếp theo sau khi sự việc xảy ra" data-context-en="After the mother leaves, Trúc invites her sister to play." data-context-vn="Sau khi mẹ đi, Trúc rủ em chơi.">Sau khi</span> 
+    <span class="vocab" id="w-me-5" data-word-en="mother / mom" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="mother" data-def-vn="mẹ" data-context-en="After the mother leaves, Trúc suggests a game." data-context-vn="Sau khi mẹ đi, Trúc rủ em chơi.">mẹ</span> 
+    <span class="vocab" id="w-di-4" data-word-en="go / leave" data-word-vn="đi" data-pos="verb / động từ" data-def-en="to go; to have left" data-def-vn="đi; đã rời đi" data-context-en="After the mother has left, Trúc proposes a game." data-context-vn="Sau khi mẹ đi, Trúc rủ em chơi.">đi</span>, 
+    <span class="vocab" id="w-truc-2" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister" data-def-vn="Chị gái" data-context-en="Trúc invites her sister to play doctor." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">Trúc</span> 
+    <span class="vocab" id="w-ru-1" data-word-en="invite / suggest / coax" data-word-vn="rủ" data-pos="verb / động từ" data-def-en="to invite someone to do something together; to coax or suggest" data-def-vn="mời, gợi ý ai cùng làm gì đó" data-context-en="Trúc invites her younger sister to play a game." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">rủ</span> 
+    <span class="vocab" id="w-em-2" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ hơn" data-context-en="Trúc invites her younger sister to play." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">em</span> 
+    <span class="vocab" id="w-choi-2" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play" data-def-vn="chơi, tham gia vui chơi" data-context-en="Trúc suggests they play a game together." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">chơi</span> 
+    <span class="vocab" id="w-trovoi-1" data-word-en="game of / play pretend" data-word-vn="trò" data-pos="noun / danh từ" data-def-en="game; a make-believe or pretend game" data-def-vn="trò chơi; trò giả vờ" data-context-en="Trúc suggests the game of playing doctor." data-context-vn="Trúc rủ em chơi trò khám bác sĩ.">trò</span> 
+    <span class="vocab" id="w-khambacsi-1" data-word-en="playing doctor / doctor examination" data-word-vn="khám bác sĩ" data-pos="verb phrase / cụm động từ" data-def-en="pretending to be a doctor and examining a patient; a children's game" data-def-vn="giả vờ làm bác sĩ khám bệnh; trò chơi của trẻ em" data-context-en="Trúc suggests they play the doctor game where one is the doctor and the other is the patient." data-context-vn="Trúc gợi ý chơi trò khám bác sĩ, một người làm bác sĩ, một người làm bệnh nhân.">khám bác sĩ</span>.
+  </p>
+
+<p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-hamy-2" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister's name" data-def-vn="Tên em gái" data-context-en="Trúc addresses Hạ My to propose the game." data-context-vn="Trúc gọi Hạ My để đề xuất trò chơi.">Hạ My</span> nè, 
+    <span class="vocab" id="w-chiem-1" data-word-en="older sister and younger sibling / us two sisters" data-word-vn="chị em mình" data-pos="noun phrase / cụm danh từ" data-def-en="us two sisters; the older and younger sister together" data-def-vn="hai chị em chúng mình; chị và em cùng nhau" data-context-en="Trúc uses 'chị em mình' to mean the two of them together." data-context-vn="Trúc dùng 'chị em mình' để nói về hai chị em cùng nhau.">chị em mình</span> 
+    <span class="vocab" id="w-choi-3" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play" data-def-vn="chơi" data-context-en="Trúc proposes that the two of them play the doctor game." data-context-vn="Trúc đề nghị hai chị em cùng chơi trò khám bác sĩ.">chơi</span> 
+    <span class="vocab" id="w-khambacsi-2" data-word-en="playing doctor" data-word-vn="khám bác sĩ" data-pos="verb phrase / cụm động từ" data-def-en="to play doctor; pretend medical examination game" data-def-vn="trò giả vờ làm bác sĩ khám bệnh" data-context-en="Trúc suggests the doctor game to Hạ My." data-context-vn="Trúc gợi ý Hạ My chơi trò khám bác sĩ.">khám bác sĩ</span> nha! 
+    <span class="vocab" id="w-chi-2" data-word-en="older sister / I (older sister)" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="older sister; used by Trúc to refer to herself" data-def-vn="chị; Trúc tự xưng là chị khi nói với em" data-context-en="Trúc says she will be the doctor." data-context-vn="Chị làm bác sĩ, còn em làm bệnh nhân.">Chị</span> 
+    <span class="vocab" id="w-lam-1" data-word-en="do / act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to do; to act as; to take on a role" data-def-vn="làm, đảm nhận vai trò nào đó" data-context-en="Trúc says she will act as the doctor in the game." data-context-vn="Chị làm bác sĩ trong trò chơi.">làm</span> 
+    <span class="vocab" id="w-bacsi-1" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="doctor; a medical professional" data-def-vn="bác sĩ; người hành nghề y" data-context-en="Trúc wants to be the doctor in the pretend game." data-context-vn="Trúc muốn làm bác sĩ trong trò chơi.">bác sĩ</span>, 
+    <span class="vocab" id="w-con-4" data-word-en="still / and / as for" data-word-vn="còn" data-pos="conjunction / liên từ" data-def-en="and; as for; on the other hand — used to introduce the contrasting role" data-def-vn="còn; về phần; dùng để giới thiệu vai trò đối lập" data-context-en="Trúc says she is the doctor and Hạ My will be the patient." data-context-vn="Chị làm bác sĩ, còn em làm bệnh nhân.">còn</span> 
+    <span class="vocab" id="w-em-3" data-word-en="younger sibling / you (younger)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="younger sibling; used here to address Hạ My" data-def-vn="em; dùng để gọi Hạ My" data-context-en="Trúc assigns Hạ My the role of patient." data-context-vn="Còn em làm bệnh nhân.">em</span> 
+    <span class="vocab" id="w-lam-2" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; to take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Hạ My will act as the patient." data-context-vn="Em làm bệnh nhân.">làm</span> 
+    <span class="vocab" id="w-benhnhan-1" data-word-en="patient (sick person)" data-word-vn="bệnh nhân" data-pos="noun / danh từ" data-def-en="patient; a sick person being examined by a doctor" data-def-vn="người bệnh đang được bác sĩ khám" data-context-en="Trúc assigns the role of patient to Hạ My." data-context-vn="Trúc muốn em làm bệnh nhân trong trò chơi.">bệnh nhân</span> 
+    <span class="vocab" id="w-duockhong-1" data-word-en="is that okay? / can we?" data-word-vn="được không?" data-pos="question particle / tiểu từ hỏi" data-def-en="is that alright? used to ask for agreement or permission" data-def-vn="được không? dùng để hỏi sự đồng ý" data-context-en="Trúc asks Hạ My if it's okay for her to be the patient." data-context-vn="Trúc hỏi em có đồng ý làm bệnh nhân không.">được không</span>?
+  </p>
+
+<p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-khong-1" data-word-en="no / not" data-word-vn="không" data-pos="adverb / trạng từ" data-def-en="no; not; a refusal or negation" data-def-vn="không; từ phủ định hoặc từ chối" data-context-en="Hạ My refuses the arrangement — she wants to be the doctor." data-context-vn="Hạ My từ chối — em muốn làm bác sĩ.">Không</span> đâu, 
+    <span class="vocab" id="w-homnay-2" data-word-en="today" data-word-vn="hôm nay" data-pos="adverb / trạng từ" data-def-en="today; on this particular day" data-def-vn="hôm nay; ngày hôm nay" data-context-en="Hạ My says that today she wants to be the doctor." data-context-vn="Hạ My nói hôm nay em muốn làm bác sĩ.">hôm nay</span> 
+    <span class="vocab" id="w-em-4" data-word-en="I / me (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me — the younger sibling referring to herself" data-def-vn="em tự xưng khi nói chuyện với chị" data-context-en="Hạ My refers to herself as 'em' when telling Trúc what she wants." data-context-vn="Hạ My tự xưng là 'em' khi nói với chị Trúc.">em</span> 
+    <span class="vocab" id="w-muon-1" data-word-en="want / wish" data-word-vn="muốn" data-pos="verb / động từ" data-def-en="to want; to desire something" data-def-vn="mong muốn, có nguyện vọng" data-context-en="Hạ My wants to be the doctor today." data-context-vn="Em muốn làm bác sĩ hôm nay.">muốn</span> 
+    <span class="vocab" id="w-lam-3" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; to take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Hạ My wants to be the doctor in the game." data-context-vn="Em muốn làm bác sĩ.">làm</span> 
+    <span class="vocab" id="w-bacsi-2" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="doctor; medical professional" data-def-vn="bác sĩ; người chữa bệnh" data-context-en="Hạ My wants to play the role of doctor." data-context-vn="Em muốn làm bác sĩ trong trò chơi.">bác sĩ</span> cơ.
+  </p>
+
+<p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-nhung-1" data-word-en="but / however" data-word-vn="nhưng" data-pos="conjunction / liên từ" data-def-en="but; however; introduces a contrasting statement" data-def-vn="nhưng; tuy nhiên; dùng để nêu sự tương phản" data-context-en="Trúc says 'but' to justify why Hạ My shouldn't be the doctor." data-context-vn="Trúc nói 'nhưng' để biện hộ tại sao em không nên làm bác sĩ.">Nhưng</span> 
+    <span class="vocab" id="w-em-5" data-word-en="you (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="you — referring to the younger sibling" data-def-vn="em — chỉ người em nhỏ hơn" data-context-en="Trúc points out that Hạ My is younger." data-context-vn="Trúc nói em nhỏ hơn.">em</span> 
+    <span class="vocab" id="w-nho-2" data-word-en="small / young / little" data-word-vn="nhỏ" data-pos="adjective / tính từ" data-def-en="small; young; little — referring to age or size" data-def-vn="nhỏ bé; còn ít tuổi" data-context-en="Trúc argues that Hạ My is too little to be the doctor." data-context-vn="Trúc cho rằng em nhỏ hơn nên không làm bác sĩ được.">nhỏ</span> 
+    <span class="vocab" id="w-hon-1" data-word-en="more / -er (comparative)" data-word-vn="hơn" data-pos="particle / tiểu từ so sánh" data-def-en="more; -er; used to form comparative adjectives" data-def-vn="hơn; dùng để so sánh hơn" data-context-en="Trúc says Hạ My is smaller/younger — using the comparative." data-context-vn="Trúc nói em nhỏ hơn — dùng cấu trúc so sánh.">hơn</span> mà!
+  </p>
+
+<p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-em-6" data-word-en="I / me (younger)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me — younger sibling self-reference" data-def-vn="em tự xưng" data-context-en="Hạ My insists she is big now." data-context-vn="Hạ My khẳng định em lớn rồi.">Em</span> 
+    <span class="vocab" id="w-lon-1" data-word-en="big / grown up" data-word-vn="lớn" data-pos="adjective / tính từ" data-def-en="big; grown up; no longer small" data-def-vn="lớn; đã trưởng thành; không còn nhỏ" data-context-en="Hạ My claims she is already big." data-context-vn="Hạ My nói em lớn rồi.">lớn</span> rồi. 
+    <span class="vocab" id="w-em-7" data-word-en="I / me (younger)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me — used by the younger sibling" data-def-vn="em tự xưng" data-context-en="Hạ My proves she is grown up by brushing her teeth alone." data-context-vn="Hạ My chứng minh bằng cách đánh răng một mình.">Em</span> 
+    <span class="vocab" id="w-biet-2" data-word-en="know how to / can" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know how to do something; to be capable" data-def-vn="biết cách làm gì đó; có khả năng" data-context-en="Hạ My says she knows how to brush her teeth by herself." data-context-vn="Em biết đánh răng một mình.">biết</span> 
+    <span class="vocab" id="w-danhrăng-1" data-word-en="brush teeth" data-word-vn="đánh răng" data-pos="verb phrase / cụm động từ" data-def-en="to brush one's teeth" data-def-vn="chải răng, đánh răng" data-context-en="Hạ My says she can brush her own teeth as proof she is grown up." data-context-vn="Em biết đánh răng một mình để chứng minh mình đã lớn.">đánh răng</span> 
+    <span class="vocab" id="w-motminh-1" data-word-en="alone / by oneself" data-word-vn="một mình" data-pos="adverb / trạng từ" data-def-en="alone; by oneself; without help" data-def-vn="một mình; tự làm không cần ai giúp" data-context-en="Hạ My says she can brush her teeth all by herself." data-context-vn="Em biết đánh răng một mình, không cần ai giúp.">một mình</span> nữa đó!
+  </p>
+
+<p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-khong-2" data-word-en="no / not allowed" data-word-vn="không được" data-pos="phrase / cụm từ" data-def-en="not allowed; cannot; no" data-def-vn="không được phép; từ chối" data-context-en="Trúc refuses to let Hạ My be the doctor." data-context-vn="Trúc không đồng ý để Hạ My làm bác sĩ.">Không được</span> đâu, 
+    <span class="vocab" id="w-chi-3" data-word-en="older sister / I" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="I — the older sister referring to herself" data-def-vn="chị tự xưng" data-context-en="Trúc insists that she (the older sister) must be the doctor." data-context-vn="Trúc khẳng định chị phải làm bác sĩ.">chị</span> 
+    <span class="vocab" id="w-phai-1" data-word-en="must / have to" data-word-vn="phải" data-pos="modal verb / động từ tình thái" data-def-en="must; have to; obliged to" data-def-vn="phải; bắt buộc phải làm" data-context-en="Trúc insists she must be the doctor." data-context-vn="Chị phải làm bác sĩ.">phải</span> 
+    <span class="vocab" id="w-lam-4" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Trúc insists she must be the doctor in the game." data-context-vn="Chị phải làm bác sĩ trong trò chơi.">làm</span> 
+    <span class="vocab" id="w-bacsi-3" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="doctor; physician" data-def-vn="bác sĩ" data-context-en="Trúc insists on being the doctor." data-context-vn="Trúc khăng khăng mình phải làm bác sĩ.">bác sĩ</span>.
+  </p>
+
+<p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-vay-1" data-word-en="then / in that case" data-word-vn="vậy" data-pos="conjunction / liên từ" data-def-en="then; in that case — used to draw a conclusion from what was just said" data-def-vn="vậy thì; trong trường hợp đó — rút ra kết luận" data-context-en="Hạ My uses 'vậy' to mean 'in that case' — if Trúc won't give in, she won't play." data-context-vn="Hạ My dùng 'vậy' để nói nếu chị không nhường thì em không chơi.">Vậy</span> 
+    <span class="vocab" id="w-em-8" data-word-en="I / me (younger)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me — younger sibling self-reference" data-def-vn="em tự xưng" data-context-en="Hạ My says she won't play with Trúc anymore." data-context-vn="Em không chơi với chị nữa.">em</span> 
+    <span class="vocab" id="w-khongchoi-1" data-word-en="won't play" data-word-vn="không chơi" data-pos="verb phrase / cụm động từ" data-def-en="to not play; to refuse to participate" data-def-vn="không tham gia chơi; từ chối chơi" data-context-en="Hạ My threatens to stop playing with Trúc." data-context-vn="Hạ My nói sẽ không chơi với chị nữa.">không chơi</span> 
+    <span class="vocab" id="w-voi-2" data-word-en="with" data-word-vn="với" data-pos="preposition / giới từ" data-def-en="with; together with" data-def-vn="cùng với" data-context-en="Hạ My says she won't play with her older sister." data-context-vn="Em không chơi với chị nữa.">với</span> 
+    <span class="vocab" id="w-chi-4" data-word-en="older sister / you (older)" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="older sister — Hạ My addressing Trúc" data-def-vn="chị — Hạ My gọi Trúc" data-context-en="Hạ My says she won't play with her sister Trúc." data-context-vn="Em không chơi với chị Trúc nữa.">chị</span> nữa!
+  </p>
+
+<p>
+    <span class="vocab" id="w-noi-1" data-word-en="say / speak" data-word-vn="nói" data-pos="verb / động từ" data-def-en="to say; to speak" data-def-vn="nói, phát biểu" data-context-en="After saying that, Hạ My sat down and cried." data-context-vn="Nói xong, Hạ My ngồi khóc.">Nói</span> xong, 
+    <span class="vocab" id="w-hamy-3" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister" data-def-vn="Em gái nhỏ" data-context-en="After the argument, Hạ My sat down and cried." data-context-vn="Hạ My ngồi khóc sau khi tranh cãi.">Hạ My</span> 
+    <span class="vocab" id="w-ngoi-1" data-word-en="sit / sit down" data-word-vn="ngồi" data-pos="verb / động từ" data-def-en="to sit; to sit down" data-def-vn="ngồi, ngồi xuống" data-context-en="Hạ My sat down and cried." data-context-vn="Hạ My ngồi khóc.">ngồi</span> 
+    <span class="vocab" id="w-khoc-1" data-word-en="cry / weep" data-word-vn="khóc" data-pos="verb / động từ" data-def-en="to cry; to weep" data-def-vn="khóc, rơi nước mắt" data-context-en="Hạ My sat down and started crying." data-context-vn="Hạ My ngồi xuống và khóc.">khóc</span>.
+  </p>
+
+<p>
+    <span class="vocab" id="w-lucdó-1" data-word-en="at that moment / just then" data-word-vn="lúc đó" data-pos="adverb / trạng từ" data-def-en="at that moment; just then; at that time" data-def-vn="vào lúc đó; ngay lúc ấy" data-context-en="Just at that moment, Aunt Oanh came over." data-context-vn="Lúc đó, cô Oanh đi sang.">Lúc đó</span>, 
+    <span class="vocab" id="w-coanh-1" data-word-en="Aunt Oanh" data-word-vn="cô Oanh" data-pos="proper noun / danh từ riêng" data-def-en="Aunt Oanh — a neighbor or family friend who comes over" data-def-vn="Cô Oanh — hàng xóm hoặc người quen đến thăm" data-context-en="Aunt Oanh comes over just as Hạ My starts crying." data-context-vn="Cô Oanh đến đúng lúc Hạ My khóc.">cô Oanh</span> 
+    <span class="vocab" id="w-disang-1" data-word-en="came over / walked over" data-word-vn="đi sang" data-pos="verb phrase / cụm động từ" data-def-en="to come over; to walk over to someone's side or house" data-def-vn="đi sang; bước sang nhà hoặc chỗ của người khác" data-context-en="Aunt Oanh walked over to where the children were." data-context-vn="Cô Oanh đi sang chỗ của hai chị em.">đi sang</span>.
+  </p>
+
+<p>
+    <span class="speaker">Cô Oanh:</span> 
+    <span class="vocab" id="w-truc-3" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister being addressed" data-def-vn="Tên chị gái đang được gọi" data-context-en="Aunt Oanh calls out Trúc's name to question her." data-context-vn="Cô Oanh gọi tên Trúc để hỏi.">Trúc</span>, 
+    <span class="vocab" id="w-sao-1" data-word-en="why / how come" data-word-vn="sao" data-pos="adverb / trạng từ" data-def-en="why; how come; used to ask the reason for something" data-def-vn="sao; tại sao; hỏi lý do" data-context-en="Aunt Oanh asks why Trúc let her sister cry." data-context-vn="Cô Oanh hỏi tại sao Trúc để em khóc.">sao</span> 
+    <span class="vocab" id="w-con-5" data-word-en="you (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="you — used by an adult to address a child" data-def-vn="con — người lớn gọi trẻ em" data-context-en="Aunt Oanh addresses Trúc as 'con' in a scolding tone." data-context-vn="Cô Oanh gọi Trúc là 'con' khi hỏi han.">con</span> 
+    <span class="vocab" id="w-de-1" data-word-en="let / allow / cause" data-word-vn="để" data-pos="verb / động từ" data-def-en="to let; to allow; to cause something to happen" data-def-vn="để, cho phép, để xảy ra" data-context-en="Aunt Oanh asks why Trúc let her sister cry." data-context-vn="Sao con để em khóc vậy?">để</span> 
+    <span class="vocab" id="w-em-9" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ" data-context-en="Aunt Oanh asks why Trúc let the younger sister cry." data-context-vn="Sao con để em khóc vậy?">em</span> 
+    <span class="vocab" id="w-khoc-2" data-word-en="cry" data-word-vn="khóc" data-pos="verb / động từ" data-def-en="to cry" data-def-vn="khóc" data-context-en="Hạ My is crying, and Aunt Oanh questions Trúc about it." data-context-vn="Hạ My đang khóc, cô Oanh hỏi Trúc về điều đó.">khóc</span> vậy?
+  </p>
+
+<p>
+    <span class="speaker">Trúc:</span> Dạ, vì 
+    <span class="vocab" id="w-em-10" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ" data-context-en="Trúc says that her younger sister Hạ My did not listen." data-context-vn="Trúc nói vì em Hạ My không nghe lời.">em</span> 
+    <span class="vocab" id="w-hamy-4" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister's name" data-def-vn="Tên em gái" data-context-en="Trúc blames Hạ My for not listening." data-context-vn="Trúc nói em Hạ My không nghe lời.">Hạ My</span> 
+    <span class="vocab" id="w-khongnghe-1" data-word-en="did not listen / disobey" data-word-vn="không nghe lời" data-pos="verb phrase / cụm động từ" data-def-en="to not listen; to disobey" data-def-vn="không nghe lời, không vâng lời" data-context-en="Trúc complains that Hạ My didn't obey her." data-context-vn="Trúc phàn nàn Hạ My không nghe lời mình.">không nghe lời</span> 
+    <span class="vocab" id="w-con-6" data-word-en="I / me (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="I; me — used by Trúc when speaking to the adult Aunt Oanh" data-def-vn="con — Trúc tự xưng khi nói với người lớn" data-context-en="Trúc refers to herself as 'con' when speaking to Aunt Oanh." data-context-vn="Trúc tự xưng là 'con' khi nói với cô Oanh.">con</span> ạ.
+  </p>
+
+<p>
+    <span class="speaker">Cô Oanh:</span> 
+    <span class="vocab" id="w-con-7" data-word-en="you (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="you — an adult addressing a child" data-def-vn="con — người lớn gọi trẻ" data-context-en="Aunt Oanh addresses Trúc directly." data-context-vn="Cô Oanh nói thẳng với Trúc.">Con</span> 
+    <span class="vocab" id="w-lachi-1" data-word-en="is the older sister" data-word-vn="là chị" data-pos="verb phrase / cụm động từ" data-def-en="to be the older sister; to hold the role of older sibling" data-def-vn="là người chị; đóng vai trò người chị lớn" data-context-en="Aunt Oanh reminds Trúc that as the older sister, she should know better." data-context-vn="Cô Oanh nhắc Trúc rằng vì là chị nên phải biết nhường nhịn.">là chị</span> thì 
+    <span class="vocab" id="w-phai-2" data-word-en="must / have to" data-word-vn="phải" data-pos="modal verb / động từ tình thái" data-def-en="must; have to; obligated to" data-def-vn="phải, bắt buộc" data-context-en="As the older sister, Trúc must know how to yield to her younger sibling." data-context-vn="Là chị thì phải biết nhường nhịn em.">phải</span> 
+    <span class="vocab" id="w-biet-3" data-word-en="know how to" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know how to; to be wise enough to" data-def-vn="biết, hiểu cách làm" data-context-en="As the older sister, Trúc should know how to yield." data-context-vn="Là chị thì phải biết nhường nhịn em.">biết</span> 
+    <span class="vocab" id="w-nhuongnhin-1" data-word-en="yield / give way / be accommodating" data-word-vn="nhường nhịn" data-pos="verb / động từ" data-def-en="to yield; to give way; to be patient and let the other person have their way" data-def-vn="nhường nhịn; chịu thua; để người kia được như ý" data-context-en="Aunt Oanh tells Trúc she must learn to yield to her younger sister." data-context-vn="Cô Oanh nói Trúc phải biết nhường nhịn em.">nhường nhịn</span> 
+    <span class="vocab" id="w-em-11" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ" data-context-en="As the older sister, Trúc should yield to the younger sister." data-context-vn="Là chị thì phải biết nhường nhịn em.">em</span> chứ. 
+    <span class="vocab" id="w-me-6" data-word-en="mother / mom" data-word-vn="Mẹ" data-pos="noun / danh từ" data-def-en="mother" data-def-vn="mẹ" data-context-en="Aunt Oanh says that Trúc's mother has surely already taught her this lesson." data-context-vn="Cô Oanh nói mẹ Trúc chắc đã dạy rồi.">Mẹ</span> 
+    <span class="vocab" id="w-con-8" data-word-en="of yours / your" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="you; your — referring to Trúc's mother" data-def-vn="của con; mẹ của Trúc" data-context-en="Aunt Oanh refers to 'mẹ con' meaning Trúc's mother." data-context-vn="Cô Oanh nói mẹ con tức là mẹ của Trúc.">con</span> 
+    <span class="vocab" id="w-chacung-1" data-word-en="surely / certainly" data-word-vn="chắc" data-pos="adverb / trạng từ" data-def-en="surely; certainly; I'm sure that" data-def-vn="chắc chắn; hẳn là" data-context-en="Aunt Oanh says Trúc's mother has surely already taught her this." data-context-vn="Cô Oanh nói mẹ chắc đã dạy Trúc rồi.">chắc</span> 
+    <span class="vocab" id="w-cungda-1" data-word-en="also / already" data-word-vn="cũng đã" data-pos="adverb / trạng từ" data-def-en="also; already — emphasizing that something has already happened" data-def-vn="cũng đã; nhấn mạnh điều gì đó đã xảy ra" data-context-en="Aunt Oanh implies the mother has already taught Trúc this lesson before." data-context-vn="Cô Oanh ngụ ý mẹ đã dạy Trúc bài học này rồi.">cũng đã</span> 
+    <span class="vocab" id="w-day-1" data-word-en="teach / instruct" data-word-vn="dạy" data-pos="verb / động từ" data-def-en="to teach; to instruct" data-def-vn="dạy, hướng dẫn" data-context-en="Aunt Oanh says the mother has already taught Trúc to yield." data-context-vn="Cô Oanh nói mẹ đã dạy Trúc phải nhường nhịn em.">dạy</span> như vậy rồi mà.
+  </p>
+
+<p>
+    <span class="vocab" id="w-nghe-1" data-word-en="hear / listen to" data-word-vn="nghe" data-pos="verb / động từ" data-def-en="to hear; to listen to something said" data-def-vn="nghe, lắng nghe" data-context-en="Hearing Aunt Oanh's words, Trúc felt sad." data-context-vn="Nghe cô Oanh nói, Trúc cảm thấy buồn.">Nghe</span> 
+    <span class="vocab" id="w-coanh-2" data-word-en="Aunt Oanh" data-word-vn="cô Oanh" data-pos="proper noun / danh từ riêng" data-def-en="Aunt Oanh — the neighbor who came over" data-def-vn="Cô Oanh — người hàng xóm" data-context-en="After hearing Aunt Oanh's words, Trúc felt sad." data-context-vn="Nghe cô Oanh nói, Trúc cảm thấy buồn.">cô Oanh</span> nói, 
+    <span class="vocab" id="w-truc-4" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister" data-def-vn="Chị gái" data-context-en="Trúc feels sad after being scolded." data-context-vn="Trúc cảm thấy buồn sau khi bị nhắc nhở.">Trúc</span> 
+    <span class="vocab" id="w-camthay-1" data-word-en="feel / sense" data-word-vn="cảm thấy" data-pos="verb phrase / cụm động từ" data-def-en="to feel; to have an emotional sensation" data-def-vn="cảm thấy, có cảm xúc" data-context-en="Trúc feels sad after Aunt Oanh's rebuke." data-context-vn="Trúc cảm thấy buồn sau lời nhắc nhở.">cảm thấy</span> 
+    <span class="vocab" id="w-buon-1" data-word-en="sad / unhappy" data-word-vn="buồn" data-pos="adjective / tính từ" data-def-en="sad; unhappy; feeling down" data-def-vn="buồn, không vui, cảm thấy không tốt" data-context-en="Trúc feels sad and regretful after the scolding." data-context-vn="Trúc cảm thấy buồn và hối hận.">buồn</span>.
+  </p>
+
+<p>
+    <span class="vocab" id="w-truc-5" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister" data-def-vn="Chị gái" data-context-en="Trúc thinks to herself." data-context-vn="Trúc nghĩ thầm.">Trúc</span> 
+    <span class="vocab" id="w-nghitham-1" data-word-en="think to oneself / think privately" data-word-vn="nghĩ thầm" data-pos="verb phrase / cụm động từ" data-def-en="to think quietly to oneself; an internal thought not spoken aloud" data-def-vn="suy nghĩ trong lòng, không nói ra tiếng" data-context-en="Trúc has a private thought about her behavior." data-context-vn="Trúc nghĩ thầm về hành động của mình.">nghĩ thầm</span>: "<span class="vocab" id="w-minh-1" data-word-en="I / myself" data-word-vn="mình" data-pos="pronoun / đại từ" data-def-en="I; myself — a self-reflective pronoun" data-def-vn="mình; tôi — đại từ tự nhìn nhận bản thân" data-context-en="Trúc reflects on her own behavior using 'mình'." data-context-vn="Trúc dùng 'mình' để tự suy ngẫm về bản thân.">Mình</span> 
+    <span class="vocab" id="w-khongnên-1" data-word-en="should not / ought not" data-word-vn="không nên" data-pos="modal phrase / cụm tình thái" data-def-en="should not; ought not to do something" data-def-vn="không nên làm; không phù hợp khi làm" data-context-en="Trúc realizes she should not have made her sister cry." data-context-vn="Trúc nhận ra mình không nên làm em khóc.">không nên</span> 
+    <span class="vocab" id="w-lam-5" data-word-en="make / cause" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to make; to cause something to happen" data-def-vn="làm, gây ra" data-context-en="Trúc should not have made her sister cry." data-context-vn="Mình không nên làm em khóc.">làm</span> 
+    <span class="vocab" id="w-em-12" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em" data-context-en="Trúc thinks she shouldn't have made her sister cry." data-context-vn="Trúc nghĩ mình không nên làm em khóc.">em</span> 
+    <span class="vocab" id="w-khoc-3" data-word-en="cry" data-word-vn="khóc" data-pos="verb / động từ" data-def-en="to cry" data-def-vn="khóc" data-context-en="Trúc regrets making her sister cry." data-context-vn="Trúc hối hận vì đã làm em khóc.">khóc</span>. 
+    <span class="vocab" id="w-minh-2" data-word-en="I / myself" data-word-vn="mình" data-pos="pronoun / đại từ" data-def-en="I; myself" data-def-vn="mình" data-context-en="Trúc tells herself she must be loving and yielding." data-context-vn="Trúc tự nhủ mình phải yêu thương và nhường nhịn em.">Mình</span> 
+    <span class="vocab" id="w-phai-3" data-word-en="must / have to" data-word-vn="phải" data-pos="modal verb / động từ tình thái" data-def-en="must; have to" data-def-vn="phải, bắt buộc" data-context-en="Trúc resolves that she must be loving and yielding." data-context-vn="Mình phải yêu thương và nhường nhịn em mới đúng.">phải</span> 
+    <span class="vocab" id="w-biet-4" data-word-en="know how to" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know how to; to understand that one should" data-def-vn="biết cách; hiểu rằng nên làm" data-context-en="Trúc must know how to love and yield." data-context-vn="Mình phải biết yêu thương và nhường nhịn em.">biết</span> 
+    <span class="vocab" id="w-yeuthuong-1" data-word-en="love / care for" data-word-vn="yêu thương" data-pos="verb / động từ" data-def-en="to love; to care for someone warmly" data-def-vn="yêu thương; quan tâm chân thành" data-context-en="Trúc resolves to love and be patient with her sister." data-context-vn="Trúc tự nhủ phải biết yêu thương và nhường nhịn em.">yêu thương</span> và 
+    <span class="vocab" id="w-nhuongnhin-2" data-word-en="yield / give way" data-word-vn="nhường nhịn" data-pos="verb / động từ" data-def-en="to yield; to be patient and let the other person have their way" data-def-vn="nhường nhịn; chịu đựng và để người kia được ý" data-context-en="Trúc resolves to yield to her sister." data-context-vn="Trúc tự nhủ phải nhường nhịn em mới đúng.">nhường nhịn</span> 
+    <span class="vocab" id="w-em-13" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em nhỏ" data-context-en="Trúc must love and yield to her younger sister." data-context-vn="Trúc phải yêu thương và nhường nhịn em.">em</span> 
+    <span class="vocab" id="w-moidung-1" data-word-en="only then is it right / that's the right thing" data-word-vn="mới đúng" data-pos="phrase / cụm từ" data-def-en="only then is it correct; that is the right way" data-def-vn="như vậy mới đúng; đó mới là cách đúng đắn" data-context-en="Trúc thinks that only by loving and yielding is she doing the right thing." data-context-vn="Trúc nghĩ chỉ khi yêu thương và nhường nhịn em mới là đúng.">mới đúng</span>."
+  </p>
+
+<p>
+    <span class="vocab" id="w-motlucsau-1" data-word-en="a little while later / after a moment" data-word-vn="một lúc sau" data-pos="adverb / trạng từ" data-def-en="a little while later; after some time has passed" data-def-vn="một lúc sau; sau một khoảng thời gian" data-context-en="A little while later, Hạ My runs back home." data-context-vn="Một lúc sau, Hạ My chạy về nhà.">Một lúc sau</span>, 
+    <span class="vocab" id="w-hamy-5" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister" data-def-vn="Em gái" data-context-en="Hạ My runs back home." data-context-vn="Hạ My chạy về nhà.">Hạ My</span> 
+    <span class="vocab" id="w-chay-1" data-word-en="run" data-word-vn="chạy" data-pos="verb / động từ" data-def-en="to run" data-def-vn="chạy, di chuyển nhanh" data-context-en="Hạ My runs back home with candy." data-context-vn="Hạ My chạy về nhà.">chạy</span> về 
+    <span class="vocab" id="w-nha-2" data-word-en="home" data-word-vn="nhà" data-pos="noun / danh từ" data-def-en="home; house" data-def-vn="nhà, ngôi nhà" data-context-en="Hạ My runs back to the house." data-context-vn="Hạ My chạy về nhà.">nhà</span>.
+  </p>
+
+<p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-chitruoc-1" data-word-en="Sister Trúc" data-word-vn="chị Trúc" data-pos="noun phrase / cụm danh từ" data-def-en="Sister Trúc — a way to address the older sister by name" data-def-vn="chị Trúc — cách gọi chị gái bằng tên" data-context-en="Hạ My calls out to her older sister Trúc." data-context-vn="Hạ My gọi chị Trúc ơi.">chị Trúc</span> ơi! 
+    <span class="vocab" id="w-coanh-3" data-word-en="Aunt Oanh" data-word-vn="cô Oanh" data-pos="proper noun / danh từ riêng" data-def-en="Aunt Oanh" data-def-vn="Cô Oanh" data-context-en="Aunt Oanh bought candy for Hạ My." data-context-vn="Cô Oanh mua kẹo cho em.">Cô Oanh</span> 
+    <span class="vocab" id="w-mua-1" data-word-en="buy" data-word-vn="mua" data-pos="verb / động từ" data-def-en="to buy; to purchase" data-def-vn="mua, mua sắm" data-context-en="Aunt Oanh bought candy for Hạ My." data-context-vn="Cô Oanh mua kẹo cho em.">mua</span> 
+    <span class="vocab" id="w-keo-1" data-word-en="candy / sweets" data-word-vn="kẹo" data-pos="noun / danh từ" data-def-en="candy; sweets" data-def-vn="kẹo; đồ ngọt" data-context-en="Aunt Oanh bought candy and Hạ My brings some back for her sister." data-context-vn="Cô Oanh mua kẹo và Hạ My mang về cho chị.">kẹo</span> cho 
+    <span class="vocab" id="w-em-14" data-word-en="me / I (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="me; I — younger sibling self-reference" data-def-vn="em tự xưng" data-context-en="Aunt Oanh bought candy for Hạ My." data-context-vn="Cô Oanh mua kẹo cho em.">em</span> nè. 
+    <span class="vocab" id="w-em-15" data-word-en="I / me (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="I; me" data-def-vn="em" data-context-en="Hạ My brings candy back for her older sister." data-context-vn="Em mang về cho chị nữa.">Em</span> 
+    <span class="vocab" id="w-mang-1" data-word-en="bring / carry" data-word-vn="mang" data-pos="verb / động từ" data-def-en="to bring; to carry something to someone" data-def-vn="mang đến; mang lại cho ai" data-context-en="Hạ My brings candy back home to share with her sister." data-context-vn="Em mang kẹo về cho chị.">mang</span> về cho 
+    <span class="vocab" id="w-chi-5" data-word-en="older sister / you (older)" data-word-vn="chị" data-pos="noun / danh từ" data-def-en="older sister" data-def-vn="chị gái" data-context-en="Hạ My brings candy home for her older sister too." data-context-vn="Em mang về cho chị nữa.">chị</span> nữa đó.
+  </p>
+
+<p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-hamy-6" data-word-en="Hạ My" data-word-vn="Hạ My" data-pos="proper noun / danh từ riêng" data-def-en="The younger sister" data-def-vn="Em gái" data-context-en="Trúc asks Hạ My if she is still angry." data-context-vn="Trúc hỏi Hạ My còn giận không.">Hạ My</span> 
+    <span class="vocab" id="w-khong-3" data-word-en="not / no longer" data-word-vn="không" data-pos="adverb / trạng từ" data-def-en="not; no longer" data-def-vn="không; không còn" data-context-en="Trúc asks if Hạ My is no longer angry at her." data-context-vn="Trúc hỏi Hạ My không còn giận chị nữa hả?">không</span> 
+    <span class="vocab" id="w-gian-1" data-word-en="angry / upset" data-word-vn="giận" data-pos="adjective / tính từ" data-def-en="angry; upset; to hold a grudge" data-def-vn="tức giận, bực bội, hờn dỗi" data-context-en="Trúc asks if Hạ My is no longer angry at her." data-context-vn="Trúc hỏi em Hạ My còn giận chị không.">giận</span> 
+    <span class="vocab" id="w-chi-6" data-word-en="older sister / me" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="older sister — Trúc refers to herself" data-def-vn="chị — Trúc tự xưng" data-context-en="Trúc asks if Hạ My is no longer upset with her (the older sister)." data-context-vn="Trúc hỏi Hạ My còn giận chị không.">chị</span> nữa hả?
+  </p>
+
+<p><span class="speaker">Hạ My:</span> Dạ không ạ.</p>
+
+<p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-camơn-1" data-word-en="thank you" data-word-vn="cảm ơn" data-pos="phrase / cụm từ" data-def-en="thank you; expressing gratitude" data-def-vn="cảm ơn; bày tỏ lòng biết ơn" data-context-en="Trúc thanks Hạ My for bringing candy." data-context-vn="Trúc cảm ơn Hạ My đã mang kẹo về.">Cảm ơn</span> 
+    <span class="vocab" id="w-em-16" data-word-en="you (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="you — addressing the younger sibling" data-def-vn="em — gọi người em" data-context-en="Trúc thanks her younger sister." data-context-vn="Trúc cảm ơn em Hạ My.">em</span> nha. 
+    Thôi, 
+    <span class="vocab" id="w-homnay-3" data-word-en="today" data-word-vn="hôm nay" data-pos="adverb / trạng từ" data-def-en="today" data-def-vn="hôm nay" data-context-en="Trúc says that today, Hạ My can be the doctor." data-context-vn="Trúc nói hôm nay em làm bác sĩ đi.">hôm nay</span> 
+    <span class="vocab" id="w-em-17" data-word-en="you (younger sibling)" data-word-vn="em" data-pos="pronoun / đại từ" data-def-en="you — addressing Hạ My" data-def-vn="em — gọi Hạ My" data-context-en="Trúc tells Hạ My she can be the doctor today." data-context-vn="Hôm nay em làm bác sĩ đi.">em</span> 
+    <span class="vocab" id="w-lam-6" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Trúc lets Hạ My be the doctor this time." data-context-vn="Hôm nay em làm bác sĩ đi.">làm</span> 
+    <span class="vocab" id="w-bacsi-4" data-word-en="doctor" data-word-vn="bác sĩ" data-pos="noun / danh từ" data-def-en="doctor" data-def-vn="bác sĩ" data-context-en="Trúc lets Hạ My play the role of doctor." data-context-vn="Trúc cho em làm bác sĩ.">bác sĩ</span> đi. 
+    <span class="vocab" id="w-chi-7" data-word-en="I / older sister" data-word-vn="chị" data-pos="pronoun / đại từ" data-def-en="I; me — Trúc referring to herself as older sister" data-def-vn="chị tự xưng" data-context-en="Trúc says she will be the patient this time." data-context-vn="Chị sẽ làm bệnh nhân.">Chị</span> 
+    <span class="vocab" id="w-se-1" data-word-en="will / shall" data-word-vn="sẽ" data-pos="modal verb / động từ tình thái" data-def-en="will; shall — indicates future intention" data-def-vn="sẽ; chỉ hành động trong tương lai" data-context-en="Trúc says she will be the patient." data-context-vn="Chị sẽ làm bệnh nhân.">sẽ</span> 
+    <span class="vocab" id="w-lam-7" data-word-en="act as / be" data-word-vn="làm" data-pos="verb / động từ" data-def-en="to act as; take on a role" data-def-vn="đảm nhận vai trò" data-context-en="Trúc will take on the role of patient." data-context-vn="Chị sẽ làm bệnh nhân.">làm</span> 
+    <span class="vocab" id="w-benhnhan-2" data-word-en="patient (sick person)" data-word-vn="bệnh nhân" data-pos="noun / danh từ" data-def-en="patient; sick person" data-def-vn="bệnh nhân; người bệnh" data-context-en="Trúc agrees to be the patient in the game." data-context-vn="Trúc đồng ý làm bệnh nhân trong trò chơi.">bệnh nhân</span>.
+  </p>
+
+<p>
+    <span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-that-1" data-word-en="really? / truly?" data-word-vn="thật" data-pos="adverb / trạng từ" data-def-en="really; truly — used to express disbelief or pleasant surprise" data-def-vn="thật sao; dùng để bày tỏ sự ngạc nhiên vui" data-context-en="Hạ My asks in surprise if Trúc really means it." data-context-vn="Hạ My hỏi lại vì ngạc nhiên: thật hả chị?">Thật</span> hả 
+    <span class="vocab" id="w-chi-8" data-word-en="older sister" data-word-vn="chị" data-pos="noun / danh từ" data-def-en="older sister — address term" data-def-vn="chị gái" data-context-en="Hạ My asks her older sister if she really means it." data-context-vn="Hạ My hỏi lại chị: thật hả chị?">chị</span>?
+  </p>
+
+<p>
+    <span class="speaker">Trúc:</span> 
+    <span class="vocab" id="w-that-2" data-word-en="truly / really" data-word-vn="thật" data-pos="adverb / trạng từ" data-def-en="truly; really; for real" data-def-vn="thật sự; không đùa" data-context-en="Trúc confirms she really means it." data-context-vn="Trúc xác nhận là thật mà.">Thật</span> mà. 
+    <span class="vocab" id="w-chiem-2" data-word-en="us two sisters" data-word-vn="chị em mình" data-pos="noun phrase / cụm danh từ" data-def-en="the two of us sisters" data-def-vn="hai chị em chúng mình" data-context-en="Trúc invites Hạ My for both of them to go play together." data-context-vn="Trúc rủ Hạ My vào chơi cùng nhau.">Chị em mình</span> 
+    <span class="vocab" id="w-vao-1" data-word-en="go in / come inside" data-word-vn="vào" data-pos="verb / động từ" data-def-en="to go in; to enter" data-def-vn="vào trong; đi vào" data-context-en="Trúc tells Hạ My for them to go in and play." data-context-vn="Chị em mình vào chơi nha.">vào</span> 
+    <span class="vocab" id="w-choi-4" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play" data-def-vn="chơi" data-context-en="Trúc calls Hạ My to go in and play together." data-context-vn="Chị em mình vào chơi nha.">chơi</span> nha!
+  </p>
+
+<p>
+    <span class="vocab" id="w-haichiem-1" data-word-en="the two sisters" data-word-vn="hai chị em" data-pos="noun phrase / cụm danh từ" data-def-en="the two siblings (sisters); the older and younger sister together" data-def-vn="hai chị em; chị và em cùng nhau" data-context-en="The two sisters play happily together." data-context-vn="Hai chị em vui vẻ chơi cùng nhau.">Hai chị em</span> 
+    <span class="vocab" id="w-vuive-1" data-word-en="happily / cheerfully" data-word-vn="vui vẻ" data-pos="adverb / trạng từ" data-def-en="happily; cheerfully; in a joyful manner" data-def-vn="vui vẻ; hân hoan; phấn khởi" data-context-en="The two sisters play happily together after reconciling." data-context-vn="Hai chị em vui vẻ chơi cùng nhau sau khi hòa giải.">vui vẻ</span> 
+    <span class="vocab" id="w-choi-5" data-word-en="play" data-word-vn="chơi" data-pos="verb / động từ" data-def-en="to play" data-def-vn="chơi" data-context-en="The sisters play happily together." data-context-vn="Hai chị em vui vẻ chơi cùng nhau.">chơi</span> 
+    <span class="vocab" id="w-cungvoi-1" data-word-en="together / with each other" data-word-vn="cùng nhau" data-pos="adverb / trạng từ" data-def-en="together; with each other" data-def-vn="cùng với nhau" data-context-en="The two sisters play together happily." data-context-vn="Hai chị em chơi cùng nhau vui vẻ.">cùng nhau</span>.
+  </p>
+
+<p>
+    <span class="vocab" id="w-motlucsau-2" data-word-en="a little while later" data-word-vn="một lúc sau" data-pos="adverb / trạng từ" data-def-en="a little while later" data-def-vn="một lúc sau" data-context-en="A little while later, the parents return home." data-context-vn="Một lúc sau, ba mẹ về đến nhà.">Một lúc sau</span>, 
+    <span class="vocab" id="w-bame-1" data-word-en="father and mother / parents" data-word-vn="ba mẹ" data-pos="noun phrase / cụm danh từ" data-def-en="father and mother; parents" data-def-vn="ba và mẹ; cha mẹ" data-context-en="The parents return home." data-context-vn="Ba mẹ về đến nhà.">ba mẹ</span> 
+    <span class="vocab" id="w-ve-1" data-word-en="return / come back" data-word-vn="về" data-pos="verb / động từ" data-def-en="to return; to come back home" data-def-vn="về; trở về nhà" data-context-en="The parents come back home." data-context-vn="Ba mẹ về đến nhà.">về</span> đến 
+    <span class="vocab" id="w-nha-3" data-word-en="home" data-word-vn="nhà" data-pos="noun / danh từ" data-def-en="home; house" data-def-vn="nhà, nơi ở" data-context-en="The parents return home." data-context-vn="Ba mẹ về đến nhà.">nhà</span>.
+  </p>
+
+<p>
+    <span class="speaker">Ba:</span> Ha ha! 
+    <span class="vocab" id="w-hai-1" data-word-en="two" data-word-vn="hai" data-pos="number / số từ" data-def-en="two — referring to both daughters" data-def-vn="hai — chỉ cả hai cô con gái" data-context-en="The father calls both daughters his two princesses." data-context-vn="Ba gọi cả hai con gái là hai cô công chúa.">Hai</span> 
+    <span class="vocab" id="w-cocongchua-1" data-word-en="little princesses" data-word-vn="cô công chúa" data-pos="noun phrase / cụm danh từ" data-def-en="little princess; a term of endearment for a daughter" data-def-vn="công chúa nhỏ; từ âu yếm gọi con gái" data-context-en="The father lovingly calls his two daughters his princesses." data-context-vn="Ba âu yếm gọi hai con gái là hai cô công chúa của ba.">cô công chúa</span> của 
+    <span class="vocab" id="w-ba-3" data-word-en="dad / father" data-word-vn="ba" data-pos="noun / danh từ" data-def-en="dad; father — referring to himself" data-def-vn="ba; cha tự xưng" data-context-en="The father calls the girls his princesses." data-context-vn="Hai cô công chúa của ba ngoan quá.">ba</span> 
+    <span class="vocab" id="w-ngoan-1" data-word-en="good / well-behaved" data-word-vn="ngoan" data-pos="adjective / tính từ" data-def-en="good; well-behaved; obedient (said of children)" data-def-vn="ngoan ngoãn; biết vâng lời; ngoan ngoãn" data-context-en="The father praises both daughters for being well-behaved." data-context-vn="Ba khen hai con gái ngoan quá.">ngoan</span> quá!
+  </p>
+
+<p><span class="speaker">Hạ My:</span> 
+    <span class="vocab" id="w-ba-4" data-word-en="dad / father" data-word-vn="ba" data-pos="noun / danh từ" data-def-en="dad; father" data-def-vn="ba, cha" data-context-en="Hạ My exclaims that dad has come home." data-context-vn="Hạ My reo lên ba về rồi!">Ba</span> 
+    <span class="vocab" id="w-ve-2" data-word-en="returned / came back" data-word-vn="về" data-pos="verb / động từ" data-def-en="to return; to come back" data-def-vn="về, trở về" data-context-en="Hạ My is excited that her father has come back." data-context-vn="Ba về rồi — Hạ My reo lên.">về</span> rồi!
+  </p>
+
+<p>
+    <span class="speaker">Ba:</span> 
+    <span class="vocab" id="w-ba-5" data-word-en="dad / I (father)" data-word-vn="ba" data-pos="pronoun / đại từ" data-def-en="dad; father referring to himself" data-def-vn="ba tự xưng khi nói với con" data-context-en="The father says he heard from the mother about Trúc's good behavior." data-context-vn="Ba nghe mẹ nói hôm nay Trúc biết chăm sóc em.">Ba</span> 
+    <span class="vocab" id="w-nghe-2" data-word-en="hear / was told" data-word-vn="nghe" data-pos="verb / động từ" data-def-en="to hear; to be told" data-def-vn="nghe, được kể" data-context-en="The father heard from the mother about Trúc." data-context-vn="Ba nghe mẹ nói về Trúc.">nghe</span> 
+    <span class="vocab" id="w-me-7" data-word-en="mother / mom" data-word-vn="mẹ" data-pos="noun / danh từ" data-def-en="mother" data-def-vn="mẹ" data-context-en="The father heard from the mother." data-context-vn="Ba nghe mẹ nói.">mẹ</span> 
+    <span class="vocab" id="w-noi-2" data-word-en="say / tell" data-word-vn="nói" data-pos="verb / động từ" data-def-en="to say; to tell" data-def-vn="nói, kể lại" data-context-en="The mother told the father about Trúc's behavior." data-context-vn="Ba nghe mẹ nói hôm nay Trúc biết chăm sóc em.">nói</span> 
+    <span class="vocab" id="w-homnay-4" data-word-en="today" data-word-vn="hôm nay" data-pos="adverb / trạng từ" data-def-en="today" data-def-vn="hôm nay" data-context-en="The father says Trúc was good today." data-context-vn="Hôm nay Trúc biết chăm sóc em.">hôm nay</span> 
+    <span class="vocab" id="w-truc-6" data-word-en="Trúc" data-word-vn="Trúc" data-pos="proper noun / danh từ riêng" data-def-en="The older sister" data-def-vn="Chị gái" data-context-en="Trúc knew how to take care of her younger sister today." data-context-vn="Hôm nay Trúc biết chăm sóc em.">Trúc</span> 
+    <span class="vocab" id="w-biet-5" data-word-en="knew how to / showed" data-word-vn="biết" data-pos="verb / động từ" data-def-en="to know how to; showed ability or wisdom" data-def-vn="biết, thể hiện được khả năng hay sự hiểu biết" data-context-en="Trúc showed she knows how to take care of her younger sister." data-context-vn="Trúc biết chăm sóc em.">biết</span> 
+    <span class="vocab" id="w-chamsoc-1" data-word-en="take care of / look after" data-word-vn="chăm sóc" data-pos="verb phrase / cụm động từ" data-def-en="to take care of; to look after someone" data-def-vn="chăm sóc; trông nom ai đó" data-context-en="The father praises Trúc for looking after her younger sister." data-context-vn="Ba khen Trúc biết chăm sóc em.">chăm sóc</span> 
+    <span class="vocab" id="w-em-18" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em" data-context-en="Trúc took care of her younger sister today." data-context-vn="Trúc biết chăm sóc em hôm nay.">em</span>. 
+    <span class="vocab" id="w-gioi-1" data-word-en="well done / clever / capable" data-word-vn="giỏi" data-pos="adjective / tính từ" data-def-en="well done; clever; capable; skillful" data-def-vn="giỏi; thông minh; khéo léo; tài năng" data-context-en="The father praises Trúc with 'giỏi lắm' meaning well done." data-context-vn="Ba khen Trúc: giỏi lắm!">Giỏi</span> lắm!
+  </p>
+
+<p>
+    <span class="speaker">Trúc:</span> Dạ, 
+    <span class="vocab" id="w-tunay-1" data-word-en="from now on" data-word-vn="từ nay" data-pos="adverb / trạng từ" data-def-en="from now on; starting from today" data-def-vn="từ nay; kể từ bây giờ trở đi" data-context-en="Trúc promises that from now on she will yield more to her younger sister." data-context-vn="Trúc hứa từ nay sẽ nhường nhịn em nhiều hơn.">từ nay</span> 
+    <span class="vocab" id="w-con-9" data-word-en="I / me (child)" data-word-vn="con" data-pos="pronoun / đại từ" data-def-en="I; me — child speaking to parent" data-def-vn="con tự xưng với cha mẹ" data-context-en="Trúc says she will yield more from now on." data-context-vn="Con sẽ nhường nhịn em nhiều hơn ạ.">con</span> 
+    <span class="vocab" id="w-se-2" data-word-en="will" data-word-vn="sẽ" data-pos="modal verb / động từ tình thái" data-def-en="will — future intention" data-def-vn="sẽ — ý định trong tương lai" data-context-en="Trúc says she will yield more." data-context-vn="Con sẽ nhường nhịn em nhiều hơn.">sẽ</span> 
+    <span class="vocab" id="w-nhuongnhin-3" data-word-en="yield / give way" data-word-vn="nhường nhịn" data-pos="verb / động từ" data-def-en="to yield; to be patient and accommodating" data-def-vn="nhường nhịn; kiên nhẫn và chiều ý người khác" data-context-en="Trúc promises to yield more to her younger sister." data-context-vn="Con sẽ nhường nhịn em nhiều hơn ạ.">nhường nhịn</span> 
+    <span class="vocab" id="w-em-19" data-word-en="younger sibling" data-word-vn="em" data-pos="noun / danh từ" data-def-en="younger sibling" data-def-vn="em" data-context-en="Trúc will yield more to her younger sister." data-context-vn="Con sẽ nhường nhịn em nhiều hơn.">em</span> 
+    <span class="vocab" id="w-nhieu-1" data-word-en="more / a lot" data-word-vn="nhiều" data-pos="adverb / trạng từ" data-def-en="more; a lot — comparative degree" data-def-vn="nhiều hơn; nhiều — mức độ so sánh" data-context-en="Trúc promises to yield to her sister even more from now on." data-context-vn="Con sẽ nhường nhịn em nhiều hơn.">nhiều</span> 
+    <span class="vocab" id="w-hon-2" data-word-en="more / -er (comparative)" data-word-vn="hơn" data-pos="particle / tiểu từ so sánh" data-def-en="more; -er — used to form the comparative" data-def-vn="hơn — từ so sánh hơn" data-context-en="Trúc will yield more than before." data-context-vn="Con sẽ nhường nhịn em nhiều hơn.">hơn</span> ạ.
+  </p>
+
+<p>
+    <span class="speaker">Mẹ:</span> 
+    <span class="vocab" id="w-neu-1" data-word-en="if" data-word-vn="nếu" data-pos="conjunction / liên từ" data-def-en="if; provided that" data-def-vn="nếu; miễn là" data-context-en="The mother says if both children are good, the whole family will go out tonight." data-context-vn="Mẹ nói nếu hai con ngoan thì tối nay cả nhà đi chơi.">Nếu</span> 
+    <span class="vocab" id="w-haicon-1" data-word-en="both children / you two" data-word-vn="hai con" data-pos="noun phrase / cụm danh từ" data-def-en="both children; referring to both daughters" data-def-vn="hai con — cả hai đứa trẻ" data-context-en="The mother says if both children are good, they'll go out." data-context-vn="Nếu hai con ngoan thì cả nhà đi chơi.">hai con</span> 
+    <span class="vocab" id="w-ngoan-2" data-word-en="good / well-behaved" data-word-vn="ngoan" data-pos="adjective / tính từ" data-def-en="good; well-behaved" data-def-vn="ngoan ngoãn" data-context-en="If both children are well-behaved, the family will go out." data-context-vn="Nếu hai con ngoan, tối nay cả nhà đi chơi.">ngoan</span>, 
+    <span class="vocab" id="w-toinay-1" data-word-en="tonight / this evening" data-word-vn="tối nay" data-pos="adverb / trạng từ" data-def-en="tonight; this evening" data-def-vn="tối nay; buổi tối hôm nay" data-context-en="The mother promises that tonight the whole family will go out." data-context-vn="Tối nay cả nhà mình đi chơi nhé.">tối nay</span> 
+    <span class="vocab" id="w-canha-1" data-word-en="the whole family" data-word-vn="cả nhà" data-pos="noun phrase / cụm danh từ" data-def-en="the whole family; everyone in the house" data-def-vn="cả nhà; tất cả mọi người trong gia đình" data-context-en="The whole family will go out together tonight." data-context-vn="Tối nay cả nhà mình đi chơi.">cả nhà</span> 
+    <span class="vocab" id="w-minh-3" data-word-en="us / our (family)" data-word-vn="mình" data-pos="pronoun / đại từ" data-def-en="us; our — referring to the family collectively" data-def-vn="chúng mình; dùng để chỉ cả gia đình" data-context-en="The mother uses 'mình' to refer to the family going out together." data-context-vn="Cả nhà mình sẽ đi chơi tối nay.">mình</span> 
+    <span class="vocab" id="w-se-3" data-word-en="will" data-word-vn="sẽ" data-pos="modal verb / động từ tình thái" data-def-en="will" data-def-vn="sẽ" data-context-en="The mother says the family will go out." data-context-vn="Cả nhà mình sẽ đi chơi.">sẽ</span> 
+    <span class="vocab" id="w-dichoi-1" data-word-en="go out / go play" data-word-vn="đi chơi" data-pos="verb phrase / cụm động từ" data-def-en="to go out; to go and have fun" data-def-vn="đi chơi; đi ra ngoài vui chơi" data-context-en="The whole family will go out for fun tonight." data-context-vn="Tối nay cả nhà mình sẽ đi chơi.">đi chơi</span> nhé!
+  </p>
+
+<p>
+    <span class="speaker">Trúc và Hạ My:</span> Dạ 
+    <span class="vocab" id="w-dongý-1" data-word-en="agree / I agree" data-word-vn="đồng ý" data-pos="verb phrase / cụm động từ" data-def-en="to agree; to say yes to something" data-def-vn="đồng ý; tán thành" data-context-en="Both sisters happily agree to go out tonight." data-context-vn="Hai chị em đồng ý đi chơi tối nay.">đồng ý</span>! Hihi!
+  </p>
+    </div>
+            <div class="practice-controls" id="practice-controls">
+                <div class="practice-btn-row">
+                    <button id="start-practice-btn" class="practice-btn primary" disabled>Practice Your New Words</button>
+                    <button id="reset-practice-btn" class="practice-btn" style="display:none;">Practice these words again</button>
+                    <button id="toggle-bank-btn" class="practice-btn" style="display:none;">Hide Word Bank</button>
+                    <button id="exit-practice-btn" class="practice-btn large" style="display:none;">Start Over</button>
+                    <button id="start-srs-btn" class="practice-btn primary" disabled>Standard Review Level</button>
+                    <button id="start-srs-challenge-btn" class="practice-btn primary" disabled style="line-height:1.25;">Genius Level<br><span style="font-weight:normal;font-size:0.78rem;">Show us what you got!</span></button>
+                    <button id="start-cw-btn" class="practice-btn primary" disabled style="line-height:1.25;" title="Need 4 clicked words with 4+ letters each">Crossword<br><span style="font-weight:normal;font-size:0.78rem;">Minimum 4 words</span></button>
+                </div>
+                <div class="cw-hint" id="cw-hint">From words you click in the story (4+ letters each)</div>
+            </div>
+    </div>
+    </div>
+        <div class="back-btn-container">
+        <button type="button" class="back-btn" onclick="history.back()">Exit this Lesson</button>
+    </div>
+</div>
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+    <div class="browser-note">🔊 Vietnamese audio: Chrome or Edge recommended.</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the text:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+
+<div id="cw-overlay">
+    <div class="cw-panel" onclick="event.stopPropagation()">
+        <div class="cw-header">
+            <h3 class="cw-title">Crossword</h3>
+            <button type="button" class="practice-btn" id="cw-close-btn">Close</button>
+        </div>
+        <p class="cw-sub" id="cw-sub">From words you clicked · type one letter per square</p>
+        <div class="cw-toolbar">
+            <button type="button" class="practice-btn" id="cw-toggle-bank-btn">Hide Word Bank</button>
+            <button type="button" class="practice-btn" id="cw-check-btn">Check puzzle</button>
+            <button type="button" class="practice-btn" id="cw-solve-btn">See Solution</button>
+            <button type="button" class="practice-btn" id="cw-new-btn">New layout</button>
+        </div>
+        <div class="cw-bank visible" id="cw-bank">
+            <div class="cw-bank-label">Word Bank</div>
+            <div class="cw-bank-grid" id="cw-bank-grid"></div>
+        </div>
+        <div class="cw-grid-wrap">
+            <div class="cw-grid" id="cw-grid"></div>
+        </div>
+        <div class="cw-status" id="cw-status"></div>
+    </div>
+</div>
+
+<div id="srs-overlay">
+    <div class="srs-card">
+        <button class="srs-close-btn" id="srs-close-btn" title="Close review">✕</button>
+
+        <div id="srs-review-view">
+            <div class="srs-header">
+                <h3>Spaced Repetition Review</h3>
+                <div class="srs-progress-track"><div class="srs-progress-fill" id="srs-progress-fill"></div></div>
+                <div class="srs-progress-label" id="srs-progress-label"></div>
+            </div>
+
+            <div class="srs-direction-label" id="srs-direction-label"></div>
+            <div class="srs-prompt-word" id="srs-prompt-word"></div>
+            <div class="srs-audio-row" id="srs-audio-row"></div>
+
+            <div class="srs-type-area" id="srs-type-area">
+                <input type="text" class="srs-type-input" id="srs-type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Type answer, then Check or Enter">
+                <div class="srs-type-actions">
+                    <button class="srs-reveal-btn" id="srs-check-btn" type="button" style="width:auto; padding:10px 18px;">Check your answer</button>
+                    <button class="practice-btn" id="srs-giveup-btn" style="display:none;">Show answer</button>
+                </div>
+                <div class="srs-feedback" id="srs-feedback"></div>
+            </div>
+
+            <button class="srs-reveal-btn" id="srs-reveal-btn">Show Answer</button>
+
+            <div class="srs-answer" id="srs-answer">
+                <div class="srs-answer-word" id="srs-answer-word"></div>
+                <div class="srs-pos" id="srs-pos"></div>
+                <div class="srs-def" id="srs-def"></div>
+                <div class="srs-context-label">In the text:</div>
+                <div class="srs-context" id="srs-context"></div>
+
+                <div class="srs-rate-row">
+                    <button class="srs-rate-btn srs-rate-again" data-rating="again">Show More<small>need more practice</small></button>
+                    <button class="srs-rate-btn srs-rate-easy" data-rating="easy">Show Less<small>I know this well</small></button>
+                </div>
+                <div class="srs-feedback" id="srs-advance-hint" style="display:none; margin-top:12px;">Click any blank spot to advance to next word</div>
+            </div>
+        </div>
+
+        <div id="srs-done-view" class="srs-done" style="display:none;">
+            <h3>Session complete! 🎉</h3>
+            <p id="srs-done-summary"></p>
+            <div class="srs-done-actions">
+                <button class="practice-btn primary" id="srs-again-btn">Review Again</button>
+                <button class="practice-btn large" id="srs-back-btn">Back to Reading</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // ========== STATE ==========
+    let practiceMode = false;
+    let clickedIds = new Set();          // ids of vocab spans the user clicked
+    let orderedBlanks = [];              // array of vocab elements currently blanked (document order)
+    let activeBlankEl = null;            // the blank the user has selected (click any blank)
+    let originalTexts = new Map();       // id -> original innerText
+
+    // ========== SPEECH & AUDIO HELPERS (unchanged) ==========
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    // ========== UI HELPERS ==========
+    function updateWordCount() {
+        document.getElementById('start-practice-btn').disabled = clickedIds.size === 0;
+        const cwBtn = document.getElementById('start-cw-btn');
+        if (cwBtn) {
+            const n = cwEligibleWords().length;
+            cwBtn.disabled = n < 4;
+            cwBtn.title = n < 4
+                ? 'Need 4 clicked words with 4+ letters each (now have ' + n + ')'
+                : 'Build a crossword from the words you clicked';
+        }
+        const cwHint = document.getElementById('cw-hint');
+        if (cwHint) {
+            const nH = cwEligibleWords().length;
+            if (nH < 4) {
+                cwHint.textContent = 'From words you click in the story — ' + nH + ' of 4 needed';
+                cwHint.classList.remove('ready');
+            } else {
+                cwHint.textContent = 'From words you click in the story — ' + nH + ' available';
+                cwHint.classList.add('ready');
+            }
+        }
+
+        document.getElementById('start-srs-btn').disabled = clickedIds.size === 0;
+        const ch = document.getElementById('start-srs-challenge-btn');
+        if (ch) ch.disabled = clickedIds.size === 0;
+        const cwBtn2 = document.getElementById('start-cw-btn');
+        if (cwBtn2) {
+            const n2 = cwEligibleWords().length;
+            cwBtn2.disabled = n2 < 4;
+            cwBtn2.title = n2 < 4
+                ? 'Need 4 clicked words with 4+ letters each (now have ' + n2 + ')'
+                : 'Build a crossword from the words you clicked';
+        }
+    }
+
+    function updateProgress() {
+        // completion UI removed — blanks simply fill until done
+    }
+
+    // ========== PRACTICE MODE LOGIC ==========
+    function setActiveBlank(el) {
+        document.querySelectorAll('.vocab.active-blank').forEach(n => n.classList.remove('active-blank'));
+        activeBlankEl = null;
+        if (el && el.classList.contains('is-blank')) {
+            el.classList.add('active-blank');
+            activeBlankEl = el;
+        }
+    }
+
+    // Turns a blank into a real text input (used when the word bank is hidden,
+    // so there's nothing to click — the user must type the exact word).
+    function makeBlankTypeable(el) {
+        el.innerHTML = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onclick = null;
+        el.onmouseenter = null;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'blank-input';
+        input.setAttribute('autocomplete', 'off');
+        input.setAttribute('autocapitalize', 'off');
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('spellcheck', 'false');
+        input.addEventListener('click', (e) => e.stopPropagation());
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkTypedAnswer(el, input);
+            }
+        });
+        input.addEventListener('blur', () => checkTypedAnswer(el, input));
+        el.appendChild(input);
+    }
+
+    // Case-insensitive + hyphen-insensitive match (shared by story typing
+    // and SRS Level 2 challenge).
+    function normalizeAnswer(s) {
+        // Case, hyphen, and space insensitive: rapid-fire ≈ rapid fire ≈ RapidFire
+        let t = (s || '').trim().toLowerCase().replace(/-/g, '').replace(/\s+/g, '');
+        // Strip trailing -ly so meticulously ≈ meticulous, safely ≈ safe
+        if (t.length > 4 && t.endsWith('ly')) t = t.slice(0, -2);
+        return t;
+    }
+
+    function answersMatch(typed, correct) {
+        return normalizeAnswer(typed) === normalizeAnswer(correct);
+    }
+
+    function checkTypedAnswer(el, input) {
+        if (!el.classList.contains('is-blank')) return; // already filled, ignore
+        const typed = input.value.trim();
+        if (!typed) return;
+        const correct = (el.dataset.wordEn || '').trim();
+        if (answersMatch(typed, correct)) {
+            fillBlank(el, correct);
+        } else {
+            el.classList.remove('wrong-shake');
+            void el.offsetWidth; // restart the animation if triggered again
+            el.classList.add('wrong-shake');
+            setTimeout(() => el.classList.remove('wrong-shake'), 350);
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    // Restores a blank to the original click-to-select behavior (used when the
+    // word bank is shown again).
+    function makeBlankClickable(el) {
+        el.innerHTML = '';
+        el.textContent = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onmouseenter = () => {
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+        el.onclick = (e) => {
+            e.stopPropagation();
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+    }
+
+    function enterPracticeMode() {
+        if (clickedIds.size === 0) return;
+        practiceMode = true;
+
+        // Widen layout + show sidebar
+        document.querySelector('.page-container').classList.add('practice-on');
+
+        // Banner + buttons
+        document.getElementById('mode-banner').classList.add('visible');
+        document.getElementById('start-practice-btn').style.display = 'none';
+        document.getElementById('reset-practice-btn').style.display = 'inline-block';
+        document.getElementById('toggle-bank-btn').style.display = 'inline-block';
+        document.getElementById('exit-practice-btn').style.display = 'inline-block';
+        document.getElementById('word-bank-section').classList.add('visible');
+        document.getElementById('toggle-bank-btn').textContent = 'Hide Word Bank';
+
+        // Collect the clicked spans in document order
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        orderedBlanks = allVocab.filter(el => clickedIds.has(el.id));
+
+        // Blank them; activate on hover or click
+        orderedBlanks.forEach(el => {
+            if (!originalTexts.has(el.id)) {
+                originalTexts.set(el.id, el.textContent);
+            }
+            el.textContent = '';
+            el.classList.add('is-blank');
+            el.classList.remove('filled', 'highlight-flash', 'active-blank');
+            el.onmouseenter = () => {
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+            el.onclick = (e) => {
+                e.stopPropagation();
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+        });
+
+        // Build shuffled word bank
+        buildWordBank();
+
+        updateProgress();
+
+        // Select first blank and scroll to it
+        if (orderedBlanks.length > 0) {
+            setActiveBlank(orderedBlanks[0]);
+            setTimeout(() => {
+                orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 150);
+        }
+    }
+
+    function buildWordBank() {
+        const bank = document.getElementById('bank-words');
+        bank.innerHTML = '';
+
+        // Shuffle a copy of the ordered blanks for the bank display
+        const words = orderedBlanks.map(el => ({
+            id: el.id,
+            wordEn: el.dataset.wordEn,
+            wordVn: el.dataset.wordVn
+        }));
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+        shuffle(words);
+        shuffle(words);
+
+        words.forEach(item => {
+            const btn = document.createElement('div');
+            btn.className = 'bank-word';
+            btn.textContent = item.wordEn;
+            btn.dataset.wordEn = item.wordEn;
+            btn.dataset.targetId = item.id;
+            btn.addEventListener('click', onBankWordClick);
+            bank.appendChild(btn);
+        });
+    }
+
+    function fillBlank(blank, word) {
+        blank.textContent = word;
+        blank.classList.remove('is-blank', 'highlight-flash', 'active-blank');
+        blank.classList.add('filled');
+        blank.onclick = null;
+        blank.onmouseenter = null;
+        if (activeBlankEl === blank) activeBlankEl = null;
+        updateProgress();
+    }
+
+    function onBankWordClick(e) {
+        if (!practiceMode) return;
+        const btn = e.currentTarget;
+        const chosenWord = (btn.dataset.wordEn || '').trim();
+        if (!chosenWord) return;
+
+        // Need an active blank; if none, activate the first remaining one
+        let activeBlank = (activeBlankEl && activeBlankEl.classList.contains('is-blank'))
+            ? activeBlankEl
+            : null;
+        if (!activeBlank) {
+            const remaining = orderedBlanks.filter(el => el.classList.contains('is-blank'));
+            if (remaining.length === 0) return;
+            setActiveBlank(remaining[0]);
+            activeBlank = remaining[0];
+        }
+
+        // Correct for active blank → fill. Wrong word → do nothing.
+        if ((activeBlank.dataset.wordEn || '').trim().toLowerCase() === chosenWord.toLowerCase()) {
+            fillBlank(activeBlank, chosenWord);
+        }
+    }
+
+    function resetPractice() {
+        if (!practiceMode) return;
+        const bankVisible = document.getElementById('word-bank-section').classList.contains('visible');
+        // Re-blank everything that was in the original clicked set, matching
+        // whatever mode the word bank is currently in (shown vs hidden)
+        if (bankVisible) {
+            orderedBlanks.forEach(el => makeBlankClickable(el));
+            buildWordBank();
+        } else {
+            orderedBlanks.forEach(el => makeBlankTypeable(el));
+        }
+        updateProgress();
+        if (orderedBlanks.length > 0) {
+            if (bankVisible) {
+                setActiveBlank(orderedBlanks[0]);
+            } else {
+                const inp = orderedBlanks[0].querySelector('input.blank-input');
+                if (inp) inp.focus();
+            }
+            orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            activeBlankEl = null;
+        }
+    }
+
+    function exitPracticeMode() {
+        practiceMode = false;
+        document.querySelector('.page-container').classList.remove('practice-on');
+        document.getElementById('mode-banner').classList.remove('visible');
+        document.getElementById('start-practice-btn').style.display = 'inline-block';
+        document.getElementById('reset-practice-btn').style.display = 'none';
+        document.getElementById('toggle-bank-btn').style.display = 'none';
+        document.getElementById('exit-practice-btn').style.display = 'none';
+        document.getElementById('word-bank-section').classList.remove('visible');
+
+        // Restore original text on all previously blanked spans
+        orderedBlanks.forEach(el => {
+            const orig = originalTexts.get(el.id);
+            if (orig !== undefined) {
+                el.textContent = orig;
+            }
+            el.classList.remove('is-blank', 'filled', 'highlight-flash', 'active-blank');
+            el.onclick = null;
+            el.onmouseenter = null;
+        });
+        orderedBlanks = [];
+        activeBlankEl = null;
+
+        // Fresh cycle: clear collected words so next Lock-in uses only
+        // words clicked during the new reading pass
+        clickedIds.clear();
+        originalTexts.clear();
+        document.getElementById('bank-words').innerHTML = '';
+        updateWordCount();
+    }
+
+    // ========== SPACED REPETITION (Section 3) ==========
+    // Session-only, position-based review. Cards you miss resurface a few
+    // cards later in the SAME session; cards you know well drop out of the
+    // queue ("mastered") once you've gotten them right twice in a row.
+    let srsDeck = [];
+    let srsQueue = [];
+    let srsTotal = 0;
+    let srsMasteredCount = 0;
+    let srsCurrentCard = null;
+    let srsCurrentDirection = 'en2vn'; // alternates each card: 'en2vn' or 'vn2en'
+    let srsMode = 'review'; // 'review' (Level 1) or 'challenge' (Level 2 type-in)
+    let srsExpectedAnswer = '';
+
+    function srsBuildDeck() {
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        return allVocab
+            .filter(el => clickedIds.has(el.id))
+            .map(el => ({
+                id: el.id,
+                wordEn: el.dataset.wordEn || '',
+                wordVn: el.dataset.wordVn || '',
+                pos: el.dataset.pos || '',
+                defEn: el.dataset.defEn || '',
+                defVn: el.dataset.defVn || '',
+                contextEn: el.dataset.contextEn || el.dataset.wordEn || '',
+                contextVn: el.dataset.contextVn || el.dataset.wordVn || '',
+                streak: 0
+            }));
+    }
+
+    function srsShuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function srsStartSession(mode) {
+        srsMode = (mode === 'challenge') ? 'challenge' : 'review';
+        srsDeck = srsBuildDeck();
+        if (srsDeck.length === 0) return;
+        srsQueue = srsShuffle(srsDeck);
+        srsTotal = srsDeck.length;
+        srsMasteredCount = 0;
+
+        document.getElementById('srs-done-view').style.display = 'none';
+        document.getElementById('srs-review-view').style.display = 'block';
+        const header = document.querySelector('#srs-review-view .srs-header h3');
+        if (header) {
+            header.textContent = srsMode === 'challenge'
+                ? 'Challenge Review — Type the answer'
+                : 'Spaced Repetition Review';
+        }
+        document.getElementById('srs-overlay').classList.add('visible');
+
+        srsShowNextCard();
+    }
+
+    function srsRenderProgress() {
+        const pct = srsTotal === 0 ? 0 : Math.round((srsMasteredCount / srsTotal) * 100);
+        document.getElementById('srs-progress-fill').style.width = pct + '%';
+        document.getElementById('srs-progress-label').textContent =
+            srsMasteredCount + ' of ' + srsTotal + ' mastered \u00b7 ' + srsQueue.length + ' left in this round';
+    }
+
+    function srsShowNextCard() {
+        if (srsQueue.length === 0) {
+            srsFinishSession();
+            return;
+        }
+        srsCurrentCard = srsQueue.shift();
+        const isEnInput = document.documentElement.lang === 'en';
+
+        // Level 1 (review): random direction. Level 2 (challenge): always
+        // show the OPPOSITE language on the front; user types the study language.
+        if (srsMode === 'challenge') {
+            srsCurrentDirection = isEnInput ? 'vn2en' : 'en2vn';
+        } else {
+            srsCurrentDirection = Math.random() < 0.5 ? 'en2vn' : 'vn2en';
+        }
+
+        const frontWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordEn : srsCurrentCard.wordVn;
+        const backWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordVn : srsCurrentCard.wordEn;
+        srsExpectedAnswer = backWord;
+
+        // No direction label / Listen on either level — prompt word is enough.
+        const frontLangLabel = srsMode === 'challenge'
+            ? 'Type in answer and press Enter'
+            : '';
+
+        document.getElementById('srs-direction-label').textContent = frontLangLabel;
+        document.getElementById('srs-prompt-word').textContent = frontWord;
+
+        const audioRow = document.getElementById('srs-audio-row');
+        audioRow.innerHTML = '';
+
+        document.getElementById('srs-answer-word').textContent = backWord;
+        document.getElementById('srs-answer-word').style.display = '';
+        document.getElementById('srs-pos').textContent = srsCurrentCard.pos;
+        document.getElementById('srs-def').innerHTML = isEnInput
+            ? '<div>' + (srsCurrentCard.defEn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defVn || '') + '</div>'
+            : '<div>' + (srsCurrentCard.defVn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defEn || '') + '</div>';
+        document.getElementById('srs-context').textContent =
+            isEnInput ? srsCurrentCard.contextEn : (srsCurrentCard.contextVn || srsCurrentCard.contextEn);
+
+        document.getElementById('srs-answer').classList.remove('visible');
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-feedback').classList.remove('wrong-feedback');
+        srsChallengeSolved = false;
+        srsAnswerRevealed = false;
+        var advanceHint = document.getElementById("srs-advance-hint");
+        if (advanceHint) advanceHint.style.display = "none";
+
+        const typeArea = document.getElementById('srs-type-area');
+        const revealBtn = document.getElementById('srs-reveal-btn');
+        const typeInput = document.getElementById('srs-type-input');
+
+        if (srsMode === 'challenge') {
+            typeArea.classList.add('visible');
+            revealBtn.style.display = 'none';
+            typeInput.value = '';
+            typeInput.classList.remove('wrong');
+            typeInput.disabled = false;
+            document.getElementById('srs-giveup-btn').style.display = 'inline-block';
+            const chkBtn = document.getElementById('srs-check-btn');
+            if (chkBtn) chkBtn.style.display = 'inline-block';
+            setTimeout(() => typeInput.focus(), 50);
+        } else {
+            typeArea.classList.remove('visible');
+            revealBtn.style.display = 'block';
+        }
+
+        srsRenderProgress();
+    }
+
+    function srsCheckTypedAnswer() {
+        if (srsMode !== 'challenge' || !srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        const typed = input.value.trim();
+        if (!typed) return;
+        const fb = document.getElementById('srs-feedback');
+        if (answersMatch(typed, srsExpectedAnswer)) {
+            const cheers = ['You got it!', 'Good job!', 'Answer correct!', 'Dynamite!', "You're hot!", 'Perfect!', "You're a genius!"];
+            fb.textContent = cheers[Math.floor(Math.random() * cheers.length)];
+            fb.classList.remove('wrong-feedback');
+            fb.classList.add('success');
+            input.disabled = true;
+            input.classList.remove('wrong');
+            document.getElementById('srs-answer-word').style.display = 'none';
+        document.getElementById('srs-answer').classList.add('visible');
+            document.getElementById('srs-giveup-btn').style.display = 'none';
+            const chk = document.getElementById('srs-check-btn');
+            if (chk) chk.style.display = 'none';
+            srsChallengeSolved = true;
+            srsAnswerRevealed = true;
+            // Put correct answer in top position
+            (function() {
+                const prompt = document.getElementById('srs-prompt-word');
+                const frontWas = prompt.textContent;
+                prompt.textContent = srsExpectedAnswer || '';
+                document.getElementById('srs-direction-label').textContent =
+                    frontWas ? ('was: ' + frontWas) : '';
+            })();
+            var h = document.getElementById('srs-advance-hint');
+            if (h) h.style.display = 'block';
+        } else {
+            const misses = [
+                'Not quite — try again',
+                'Give up?',
+                'Close but no cigar!',
+                "C'mon, you can do better than that!",
+                'Hey, nobody said this would be easy!',
+                'Throw in the towel?'
+            ];
+            fb.textContent = misses[Math.floor(Math.random() * misses.length)];
+            fb.classList.remove('success');
+            fb.classList.add('wrong-feedback');
+            input.classList.remove('wrong');
+            void input.offsetWidth;
+            input.classList.add('wrong');
+            input.value = '';
+            input.focus();
+            setTimeout(() => input.classList.remove('wrong'), 350);
+        }
+    }
+
+    function srsGiveUp() {
+        if (!srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        if (input) {
+            input.disabled = true;
+            input.value = srsExpectedAnswer;
+        }
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-giveup-btn').style.display = 'none';
+        const chk2 = document.getElementById('srs-check-btn');
+        if (chk2) chk2.style.display = 'none';
+        // Allow click-anywhere to advance (counts as Again — they needed the answer)
+        srsChallengeSolved = false;
+        srsAnswerRevealed = true;
+        var h = document.getElementById("srs-advance-hint");
+        if (h) h.style.display = "block";
+    }
+
+    function srsRevealAnswer() {
+        // Answer word takes the top (prompt) position — large black type
+        const prompt = document.getElementById('srs-prompt-word');
+        const frontWas = prompt.textContent;
+        prompt.textContent = srsExpectedAnswer || '';
+        document.getElementById('srs-direction-label').textContent =
+            frontWas ? ('was: ' + frontWas) : '';
+        const aw = document.getElementById('srs-answer-word');
+        if (aw) aw.style.display = 'none';
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-reveal-btn').style.display = 'none';
+        srsAnswerRevealed = true;
+        var h = document.getElementById('srs-advance-hint');
+        if (h) h.style.display = 'block';
+    }
+
+    function srsRateCard(rating) {
+        if (!srsCurrentCard) return;
+        const card = srsCurrentCard;
+
+        // Two-button system:
+        // Show More  → again (reappear soon)
+        // Show Less  → easy  (done for this session)
+        if (rating === 'again' || rating === 'hard') {
+            card.streak = 0;
+            srsQueue.splice(Math.min(3, srsQueue.length), 0, card);
+        } else {
+            // good / easy / anything else → mastered for this session
+            srsMasteredCount++;
+        }
+
+        srsCurrentCard = null;
+        srsShowNextCard();
+    }
+
+    function srsFinishSession() {
+        document.getElementById('srs-review-view').style.display = 'none';
+        document.getElementById('srs-done-view').style.display = 'block';
+        document.getElementById('srs-done-summary').textContent =
+            'You reviewed ' + srsTotal + ' word' + (srsTotal === 1 ? '' : 's') + ' and mastered all of them this round. Nice work!';
+    }
+
+    function srsCloseOverlay() {
+        document.getElementById('srs-overlay').classList.remove('visible');
+    }
+
+    
+    // ========== CROSSWORD ==========
+    let cwShowBank = true;
+    let cwPlacements = []; // {word, row, col, dir, num}
+    let cwRows = 0, cwCols = 0;
+    let cwSolution = {}; // "r,c" -> letter
+
+    function cwEligibleWords() {
+        const isEn = document.documentElement.lang !== 'vi';
+        const seen = new Set();
+        const words = [];
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach(el => {
+            if (!clickedIds.has(el.id)) return;
+            let w = (isEn ? el.dataset.wordEn : el.dataset.wordVn) || '';
+            w = w.trim();
+            // single token only (allow hyphen → strip for grid letters)
+            if (/\s/.test(w)) return;
+            const letters = w.replace(/-/g, '');
+            if (letters.length < 4) return;
+            const key = letters.toUpperCase();
+            if (seen.has(key)) return;
+            seen.add(key);
+            words.push({ display: w, letters: key });
+        });
+        return words;
+    }
+
+    function cwTryPlace(grid, rows, cols, word, row, col, dir) {
+        const dr = dir === 'across' ? 0 : 1;
+        const dc = dir === 'across' ? 1 : 0;
+        const L = word.length;
+        if (row < 0 || col < 0 || row + dr * (L - 1) >= rows || col + dc * (L - 1) >= cols) return null;
+        let crosses = 0;
+        for (let i = 0; i < L; i++) {
+            const r = row + dr * i, c = col + dc * i;
+            const cell = grid[r][c];
+            if (cell === null) {
+                // empty — ok, but check neighbors perpendicular aren't letters (loose check)
+            } else if (cell === word[i]) {
+                crosses++;
+            } else {
+                return null; // conflict
+            }
+        }
+        // Prefer at least one cross for non-first words
+        return crosses;
+    }
+
+    function cwBuildGrid(wordList) {
+        // wordList: array of {display, letters}
+        const words = wordList.slice().sort((a, b) => b.letters.length - a.letters.length);
+        if (!words.length) return null;
+
+        const maxLen = Math.max(...words.map(w => w.letters.length));
+        const size = Math.min(22, Math.max(12, maxLen + 4 + Math.floor(words.length / 2)));
+        let best = null;
+
+        for (let attempt = 0; attempt < 40; attempt++) {
+            const order = words.slice();
+            // shuffle slightly after first
+            if (attempt > 0) {
+                for (let i = order.length - 1; i > 0; i--) {
+                    if (Math.random() < 0.5) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [order[i], order[j]] = [order[j], order[i]];
+                    }
+                }
+            }
+            const grid = Array.from({ length: size }, () => Array(size).fill(null));
+            const placements = [];
+            let num = 1;
+
+            // first word centered horizontally
+            const w0 = order[0].letters;
+            let r0 = Math.floor(size / 2);
+            let c0 = Math.floor((size - w0.length) / 2);
+            for (let i = 0; i < w0.length; i++) grid[r0][c0 + i] = w0[i];
+            placements.push({ word: order[0].display, letters: w0, row: r0, col: c0, dir: 'across', num: num++ });
+
+            for (let wi = 1; wi < order.length; wi++) {
+                const letters = order[wi].letters;
+                let candidates = [];
+                for (let i = 0; i < letters.length; i++) {
+                    for (let r = 0; r < size; r++) {
+                        for (let c = 0; c < size; c++) {
+                            if (grid[r][c] !== letters[i]) continue;
+                            // try across with letter i at (r,c)
+                            const ca = c - i;
+                            const xa = cwTryPlace(grid, size, size, letters, r, ca, 'across');
+                            if (xa !== null && (placements.length === 0 || xa > 0)) {
+                                candidates.push({ row: r, col: ca, dir: 'across', crosses: xa });
+                            }
+                            const cr = r - i;
+                            const xd = cwTryPlace(grid, size, size, letters, cr, c, 'down');
+                            if (xd !== null && (placements.length === 0 || xd > 0)) {
+                                candidates.push({ row: cr, col: c, dir: 'down', crosses: xd });
+                            }
+                        }
+                    }
+                }
+                if (!candidates.length) continue;
+                candidates.sort((a, b) => b.crosses - a.crosses);
+                const pick = candidates[Math.floor(Math.random() * Math.min(3, candidates.length))];
+                const dr = pick.dir === 'across' ? 0 : 1;
+                const dc = pick.dir === 'across' ? 1 : 0;
+                for (let i = 0; i < letters.length; i++) {
+                    grid[pick.row + dr * i][pick.col + dc * i] = letters[i];
+                }
+                placements.push({
+                    word: order[wi].display,
+                    letters,
+                    row: pick.row,
+                    col: pick.col,
+                    dir: pick.dir,
+                    num: num++
+                });
+            }
+
+            if (!best || placements.length > best.placements.length) {
+                best = { grid, placements, size };
+            }
+            if (placements.length === order.length) break;
+        }
+
+        if (!best || best.placements.length < 2) return null;
+
+        // Trim empty border
+        let minR = best.size, maxR = 0, minC = best.size, maxC = 0;
+        for (let r = 0; r < best.size; r++) {
+            for (let c = 0; c < best.size; c++) {
+                if (best.grid[r][c] !== null) {
+                    minR = Math.min(minR, r); maxR = Math.max(maxR, r);
+                    minC = Math.min(minC, c); maxC = Math.max(maxC, c);
+                }
+            }
+        }
+        const rows = maxR - minR + 1;
+        const cols = maxC - minC + 1;
+        const trimmed = Array.from({ length: rows }, (_, r) =>
+            Array.from({ length: cols }, (_, c) => best.grid[r + minR][c + minC])
+        );
+        const placements = best.placements.map(p => ({
+            ...p,
+            row: p.row - minR,
+            col: p.col - minC
+        }));
+        // renumber by reading order
+        placements.sort((a, b) => a.row - b.row || a.col - b.col);
+        placements.forEach((p, i) => { p.num = i + 1; });
+
+        return { grid: trimmed, placements, rows, cols };
+    }
+
+    function cwRender(result) {
+        cwPlacements = result.placements;
+        cwRows = result.rows;
+        cwCols = result.cols;
+        cwSolution = {};
+        for (let r = 0; r < result.rows; r++) {
+            for (let c = 0; c < result.cols; c++) {
+                if (result.grid[r][c] !== null) cwSolution[r + ',' + c] = result.grid[r][c];
+            }
+        }
+
+        const gridEl = document.getElementById('cw-grid');
+        gridEl.style.gridTemplateColumns = 'repeat(' + result.cols + ', 28px)';
+        gridEl.style.gap = '0';
+        gridEl.style.columnGap = '0';
+        gridEl.style.rowGap = '0';
+        gridEl.innerHTML = '';
+
+        // number map
+        const numAt = {};
+        result.placements.forEach(p => {
+            const k = p.row + ',' + p.col;
+            if (!numAt[k] || p.num < numAt[k]) numAt[k] = p.num;
+        });
+
+        for (let r = 0; r < result.rows; r++) {
+            for (let c = 0; c < result.cols; c++) {
+                const cell = document.createElement('div');
+                const letter = result.grid[r][c];
+                if (letter === null) {
+                    cell.className = 'cw-cell block';
+                } else {
+                    cell.className = 'cw-cell letter';
+                    const key = r + ',' + c;
+                    if (numAt[key]) {
+                        const n = document.createElement('span');
+                        n.className = 'cw-num';
+                        n.textContent = numAt[key];
+                        cell.appendChild(n);
+                    }
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.maxLength = 1;
+                    inp.autocomplete = 'off';
+                    inp.autocapitalize = 'characters';
+                    inp.dataset.r = r;
+                    inp.dataset.c = c;
+                    inp.addEventListener('focus', (e) => {
+                        const r = +e.target.dataset.r, c = +e.target.dataset.c;
+                        cwSetDirFromClick(r, c);
+                        cwHighlightWordAt(r, c);
+                    });
+                    inp.addEventListener('input', (e) => {
+                        let v = (e.target.value || '').slice(-1).toUpperCase();
+                        v = v.replace(/[^A-Za-zÀ-ỹĂăÂâÊêÔôƠơƯưĐđ]/g, '');
+                        e.target.value = v;
+                        e.target.parentElement.classList.remove('correct', 'wrong-flash');
+                        if (v) {
+                            const next = cwNextCell(+e.target.dataset.r, +e.target.dataset.c);
+                            if (next) next.focus();
+                        }
+                    });
+                    inp.addEventListener('keydown', (e) => {
+                        const r = +e.target.dataset.r, c = +e.target.dataset.c;
+                        if (e.key === 'ArrowRight') { cwDir = 'across'; const n = cwCellInput(r, c + 1); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowLeft') { cwDir = 'across'; const n = cwCellInput(r, c - 1); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowDown') { cwDir = 'down'; const n = cwCellInput(r + 1, c); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowUp') { cwDir = 'down'; const n = cwCellInput(r - 1, c); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'Backspace' && !e.target.value) {
+                            const prev = cwPrevCell(r, c);
+                            if (prev) { prev.focus(); e.preventDefault(); }
+                        }
+                    });
+                    cell.appendChild(inp);
+                }
+                gridEl.appendChild(cell);
+            }
+        }
+
+        // bank
+        const bank = document.getElementById('cw-bank-grid');
+        bank.innerHTML = '';
+        const shuffled = result.placements.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        shuffled.forEach(p => {
+            const d = document.createElement('div');
+            d.className = 'cw-bank-word';
+            d.textContent = p.word;
+            d.dataset.letters = p.letters;
+            bank.appendChild(d);
+        });
+
+        document.getElementById('cw-status').textContent =
+            'Placed ' + result.placements.length + ' words · fill every square';
+        document.getElementById('cw-status').className = 'cw-status';
+        cwApplyBankVisibility();
+    }
+
+    // Track typing direction so junctions continue the same way
+    let cwDir = 'across'; // 'across' | 'down'
+
+    function cwCellInput(r, c) {
+        return document.querySelector('.cw-cell.letter input[data-r="'+r+'"][data-c="'+c+'"]');
+    }
+    function cwNextCell(r, c) {
+        if (cwDir === 'down') {
+            const down = cwCellInput(r + 1, c);
+            if (down) return down;
+            const right = cwCellInput(r, c + 1);
+            if (right) { cwDir = 'across'; return right; }
+        } else {
+            const right = cwCellInput(r, c + 1);
+            if (right) return right;
+            const down = cwCellInput(r + 1, c);
+            if (down) { cwDir = 'down'; return down; }
+        }
+        return null;
+    }
+    function cwPrevCell(r, c) {
+        if (cwDir === 'down') {
+            const up = cwCellInput(r - 1, c);
+            if (up) return up;
+            const left = cwCellInput(r, c - 1);
+            if (left) { cwDir = 'across'; return left; }
+        } else {
+            const left = cwCellInput(r, c - 1);
+            if (left) return left;
+            const up = cwCellInput(r - 1, c);
+            if (up) { cwDir = 'down'; return up; }
+        }
+        return null;
+    }
+
+    function cwClearActiveWord() {
+        document.querySelectorAll('.cw-cell.cw-active-word').forEach(el => el.classList.remove('cw-active-word'));
+    }
+    function cwHighlightWordAt(r, c) {
+        cwClearActiveWord();
+        // Find placement(s) covering this cell in current direction; prefer cwDir
+        const covering = cwPlacements.filter(p => {
+            const dr = p.dir === 'across' ? 0 : 1;
+            const dc = p.dir === 'across' ? 1 : 0;
+            for (let i = 0; i < p.letters.length; i++) {
+                if (p.row + dr * i === r && p.col + dc * i === c) return true;
+            }
+            return false;
+        });
+        let place = covering.find(p => p.dir === cwDir) || covering[0];
+        if (!place) return;
+        cwDir = place.dir;
+        const dr = place.dir === 'across' ? 0 : 1;
+        const dc = place.dir === 'across' ? 1 : 0;
+        for (let i = 0; i < place.letters.length; i++) {
+            const rr = place.row + dr * i, cc = place.col + dc * i;
+            const inp = cwCellInput(rr, cc);
+            if (inp) inp.parentElement.classList.add('cw-active-word');
+        }
+    }
+
+    function cwSetDirFromClick(r, c) {
+        // If this cell is the start of a placed word, adopt that word's direction.
+        const starts = cwPlacements.filter(p => p.row === r && p.col === c);
+        if (starts.length === 1) {
+            cwDir = starts[0].dir;
+            return;
+        }
+        if (starts.length > 1) {
+            // both across & down start here — keep current dir
+            return;
+        }
+        // Mid-word: only one axis may continue
+        const hasAcross = !!(cwCellInput(r, c - 1) || cwCellInput(r, c + 1));
+        const hasDown = !!(cwCellInput(r - 1, c) || cwCellInput(r + 1, c));
+        if (hasAcross && !hasDown) cwDir = 'across';
+        else if (hasDown && !hasAcross) cwDir = 'down';
+        // if both (junction), keep current cwDir so progress continues straight
+    }
+
+    function cwApplyBankVisibility() {
+        const bank = document.getElementById('cw-bank');
+        const btn = document.getElementById('cw-toggle-bank-btn');
+        if (cwShowBank) {
+            bank.classList.add('visible');
+            btn.textContent = 'Hide Word Bank';
+        } else {
+            bank.classList.remove('visible');
+            btn.textContent = 'Show Word Bank';
+        }
+    }
+
+    function cwOpen() {
+        const words = cwEligibleWords();
+        if (words.length < 4) {
+            alert('Need at least 4 clicked words with 4+ letters each to build a crossword.');
+            return;
+        }
+        // Cap at 15 for density
+        let list = words.slice();
+        if (list.length > 15) {
+            // shuffle and take 15
+            for (let i = list.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [list[i], list[j]] = [list[j], list[i]];
+            }
+            list = list.slice(0, 15);
+        }
+        const result = cwBuildGrid(list);
+        if (!result) {
+            alert('Could not build a crossword from those words. Click a few more, or try again.');
+            return;
+        }
+        cwRender(result);
+        document.getElementById('cw-sub').textContent =
+            'From words you clicked · ' + result.placements.length + ' words in the puzzle';
+        document.getElementById('cw-overlay').classList.add('visible');
+    }
+
+    function cwClose() {
+        cwClearActiveWord();
+        document.getElementById('cw-overlay').classList.remove('visible');
+    }
+
+    function cwCheck() {
+        let total = 0, ok = 0;
+        document.querySelectorAll('.cw-cell.letter input').forEach(inp => {
+            total++;
+            const key = inp.dataset.r + ',' + inp.dataset.c;
+            const want = cwSolution[key];
+            const got = (inp.value || '').toUpperCase();
+            inp.parentElement.classList.remove('correct', 'wrong-flash');
+            if (got && got === want) {
+                ok++;
+                inp.parentElement.classList.add('correct');
+            } else if (got) {
+                inp.parentElement.classList.add('wrong-flash');
+            }
+        });
+        const st = document.getElementById('cw-status');
+        if (ok === total && total > 0) {
+            st.textContent = "You got it! Crossword complete.";
+            st.className = 'cw-status success';
+            // mark bank used
+            document.querySelectorAll('.cw-bank-word').forEach(w => w.classList.add('used'));
+        } else {
+            st.textContent = ok + ' / ' + total + ' letters correct — keep going';
+            st.className = 'cw-status bad';
+        }
+    }
+
+
+    function cwShowSolution() {
+        document.querySelectorAll('.cw-cell.letter input').forEach(inp => {
+            const key = inp.dataset.r + ',' + inp.dataset.c;
+            const want = cwSolution[key];
+            if (want) {
+                inp.value = want;
+                inp.parentElement.classList.remove('wrong-flash');
+                inp.parentElement.classList.add('correct');
+            }
+        });
+        document.querySelectorAll('.cw-bank-word').forEach(w => w.classList.add('used'));
+        const st = document.getElementById('cw-status');
+        st.textContent = 'Solution shown — try New layout for another puzzle';
+        st.className = 'cw-status success';
+    }
+
+    function cwNewLayout() {
+        cwOpen();
+    }
+
+    // ========== INITIALIZATION ==========
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        // Assign stable ids and wire click handlers
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                // In practice mode we ignore clicks on vocab (they are blanks or filled)
+                if (practiceMode) return;
+
+                // Track this word for the word bank
+                if (!clickedIds.has(el.id)) {
+                    clickedIds.add(el.id);
+                    updateWordCount();
+                }
+
+                // Show / toggle popup (existing behaviour)
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                // For Vietnamese input (lang=vi): title = English (opposite), sub = Vietnamese
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                const isEnInput = document.documentElement.lang === 'en';
+                document.getElementById('popup-definition').innerHTML = isEnInput
+                    ? (el.dataset.defVn || '') + hr + (el.dataset.defEn || '')
+                    : (el.dataset.defEn || '') + hr + (el.dataset.defVn || '');
+                
+                document.getElementById('popup-context-text').innerText = isEnInput ? (el.dataset.contextEn || el.dataset.wordEn || '') : (el.dataset.contextVn || el.dataset.wordVn || '');
+
+                popup.style.display = 'block';
+            });
+        });
+
+        // Close popup on outside click
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        // Practice control buttons
+        // Practice control buttons
+        function toggleWordBank() {
+            const bank = document.getElementById('word-bank-section');
+            const btn = document.getElementById('toggle-bank-btn');
+            if (bank.classList.contains('visible')) {
+                // Hide bank + re-blank the story as typeable inputs for a
+                // real memory challenge (nothing to click anymore)
+                bank.classList.remove('visible');
+                btn.textContent = 'Show Word Bank';
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankTypeable(el));
+                    const firstBlank = orderedBlanks[0];
+                    if (firstBlank) {
+                        firstBlank.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const inp = firstBlank.querySelector('input.blank-input');
+                        if (inp) inp.focus();
+                    }
+                    updateProgress();
+                }
+            } else {
+                bank.classList.add('visible');
+                btn.textContent = 'Hide Word Bank';
+                // Fresh round again, same as the hide direction: re-blank
+                // everything back to click-to-select and rebuild the bank,
+                // rather than leaving previously-typed answers in place.
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankClickable(el));
+                    buildWordBank();
+                    setActiveBlank(orderedBlanks[0]);
+                    orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    updateProgress();
+                }
+            }
+        }
+
+        document.getElementById('start-practice-btn').addEventListener('click', enterPracticeMode);
+        document.getElementById('reset-practice-btn').addEventListener('click', resetPractice);
+        document.getElementById('toggle-bank-btn').addEventListener('click', toggleWordBank);
+        document.getElementById('exit-practice-btn').addEventListener('click', exitPracticeMode);
+
+        // Spaced Repetition controls
+        document.getElementById('start-srs-btn').addEventListener('click', () => srsStartSession('review'));
+        document.getElementById('start-srs-challenge-btn').addEventListener('click', () => srsStartSession('challenge'));
+        document.getElementById('srs-close-btn').addEventListener('click', srsCloseOverlay);
+        document.getElementById('srs-reveal-btn').addEventListener('click', srsRevealAnswer);
+        document.getElementById('srs-check-btn').addEventListener('click', srsCheckTypedAnswer);
+        const typeAreaEl = document.getElementById('srs-type-area');
+        if (typeAreaEl) {
+            typeAreaEl.addEventListener('click', (e) => e.stopPropagation());
+            typeAreaEl.addEventListener('touchend', (e) => e.stopPropagation());
+        }
+        // srs-type-area-stop
+
+        document.getElementById('srs-giveup-btn').addEventListener('click', srsGiveUp);
+        const srsTypeInput = document.getElementById('srs-type-input');
+        const submitTyped = (e) => {
+            if (e) e.preventDefault();
+            srsCheckTypedAnswer();
+        };
+        srsTypeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        // Mobile keyboards often only fire keyup / change for the Done key
+        srsTypeInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        document.getElementById('srs-again-btn').addEventListener('click', () => srsStartSession(srsMode));
+        document.getElementById('srs-back-btn').addEventListener('click', srsCloseOverlay);
+        document.querySelectorAll('.srs-rate-btn').forEach(btn => {
+            btn.addEventListener('click', () => srsRateCard(btn.dataset.rating));
+        });
+        // Click anywhere in the review card that isn't a button dismisses it
+        // (mirrors the vocab popup's behavior) — no button clicks close it,
+        // since those (Show Answer, ratings, audio) have their own actions.
+        // Backdrop closes session. Once an answer is showing (Level 1 reveal,
+        // Level 2 correct, or Show answer), click anywhere on the card (not a
+        // rating button / input) advances — no need to hunt for the X.
+        document.getElementById('srs-overlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('srs-overlay')) {
+                srsCloseOverlay();
+                return;
+            }
+            // Never advance from a tap while the type-in field is active (mobile
+            // keyboard dismiss often hits the card behind the keyboard).
+            const typeInput = document.getElementById('srs-type-input');
+            if (typeInput && document.activeElement === typeInput) return;
+            if (e.target.closest('#srs-type-area')) return;
+            if (srsAnswerRevealed && !e.target.closest('button') && !e.target.closest('input')) {
+                const rating = (srsChallengeSolved || srsMode === 'review') ? 'easy' : 'again';
+                srsAnswerRevealed = false;
+                srsChallengeSolved = false;
+                srsRateCard(rating);
+            }
+        });
+
+        const cwStart = document.getElementById('start-cw-btn');
+        if (cwStart) cwStart.addEventListener('click', cwOpen);
+        const cwCloseBtn = document.getElementById('cw-close-btn');
+        if (cwCloseBtn) cwCloseBtn.addEventListener('click', cwClose);
+        const cwCheckBtn = document.getElementById('cw-check-btn');
+        if (cwCheckBtn) cwCheckBtn.addEventListener('click', cwCheck);
+        const cwSolveBtn = document.getElementById('cw-solve-btn');
+        if (cwSolveBtn) cwSolveBtn.addEventListener('click', cwShowSolution);
+        const cwNewBtn = document.getElementById('cw-new-btn');
+        if (cwNewBtn) cwNewBtn.addEventListener('click', cwNewLayout);
+        const cwToggleBank = document.getElementById('cw-toggle-bank-btn');
+        if (cwToggleBank) cwToggleBank.addEventListener('click', () => {
+            cwShowBank = !cwShowBank;
+            cwApplyBankVisibility();
+        });
+        const cwOverlay = document.getElementById('cw-overlay');
+        if (cwOverlay) cwOverlay.addEventListener('click', (e) => {
+            if (e.target === cwOverlay) cwClose();
+        });
+
+
+        updateWordCount();
+    });
+
+</script>
+</body>
+</html>
