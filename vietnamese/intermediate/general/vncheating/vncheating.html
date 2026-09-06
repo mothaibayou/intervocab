@@ -1,0 +1,2398 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vấn Nạn Gian Lận Thi Cử Tại Việt Nam</title>
+<style>
+
+        body {
+            background-color: #2b2b2b;
+            color: #1a0e00;
+            font-family: Arial, sans-serif;
+            font-size: 17px;
+            margin: 0;
+            padding: 40px 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+		
+		
+        .page-container {
+            background-color: #f0e6c8;
+            max-width: 700px;
+            width: 100%;
+            padding: 40px;
+            box-sizing: border-box;
+            border: 2px solid #a0845a;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border-radius: 4px;
+            transition: max-width 0.25s ease;
+        }
+        .page-container.practice-on {
+            max-width: 700px;
+        }
+        .story-and-bank {
+            display: block;
+        }
+        .page-container.practice-on .story-and-bank {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            align-items: stretch;
+        }
+        .page-container.practice-on .story-main {
+            flex: 1 1 auto;
+            min-width: 0;
+        }
+        h1 {
+            color: #3a1f00;
+            font-size: 2.2rem;
+            margin-top: 0;
+            margin-bottom: 5px;
+            padding-bottom: 10px;
+        }
+        h2.subtitle {
+            color: #7a4e1a;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #7a4e1a;
+            padding-bottom: 10px;
+            font-weight: normal;
+        }
+        p {
+            line-height: 1.8;
+            margin-bottom: 20px;
+            text-align: justify;
+            color: #1a0e00;
+        }
+        .read-hint {
+            text-align: center;
+            font-size: 0.95rem;
+            color: #5c3a14;
+            font-style: italic;
+            margin: -10px 0 22px;
+            padding: 0 8px;
+        }
+        .page-container.practice-on .read-hint {
+            display: none;
+        }
+        .audio-section {
+            margin-bottom: 30px;
+            background: #f0e6c8;
+            padding: 15px;
+            border-radius: 4px;
+            border: 1px solid #a0845a;
+            position: sticky;
+            top: 0;
+            z-index: 40;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.12);
+        }
+        .audio-label {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        audio {
+            width: 100%;
+            margin-bottom: 12px;
+        }
+        audio::-webkit-media-controls-panel {
+            background-color: #2e1f0a;
+        }
+        audio::-webkit-media-controls-current-time-display,
+        audio::-webkit-media-controls-time-remaining-display {
+            color: #f0d9a0;
+        }
+        .audio-controls, .speed-controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+        .rewind-btn, .speed-btn, .back-btn, .practice-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.9rem;
+            transition: all 0.2s;
+        }
+        .rewind-btn:hover, .speed-btn:hover, .back-btn:hover, .practice-btn:hover {
+            background: #422d12;
+            color: #ffe6b3;
+        }
+        .speed-btn.active {
+            background: #c8a060;
+            color: #2e1f0a;
+            font-weight: bold;
+            border-color: #2e1f0a;
+        }
+        .practice-btn:disabled {
+            opacity: 0.45;
+            cursor: not-allowed;
+        }
+        .practice-btn.primary {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border: 2px solid #7a4e1a !important;
+            font-weight: bold;
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            box-shadow: none;
+        }
+        .practice-btn.large {
+            font-size: 1.12rem;
+            padding: 11px 24px;
+            font-weight: bold;
+        }
+        .practice-btn.primary:hover:not(:disabled) {
+            background: #e8d9b0 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+        }
+        .practice-btn.primary:disabled {
+            background: #f0e6c8 !important;
+            color: #7a4e1a !important;
+            border-color: #7a4e1a !important;
+            opacity: 0.5;
+        }
+        .vocab {
+            border-bottom: 2.5px dotted #1a5c20;
+            cursor: pointer;
+            display: inline-block;
+        }
+        .vocab:hover {
+            background-color: rgba(26, 92, 32, 0.1);
+        }
+        .vocab.is-blank {
+            display: inline-block;
+            min-width: 5.2em;
+            height: 1.35em;
+            line-height: 1.35em;
+            vertical-align: baseline;
+            margin: 0 2px;
+            padding: 0 6px;
+            background-color: #fffdf6;
+            border: 2px solid #5c3a14;
+            border-radius: 3px;
+            color: transparent;
+            text-align: center;
+            cursor: pointer;
+            position: relative;
+            box-sizing: border-box;
+            transition: background-color 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+        }
+        .vocab.is-blank::after {
+            content: none;
+        }
+        .vocab.is-blank.active-blank {
+            background-color: #fff8e0;
+            border-color: #2e1f0a;
+            box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.45);
+        }
+        .vocab.is-blank.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 4px #e6b800 !important;
+            border-color: #c9a000 !important;
+        }
+        .vocab.is-blank input.blank-input {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: transparent;
+            text-align: center;
+            font: inherit;
+            color: #1a0e00;
+            outline: none;
+            padding: 0;
+            box-sizing: border-box;
+            cursor: text;
+        }
+        .vocab.is-blank.wrong-shake {
+            animation: blankShake 0.3s;
+            border-color: #a33b2e !important;
+            box-shadow: 0 0 0 3px rgba(163, 59, 46, 0.35) !important;
+        }
+        @keyframes blankShake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-4px); }
+            75% { transform: translateX(4px); }
+        }
+        .vocab.filled {
+            border: none;
+            border-bottom: 2px solid #1a5c20;
+            background-color: rgba(26, 92, 32, 0.12);
+            color: #1a3c10;
+            font-weight: 600;
+            cursor: default;
+            padding: 0;
+            min-width: 0;
+            height: auto;
+        }
+        .vocab.filled:hover {
+            background-color: rgba(26, 92, 32, 0.18);
+        }
+        .vocab.highlight-flash {
+            background-color: #ffe082 !important;
+            box-shadow: 0 0 0 5px #ffc107 !important;
+        }
+        #popup-card {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: #f0e6c8;
+            color: #2a1500;
+            border: 3px solid #7a4e1a;
+            padding: 25px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            z-index: 1000;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+        #popup-card h3 {
+            margin-top: 0;
+            margin-bottom: 5px;
+            font-size: 1.3rem;
+            color: #3a1f00;
+            font-weight: bold;
+        }
+        .popup-secondary {
+            font-size: 0.95rem;
+            font-style: italic;
+            color: #604020;
+            margin-bottom: 12px;
+        }
+        .popup-audio-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            border-bottom: 1px dashed #7a4e1a;
+            padding-bottom: 12px;
+        }
+        .popup-audio-btn {
+            background: #2e1f0a;
+            color: #f0d9a0;
+            border: 1px solid #7a4e1a;
+            border-radius: 4px;
+            cursor: pointer;
+            padding: 6px 12px;
+            font-size: 0.95rem;
+            margin-bottom: 10px;
+        }
+        .popup-audio-btn:hover {
+            background: #422d12;
+        }
+		.browser-note {
+           font-size: 0.8rem;
+           color: #7a4e1a;
+           margin-bottom: 10px;
+           font-style: italic;
+        }
+        .popup-pos {
+            font-size: 0.95rem;
+            font-weight: bold;
+            color: #7a4e1a;
+            margin-bottom: 10px;
+        }
+        .popup-def {
+            font-size: 1rem;
+            margin-bottom: 15px;
+            line-height: 1.4;
+        }
+        .popup-context-label {
+            font-size: 0.95rem;
+            font-weight: bold;
+            margin-top: 12px;
+            color: #3a1f00;
+        }
+        .popup-context {
+            font-size: 0.95rem;
+            font-style: italic;
+            line-height: 1.4;
+            margin-top: 4px;
+        }
+        .practice-controls {
+            margin: 30px 0 20px;
+            padding: 10px 0;
+            background: transparent;
+            border: none;
+            text-align: center;
+        }
+        .collect-status {
+            font-size: 1rem;
+            color: #3a1f00;
+            margin-bottom: 12px;
+            font-weight: bold;
+        }
+        .collect-status span {
+            color: #7a4e1a;
+            font-size: 1.15rem;
+        }
+        .back-btn-container {
+            text-align: center;
+            margin: 28px 0 8px;
+            padding-top: 16px;
+            border-top: 1px dashed #a0845a;
+        }
+        .back-btn-container .back-btn {
+            font-size: 1rem;
+            padding: 10px 22px;
+        }
+        .practice-btn-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+        }
+        .word-bank-section {
+            display: none;
+            margin: 20px 0 10px;
+            padding: 14px;
+            background: rgba(122, 78, 26, 0.06);
+            border: 1px solid #a0845a;
+            border-radius: 6px;
+        }
+        .word-bank-section.visible {
+            display: block;
+        }
+        /* Horizontal word bank above the story when practice is active */
+        .page-container.practice-on .word-bank-section.visible {
+            display: block;
+            width: 100%;
+            margin: 0 0 4px;
+            position: sticky;
+            top: 160px;
+            z-index: 20;
+            max-height: none;
+            overflow: visible;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            background: #f5ecd4;
+        }
+        .bank-grid {
+            display: flex !important;
+            flex-direction: row !important;
+            flex-wrap: wrap !important;
+            gap: 8px;
+            margin-top: 8px;
+            justify-content: flex-start;
+            align-items: center;
+        }
+        .bank-word {
+            font-size: 0.92rem;
+            border: 1px solid #7a4e1a;
+            cursor: pointer;
+            padding: 7px 12px;
+            text-align: center;
+            background: #f8f0d8;
+            border-radius: 4px;
+            color: #2a1500;
+            transition: all 0.15s;
+            user-select: none;
+            line-height: 1.3;
+            white-space: nowrap;
+        }
+        .bank-word:hover {
+            background: #e8d8b0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+        }
+        .practice-progress {
+            font-size: 0.9rem;
+            color: #7a4e1a;
+            margin-top: 10px;
+            font-style: italic;
+        }
+        .practice-complete {
+            display: none;
+            margin: 20px 0;
+            padding: 16px;
+            background: rgba(26, 92, 32, 0.12);
+            border: 2px solid #1a5c20;
+            border-radius: 6px;
+            text-align: center;
+            color: #1a3c10;
+            font-weight: bold;
+            font-size: 1.1rem;
+        }
+        .practice-complete.visible {
+            display: block;
+        }
+        .mode-banner {
+            display: none;
+            background: #7a4e1a;
+            color: #f0e6c8;
+            text-align: center;
+            padding: 8px 12px;
+            font-size: 0.95rem;
+            font-weight: bold;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        .mode-banner.visible {
+            display: block;
+        }
+        .practice-instruction {
+            display: none;
+            text-align: center;
+            font-size: 0.95rem;
+            color: #7a4e1a;
+            margin-top: 8px;
+            font-style: italic;
+        }
+        .practice-instruction.visible {
+            display: block;
+        }
+       @media (max-width: 820px) {
+          .page-container.practice-on {
+              max-width: 700px;
+          }
+          .page-container.practice-on .word-bank-section.visible {
+              position: sticky;
+              top: 160px;
+              max-height: none;
+          }
+       }
+       @media (max-width: 600px) {
+          p {
+                  text-align:  left;
+ }
+    body {
+        padding: 0;
+    }
+    .page-container {
+        padding: 20px 16px;
+        border-left: none;
+        border-right: none;
+        border-radius: 0;
+        box-shadow: none;
+    }
+    .bank-word {
+        padding: 8px 10px;
+        font-size: 0.9rem;
+    }
+}
+
+/* ========== SPACED REPETITION (Section 3) ========== */
+#srs-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(20, 12, 4, 0.72);
+    z-index: 2000;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    box-sizing: border-box;
+}
+#srs-overlay.visible {
+    display: flex;
+}
+.srs-card {
+    background-color: #f0e6c8;
+    color: #1a0e00;
+    border: 3px solid #7a4e1a;
+    border-radius: 6px;
+    box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    width: 100%;
+    max-width: 480px;
+    max-height: 90vh;
+    overflow-y: auto;
+    padding: 25px;
+    box-sizing: border-box;
+    position: relative;
+}
+.srs-close-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    background: transparent;
+    border: none;
+    color: #7a4e1a;
+    font-size: 1.3rem;
+    cursor: pointer;
+    line-height: 1;
+    padding: 4px 8px;
+}
+.srs-close-btn:hover {
+    color: #3a1f00;
+}
+.srs-header {
+    text-align: center;
+    margin-bottom: 18px;
+}
+.srs-header h3 {
+    margin: 0 0 6px;
+    color: #3a1f00;
+    font-size: 1.25rem;
+}
+.srs-progress-track {
+    background: rgba(122, 78, 26, 0.18);
+    border-radius: 8px;
+    height: 10px;
+    overflow: hidden;
+    margin-top: 8px;
+}
+.srs-progress-fill {
+    background: #1a5c20;
+    height: 100%;
+    width: 0%;
+    transition: width 0.25s ease;
+}
+.srs-progress-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    margin-top: 6px;
+}
+.srs-direction-label {
+    font-size: 0.85rem;
+    color: #7a4e1a;
+    font-style: italic;
+    text-align: center;
+    min-height: 1.2em;
+}
+.srs-prompt-word {
+    font-size: 1.55rem;
+    font-weight: bold;
+    color: #000000;
+    margin: 8px 0 6px;
+    line-height: 1.35;
+}
+.srs-audio-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 18px;
+}
+.srs-reveal-btn {
+    display: block;
+    width: 100%;
+    background: #2e1f0a;
+    color: #f0d9a0;
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 12px;
+    font-size: 1.05rem;
+    font-weight: bold;
+}
+.srs-reveal-btn:hover {
+    background: #422d12;
+    color: #ffe6b3;
+}
+.srs-answer {
+    display: none;
+    border-top: 1px dashed #7a4e1a;
+    padding-top: 16px;
+    margin-top: 4px;
+}
+.srs-answer.visible {
+    display: block;
+}
+.srs-answer-word {
+    font-size: 1.25rem;
+    font-weight: bold;
+    color: #000000;
+    margin-bottom: 4px;
+}
+.srs-pos {
+    font-size: 0.95rem;
+    font-weight: bold;
+    color: #7a4e1a;
+    margin-bottom: 8px;
+    text-align: center;
+}
+.srs-def {
+    font-size: 0.98rem;
+    line-height: 1.4;
+    margin-bottom: 12px;
+}
+.srs-def-secondary {
+    font-size: 0.85rem;
+    line-height: 1.4;
+    color: #7a4e1a;
+    font-style: italic;
+    margin-top: 4px;
+}
+.srs-context-label {
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #3a1f00;
+}
+.srs-context {
+    font-size: 0.9rem;
+    font-style: italic;
+    line-height: 1.4;
+    margin: 4px 0 18px;
+}
+.srs-rate-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+}
+.srs-rate-btn {
+    border: 1px solid #7a4e1a;
+    border-radius: 4px;
+    cursor: pointer;
+    padding: 10px 4px;
+    font-size: 0.9rem;
+    font-weight: bold;
+    color: #2a1500;
+    text-align: center;
+    line-height: 1.3;
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-rate-btn small {
+    display: block;
+    font-weight: normal;
+    font-size: 0.72rem;
+    opacity: 0.85;
+    margin-top: 2px;
+    color: #4a3010;
+}
+.srs-rate-again,
+.srs-rate-hard,
+.srs-rate-good,
+.srs-rate-easy {
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-rate-again:hover,
+.srs-rate-hard:hover,
+.srs-rate-good:hover,
+.srs-rate-easy:hover {
+    background: rgba(122, 78, 26, 0.18);
+}
+.srs-done {
+    text-align: center;
+}
+.srs-done h3 {
+    color: #3a1f00;
+    margin-bottom: 10px;
+}
+.srs-done p {
+    text-align: center;
+    line-height: 1.5;
+}
+.srs-done-actions {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 18px;
+    flex-wrap: wrap;
+}
+
+.srs-type-area {
+    display: none;
+    margin: 12px 0 8px;
+}
+.srs-type-area.visible {
+    display: block;
+}
+.srs-type-input {
+    width: 100%;
+    box-sizing: border-box;
+    font-size: 1.15rem;
+    padding: 12px 14px;
+    border: 2px solid #7a4e1a;
+    border-radius: 4px;
+    background: #fffdf6;
+    color: #1a0e00;
+    text-align: center;
+    font-family: inherit;
+    outline: none;
+}
+.srs-type-input:focus {
+    border-color: #2e1f0a;
+    box-shadow: 0 0 0 3px rgba(122, 78, 26, 0.35);
+}
+.srs-type-input.wrong {
+    border-color: #a33b2e;
+    animation: blankShake 0.3s;
+}
+.srs-type-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+.srs-mode-row {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 4px;
+}
+.srs-feedback {
+    text-align: center;
+    font-size: 0.9rem;
+    color: #a33b2e;
+    min-height: 1.2em;
+    margin-top: 6px;
+}
+
+.srs-feedback.wrong-feedback {
+    color: #a33b2e;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+.srs-feedback.success {
+    color: #1a5c20;
+    font-weight: bold;
+    font-size: 1.15rem;
+}
+
+@media (max-width: 480px) {
+    .srs-rate-row {
+        grid-template-columns: 1fr 1fr;
+    }
+    .srs-prompt-word { font-size: 1.35rem; color: #000000; }
+}
+
+
+    /* ===== CROSSWORD ===== */
+    #cw-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(20, 12, 4, 0.72);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+        padding: 12px;
+        box-sizing: border-box;
+        overflow: auto;
+    }
+    #cw-overlay.visible { display: flex; }
+    .cw-panel {
+        background: #f0e6c8;
+        color: #1a0e00;
+        border: 3px solid #7a4e1a;
+        border-radius: 6px;
+        box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+        width: 100%;
+        max-width: 640px;
+        max-height: 94vh;
+        overflow: auto;
+        padding: 16px 16px 20px;
+        box-sizing: border-box;
+    }
+    .cw-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 8px;
+    }
+    .cw-title {
+        font-size: 1.15rem;
+        font-weight: bold;
+        color: #3a1f00;
+        margin: 0;
+    }
+    .cw-sub {
+        text-align: center;
+        font-size: 0.98rem;
+        color: #3a1f00;
+        font-style: italic;
+        font-weight: 600;
+        margin: 0 0 12px;
+    }
+    .cw-toolbar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 8px;
+        justify-content: center;
+        margin-bottom: 12px;
+    }
+    .cw-grid-wrap {
+        display: flex;
+        justify-content: center;
+        overflow: auto;
+        margin-bottom: 12px;
+    }
+    .cw-grid {
+        display: grid;
+        gap: 0;
+        background: #2e1f0a;
+        border: 2px solid #2e1f0a;
+        width: max-content;
+        margin: 0 auto;
+    }
+    .cw-cell {
+        width: 28px;
+        height: 28px;
+        min-width: 28px;
+        min-height: 28px;
+        max-width: 28px;
+        max-height: 28px;
+        box-sizing: border-box;
+        position: relative;
+        background: #2e1f0a;
+        padding: 0;
+        margin: 0;
+    }
+    .cw-cell.block { background: #2e1f0a; }
+    .cw-cell.letter {
+        background: #fffdf6;
+        border: 1px solid #5c3a14;
+    }
+    .cw-cell.letter input {
+        width: 100%;
+        height: 100%;
+        min-width: 0;
+        min-height: 0;
+        border: none;
+        border-radius: 0;
+        background: #fffdf6;
+        text-align: center;
+        font-size: 15px;
+        font-weight: 700;
+        color: #1a0e00;
+        text-transform: uppercase;
+        padding: 0;
+        margin: 0;
+        box-sizing: border-box;
+        caret-color: #7a4e1a;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+    .cw-cell.letter input:focus {
+        outline: 2px solid #c8a060;
+        background: #fff8e0;
+    }
+    .cw-cell.correct {
+        background: #eaf6e0 !important;
+        border-color: #3d7a2f !important;
+    }
+    .cw-cell.correct input {
+        color: #1a3c10 !important;
+        font-weight: 700;
+        background: transparent !important;
+    }
+    .cw-cell.wrong-flash {
+        background: #fde8e4 !important;
+        border-color: #a33b2e !important;
+    }
+    .cw-cell.wrong-flash input {
+        color: #6b1c14 !important;
+    }
+    .cw-status.success {
+        color: #1a5c20;
+        background: #eaf6e0;
+        border: 1px solid #3d7a2f;
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+
+    .cw-cell.letter.cw-active-word {
+        background: #fff3bf !important;
+        border-color: #c9a000 !important;
+        box-shadow: inset 0 0 0 2px #e6b800;
+    }
+    .cw-cell.letter.cw-active-word input {
+        background: #fff3bf !important;
+    }
+
+    .cw-status.bad {
+        color: #6b1c14;
+        background: #fde8e4;
+        border: 1px solid #a33b2e;
+        border-radius: 4px;
+        padding: 6px 10px;
+    }
+    .cw-num {
+        position: absolute;
+        top: 1px;
+        left: 2px;
+        font-size: 8px;
+        line-height: 1;
+        color: #5c3a14;
+        pointer-events: none;
+        font-weight: bold;
+    }
+    .cw-bank {
+        display: none;
+        margin: 10px 0;
+        padding: 10px;
+        background: rgba(122, 78, 26, 0.06);
+        border: 1px solid #a0845a;
+        border-radius: 6px;
+    }
+    .cw-bank.visible { display: block; }
+    .cw-bank-label {
+        font-size: 0.85rem;
+        color: #7a4e1a;
+        font-weight: bold;
+        margin-bottom: 6px;
+    }
+    .cw-bank-grid {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+    .cw-bank-word {
+        font-size: 0.85rem;
+        border: 1px solid #7a4e1a;
+        padding: 5px 10px;
+        background: #f8f0d8;
+        border-radius: 4px;
+        color: #2a1500;
+        user-select: none;
+    }
+    .cw-bank-word.used {
+        opacity: 0.35;
+        text-decoration: line-through;
+    }
+    .cw-status {
+        text-align: center;
+        font-size: 0.95rem;
+        color: #3a1f00;
+        font-weight: bold;
+        min-height: 1.3em;
+        margin: 8px 0;
+    }
+    .cw-status.success { color: #1a5c20; }
+
+    .cw-cell.letter.cw-active-word {
+        background: #fff3bf !important;
+        border-color: #c9a000 !important;
+        box-shadow: inset 0 0 0 2px #e6b800;
+    }
+    .cw-cell.letter.cw-active-word input {
+        background: #fff3bf !important;
+    }
+
+    .cw-status.bad { color: #a33b2e; }
+    @media (max-width: 500px) {
+        .cw-cell, .cw-cell.block, .cw-cell.letter {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            min-height: 28px;
+            max-width: 28px;
+            max-height: 28px;
+        }
+        .cw-cell.letter input { font-size: 14px; }
+        .cw-grid-wrap {
+            justify-content: flex-start;
+            -webkit-overflow-scrolling: touch;
+        }
+    }
+
+
+    .cw-hint {
+        text-align: center;
+        font-size: 0.88rem;
+        color: #7a4e1a;
+        font-style: italic;
+        margin: 8px 0 0;
+        min-height: 1.2em;
+    }
+    .cw-hint.ready {
+        color: #1a5c20;
+        font-style: normal;
+        font-weight: bold;
+    }
+
+</style>
+</head>
+<body>
+<div class="page-container">
+<h1>Vấn Nạn Gian Lận Thi Cử Tại Việt Nam</h1>
+    <h2 class="subtitle">Vấn Nạn Gian Lận Thi Cử Tại Việt Nam</h2>
+    <div class="mode-banner" id="mode-banner">Hover/click (desktop) or tap (phone) a blank, then choose the matching word from Word Bank</div>
+    <div class="audio-section">
+        <div class="audio-label">🎧 Listen</div>
+        <audio id="audio-player" src="vncheating.mp3" controls></audio>
+        <div class="audio-controls">
+            <button class="rewind-btn" onclick="document.getElementById('audio-player').currentTime=0;">⏮ Start</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-5);">↺ 5 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.max(0,a.currentTime-10);">↺ 10 sec</button>
+            <button class="rewind-btn" onclick="var a=document.getElementById('audio-player'); a.currentTime=Math.min(a.duration||0,a.currentTime+20);">⇢ 20 sec</button>
+        </div>
+        <div class="speed-controls">
+            <label style="color:#7a4e1a; margin-right:8px; align-self:center;">Speed:</label>
+            <button class="speed-btn" data-speed="0.5" onclick="setPlaybackSpeed(0.5)">0.5x</button>
+            <button class="speed-btn" data-speed="0.75" onclick="setPlaybackSpeed(0.75)">0.75x</button>
+            <button class="speed-btn active" data-speed="1" onclick="setPlaybackSpeed(1)">1x</button>
+            <button class="speed-btn" data-speed="1.25" onclick="setPlaybackSpeed(1.25)">1.25x</button>
+            <button class="speed-btn" data-speed="1.5" onclick="setPlaybackSpeed(1.5)">1.5x</button>
+        </div>
+    </div>
+    <div class="read-hint" id="read-hint">Click/tap any word with dotted underline to see definition.</div>
+    <div class="story-and-bank">
+        <div class="word-bank-section" id="word-bank-section">
+            <div class="audio-label">Word Bank</div>
+            <div class="bank-grid" id="bank-words"></div>
+        </div>
+    <div class="story-main">
+    <div id="story-content">
+<p>
+        <span class="vocab" data-word-en="exam period" data-word-vn="kỳ thi" data-pos="cụm danh từ / noun phrase" data-def-en="An official period of examinations or testing." data-def-vn="Một giai đoạn thi cử chính thức." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">Kỳ thi</span> <span class="vocab" data-word-en="graduate" data-word-vn="tốt nghiệp" data-pos="động từ / verb" data-def-en="To complete a course of study and receive a diploma." data-def-vn="Hoàn thành một khóa học và nhận bằng cấp." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">tốt nghiệp</span> <span class="vocab" data-word-en="secondary school" data-word-vn="trung học" data-pos="cụm danh từ / noun phrase" data-def-en="The level of schooling after primary school, before university." data-def-vn="Cấp học sau tiểu học, trước đại học." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">trung học</span> <span class="vocab" data-word-en="general/common" data-word-vn="phổ thông" data-pos="tính từ / adjective" data-def-en="Standard, general, or common to the public." data-def-vn="Mang tính đại chúng, phổ biến, không chuyên biệt." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">phổ thông</span> <span class="vocab" data-word-en="year" data-word-vn="năm" data-pos="danh từ / noun" data-def-en="A period of twelve months." data-def-vn="Một khoảng thời gian mười hai tháng." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">năm</span> 2026 <span class="vocab" data-word-en="at/in" data-word-vn="tại" data-pos="giới từ / preposition" data-def-en="Indicates a specific place or location." data-def-vn="Chỉ một địa điểm hoặc vị trí cụ thể." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">tại</span> <span class="vocab" data-word-en="province" data-word-vn="tỉnh" data-pos="danh từ / noun" data-def-en="An administrative division of a country." data-def-vn="Một đơn vị hành chính của một quốc gia." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">tỉnh</span> Tuyên Quang <span class="vocab" data-word-en="already (past marker)" data-word-vn="đã" data-pos="trợ từ / particle" data-def-en="A marker indicating a completed or past action." data-def-vn="Từ chỉ hành động đã hoàn thành hoặc đã xảy ra." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">đã</span> <span class="vocab" data-word-en="cause" data-word-vn="gây ra" data-pos="cụm động từ / verb phrase" data-def-en="To bring about or lead to a result, often negative." data-def-vn="Làm cho một điều gì đó xảy ra, thường là tiêu cực." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">gây ra</span> <span class="vocab" data-word-en="(nominalizer)" data-word-vn="sự" data-pos="trợ từ / particle" data-def-en="A particle turning a verb/adjective into an abstract noun." data-def-vn="Trợ từ biến động từ/tính từ thành danh từ trừu tượng." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">sự</span> <span class="vocab" data-word-en="outrage" data-word-vn="phẫn nộ" data-pos="danh từ / noun" data-def-en="Strong anger or indignation." data-def-vn="Sự tức giận hoặc căm phẫn mạnh mẽ." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">phẫn nộ</span> <span class="vocab" data-word-en="in" data-word-vn="trong" data-pos="giới từ / preposition" data-def-en="Indicates being inside or within something." data-def-vn="Chỉ vị trí bên trong một điều gì đó." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">trong</span> <span class="vocab" data-word-en="public opinion" data-word-vn="dư luận" data-pos="danh từ / noun" data-def-en="The collective views of the general public." data-def-vn="Quan điểm chung của công chúng." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">dư luận</span> <span class="vocab" data-word-en="due to" data-word-vn="do" data-pos="giới từ / preposition" data-def-en="Because of; caused by." data-def-vn="Vì, bởi nguyên nhân từ." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">do</span> <span class="vocab" data-word-en="quantity" data-word-vn="số lượng" data-pos="danh từ / noun" data-def-en="The amount or number of something." data-def-vn="Số lượng hoặc con số của một điều gì đó." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">số lượng</span> <span class="vocab" data-word-en="score/point" data-word-vn="điểm" data-pos="danh từ / noun" data-def-en="A numerical mark given for performance." data-def-vn="Con số được chấm cho một kết quả." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">điểm</span> 10 <span class="vocab" data-word-en="rise sharply" data-word-vn="tăng cao" data-pos="cụm động từ / verb phrase" data-def-en="To increase to a high or abnormal level." data-def-vn="Tăng lên đến một mức cao hoặc bất thường." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">tăng cao</span> <span class="vocab" data-word-en="abnormal" data-word-vn="bất thường" data-pos="tính từ / adjective" data-def-en="Not normal or usual; irregular." data-def-vn="Không bình thường, khác thường." data-context-vn="Kỳ thi tốt nghiệp trung học phổ thông năm 2026 tại tỉnh Tuyên Quang đã gây ra sự phẫn nộ trong dư luận do số lượng điểm 10 tăng cao bất thường.">bất thường</span>. Tại <span class="vocab" data-word-en="a/one" data-word-vn="một" data-pos="số từ / numeral" data-def-en="The number one; used as an indefinite article." data-def-vn="Số một; dùng như mạo từ không xác định." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">một</span> <span class="vocab" data-word-en="exam site" data-word-vn="điểm thi" data-pos="cụm danh từ / noun phrase" data-def-en="A location where an examination is held." data-def-vn="Địa điểm tổ chức một kỳ thi." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">điểm thi</span>, <span class="vocab" data-word-en="have/there is" data-word-vn="có" data-pos="động từ / verb" data-def-en="To possess, or to indicate existence." data-def-vn="Sở hữu, hoặc chỉ sự tồn tại." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">có</span> 154 <span class="vocab" data-word-en="student" data-word-vn="học sinh" data-pos="danh từ / noun" data-def-en="A person who is studying at a school." data-def-vn="Người đang theo học ở trường." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">học sinh</span> <span class="vocab" data-word-en="achieve" data-word-vn="đạt" data-pos="động từ / verb" data-def-en="To reach or attain a result." data-def-vn="Đạt được một kết quả nào đó." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">đạt</span> điểm 10 <span class="vocab" data-word-en="subject" data-word-vn="môn" data-pos="danh từ / noun" data-def-en="A field of study taught in school." data-def-vn="Một lĩnh vực học được giảng dạy ở trường." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">môn</span> <span class="vocab" data-word-en="math" data-word-vn="toán" data-pos="danh từ / noun" data-def-en="The study of numbers, quantities, and shapes." data-def-vn="Môn học về số, đại lượng và hình học." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">Toán</span>, <span class="vocab" data-word-en="among which" data-word-vn="trong đó" data-pos="cụm từ / phrase" data-def-en="Referring to a subset within a group just mentioned." data-def-vn="Chỉ một phần trong nhóm vừa được nhắc đến." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">trong đó</span> 147 <span class="vocab" data-word-en="student/child" data-word-vn="em" data-pos="đại từ / pronoun" data-def-en="A respectful term for a younger student or person." data-def-vn="Từ xưng hô tôn trọng dành cho học sinh hoặc người nhỏ tuổi hơn." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">em</span> <span class="vocab" data-word-en="to be" data-word-vn="là" data-pos="động từ / verb" data-def-en="Used to state identity or classification." data-def-vn="Dùng để xác định danh tính hoặc phân loại." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">là</span> học sinh <span class="vocab" data-word-en="school" data-word-vn="trường" data-pos="danh từ / noun" data-def-en="An institution for teaching students." data-def-vn="Cơ sở giảng dạy học sinh." data-context-vn="Tại một điểm thi, có 154 học sinh đạt điểm 10 môn Toán, trong đó 147 em là học sinh Trường THPT Chuyên Tuyên Quang.">Trường</span> THPT Chuyên Tuyên Quang. <span class="vocab" data-word-en="right/immediately" data-word-vn="ngay" data-pos="trạng từ / adverb" data-def-en="At once; without delay." data-def-vn="Ngay lập tức, không chậm trễ." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">Ngay</span> <span class="vocab" data-word-en="after that" data-word-vn="sau đó" data-pos="cụm trạng từ / adverb phrase" data-def-en="Following that point in time." data-def-vn="Sau thời điểm đó." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">sau đó</span>, <span class="vocab" data-word-en="agency" data-word-vn="cơ quan" data-pos="danh từ / noun" data-def-en="An official organization or department." data-def-vn="Một tổ chức hoặc bộ phận chính thức." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">cơ quan</span> <span class="vocab" data-word-en="police" data-word-vn="công an" data-pos="danh từ / noun" data-def-en="The law enforcement force of Vietnam." data-def-vn="Lực lượng thực thi pháp luật của Việt Nam." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">công an</span> đã <span class="vocab" data-word-en="step in" data-word-vn="vào cuộc" data-pos="cụm động từ / verb phrase" data-def-en="To become involved in handling a matter." data-def-vn="Tham gia vào việc xử lý một vụ việc." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">vào cuộc</span> <span class="vocab" data-word-en="investigate" data-word-vn="điều tra" data-pos="động từ / verb" data-def-en="To examine facts to discover the truth." data-def-vn="Xem xét sự việc để tìm ra sự thật." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">điều tra</span> <span class="vocab" data-word-en="and" data-word-vn="và" data-pos="liên từ / conjunction" data-def-en="Used to connect words or clauses." data-def-vn="Dùng để nối các từ hoặc mệnh đề." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">và</span> <span class="vocab" data-word-en="arrest" data-word-vn="bắt giữ" data-pos="động từ / verb" data-def-en="To take a person into custody." data-def-vn="Bắt một người và giam giữ." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">bắt giữ</span> một <span class="vocab" data-word-en="teacher" data-word-vn="giáo viên" data-pos="danh từ / noun" data-def-en="A person who teaches, especially in school." data-def-vn="Người giảng dạy, đặc biệt tại trường học." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">giáo viên</span> <span class="vocab" data-word-en="named" data-word-vn="tên là" data-pos="cụm động từ / verb phrase" data-def-en="Having a particular given name." data-def-vn="Có một tên gọi cụ thể." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">tên là</span> Nguyễn Hà Duy <span class="vocab" data-word-en="along with" data-word-vn="cùng với" data-pos="cụm giới từ / prepositional phrase" data-def-en="Together with; in addition to." data-def-vn="Cùng đi với, thêm vào với." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">cùng với</span> <span class="vocab" data-word-en="site chief" data-word-vn="điểm trưởng" data-pos="cụm danh từ / noun phrase" data-def-en="The person in charge of an exam site." data-def-vn="Người phụ trách một điểm thi." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">điểm trưởng</span> điểm thi là <span class="vocab" data-word-en="Mrs./madam" data-word-vn="bà" data-pos="danh từ / noun" data-def-en="A respectful title for an older or married woman." data-def-vn="Danh xưng tôn trọng dành cho phụ nữ lớn tuổi hoặc đã kết hôn." data-context-vn="Ngay sau đó, cơ quan công an đã vào cuộc điều tra và bắt giữ một giáo viên tên là Nguyễn Hà Duy cùng với điểm trưởng điểm thi là bà Trần Thị Thu Hằng.">bà</span> Trần Thị Thu Hằng. Cơ quan <span class="vocab" data-word-en="function/authority" data-word-vn="chức năng" data-pos="danh từ / noun" data-def-en="The relevant authority or role of a body." data-def-vn="Thẩm quyền hoặc vai trò liên quan của một cơ quan." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">chức năng</span> <span class="vocab" data-word-en="discover" data-word-vn="phát hiện" data-pos="động từ / verb" data-def-en="To find out or notice something previously unknown." data-def-vn="Tìm ra hoặc nhận thấy một điều gì đó trước đây chưa biết." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">phát hiện</span> <span class="vocab" data-word-en="out" data-word-vn="ra" data-pos="trạng từ / adverb" data-def-en="A particle indicating an outward or resulting direction." data-def-vn="Trợ từ chỉ hướng ra ngoài hoặc kết quả." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">ra</span> <span class="vocab" data-word-en="that" data-word-vn="rằng" data-pos="liên từ / conjunction" data-def-en="Used to introduce a reported clause." data-def-vn="Dùng để dẫn vào một mệnh đề tường thuật." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">rằng</span> <span class="vocab" data-word-en="(plural marker)" data-word-vn="các" data-pos="trợ từ / particle" data-def-en="A word marking plurality for a following noun." data-def-vn="Từ đánh dấu số nhiều cho danh từ theo sau." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">các</span> <span class="vocab" data-word-en="exam proctor" data-word-vn="giám thị" data-pos="danh từ / noun" data-def-en="A person who supervises an examination." data-def-vn="Người coi thi trong một kỳ thi." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">giám thị</span> đã <span class="vocab" data-word-en="directly" data-word-vn="trực tiếp" data-pos="trạng từ / adverb" data-def-en="In a direct manner, without an intermediary." data-def-vn="Theo cách trực tiếp, không qua trung gian." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">trực tiếp</span> <span class="vocab" data-word-en="smuggle/leak" data-word-vn="tuồn" data-pos="động từ / verb" data-def-en="To illicitly pass something along secretly." data-def-vn="Lén lút chuyển giao điều gì đó một cách bất hợp pháp." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">tuồn</span> <span class="vocab" data-word-en="answer key" data-word-vn="đáp án" data-pos="danh từ / noun" data-def-en="The correct answers to a test." data-def-vn="Các câu trả lời đúng của một bài kiểm tra." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">đáp án</span> <span class="vocab" data-word-en="for/to" data-word-vn="cho" data-pos="giới từ / preposition" data-def-en="Indicates the recipient or beneficiary." data-def-vn="Chỉ người nhận hoặc người được hưởng lợi." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">cho</span> học sinh ngay trong <span class="vocab" data-word-en="exam hour" data-word-vn="giờ thi" data-pos="cụm danh từ / noun phrase" data-def-en="The time period during which a test is held." data-def-vn="Khoảng thời gian diễn ra bài thi." data-context-vn="Cơ quan chức năng phát hiện ra rằng các giám thị đã trực tiếp tuồn đáp án cho học sinh ngay trong giờ thi.">giờ thi</span>.
+    </p>
+
+<p>
+        <span class="vocab" data-word-en="incident" data-word-vn="vụ việc" data-pos="danh từ / noun" data-def-en="An event or case, often negative." data-def-vn="Một sự việc hoặc vụ án, thường mang tính tiêu cực." data-context-vn="Vụ việc này tương tự như bê bối thi cử chấn động năm 2018 tại Hà Giang, Sơn La và Hòa Bình.">Vụ việc</span> <span class="vocab" data-word-en="this" data-word-vn="này" data-pos="đại từ / pronoun" data-def-en="Referring to something just mentioned." data-def-vn="Chỉ điều vừa được nhắc đến." data-context-vn="Vụ việc này tương tự như bê bối thi cử chấn động năm 2018 tại Hà Giang, Sơn La và Hòa Bình.">này</span> <span class="vocab" data-word-en="similar" data-word-vn="tương tự" data-pos="tính từ / adjective" data-def-en="Alike or comparable to something else." data-def-vn="Giống hoặc có thể so sánh với điều khác." data-context-vn="Vụ việc này tương tự như bê bối thi cử chấn động năm 2018 tại Hà Giang, Sơn La và Hòa Bình.">tương tự</span> <span class="vocab" data-word-en="like/as" data-word-vn="như" data-pos="liên từ / conjunction" data-def-en="Used to make a comparison." data-def-vn="Dùng để so sánh." data-context-vn="Vụ việc này tương tự như bê bối thi cử chấn động năm 2018 tại Hà Giang, Sơn La và Hòa Bình.">như</span> <span class="vocab" data-word-en="scandal" data-word-vn="bê bối" data-pos="danh từ / noun" data-def-en="A disgraceful public event causing outrage." data-def-vn="Một sự việc đáng xấu hổ gây phẫn nộ công chúng." data-context-vn="Vụ việc này tương tự như bê bối thi cử chấn động năm 2018 tại Hà Giang, Sơn La và Hòa Bình.">bê bối</span> <span class="vocab" data-word-en="examinations" data-word-vn="thi cử" data-pos="danh từ / noun" data-def-en="Testing and examinations in general." data-def-vn="Việc thi cử nói chung." data-context-vn="Vụ việc này tương tự như bê bối thi cử chấn động năm 2018 tại Hà Giang, Sơn La và Hòa Bình.">thi cử</span> <span class="vocab" data-word-en="shocking" data-word-vn="chấn động" data-pos="tính từ / adjective" data-def-en="Causing widespread shock or sensation." data-def-vn="Gây chấn động, gây sốc trên diện rộng." data-context-vn="Vụ việc này tương tự như bê bối thi cử chấn động năm 2018 tại Hà Giang, Sơn La và Hòa Bình.">chấn động</span> năm 2018 tại Hà Giang, Sơn La và Hòa Bình. <span class="vocab" data-word-en="at that time" data-word-vn="khi đó" data-pos="cụm trạng từ / adverb phrase" data-def-en="Referring to a previously mentioned point in time." data-def-vn="Chỉ thời điểm đã được nhắc đến trước đó." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">Khi đó</span>, <span class="vocab" data-word-en="(plural marker)" data-word-vn="những" data-pos="trợ từ / particle" data-def-en="A word marking plurality, often for specific groups." data-def-vn="Từ đánh dấu số nhiều, thường cho nhóm cụ thể." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">những</span> <span class="vocab" data-word-en="official" data-word-vn="cán bộ" data-pos="danh từ / noun" data-def-en="A government or organizational official." data-def-vn="Một cán bộ nhà nước hoặc tổ chức." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">cán bộ</span> <span class="vocab" data-word-en="corrupt" data-word-vn="tha hóa" data-pos="tính từ / adjective" data-def-en="Morally degraded or corrupted." data-def-vn="Suy thoái về đạo đức, bị tha hóa." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">tha hóa</span> đã <span class="vocab" data-word-en="intervene" data-word-vn="can thiệp" data-pos="động từ / verb" data-def-en="To become involved in a situation to influence it." data-def-vn="Tham gia vào một tình huống để tác động đến nó." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">can thiệp</span>, <span class="vocab" data-word-en="alter" data-word-vn="sửa" data-pos="động từ / verb" data-def-en="To change or modify something." data-def-vn="Thay đổi hoặc chỉnh sửa điều gì đó." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">sửa</span> điểm thi <span class="vocab" data-word-en="illegal" data-word-vn="trái phép" data-pos="tính từ / adjective" data-def-en="Not authorized or permitted by law." data-def-vn="Không được pháp luật cho phép." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">trái phép</span> <span class="vocab" data-word-en="on/upon" data-word-vn="trên" data-pos="giới từ / preposition" data-def-en="Indicates a position on top of or via something." data-def-vn="Chỉ vị trí trên bề mặt hoặc thông qua điều gì đó." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">trên</span> <span class="vocab" data-word-en="computer" data-word-vn="máy tính" data-pos="danh từ / noun" data-def-en="An electronic device for processing data." data-def-vn="Thiết bị điện tử xử lý dữ liệu." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">máy tính</span> cho <span class="vocab" data-word-en="hundreds of" data-word-vn="hàng trăm" data-pos="cụm số từ / numeral phrase" data-def-en="A large number in the hundreds." data-def-vn="Một số lượng lớn tính bằng trăm." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">hàng trăm</span> <span class="vocab" data-word-en="exam candidate" data-word-vn="thí sinh" data-pos="danh từ / noun" data-def-en="A person taking an examination." data-def-vn="Người tham dự một kỳ thi." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">thí sinh</span>, <span class="vocab" data-word-en="cause/make" data-word-vn="khiến" data-pos="động từ / verb" data-def-en="To make something happen as a result." data-def-vn="Làm cho một điều gì đó xảy ra như một kết quả." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">khiến</span> <span class="vocab" data-word-en="many" data-word-vn="nhiều" data-pos="tính từ / adjective" data-def-en="A large number or amount of." data-def-vn="Số lượng lớn." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">nhiều</span> <span class="vocab" data-word-en="individual" data-word-vn="cá nhân" data-pos="danh từ / noun" data-def-en="A single person, as opposed to a group." data-def-vn="Một người riêng lẻ, khác với một nhóm." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">cá nhân</span> <span class="vocab" data-word-en="related" data-word-vn="liên quan" data-pos="tính từ / adjective" data-def-en="Connected or associated with something." data-def-vn="Có liên hệ hoặc liên đới với điều gì đó." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">liên quan</span> <span class="vocab" data-word-en="must" data-word-vn="phải" data-pos="động từ / verb" data-def-en="Indicates obligation or necessity." data-def-vn="Chỉ sự bắt buộc hoặc cần thiết." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">phải</span> <span class="vocab" data-word-en="receive" data-word-vn="nhận" data-pos="động từ / verb" data-def-en="To be given or to accept something." data-def-vn="Được trao hoặc chấp nhận điều gì đó." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">nhận</span> <span class="vocab" data-word-en="sentence level" data-word-vn="mức án" data-pos="cụm danh từ / noun phrase" data-def-en="The severity level of a legal punishment." data-def-vn="Mức độ nghiêm trọng của một hình phạt pháp lý." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">mức án</span> <span class="vocab" data-word-en="imprisonment" data-word-vn="tù giam" data-pos="danh từ / noun" data-def-en="The state of being confined in prison." data-def-vn="Trạng thái bị giam giữ trong nhà tù." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">tù giam</span> <span class="vocab" data-word-en="severe" data-word-vn="nghiêm khắc" data-pos="tính từ / adjective" data-def-en="Strict and harsh in nature." data-def-vn="Nghiêm ngặt và khắt khe." data-context-vn="Khi đó, những cán bộ tha hóa đã can thiệp, sửa điểm thi trái phép trên máy tính cho hàng trăm thí sinh, khiến nhiều cá nhân liên quan phải nhận mức án tù giam nghiêm khắc.">nghiêm khắc</span>. <span class="vocab" data-word-en="while" data-word-vn="trong khi" data-pos="liên từ / conjunction" data-def-en="During the same time that something else happens." data-def-vn="Trong lúc một điều khác xảy ra." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">Trong khi</span> bê bối năm 2018 <span class="vocab" data-word-en="exploit" data-word-vn="lợi dụng" data-pos="động từ / verb" data-def-en="To take unfair advantage of something." data-def-vn="Lợi dụng một cách không công bằng." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">lợi dụng</span> <span class="vocab" data-word-en="the matter of" data-word-vn="việc" data-pos="danh từ / noun" data-def-en="A nominalizer referring to an act or matter." data-def-vn="Từ chỉ một sự việc hoặc hành động." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">việc</span> <span class="vocab" data-word-en="cheat/fraud" data-word-vn="gian lận" data-pos="danh từ / noun" data-def-en="Dishonest or fraudulent behavior." data-def-vn="Hành vi gian dối hoặc lừa đảo." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">gian lận</span> <span class="vocab" data-word-en="technology" data-word-vn="công nghệ" data-pos="danh từ / noun" data-def-en="Applied science and engineering tools/methods." data-def-vn="Khoa học ứng dụng và công cụ kỹ thuật." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">công nghệ</span> <span class="vocab" data-word-en="high" data-word-vn="cao" data-pos="tính từ / adjective" data-def-en="Tall, elevated, or advanced in level." data-def-vn="Cao, ở mức tiên tiến." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">cao</span> trên <span class="vocab" data-word-en="software" data-word-vn="phần mềm" data-pos="danh từ / noun" data-def-en="Computer programs and applications." data-def-vn="Các chương trình và ứng dụng máy tính." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">phần mềm</span>, <span class="vocab" data-word-en="then/as for" data-word-vn="thì" data-pos="trợ từ / particle" data-def-en="A discourse marker introducing a contrast or topic." data-def-vn="Từ nối chỉ sự tương phản hoặc chủ đề." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">thì</span> vụ việc năm 2026 <span class="vocab" data-word-en="again/on the other hand" data-word-vn="lại" data-pos="trạng từ / adverb" data-def-en="Indicating repetition or a contrasting point." data-def-vn="Chỉ sự lặp lại hoặc một điểm tương phản." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">lại</span> <span class="vocab" data-word-en="take place" data-word-vn="diễn ra" data-pos="động từ / verb" data-def-en="To happen or occur." data-def-vn="Xảy ra." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">diễn ra</span> <span class="vocab" data-word-en="according to" data-word-vn="theo" data-pos="giới từ / preposition" data-def-en="In accordance with; following." data-def-vn="Dựa theo, tuân theo." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">theo</span> <span class="vocab" data-word-en="form/method" data-word-vn="hình thức" data-pos="danh từ / noun" data-def-en="A manner or way something is done." data-def-vn="Cách thức mà điều gì đó được thực hiện." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">hình thức</span> gian lận trực tiếp <span class="vocab" data-word-en="right at" data-word-vn="ngay tại" data-pos="cụm giới từ / prepositional phrase" data-def-en="Exactly at a specific location." data-def-vn="Ngay chính tại một địa điểm cụ thể." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">ngay tại</span> <span class="vocab" data-word-en="exam room" data-word-vn="phòng thi" data-pos="cụm danh từ / noun phrase" data-def-en="The room where an exam takes place." data-def-vn="Căn phòng nơi diễn ra kỳ thi." data-context-vn="Trong khi bê bối năm 2018 lợi dụng việc gian lận công nghệ cao trên phần mềm, thì vụ việc năm 2026 lại diễn ra theo hình thức gian lận trực tiếp ngay tại phòng thi.">phòng thi</span>. <span class="vocab" data-word-en="both" data-word-vn="cả hai" data-pos="cụm đại từ / pronoun phrase" data-def-en="Referring to two things together." data-def-vn="Chỉ cả hai điều được nhắc đến." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">Cả hai</span> <span class="vocab" data-word-en="case" data-word-vn="trường hợp" data-pos="danh từ / noun" data-def-en="A particular instance or situation." data-def-vn="Một tình huống hoặc trường hợp cụ thể." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">trường hợp</span> <span class="vocab" data-word-en="all/both" data-word-vn="đều" data-pos="trạng từ / adverb" data-def-en="Indicating that something applies equally." data-def-vn="Chỉ điều gì áp dụng như nhau cho tất cả." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">đều</span> <span class="vocab" data-word-en="show" data-word-vn="cho thấy" data-pos="cụm động từ / verb phrase" data-def-en="To demonstrate or indicate." data-def-vn="Chứng minh hoặc cho biết." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">cho thấy</span> <span class="vocab" data-word-en="pressure" data-word-vn="áp lực" data-pos="danh từ / noun" data-def-en="A feeling of stress from demands." data-def-vn="Cảm giác căng thẳng do áp lực từ yêu cầu." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">áp lực</span> <span class="vocab" data-word-en="disease" data-word-vn="bệnh" data-pos="danh từ / noun" data-def-en="An illness or unhealthy condition, used figuratively here." data-def-vn="Một căn bệnh, ở đây dùng theo nghĩa bóng." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">bệnh</span> <span class="vocab" data-word-en="achievement" data-word-vn="thành tích" data-pos="danh từ / noun" data-def-en="A notable accomplishment or record." data-def-vn="Một thành quả hoặc kỷ lục đáng chú ý." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">thành tích</span> <span class="vocab" data-word-en="heavy/serious" data-word-vn="nặng nề" data-pos="tính từ / adjective" data-def-en="Burdensome or severe in impact." data-def-vn="Nặng nề, có tác động nghiêm trọng." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">nặng nề</span> <span class="vocab" data-word-en="together with" data-word-vn="cùng" data-pos="giới từ / preposition" data-def-en="Along with; combined with." data-def-vn="Cùng với, kết hợp với." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">cùng</span> <span class="vocab" data-word-en="work/task" data-word-vn="công tác" data-pos="danh từ / noun" data-def-en="An assigned duty or administrative task." data-def-vn="Nhiệm vụ hoặc công việc hành chính được giao." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">công tác</span> <span class="vocab" data-word-en="supervise" data-word-vn="giám sát" data-pos="động từ / verb" data-def-en="To oversee and monitor an activity." data-def-vn="Theo dõi và giám sát một hoạt động." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">giám sát</span> <span class="vocab" data-word-en="lax" data-word-vn="lỏng lẻo" data-pos="tính từ / adjective" data-def-en="Loose, weak, or not strict." data-def-vn="Lỏng lẻo, không chặt chẽ." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">lỏng lẻo</span> <span class="vocab" data-word-en="still" data-word-vn="vẫn" data-pos="trạng từ / adverb" data-def-en="Continuing as before; not having stopped." data-def-vn="Tiếp tục như trước, chưa dừng lại." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">vẫn</span> <span class="vocab" data-word-en="(progressive marker)" data-word-vn="đang" data-pos="trợ từ / particle" data-def-en="A marker indicating an ongoing action." data-def-vn="Từ chỉ một hành động đang diễn ra." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">đang</span> <span class="vocab" data-word-en="cause harm" data-word-vn="gây hại" data-pos="cụm động từ / verb phrase" data-def-en="To bring about damage or harm." data-def-vn="Gây ra thiệt hại hoặc tổn hại." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">gây hại</span> cho <span class="vocab" data-word-en="system" data-word-vn="hệ thống" data-pos="danh từ / noun" data-def-en="An organized set of interconnected parts." data-def-vn="Một tập hợp các bộ phận liên kết có tổ chức." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">hệ thống</span> <span class="vocab" data-word-en="education" data-word-vn="giáo dục" data-pos="danh từ / noun" data-def-en="The process of teaching and learning." data-def-vn="Quá trình dạy và học." data-context-vn="Cả hai trường hợp đều cho thấy áp lực bệnh thành tích nặng nề cùng công tác giám sát lỏng lẻo vẫn đang gây hại cho hệ thống giáo dục.">giáo dục</span>.
+    </p>
+
+<p>
+        <span class="vocab" data-word-en="under/from" data-word-vn="dưới" data-pos="giới từ / preposition" data-def-en="Below, or from the standpoint of." data-def-vn="Ở dưới, hoặc theo góc nhìn của." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">Dưới</span> <span class="vocab" data-word-en="perspective" data-word-vn="góc độ" data-pos="danh từ / noun" data-def-en="A particular point of view or angle." data-def-vn="Một quan điểm hoặc góc nhìn cụ thể." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">góc độ</span> <span class="vocab" data-word-en="legal" data-word-vn="pháp lý" data-pos="tính từ / adjective" data-def-en="Relating to the law." data-def-vn="Liên quan đến pháp luật." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">pháp lý</span>, gian lận thi cử <span class="vocab" data-word-en="not only" data-word-vn="không chỉ" data-pos="cụm liên từ / conjunction phrase" data-def-en="Indicating more than just one thing." data-def-vn="Chỉ nhiều hơn một điều duy nhất." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">không chỉ</span> <span class="vocab" data-word-en="stop" data-word-vn="dừng lại" data-pos="cụm động từ / verb phrase" data-def-en="To halt or come to an end." data-def-vn="Ngừng lại hoặc kết thúc." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">dừng lại</span> <span class="vocab" data-word-en="at/in" data-word-vn="ở" data-pos="giới từ / preposition" data-def-en="Indicates location." data-def-vn="Chỉ vị trí." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">ở</span> việc <span class="vocab" data-word-en="violate" data-word-vn="vi phạm" data-pos="động từ / verb" data-def-en="To break a rule or law." data-def-vn="Vi phạm một quy tắc hoặc pháp luật." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">vi phạm</span> <span class="vocab" data-word-en="regulations" data-word-vn="quy chế" data-pos="danh từ / noun" data-def-en="A set of official rules." data-def-vn="Một tập hợp các quy tắc chính thức." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">quy chế</span>, <span class="vocab" data-word-en="but/rather" data-word-vn="mà" data-pos="liên từ / conjunction" data-def-en="Introduces a contrast or correction." data-def-vn="Dẫn vào một sự tương phản hoặc điều chỉnh." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">mà</span> là một hình thức <span class="vocab" data-word-en="corruption" data-word-vn="tham nhũng" data-pos="danh từ / noun" data-def-en="The abuse of power for personal gain." data-def-vn="Lạm dụng quyền lực để trục lợi cá nhân." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">tham nhũng</span> <span class="vocab" data-word-en="serious" data-word-vn="nghiêm trọng" data-pos="tính từ / adjective" data-def-en="Grave or significant in severity." data-def-vn="Nghiêm trọng, có mức độ đáng kể." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">nghiêm trọng</span>, <span class="vocab" data-word-en="infringe" data-word-vn="xâm phạm" data-pos="động từ / verb" data-def-en="To violate someone&#x27;s rights." data-def-vn="Vi phạm quyền của người khác." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">xâm phạm</span> <span class="vocab" data-word-en="right" data-word-vn="quyền" data-pos="danh từ / noun" data-def-en="A legal or moral entitlement." data-def-vn="Một sự cho phép hợp pháp hoặc đạo đức." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">quyền</span> <span class="vocab" data-word-en="equality" data-word-vn="bình đẳng" data-pos="danh từ / noun" data-def-en="The state of being equal." data-def-vn="Trạng thái bình đẳng." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">bình đẳng</span> trong giáo dục <span class="vocab" data-word-en="(passive marker)" data-word-vn="được" data-pos="trợ từ / particle" data-def-en="A marker indicating a passive or benefitted action." data-def-vn="Từ chỉ hành động bị động hoặc được hưởng." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">được</span> <span class="vocab" data-word-en="constitution" data-word-vn="hiến pháp" data-pos="danh từ / noun" data-def-en="The fundamental law of a country." data-def-vn="Luật cơ bản của một quốc gia." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">Hiến pháp</span> <span class="vocab" data-word-en="stipulate" data-word-vn="quy định" data-pos="động từ / verb" data-def-en="To officially set down a rule." data-def-vn="Đặt ra một quy tắc chính thức." data-context-vn="Dưới góc độ pháp lý, gian lận thi cử không chỉ dừng lại ở việc vi phạm quy chế, mà là một hình thức tham nhũng nghiêm trọng, xâm phạm quyền bình đẳng trong giáo dục được Hiến pháp quy định.">quy định</span>. Theo <span class="vocab" data-word-en="article" data-word-vn="điều" data-pos="danh từ / noun" data-def-en="A numbered section of a legal document." data-def-vn="Một mục được đánh số trong văn bản pháp luật." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">Điều</span> 356 <span class="vocab" data-word-en="code of law" data-word-vn="bộ luật" data-pos="cụm danh từ / noun phrase" data-def-en="A systematic collection of laws." data-def-vn="Một tập hợp luật pháp có hệ thống." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">Bộ luật</span> <span class="vocab" data-word-en="criminal" data-word-vn="hình sự" data-pos="tính từ / adjective" data-def-en="Relating to crime and its punishment." data-def-vn="Liên quan đến tội phạm và hình phạt." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">Hình sự</span>, <span class="vocab" data-word-en="act/conduct" data-word-vn="hành vi" data-pos="danh từ / noun" data-def-en="An action performed by a person." data-def-vn="Một hành động do một người thực hiện." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">hành vi</span> lợi dụng <span class="vocab" data-word-en="position" data-word-vn="chức vụ" data-pos="danh từ / noun" data-def-en="An official role or post held." data-def-vn="Một chức danh hoặc vai trò chính thức." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">chức vụ</span>, <span class="vocab" data-word-en="authority" data-word-vn="quyền hạn" data-pos="danh từ / noun" data-def-en="The official power to act." data-def-vn="Quyền lực chính thức để hành động." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">quyền hạn</span> trong khi <span class="vocab" data-word-en="execute" data-word-vn="thi hành" data-pos="động từ / verb" data-def-en="To carry out or put into effect." data-def-vn="Thực hiện hoặc đưa vào áp dụng." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">thi hành</span> <span class="vocab" data-word-en="official duty" data-word-vn="công vụ" data-pos="danh từ / noun" data-def-en="A duty performed as part of one&#x27;s official role." data-def-vn="Nhiệm vụ được thực hiện trong vai trò chính thức." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">công vụ</span> <span class="vocab" data-word-en="can/may" data-word-vn="có thể" data-pos="động từ / verb" data-def-en="Indicates possibility or ability." data-def-vn="Chỉ khả năng hoặc năng lực." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">có thể</span> <span class="vocab" data-word-en="bear/suffer" data-word-vn="chịu" data-pos="động từ / verb" data-def-en="To endure or be subjected to." data-def-vn="Chịu đựng hoặc bị áp dụng." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">chịu</span> mức án <span class="vocab" data-word-en="up to" data-word-vn="tới" data-pos="giới từ / preposition" data-def-en="As much as; reaching a limit." data-def-vn="Đến mức, đạt tới giới hạn." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">tới</span> 15 năm <span class="vocab" data-word-en="prison" data-word-vn="tù" data-pos="danh từ / noun" data-def-en="A place of confinement for criminals." data-def-vn="Nơi giam giữ tội phạm." data-context-vn="Theo Điều 356 Bộ luật Hình sự, hành vi lợi dụng chức vụ, quyền hạn trong khi thi hành công vụ có thể chịu mức án tới 15 năm tù.">tù</span>. <span class="vocab" data-word-en="although" data-word-vn="mặc dù" data-pos="liên từ / conjunction" data-def-en="Despite the fact that." data-def-vn="Mặc dù thực tế là." data-context-vn="Mặc dù vậy, quy định pháp luật hiện hành vẫn còn những khoảng trống:">Mặc dù</span> <span class="vocab" data-word-en="so/thus" data-word-vn="vậy" data-pos="trạng từ / adverb" data-def-en="Used to indicate a resulting state." data-def-vn="Dùng để chỉ một trạng thái kết quả." data-context-vn="Mặc dù vậy, quy định pháp luật hiện hành vẫn còn những khoảng trống:">vậy</span>, quy định <span class="vocab" data-word-en="law" data-word-vn="pháp luật" data-pos="danh từ / noun" data-def-en="The system of rules enforced by a state." data-def-vn="Hệ thống quy tắc được nhà nước thực thi." data-context-vn="Mặc dù vậy, quy định pháp luật hiện hành vẫn còn những khoảng trống:">pháp luật</span> <span class="vocab" data-word-en="currently in effect" data-word-vn="hiện hành" data-pos="tính từ / adjective" data-def-en="Presently valid or in force." data-def-vn="Đang có hiệu lực hiện tại." data-context-vn="Mặc dù vậy, quy định pháp luật hiện hành vẫn còn những khoảng trống:">hiện hành</span> vẫn <span class="vocab" data-word-en="remain" data-word-vn="còn" data-pos="động từ / verb" data-def-en="To still exist or be left." data-def-vn="Vẫn tồn tại hoặc còn sót lại." data-context-vn="Mặc dù vậy, quy định pháp luật hiện hành vẫn còn những khoảng trống:">còn</span> những <span class="vocab" data-word-en="gap" data-word-vn="khoảng trống" data-pos="danh từ / noun" data-def-en="An empty or unaddressed space, often figurative." data-def-vn="Một khoảng trống chưa được lấp đầy, thường mang nghĩa bóng." data-context-vn="Mặc dù vậy, quy định pháp luật hiện hành vẫn còn những khoảng trống:">khoảng trống</span>:
+    </p>
+
+<p>
+        <span class="vocab" data-word-en="lack" data-word-vn="thiếu" data-pos="động từ / verb" data-def-en="To not have enough of something." data-def-vn="Không có đủ điều gì đó." data-context-vn="Thiếu các quy định pháp luật cụ thể:">Thiếu</span> các quy định pháp luật <span class="vocab" data-word-en="specific" data-word-vn="cụ thể" data-pos="tính từ / adjective" data-def-en="Detailed and precise, not vague." data-def-vn="Chi tiết và rõ ràng, không mơ hồ." data-context-vn="Thiếu các quy định pháp luật cụ thể:">cụ thể</span>: <span class="vocab" data-word-en="not yet have" data-word-vn="chưa có" data-pos="cụm động từ / verb phrase" data-def-en="To not yet possess something." data-def-vn="Chưa sở hữu điều gì đó." data-context-vn="Chưa có khung pháp lý riêng biệt dành cho hành vi gian lận thi cử có tổ chức hoặc tuồn đáp án trong phòng thi.">Chưa có</span> <span class="vocab" data-word-en="framework" data-word-vn="khung" data-pos="danh từ / noun" data-def-en="A structural or conceptual basis." data-def-vn="Một cơ sở cấu trúc hoặc khái niệm." data-context-vn="Chưa có khung pháp lý riêng biệt dành cho hành vi gian lận thi cử có tổ chức hoặc tuồn đáp án trong phòng thi.">khung</span> pháp lý <span class="vocab" data-word-en="separate" data-word-vn="riêng biệt" data-pos="tính từ / adjective" data-def-en="Distinct and set apart from others." data-def-vn="Riêng rẽ và tách biệt khỏi những thứ khác." data-context-vn="Chưa có khung pháp lý riêng biệt dành cho hành vi gian lận thi cử có tổ chức hoặc tuồn đáp án trong phòng thi.">riêng biệt</span> <span class="vocab" data-word-en="intended for" data-word-vn="dành cho" data-pos="cụm động từ / verb phrase" data-def-en="Designated for a specific purpose or group." data-def-vn="Được chỉ định cho một mục đích hoặc nhóm cụ thể." data-context-vn="Chưa có khung pháp lý riêng biệt dành cho hành vi gian lận thi cử có tổ chức hoặc tuồn đáp án trong phòng thi.">dành cho</span> hành vi gian lận thi cử có <span class="vocab" data-word-en="organize" data-word-vn="tổ chức" data-pos="động từ / verb" data-def-en="To arrange or plan systematically." data-def-vn="Sắp xếp hoặc lên kế hoạch một cách có hệ thống." data-context-vn="Chưa có khung pháp lý riêng biệt dành cho hành vi gian lận thi cử có tổ chức hoặc tuồn đáp án trong phòng thi.">tổ chức</span> <span class="vocab" data-word-en="or" data-word-vn="hoặc" data-pos="liên từ / conjunction" data-def-en="Indicates an alternative." data-def-vn="Chỉ một lựa chọn thay thế." data-context-vn="Chưa có khung pháp lý riêng biệt dành cho hành vi gian lận thi cử có tổ chức hoặc tuồn đáp án trong phòng thi.">hoặc</span> tuồn đáp án trong phòng thi.
+    </p>
+
+<p>
+        <span class="vocab" data-word-en="responsibility" data-word-vn="trách nhiệm" data-pos="danh từ / noun" data-def-en="A duty or obligation to deal with something." data-def-vn="Nghĩa vụ phải xử lý một điều gì đó." data-context-vn="Trách nhiệm của người đứng đầu chưa rõ ràng:">Trách nhiệm</span> <span class="vocab" data-word-en="of" data-word-vn="của" data-pos="giới từ / preposition" data-def-en="Indicates possession or belonging." data-def-vn="Chỉ sự sở hữu hoặc thuộc về." data-context-vn="Trách nhiệm của người đứng đầu chưa rõ ràng:">của</span> <span class="vocab" data-word-en="person" data-word-vn="người" data-pos="danh từ / noun" data-def-en="A human being." data-def-vn="Một con người." data-context-vn="Trách nhiệm của người đứng đầu chưa rõ ràng:">người</span> <span class="vocab" data-word-en="head/lead" data-word-vn="đứng đầu" data-pos="cụm động từ / verb phrase" data-def-en="To be in charge of a group or organization." data-def-vn="Đứng đầu và chịu trách nhiệm cho một nhóm hoặc tổ chức." data-context-vn="Trách nhiệm của người đứng đầu chưa rõ ràng:">đứng đầu</span> <span class="vocab" data-word-en="not yet" data-word-vn="chưa" data-pos="trạng từ / adverb" data-def-en="Indicates something has not happened." data-def-vn="Chỉ điều gì đó chưa xảy ra." data-context-vn="Trách nhiệm của người đứng đầu chưa rõ ràng:">chưa</span> <span class="vocab" data-word-en="clear" data-word-vn="rõ ràng" data-pos="tính từ / adjective" data-def-en="Easy to understand; not vague." data-def-vn="Dễ hiểu, không mơ hồ." data-context-vn="Trách nhiệm của người đứng đầu chưa rõ ràng:">rõ ràng</span>: Cán bộ <span class="vocab" data-word-en="leadership" data-word-vn="lãnh đạo" data-pos="danh từ / noun" data-def-en="The act or role of leading others." data-def-vn="Hành động hoặc vai trò lãnh đạo người khác." data-context-vn="Cán bộ lãnh đạo cấp cao thường chỉ chịu các hình thức xử phạt hành chính nhẹ thay vì phải chịu trách nhiệm pháp lý nghiêm khắc.">lãnh đạo</span> <span class="vocab" data-word-en="high-ranking" data-word-vn="cấp cao" data-pos="tính từ / adjective" data-def-en="Of a senior or elevated rank." data-def-vn="Ở cấp bậc cao hoặc cấp trên." data-context-vn="Cán bộ lãnh đạo cấp cao thường chỉ chịu các hình thức xử phạt hành chính nhẹ thay vì phải chịu trách nhiệm pháp lý nghiêm khắc.">cấp cao</span> <span class="vocab" data-word-en="often" data-word-vn="thường" data-pos="trạng từ / adverb" data-def-en="Frequently; usually." data-def-vn="Thường xuyên, phổ biến." data-context-vn="Cán bộ lãnh đạo cấp cao thường chỉ chịu các hình thức xử phạt hành chính nhẹ thay vì phải chịu trách nhiệm pháp lý nghiêm khắc.">thường</span> <span class="vocab" data-word-en="only" data-word-vn="chỉ" data-pos="trạng từ / adverb" data-def-en="Merely; nothing more than." data-def-vn="Chỉ đơn thuần, không hơn." data-context-vn="Cán bộ lãnh đạo cấp cao thường chỉ chịu các hình thức xử phạt hành chính nhẹ thay vì phải chịu trách nhiệm pháp lý nghiêm khắc.">chỉ</span> chịu các hình thức <span class="vocab" data-word-en="penalize" data-word-vn="xử phạt" data-pos="động từ / verb" data-def-en="To officially punish for an offense." data-def-vn="Chính thức trừng phạt vì một hành vi sai trái." data-context-vn="Cán bộ lãnh đạo cấp cao thường chỉ chịu các hình thức xử phạt hành chính nhẹ thay vì phải chịu trách nhiệm pháp lý nghiêm khắc.">xử phạt</span> <span class="vocab" data-word-en="administrative" data-word-vn="hành chính" data-pos="tính từ / adjective" data-def-en="Relating to management or administration." data-def-vn="Liên quan đến việc quản lý hành chính." data-context-vn="Cán bộ lãnh đạo cấp cao thường chỉ chịu các hình thức xử phạt hành chính nhẹ thay vì phải chịu trách nhiệm pháp lý nghiêm khắc.">hành chính</span> <span class="vocab" data-word-en="light/mild" data-word-vn="nhẹ" data-pos="tính từ / adjective" data-def-en="Not severe; of low intensity." data-def-vn="Không nghiêm trọng, ở mức độ thấp." data-context-vn="Cán bộ lãnh đạo cấp cao thường chỉ chịu các hình thức xử phạt hành chính nhẹ thay vì phải chịu trách nhiệm pháp lý nghiêm khắc.">nhẹ</span> <span class="vocab" data-word-en="instead of" data-word-vn="thay vì" data-pos="liên từ / conjunction" data-def-en="In place of; rather than." data-def-vn="Thay cho, chứ không phải." data-context-vn="Cán bộ lãnh đạo cấp cao thường chỉ chịu các hình thức xử phạt hành chính nhẹ thay vì phải chịu trách nhiệm pháp lý nghiêm khắc.">thay vì</span> phải chịu trách nhiệm pháp lý nghiêm khắc.
+    </p>
+
+<p>
+        <span class="vocab" data-word-en="mechanism" data-word-vn="cơ chế" data-pos="danh từ / noun" data-def-en="A system or process by which something works." data-def-vn="Một hệ thống hoặc quy trình vận hành." data-context-vn="Cơ chế bảo vệ người tố giác còn yếu:">Cơ chế</span> <span class="vocab" data-word-en="protect" data-word-vn="bảo vệ" data-pos="động từ / verb" data-def-en="To keep safe from harm." data-def-vn="Giữ an toàn khỏi bị tổn hại." data-context-vn="Cơ chế bảo vệ người tố giác còn yếu:">bảo vệ</span> người <span class="vocab" data-word-en="whistleblow" data-word-vn="tố giác" data-pos="động từ / verb" data-def-en="To report wrongdoing to authorities." data-def-vn="Báo cáo hành vi sai trái cho cơ quan chức năng." data-context-vn="Cơ chế bảo vệ người tố giác còn yếu:">tố giác</span> còn <span class="vocab" data-word-en="weak" data-word-vn="yếu" data-pos="tính từ / adjective" data-def-en="Lacking strength or effectiveness." data-def-vn="Thiếu sức mạnh hoặc hiệu quả." data-context-vn="Cơ chế bảo vệ người tố giác còn yếu:">yếu</span>: Những giáo viên <span class="vocab" data-word-en="want" data-word-vn="muốn" data-pos="động từ / verb" data-def-en="To desire something." data-def-vn="Mong muốn điều gì đó." data-context-vn="Những giáo viên muốn tố cáo hành vi gian lận thường cảm thấy không an toàn khi lên tiếng.">muốn</span> <span class="vocab" data-word-en="denounce" data-word-vn="tố cáo" data-pos="động từ / verb" data-def-en="To publicly accuse someone of wrongdoing." data-def-vn="Công khai tố cáo hành vi sai trái của ai đó." data-context-vn="Những giáo viên muốn tố cáo hành vi gian lận thường cảm thấy không an toàn khi lên tiếng.">tố cáo</span> hành vi gian lận thường <span class="vocab" data-word-en="feel" data-word-vn="cảm thấy" data-pos="động từ / verb" data-def-en="To experience an emotion or sensation." data-def-vn="Trải nghiệm một cảm xúc hoặc cảm giác." data-context-vn="Những giáo viên muốn tố cáo hành vi gian lận thường cảm thấy không an toàn khi lên tiếng.">cảm thấy</span> <span class="vocab" data-word-en="not" data-word-vn="không" data-pos="trạng từ / adverb" data-def-en="Used to negate a statement." data-def-vn="Dùng để phủ định một câu." data-context-vn="Những giáo viên muốn tố cáo hành vi gian lận thường cảm thấy không an toàn khi lên tiếng.">không</span> <span class="vocab" data-word-en="safe" data-word-vn="an toàn" data-pos="tính từ / adjective" data-def-en="Free from danger or risk." data-def-vn="Không có nguy hiểm hoặc rủi ro." data-context-vn="Những giáo viên muốn tố cáo hành vi gian lận thường cảm thấy không an toàn khi lên tiếng.">an toàn</span> <span class="vocab" data-word-en="when" data-word-vn="khi" data-pos="liên từ / conjunction" data-def-en="At the time that." data-def-vn="Vào thời điểm mà." data-context-vn="Những giáo viên muốn tố cáo hành vi gian lận thường cảm thấy không an toàn khi lên tiếng.">khi</span> <span class="vocab" data-word-en="speak up" data-word-vn="lên tiếng" data-pos="cụm động từ / verb phrase" data-def-en="To voice one&#x27;s opinion publicly." data-def-vn="Công khai bày tỏ ý kiến của mình." data-context-vn="Những giáo viên muốn tố cáo hành vi gian lận thường cảm thấy không an toàn khi lên tiếng.">lên tiếng</span>.
+    </p>
+
+<p>
+        <span class="vocab" data-word-en="in order to" data-word-vn="để" data-pos="liên từ / conjunction" data-def-en="For the purpose of." data-def-vn="Nhằm mục đích." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">Để</span> <span class="vocab" data-word-en="resolve" data-word-vn="giải quyết" data-pos="động từ / verb" data-def-en="To find a solution to a problem." data-def-vn="Tìm ra giải pháp cho một vấn đề." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">giải quyết</span> <span class="vocab" data-word-en="conclusively" data-word-vn="dứt điểm" data-pos="trạng từ / adverb" data-def-en="Completely and finally, once and for all." data-def-vn="Một cách hoàn toàn và dứt khoát." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">dứt điểm</span> <span class="vocab" data-word-en="problem" data-word-vn="vấn đề" data-pos="danh từ / noun" data-def-en="An issue that needs to be dealt with." data-def-vn="Một vấn đề cần được giải quyết." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">vấn đề</span> này, các <span class="vocab" data-word-en="expert" data-word-vn="chuyên gia" data-pos="danh từ / noun" data-def-en="A person with specialized knowledge." data-def-vn="Người có kiến thức chuyên sâu." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">chuyên gia</span> <span class="vocab" data-word-en="propose" data-word-vn="đề xuất" data-pos="động từ / verb" data-def-en="To put forward an idea or plan." data-def-vn="Đưa ra một ý tưởng hoặc kế hoạch." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">đề xuất</span> <span class="vocab" data-word-en="three" data-word-vn="ba" data-pos="số từ / numeral" data-def-en="The number three." data-def-vn="Số ba." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">ba</span> <span class="vocab" data-word-en="group" data-word-vn="nhóm" data-pos="danh từ / noun" data-def-en="A set of things or people together." data-def-vn="Một tập hợp sự vật hoặc con người." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">nhóm</span> <span class="vocab" data-word-en="solution" data-word-vn="giải pháp" data-pos="danh từ / noun" data-def-en="A means of solving a problem." data-def-vn="Một cách để giải quyết vấn đề." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">giải pháp</span> <span class="vocab" data-word-en="main/primary" data-word-vn="chính" data-pos="tính từ / adjective" data-def-en="Principal or most important." data-def-vn="Chủ yếu hoặc quan trọng nhất." data-context-vn="Để giải quyết dứt điểm vấn đề này, các chuyên gia đề xuất ba nhóm giải pháp chính:">chính</span>:
+    </p>
+
+<p>
+        Giải pháp <span class="vocab" data-word-en="technical" data-word-vn="kỹ thuật" data-pos="tính từ / adjective" data-def-en="Relating to technology or applied methods." data-def-vn="Liên quan đến kỹ thuật hoặc công nghệ ứng dụng." data-context-vn="Giải pháp kỹ thuật ngắn hạn:">kỹ thuật</span> <span class="vocab" data-word-en="short-term" data-word-vn="ngắn hạn" data-pos="tính từ / adjective" data-def-en="Lasting only a short period." data-def-vn="Chỉ kéo dài trong một thời gian ngắn." data-context-vn="Giải pháp kỹ thuật ngắn hạn:">ngắn hạn</span>: <span class="vocab" data-word-en="install" data-word-vn="lắp đặt" data-pos="động từ / verb" data-def-en="To set up equipment for use." data-def-vn="Lắp ráp thiết bị để sử dụng." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">Lắp đặt</span> <span class="vocab" data-word-en="camera" data-word-vn="camera" data-pos="danh từ / noun" data-def-en="A device for recording images or video." data-def-vn="Thiết bị ghi lại hình ảnh hoặc video." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">camera</span> <span class="vocab" data-word-en="AI" data-word-vn="ai" data-pos="danh từ / noun" data-def-en="Artificial Intelligence; computer systems that mimic human thinking." data-def-vn="Trí tuệ nhân tạo; hệ thống máy tính mô phỏng tư duy con người." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">AI</span> trong phòng thi, <span class="vocab" data-word-en="concentrate" data-word-vn="tập trung" data-pos="động từ / verb" data-def-en="To focus effort or attention on something." data-def-vn="Dồn nỗ lực hoặc sự chú ý vào điều gì đó." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">tập trung</span> <span class="vocab" data-word-en="-ize (suffix)" data-word-vn="hóa" data-pos="hậu tố / suffix" data-def-en="A suffix meaning to convert into a certain state." data-def-vn="Hậu tố mang nghĩa biến đổi thành một trạng thái nào đó." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">hóa</span> hệ thống <span class="vocab" data-word-en="grade exams" data-word-vn="chấm thi" data-pos="cụm động từ / verb phrase" data-def-en="To mark or score examination papers." data-def-vn="Chấm điểm cho các bài thi." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">chấm thi</span> và <span class="vocab" data-word-en="apply" data-word-vn="áp dụng" data-pos="động từ / verb" data-def-en="To put a method or rule into use." data-def-vn="Đưa một phương pháp hoặc quy tắc vào sử dụng." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">áp dụng</span> phần mềm <span class="vocab" data-word-en="analyze" data-word-vn="phân tích" data-pos="động từ / verb" data-def-en="To examine something in detail." data-def-vn="Xem xét điều gì đó một cách chi tiết." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">phân tích</span> <span class="vocab" data-word-en="score distribution" data-word-vn="phổ điểm" data-pos="cụm danh từ / noun phrase" data-def-en="The statistical spread of scores across test-takers." data-def-vn="Sự phân bố thống kê điểm số của các thí sinh." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">phổ điểm</span> để <span class="vocab" data-word-en="timely" data-word-vn="kịp thời" data-pos="trạng từ / adverb" data-def-en="Happening at the right or needed time." data-def-vn="Xảy ra đúng lúc cần thiết." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">kịp thời</span> phát hiện các <span class="vocab" data-word-en="sign" data-word-vn="dấu hiệu" data-pos="danh từ / noun" data-def-en="An indication that something is happening." data-def-vn="Một dấu chỉ báo điều gì đó đang xảy ra." data-context-vn="Lắp đặt camera AI trong phòng thi, tập trung hóa hệ thống chấm thi và áp dụng phần mềm phân tích phổ điểm để kịp thời phát hiện các dấu hiệu bất thường.">dấu hiệu</span> bất thường.
+    </p>
+
+<p>
+        <span class="vocab" data-word-en="change" data-word-vn="thay đổi" data-pos="động từ / verb" data-def-en="To make or become different." data-def-vn="Làm cho khác đi hoặc trở nên khác." data-context-vn="Thay đổi pháp lý trung hạn:">Thay đổi</span> pháp lý <span class="vocab" data-word-en="medium-term" data-word-vn="trung hạn" data-pos="tính từ / adjective" data-def-en="Lasting a moderate period of time." data-def-vn="Kéo dài trong một khoảng thời gian vừa phải." data-context-vn="Thay đổi pháp lý trung hạn:">trung hạn</span>: <span class="vocab" data-word-en="supplement" data-word-vn="bổ sung" data-pos="động từ / verb" data-def-en="To add something extra." data-def-vn="Thêm vào điều gì đó." data-context-vn="Bổ sung các hình phạt hình sự rõ ràng đối với hành vi gian lận trong phòng thi, đồng thời xử lý nghiêm trách nhiệm của trưởng điểm thi.">Bổ sung</span> các <span class="vocab" data-word-en="penalty" data-word-vn="hình phạt" data-pos="danh từ / noun" data-def-en="A punishment for an offense." data-def-vn="Hình thức trừng phạt cho một hành vi vi phạm." data-context-vn="Bổ sung các hình phạt hình sự rõ ràng đối với hành vi gian lận trong phòng thi, đồng thời xử lý nghiêm trách nhiệm của trưởng điểm thi.">hình phạt</span> hình sự rõ ràng <span class="vocab" data-word-en="towards/regarding" data-word-vn="đối với" data-pos="giới từ / preposition" data-def-en="In relation to; concerning." data-def-vn="Liên quan đến." data-context-vn="Bổ sung các hình phạt hình sự rõ ràng đối với hành vi gian lận trong phòng thi, đồng thời xử lý nghiêm trách nhiệm của trưởng điểm thi.">đối với</span> hành vi gian lận trong phòng thi, <span class="vocab" data-word-en="simultaneously" data-word-vn="đồng thời" data-pos="trạng từ / adverb" data-def-en="At the same time." data-def-vn="Cùng một lúc." data-context-vn="Bổ sung các hình phạt hình sự rõ ràng đối với hành vi gian lận trong phòng thi, đồng thời xử lý nghiêm trách nhiệm của trưởng điểm thi.">đồng thời</span> <span class="vocab" data-word-en="handle" data-word-vn="xử lý" data-pos="động từ / verb" data-def-en="To deal with or manage a matter." data-def-vn="Giải quyết hoặc quản lý một vấn đề." data-context-vn="Bổ sung các hình phạt hình sự rõ ràng đối với hành vi gian lận trong phòng thi, đồng thời xử lý nghiêm trách nhiệm của trưởng điểm thi.">xử lý</span> <span class="vocab" data-word-en="strictly" data-word-vn="nghiêm" data-pos="trạng từ / adverb" data-def-en="In a strict or severe manner." data-def-vn="Theo cách nghiêm khắc." data-context-vn="Bổ sung các hình phạt hình sự rõ ràng đối với hành vi gian lận trong phòng thi, đồng thời xử lý nghiêm trách nhiệm của trưởng điểm thi.">nghiêm</span> trách nhiệm của <span class="vocab" data-word-en="chief/head" data-word-vn="trưởng" data-pos="danh từ / noun" data-def-en="The leader or person in charge." data-def-vn="Người đứng đầu hoặc phụ trách." data-context-vn="Bổ sung các hình phạt hình sự rõ ràng đối với hành vi gian lận trong phòng thi, đồng thời xử lý nghiêm trách nhiệm của trưởng điểm thi.">trưởng</span> điểm thi.
+    </p>
+
+<p>
+        <span class="vocab" data-word-en="reform" data-word-vn="cải cách" data-pos="động từ / verb" data-def-en="To make changes to improve a system." data-def-vn="Thực hiện thay đổi để cải thiện một hệ thống." data-context-vn="Cải cách giáo dục dài hạn:">Cải cách</span> giáo dục <span class="vocab" data-word-en="long-term" data-word-vn="dài hạn" data-pos="tính từ / adjective" data-def-en="Lasting over a long period." data-def-vn="Kéo dài trong một thời gian dài." data-context-vn="Cải cách giáo dục dài hạn:">dài hạn</span>: <span class="vocab" data-word-en="separate" data-word-vn="tách biệt" data-pos="động từ / verb" data-def-en="To keep apart or divide." data-def-vn="Giữ tách rời hoặc chia tách." data-context-vn="Tách biệt kỳ thi tốt nghiệp THPT với kỳ thi tuyển sinh đại học.">Tách biệt</span> kỳ thi tốt nghiệp THPT <span class="vocab" data-word-en="with" data-word-vn="với" data-pos="giới từ / preposition" data-def-en="In the company of; together with." data-def-vn="Cùng với, đi kèm với." data-context-vn="Tách biệt kỳ thi tốt nghiệp THPT với kỳ thi tuyển sinh đại học.">với</span> kỳ thi <span class="vocab" data-word-en="admission" data-word-vn="tuyển sinh" data-pos="danh từ / noun" data-def-en="The process of enrolling new students." data-def-vn="Quá trình tuyển học sinh hoặc sinh viên mới." data-context-vn="Tách biệt kỳ thi tốt nghiệp THPT với kỳ thi tuyển sinh đại học.">tuyển sinh</span> <span class="vocab" data-word-en="university" data-word-vn="đại học" data-pos="danh từ / noun" data-def-en="An institution of higher education." data-def-vn="Cơ sở giáo dục bậc cao." data-context-vn="Tách biệt kỳ thi tốt nghiệp THPT với kỳ thi tuyển sinh đại học.">đại học</span>. Việc <span class="vocab" data-word-en="reduce" data-word-vn="giảm bớt" data-pos="động từ / verb" data-def-en="To make something smaller in amount." data-def-vn="Làm cho điều gì đó ít đi." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">giảm bớt</span> áp lực <span class="vocab" data-word-en="score" data-word-vn="điểm số" data-pos="danh từ / noun" data-def-en="A numerical grade or mark." data-def-vn="Con số điểm được chấm." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">điểm số</span> <span class="vocab" data-word-en="will" data-word-vn="sẽ" data-pos="trợ từ / particle" data-def-en="A marker indicating future action." data-def-vn="Từ chỉ hành động trong tương lai." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">sẽ</span> <span class="vocab" data-word-en="help" data-word-vn="giúp" data-pos="động từ / verb" data-def-en="To assist someone in doing something." data-def-vn="Hỗ trợ ai đó làm điều gì." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">giúp</span> <span class="vocab" data-word-en="school (institution)" data-word-vn="nhà trường" data-pos="danh từ / noun" data-def-en="The institution of a school as a body." data-def-vn="Nhà trường với tư cách là một tổ chức." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">nhà trường</span> tập trung <span class="vocab" data-word-en="into" data-word-vn="vào" data-pos="giới từ / preposition" data-def-en="Indicates movement or direction into something." data-def-vn="Chỉ sự chuyển động hoặc hướng vào điều gì đó." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">vào</span> <span class="vocab" data-word-en="quality" data-word-vn="chất lượng" data-pos="danh từ / noun" data-def-en="The standard of something as measured against others." data-def-vn="Tiêu chuẩn của điều gì đó so với những thứ khác." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">chất lượng</span> <span class="vocab" data-word-en="study" data-word-vn="học tập" data-pos="danh từ / noun" data-def-en="The process of learning." data-def-vn="Quá trình học hỏi." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">học tập</span> <span class="vocab" data-word-en="substantive" data-word-vn="thực chất" data-pos="tính từ / adjective" data-def-en="Real and meaningful, not superficial." data-def-vn="Thực sự và có ý nghĩa, không hình thức." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">thực chất</span> và <span class="vocab" data-word-en="-ness (nature of)" data-word-vn="tính" data-pos="tiền tố / prefix" data-def-en="A prefix forming abstract nouns of quality." data-def-vn="Tiền tố tạo danh từ trừu tượng chỉ tính chất." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">tính</span> <span class="vocab" data-word-en="honesty" data-word-vn="trung thực" data-pos="danh từ / noun" data-def-en="The quality of being truthful and sincere." data-def-vn="Phẩm chất trung thực và chân thành." data-context-vn="Việc giảm bớt áp lực điểm số sẽ giúp nhà trường tập trung vào chất lượng học tập thực chất và tính trung thực.">trung thực</span>.
+    </p>
+
+<p>
+        Việc <span class="vocab" data-word-en="restore" data-word-vn="khôi phục" data-pos="động từ / verb" data-def-en="To bring back to a former state." data-def-vn="Đưa trở lại trạng thái trước đây." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">khôi phục</span> sự <span class="vocab" data-word-en="fairness" data-word-vn="công bằng" data-pos="danh từ / noun" data-def-en="The quality of being just and equal." data-def-vn="Phẩm chất công bằng và bình đẳng." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">công bằng</span> cho các kỳ thi <span class="vocab" data-word-en="national" data-word-vn="quốc gia" data-pos="tính từ / adjective" data-def-en="Relating to an entire nation." data-def-vn="Liên quan đến toàn bộ quốc gia." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">quốc gia</span> là điều <span class="vocab" data-word-en="extremely" data-word-vn="vô cùng" data-pos="trạng từ / adverb" data-def-en="To a very great degree." data-def-vn="Ở mức độ rất cao." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">vô cùng</span> <span class="vocab" data-word-en="urgent" data-word-vn="cấp thiết" data-pos="tính từ / adjective" data-def-en="Requiring immediate attention." data-def-vn="Cần được giải quyết ngay lập tức." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">cấp thiết</span> để <span class="vocab" data-word-en="strengthen" data-word-vn="củng cố" data-pos="động từ / verb" data-def-en="To make stronger or more secure." data-def-vn="Làm cho vững chắc hoặc an toàn hơn." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">củng cố</span> <span class="vocab" data-word-en="trust" data-word-vn="niềm tin" data-pos="danh từ / noun" data-def-en="Confidence in the reliability of something." data-def-vn="Sự tin tưởng vào độ tin cậy của điều gì đó." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">niềm tin</span> của <span class="vocab" data-word-en="people (citizens)" data-word-vn="nhân dân" data-pos="danh từ / noun" data-def-en="The citizens of a nation collectively." data-def-vn="Toàn thể công dân của một quốc gia." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">nhân dân</span> và bảo vệ chất lượng cho các <span class="vocab" data-word-en="generation" data-word-vn="thế hệ" data-pos="danh từ / noun" data-def-en="A group of people born around the same time." data-def-vn="Một nhóm người sinh ra cùng thời kỳ." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">thế hệ</span> <span class="vocab" data-word-en="future" data-word-vn="tương lai" data-pos="danh từ / noun" data-def-en="The time yet to come." data-def-vn="Thời gian sắp tới." data-context-vn="Việc khôi phục sự công bằng cho các kỳ thi quốc gia là điều vô cùng cấp thiết để củng cố niềm tin của nhân dân và bảo vệ chất lượng cho các thế hệ tương lai.">tương lai</span>.
+    </p>
+    </div>
+            <div class="practice-controls" id="practice-controls">
+                <div class="practice-btn-row">
+                    <button id="start-practice-btn" class="practice-btn primary" disabled>Practice Your New Words</button>
+                    <button id="reset-practice-btn" class="practice-btn" style="display:none;">Practice these words again</button>
+                    <button id="toggle-bank-btn" class="practice-btn" style="display:none;">Hide Word Bank</button>
+                    <button id="exit-practice-btn" class="practice-btn large" style="display:none;">Start Over</button>
+                    <button id="start-srs-btn" class="practice-btn primary" disabled>Standard Review Level</button>
+                    <button id="start-srs-challenge-btn" class="practice-btn primary" disabled style="line-height:1.25;">Genius Level<br><span style="font-weight:normal;font-size:0.78rem;">Show us what you got!</span></button>
+                    <button id="start-cw-btn" class="practice-btn primary" disabled style="line-height:1.25;" title="Need 4 clicked words with 4+ letters each">Crossword<br><span style="font-weight:normal;font-size:0.78rem;">Minimum 4 words</span></button>
+                </div>
+                <div class="cw-hint" id="cw-hint">From words you click in the story (4+ letters each)</div>
+            </div>
+    </div>
+    </div>
+        <div class="back-btn-container">
+        <button type="button" class="back-btn" onclick="history.back()">Exit this Lesson</button>
+    </div>
+</div>
+<div id="popup-card">
+    <h3 id="popup-title">Word</h3>
+    <div id="popup-sub" class="popup-secondary">Translation</div>
+    <div class="popup-audio-row">
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🔊 Vietnamese</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordVn, 'vi-VN')">🐢 Slow</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabulary(this.closest('#popup-card').dataset.wordEn, 'en-US')">🔊 English</button>
+        <button class="popup-audio-btn" onclick="event.stopPropagation(); speakVocabularySlow(this.closest('#popup-card').dataset.wordEn, 'en-US')">🐢 Slow</button>
+    </div>
+    <div class="browser-note">🔊 Vietnamese audio: Chrome or Edge recommended.</div>
+    <div id="popup-part-of-speech" class="popup-pos"></div>
+    <div id="popup-definition" class="popup-def"></div>
+    <div class="popup-context-label">In the text:</div>
+    <div id="popup-context-text" class="popup-context"></div>
+</div>
+
+
+<div id="cw-overlay">
+    <div class="cw-panel" onclick="event.stopPropagation()">
+        <div class="cw-header">
+            <h3 class="cw-title">Crossword</h3>
+            <button type="button" class="practice-btn" id="cw-close-btn">Close</button>
+        </div>
+        <p class="cw-sub" id="cw-sub">From words you clicked · type one letter per square</p>
+        <div class="cw-toolbar">
+            <button type="button" class="practice-btn" id="cw-toggle-bank-btn">Hide Word Bank</button>
+            <button type="button" class="practice-btn" id="cw-check-btn">Check puzzle</button>
+            <button type="button" class="practice-btn" id="cw-solve-btn">See Solution</button>
+            <button type="button" class="practice-btn" id="cw-new-btn">New layout</button>
+        </div>
+        <div class="cw-bank visible" id="cw-bank">
+            <div class="cw-bank-label">Word Bank</div>
+            <div class="cw-bank-grid" id="cw-bank-grid"></div>
+        </div>
+        <div class="cw-grid-wrap">
+            <div class="cw-grid" id="cw-grid"></div>
+        </div>
+        <div class="cw-status" id="cw-status"></div>
+    </div>
+</div>
+
+<div id="srs-overlay">
+    <div class="srs-card">
+        <button class="srs-close-btn" id="srs-close-btn" title="Close review">✕</button>
+
+        <div id="srs-review-view">
+            <div class="srs-header">
+                <h3>Spaced Repetition Review</h3>
+                <div class="srs-progress-track"><div class="srs-progress-fill" id="srs-progress-fill"></div></div>
+                <div class="srs-progress-label" id="srs-progress-label"></div>
+            </div>
+
+            <div class="srs-direction-label" id="srs-direction-label"></div>
+            <div class="srs-prompt-word" id="srs-prompt-word"></div>
+            <div class="srs-audio-row" id="srs-audio-row"></div>
+
+            <div class="srs-type-area" id="srs-type-area">
+                <input type="text" class="srs-type-input" id="srs-type-input" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" enterkeyhint="done" placeholder="Type answer, then Check or Enter">
+                <div class="srs-type-actions">
+                    <button class="srs-reveal-btn" id="srs-check-btn" type="button" style="width:auto; padding:10px 18px;">Check your answer</button>
+                    <button class="practice-btn" id="srs-giveup-btn" style="display:none;">Show answer</button>
+                </div>
+                <div class="srs-feedback" id="srs-feedback"></div>
+            </div>
+
+            <button class="srs-reveal-btn" id="srs-reveal-btn">Show Answer</button>
+
+            <div class="srs-answer" id="srs-answer">
+                <div class="srs-answer-word" id="srs-answer-word"></div>
+                <div class="srs-pos" id="srs-pos"></div>
+                <div class="srs-def" id="srs-def"></div>
+                <div class="srs-context-label">In the text:</div>
+                <div class="srs-context" id="srs-context"></div>
+
+                <div class="srs-rate-row">
+                    <button class="srs-rate-btn srs-rate-again" data-rating="again">Show More<small>need more practice</small></button>
+                    <button class="srs-rate-btn srs-rate-easy" data-rating="easy">Show Less<small>I know this well</small></button>
+                </div>
+                <div class="srs-feedback" id="srs-advance-hint" style="display:none; margin-top:12px;">Click any blank spot to advance to next word</div>
+            </div>
+        </div>
+
+        <div id="srs-done-view" class="srs-done" style="display:none;">
+            <h3>Session complete! 🎉</h3>
+            <p id="srs-done-summary"></p>
+            <div class="srs-done-actions">
+                <button class="practice-btn primary" id="srs-again-btn">Review Again</button>
+                <button class="practice-btn large" id="srs-back-btn">Back to Reading</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+
+    // ========== STATE ==========
+    let practiceMode = false;
+    let clickedIds = new Set();          // ids of vocab spans the user clicked
+    let orderedBlanks = [];              // array of vocab elements currently blanked (document order)
+    let activeBlankEl = null;            // the blank the user has selected (click any blank)
+    let originalTexts = new Map();       // id -> original innerText
+
+    // ========== SPEECH & AUDIO HELPERS (unchanged) ==========
+    function speakVocabulary(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 1.0;
+        speechSynthesis.speak(utterance);
+    }
+
+    function speakVocabularySlow(word, lang) {
+        speechSynthesis.cancel();
+        const utterance = new SpeechSynthesisUtterance(word);
+        utterance.lang = lang;
+        utterance.rate = 0.7;
+        speechSynthesis.speak(utterance);
+    }
+
+    function setPlaybackSpeed(speed) {
+        const audio = document.getElementById('audio-player');
+        if (audio) {
+            audio.playbackRate = speed;
+            document.querySelectorAll('.speed-btn').forEach(btn => {
+                btn.classList.remove('active');
+                if (parseFloat(btn.dataset.speed) === speed) btn.classList.add('active');
+            });
+        }
+    }
+
+    // ========== UI HELPERS ==========
+    function updateWordCount() {
+        document.getElementById('start-practice-btn').disabled = clickedIds.size === 0;
+        const cwBtn = document.getElementById('start-cw-btn');
+        if (cwBtn) {
+            const n = cwEligibleWords().length;
+            cwBtn.disabled = n < 4;
+            cwBtn.title = n < 4
+                ? 'Need 4 clicked words with 4+ letters each (now have ' + n + ')'
+                : 'Build a crossword from the words you clicked';
+        }
+        const cwHint = document.getElementById('cw-hint');
+        if (cwHint) {
+            const nH = cwEligibleWords().length;
+            if (nH < 4) {
+                cwHint.textContent = 'From words you click in the story — ' + nH + ' of 4 needed';
+                cwHint.classList.remove('ready');
+            } else {
+                cwHint.textContent = 'From words you click in the story — ' + nH + ' available';
+                cwHint.classList.add('ready');
+            }
+        }
+
+        document.getElementById('start-srs-btn').disabled = clickedIds.size === 0;
+        const ch = document.getElementById('start-srs-challenge-btn');
+        if (ch) ch.disabled = clickedIds.size === 0;
+        const cwBtn2 = document.getElementById('start-cw-btn');
+        if (cwBtn2) {
+            const n2 = cwEligibleWords().length;
+            cwBtn2.disabled = n2 < 4;
+            cwBtn2.title = n2 < 4
+                ? 'Need 4 clicked words with 4+ letters each (now have ' + n2 + ')'
+                : 'Build a crossword from the words you clicked';
+        }
+    }
+
+    function updateProgress() {
+        // completion UI removed — blanks simply fill until done
+    }
+
+    // ========== PRACTICE MODE LOGIC ==========
+    function setActiveBlank(el) {
+        document.querySelectorAll('.vocab.active-blank').forEach(n => n.classList.remove('active-blank'));
+        activeBlankEl = null;
+        if (el && el.classList.contains('is-blank')) {
+            el.classList.add('active-blank');
+            activeBlankEl = el;
+        }
+    }
+
+    // Turns a blank into a real text input (used when the word bank is hidden,
+    // so there's nothing to click — the user must type the exact word).
+    function makeBlankTypeable(el) {
+        el.innerHTML = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onclick = null;
+        el.onmouseenter = null;
+
+        const input = document.createElement('input');
+        input.type = 'text';
+        input.className = 'blank-input';
+        input.setAttribute('autocomplete', 'off');
+        input.setAttribute('autocapitalize', 'off');
+        input.setAttribute('autocorrect', 'off');
+        input.setAttribute('spellcheck', 'false');
+        input.addEventListener('click', (e) => e.stopPropagation());
+        input.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkTypedAnswer(el, input);
+            }
+        });
+        input.addEventListener('blur', () => checkTypedAnswer(el, input));
+        el.appendChild(input);
+    }
+
+    // Case-insensitive + hyphen-insensitive match (shared by story typing
+    // and SRS Level 2 challenge).
+    function normalizeAnswer(s) {
+        // Case, hyphen, and space insensitive: rapid-fire ≈ rapid fire ≈ RapidFire
+        let t = (s || '').trim().toLowerCase().replace(/-/g, '').replace(/\s+/g, '');
+        // Strip trailing -ly so meticulously ≈ meticulous, safely ≈ safe
+        if (t.length > 4 && t.endsWith('ly')) t = t.slice(0, -2);
+        return t;
+    }
+
+    function answersMatch(typed, correct) {
+        return normalizeAnswer(typed) === normalizeAnswer(correct);
+    }
+
+    function checkTypedAnswer(el, input) {
+        if (!el.classList.contains('is-blank')) return; // already filled, ignore
+        const typed = input.value.trim();
+        if (!typed) return;
+        const correct = (el.dataset.wordEn || '').trim();
+        if (answersMatch(typed, correct)) {
+            fillBlank(el, correct);
+        } else {
+            el.classList.remove('wrong-shake');
+            void el.offsetWidth; // restart the animation if triggered again
+            el.classList.add('wrong-shake');
+            setTimeout(() => el.classList.remove('wrong-shake'), 350);
+            input.value = '';
+            input.focus();
+        }
+    }
+
+    // Restores a blank to the original click-to-select behavior (used when the
+    // word bank is shown again).
+    function makeBlankClickable(el) {
+        el.innerHTML = '';
+        el.textContent = '';
+        el.classList.add('is-blank');
+        el.classList.remove('filled', 'highlight-flash', 'active-blank');
+        el.onmouseenter = () => {
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+        el.onclick = (e) => {
+            e.stopPropagation();
+            if (!practiceMode || !el.classList.contains('is-blank')) return;
+            setActiveBlank(el);
+        };
+    }
+
+    function enterPracticeMode() {
+        if (clickedIds.size === 0) return;
+        practiceMode = true;
+
+        // Widen layout + show sidebar
+        document.querySelector('.page-container').classList.add('practice-on');
+
+        // Banner + buttons
+        document.getElementById('mode-banner').classList.add('visible');
+        document.getElementById('start-practice-btn').style.display = 'none';
+        document.getElementById('reset-practice-btn').style.display = 'inline-block';
+        document.getElementById('toggle-bank-btn').style.display = 'inline-block';
+        document.getElementById('exit-practice-btn').style.display = 'inline-block';
+        document.getElementById('word-bank-section').classList.add('visible');
+        document.getElementById('toggle-bank-btn').textContent = 'Hide Word Bank';
+
+        // Collect the clicked spans in document order
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        orderedBlanks = allVocab.filter(el => clickedIds.has(el.id));
+
+        // Blank them; activate on hover or click
+        orderedBlanks.forEach(el => {
+            if (!originalTexts.has(el.id)) {
+                originalTexts.set(el.id, el.textContent);
+            }
+            el.textContent = '';
+            el.classList.add('is-blank');
+            el.classList.remove('filled', 'highlight-flash', 'active-blank');
+            el.onmouseenter = () => {
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+            el.onclick = (e) => {
+                e.stopPropagation();
+                if (!practiceMode || !el.classList.contains('is-blank')) return;
+                setActiveBlank(el);
+            };
+        });
+
+        // Build shuffled word bank
+        buildWordBank();
+
+        updateProgress();
+
+        // Select first blank and scroll to it
+        if (orderedBlanks.length > 0) {
+            setActiveBlank(orderedBlanks[0]);
+            setTimeout(() => {
+                orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }, 150);
+        }
+    }
+
+    function buildWordBank() {
+        const bank = document.getElementById('bank-words');
+        bank.innerHTML = '';
+
+        // Shuffle a copy of the ordered blanks for the bank display
+        const words = orderedBlanks.map(el => ({
+            id: el.id,
+            wordEn: el.dataset.wordEn,
+            wordVn: el.dataset.wordVn
+        }));
+
+        function shuffle(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+        }
+        shuffle(words);
+        shuffle(words);
+
+        words.forEach(item => {
+            const btn = document.createElement('div');
+            btn.className = 'bank-word';
+            btn.textContent = item.wordEn;
+            btn.dataset.wordEn = item.wordEn;
+            btn.dataset.targetId = item.id;
+            btn.addEventListener('click', onBankWordClick);
+            bank.appendChild(btn);
+        });
+    }
+
+    function fillBlank(blank, word) {
+        blank.textContent = word;
+        blank.classList.remove('is-blank', 'highlight-flash', 'active-blank');
+        blank.classList.add('filled');
+        blank.onclick = null;
+        blank.onmouseenter = null;
+        if (activeBlankEl === blank) activeBlankEl = null;
+        updateProgress();
+    }
+
+    function onBankWordClick(e) {
+        if (!practiceMode) return;
+        const btn = e.currentTarget;
+        const chosenWord = (btn.dataset.wordEn || '').trim();
+        if (!chosenWord) return;
+
+        // Need an active blank; if none, activate the first remaining one
+        let activeBlank = (activeBlankEl && activeBlankEl.classList.contains('is-blank'))
+            ? activeBlankEl
+            : null;
+        if (!activeBlank) {
+            const remaining = orderedBlanks.filter(el => el.classList.contains('is-blank'));
+            if (remaining.length === 0) return;
+            setActiveBlank(remaining[0]);
+            activeBlank = remaining[0];
+        }
+
+        // Correct for active blank → fill. Wrong word → do nothing.
+        if ((activeBlank.dataset.wordEn || '').trim().toLowerCase() === chosenWord.toLowerCase()) {
+            fillBlank(activeBlank, chosenWord);
+        }
+    }
+
+    function resetPractice() {
+        if (!practiceMode) return;
+        const bankVisible = document.getElementById('word-bank-section').classList.contains('visible');
+        // Re-blank everything that was in the original clicked set, matching
+        // whatever mode the word bank is currently in (shown vs hidden)
+        if (bankVisible) {
+            orderedBlanks.forEach(el => makeBlankClickable(el));
+            buildWordBank();
+        } else {
+            orderedBlanks.forEach(el => makeBlankTypeable(el));
+        }
+        updateProgress();
+        if (orderedBlanks.length > 0) {
+            if (bankVisible) {
+                setActiveBlank(orderedBlanks[0]);
+            } else {
+                const inp = orderedBlanks[0].querySelector('input.blank-input');
+                if (inp) inp.focus();
+            }
+            orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+        } else {
+            activeBlankEl = null;
+        }
+    }
+
+    function exitPracticeMode() {
+        practiceMode = false;
+        document.querySelector('.page-container').classList.remove('practice-on');
+        document.getElementById('mode-banner').classList.remove('visible');
+        document.getElementById('start-practice-btn').style.display = 'inline-block';
+        document.getElementById('reset-practice-btn').style.display = 'none';
+        document.getElementById('toggle-bank-btn').style.display = 'none';
+        document.getElementById('exit-practice-btn').style.display = 'none';
+        document.getElementById('word-bank-section').classList.remove('visible');
+
+        // Restore original text on all previously blanked spans
+        orderedBlanks.forEach(el => {
+            const orig = originalTexts.get(el.id);
+            if (orig !== undefined) {
+                el.textContent = orig;
+            }
+            el.classList.remove('is-blank', 'filled', 'highlight-flash', 'active-blank');
+            el.onclick = null;
+            el.onmouseenter = null;
+        });
+        orderedBlanks = [];
+        activeBlankEl = null;
+
+        // Fresh cycle: clear collected words so next Lock-in uses only
+        // words clicked during the new reading pass
+        clickedIds.clear();
+        originalTexts.clear();
+        document.getElementById('bank-words').innerHTML = '';
+        updateWordCount();
+    }
+
+    // ========== SPACED REPETITION (Section 3) ==========
+    // Session-only, position-based review. Cards you miss resurface a few
+    // cards later in the SAME session; cards you know well drop out of the
+    // queue ("mastered") once you've gotten them right twice in a row.
+    let srsDeck = [];
+    let srsQueue = [];
+    let srsTotal = 0;
+    let srsMasteredCount = 0;
+    let srsCurrentCard = null;
+    let srsCurrentDirection = 'en2vn'; // alternates each card: 'en2vn' or 'vn2en'
+    let srsMode = 'review'; // 'review' (Level 1) or 'challenge' (Level 2 type-in)
+    let srsExpectedAnswer = '';
+
+    function srsBuildDeck() {
+        const allVocab = Array.from(document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab'));
+        return allVocab
+            .filter(el => clickedIds.has(el.id))
+            .map(el => ({
+                id: el.id,
+                wordEn: el.dataset.wordEn || '',
+                wordVn: el.dataset.wordVn || '',
+                pos: el.dataset.pos || '',
+                defEn: el.dataset.defEn || '',
+                defVn: el.dataset.defVn || '',
+                contextEn: el.dataset.contextEn || el.dataset.wordEn || '',
+                contextVn: el.dataset.contextVn || el.dataset.wordVn || '',
+                streak: 0
+            }));
+    }
+
+    function srsShuffle(arr) {
+        const a = arr.slice();
+        for (let i = a.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+    }
+
+    function srsStartSession(mode) {
+        srsMode = (mode === 'challenge') ? 'challenge' : 'review';
+        srsDeck = srsBuildDeck();
+        if (srsDeck.length === 0) return;
+        srsQueue = srsShuffle(srsDeck);
+        srsTotal = srsDeck.length;
+        srsMasteredCount = 0;
+
+        document.getElementById('srs-done-view').style.display = 'none';
+        document.getElementById('srs-review-view').style.display = 'block';
+        const header = document.querySelector('#srs-review-view .srs-header h3');
+        if (header) {
+            header.textContent = srsMode === 'challenge'
+                ? 'Challenge Review — Type the answer'
+                : 'Spaced Repetition Review';
+        }
+        document.getElementById('srs-overlay').classList.add('visible');
+
+        srsShowNextCard();
+    }
+
+    function srsRenderProgress() {
+        const pct = srsTotal === 0 ? 0 : Math.round((srsMasteredCount / srsTotal) * 100);
+        document.getElementById('srs-progress-fill').style.width = pct + '%';
+        document.getElementById('srs-progress-label').textContent =
+            srsMasteredCount + ' of ' + srsTotal + ' mastered \u00b7 ' + srsQueue.length + ' left in this round';
+    }
+
+    function srsShowNextCard() {
+        if (srsQueue.length === 0) {
+            srsFinishSession();
+            return;
+        }
+        srsCurrentCard = srsQueue.shift();
+        const isEnInput = document.documentElement.lang === 'en';
+
+        // Level 1 (review): random direction. Level 2 (challenge): always
+        // show the OPPOSITE language on the front; user types the study language.
+        if (srsMode === 'challenge') {
+            srsCurrentDirection = isEnInput ? 'vn2en' : 'en2vn';
+        } else {
+            srsCurrentDirection = Math.random() < 0.5 ? 'en2vn' : 'vn2en';
+        }
+
+        const frontWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordEn : srsCurrentCard.wordVn;
+        const backWord = srsCurrentDirection === 'en2vn' ? srsCurrentCard.wordVn : srsCurrentCard.wordEn;
+        srsExpectedAnswer = backWord;
+
+        // No direction label / Listen on either level — prompt word is enough.
+        const frontLangLabel = srsMode === 'challenge'
+            ? 'Type in answer and press Enter'
+            : '';
+
+        document.getElementById('srs-direction-label').textContent = frontLangLabel;
+        document.getElementById('srs-prompt-word').textContent = frontWord;
+
+        const audioRow = document.getElementById('srs-audio-row');
+        audioRow.innerHTML = '';
+
+        document.getElementById('srs-answer-word').textContent = backWord;
+        document.getElementById('srs-answer-word').style.display = '';
+        document.getElementById('srs-pos').textContent = srsCurrentCard.pos;
+        document.getElementById('srs-def').innerHTML = isEnInput
+            ? '<div>' + (srsCurrentCard.defEn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defVn || '') + '</div>'
+            : '<div>' + (srsCurrentCard.defVn || '') + '</div><div class="srs-def-secondary">' + (srsCurrentCard.defEn || '') + '</div>';
+        document.getElementById('srs-context').textContent =
+            isEnInput ? srsCurrentCard.contextEn : (srsCurrentCard.contextVn || srsCurrentCard.contextEn);
+
+        document.getElementById('srs-answer').classList.remove('visible');
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-feedback').classList.remove('wrong-feedback');
+        srsChallengeSolved = false;
+        srsAnswerRevealed = false;
+        var advanceHint = document.getElementById("srs-advance-hint");
+        if (advanceHint) advanceHint.style.display = "none";
+
+        const typeArea = document.getElementById('srs-type-area');
+        const revealBtn = document.getElementById('srs-reveal-btn');
+        const typeInput = document.getElementById('srs-type-input');
+
+        if (srsMode === 'challenge') {
+            typeArea.classList.add('visible');
+            revealBtn.style.display = 'none';
+            typeInput.value = '';
+            typeInput.classList.remove('wrong');
+            typeInput.disabled = false;
+            document.getElementById('srs-giveup-btn').style.display = 'inline-block';
+            const chkBtn = document.getElementById('srs-check-btn');
+            if (chkBtn) chkBtn.style.display = 'inline-block';
+            setTimeout(() => typeInput.focus(), 50);
+        } else {
+            typeArea.classList.remove('visible');
+            revealBtn.style.display = 'block';
+        }
+
+        srsRenderProgress();
+    }
+
+    function srsCheckTypedAnswer() {
+        if (srsMode !== 'challenge' || !srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        const typed = input.value.trim();
+        if (!typed) return;
+        const fb = document.getElementById('srs-feedback');
+        if (answersMatch(typed, srsExpectedAnswer)) {
+            const cheers = ['You got it!', 'Good job!', 'Answer correct!', 'Dynamite!', "You're hot!", 'Perfect!', "You're a genius!"];
+            fb.textContent = cheers[Math.floor(Math.random() * cheers.length)];
+            fb.classList.remove('wrong-feedback');
+            fb.classList.add('success');
+            input.disabled = true;
+            input.classList.remove('wrong');
+            document.getElementById('srs-answer-word').style.display = 'none';
+        document.getElementById('srs-answer').classList.add('visible');
+            document.getElementById('srs-giveup-btn').style.display = 'none';
+            const chk = document.getElementById('srs-check-btn');
+            if (chk) chk.style.display = 'none';
+            srsChallengeSolved = true;
+            srsAnswerRevealed = true;
+            // Put correct answer in top position
+            (function() {
+                const prompt = document.getElementById('srs-prompt-word');
+                const frontWas = prompt.textContent;
+                prompt.textContent = srsExpectedAnswer || '';
+                document.getElementById('srs-direction-label').textContent =
+                    frontWas ? ('was: ' + frontWas) : '';
+            })();
+            var h = document.getElementById('srs-advance-hint');
+            if (h) h.style.display = 'block';
+        } else {
+            const misses = [
+                'Not quite — try again',
+                'Give up?',
+                'Close but no cigar!',
+                "C'mon, you can do better than that!",
+                'Hey, nobody said this would be easy!',
+                'Throw in the towel?'
+            ];
+            fb.textContent = misses[Math.floor(Math.random() * misses.length)];
+            fb.classList.remove('success');
+            fb.classList.add('wrong-feedback');
+            input.classList.remove('wrong');
+            void input.offsetWidth;
+            input.classList.add('wrong');
+            input.value = '';
+            input.focus();
+            setTimeout(() => input.classList.remove('wrong'), 350);
+        }
+    }
+
+    function srsGiveUp() {
+        if (!srsCurrentCard) return;
+        const input = document.getElementById('srs-type-input');
+        if (input) {
+            input.disabled = true;
+            input.value = srsExpectedAnswer;
+        }
+        document.getElementById('srs-feedback').textContent = '';
+        document.getElementById('srs-feedback').classList.remove('success');
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-giveup-btn').style.display = 'none';
+        const chk2 = document.getElementById('srs-check-btn');
+        if (chk2) chk2.style.display = 'none';
+        // Allow click-anywhere to advance (counts as Again — they needed the answer)
+        srsChallengeSolved = false;
+        srsAnswerRevealed = true;
+        var h = document.getElementById("srs-advance-hint");
+        if (h) h.style.display = "block";
+    }
+
+    function srsRevealAnswer() {
+        // Answer word takes the top (prompt) position — large black type
+        const prompt = document.getElementById('srs-prompt-word');
+        const frontWas = prompt.textContent;
+        prompt.textContent = srsExpectedAnswer || '';
+        document.getElementById('srs-direction-label').textContent =
+            frontWas ? ('was: ' + frontWas) : '';
+        const aw = document.getElementById('srs-answer-word');
+        if (aw) aw.style.display = 'none';
+        document.getElementById('srs-answer').classList.add('visible');
+        document.getElementById('srs-reveal-btn').style.display = 'none';
+        srsAnswerRevealed = true;
+        var h = document.getElementById('srs-advance-hint');
+        if (h) h.style.display = 'block';
+    }
+
+    function srsRateCard(rating) {
+        if (!srsCurrentCard) return;
+        const card = srsCurrentCard;
+
+        // Two-button system:
+        // Show More  → again (reappear soon)
+        // Show Less  → easy  (done for this session)
+        if (rating === 'again' || rating === 'hard') {
+            card.streak = 0;
+            srsQueue.splice(Math.min(3, srsQueue.length), 0, card);
+        } else {
+            // good / easy / anything else → mastered for this session
+            srsMasteredCount++;
+        }
+
+        srsCurrentCard = null;
+        srsShowNextCard();
+    }
+
+    function srsFinishSession() {
+        document.getElementById('srs-review-view').style.display = 'none';
+        document.getElementById('srs-done-view').style.display = 'block';
+        document.getElementById('srs-done-summary').textContent =
+            'You reviewed ' + srsTotal + ' word' + (srsTotal === 1 ? '' : 's') + ' and mastered all of them this round. Nice work!';
+    }
+
+    function srsCloseOverlay() {
+        document.getElementById('srs-overlay').classList.remove('visible');
+    }
+
+    
+    // ========== CROSSWORD ==========
+    let cwShowBank = true;
+    let cwPlacements = []; // {word, row, col, dir, num}
+    let cwRows = 0, cwCols = 0;
+    let cwSolution = {}; // "r,c" -> letter
+
+    function cwEligibleWords() {
+        const isEn = document.documentElement.lang !== 'vi';
+        const seen = new Set();
+        const words = [];
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach(el => {
+            if (!clickedIds.has(el.id)) return;
+            let w = (isEn ? el.dataset.wordEn : el.dataset.wordVn) || '';
+            w = w.trim();
+            // single token only (allow hyphen → strip for grid letters)
+            if (/\s/.test(w)) return;
+            const letters = w.replace(/-/g, '');
+            if (letters.length < 4) return;
+            const key = letters.toUpperCase();
+            if (seen.has(key)) return;
+            seen.add(key);
+            words.push({ display: w, letters: key });
+        });
+        return words;
+    }
+
+    function cwTryPlace(grid, rows, cols, word, row, col, dir) {
+        const dr = dir === 'across' ? 0 : 1;
+        const dc = dir === 'across' ? 1 : 0;
+        const L = word.length;
+        if (row < 0 || col < 0 || row + dr * (L - 1) >= rows || col + dc * (L - 1) >= cols) return null;
+        let crosses = 0;
+        for (let i = 0; i < L; i++) {
+            const r = row + dr * i, c = col + dc * i;
+            const cell = grid[r][c];
+            if (cell === null) {
+                // empty — ok, but check neighbors perpendicular aren't letters (loose check)
+            } else if (cell === word[i]) {
+                crosses++;
+            } else {
+                return null; // conflict
+            }
+        }
+        // Prefer at least one cross for non-first words
+        return crosses;
+    }
+
+    function cwBuildGrid(wordList) {
+        // wordList: array of {display, letters}
+        const words = wordList.slice().sort((a, b) => b.letters.length - a.letters.length);
+        if (!words.length) return null;
+
+        const maxLen = Math.max(...words.map(w => w.letters.length));
+        const size = Math.min(22, Math.max(12, maxLen + 4 + Math.floor(words.length / 2)));
+        let best = null;
+
+        for (let attempt = 0; attempt < 40; attempt++) {
+            const order = words.slice();
+            // shuffle slightly after first
+            if (attempt > 0) {
+                for (let i = order.length - 1; i > 0; i--) {
+                    if (Math.random() < 0.5) {
+                        const j = Math.floor(Math.random() * (i + 1));
+                        [order[i], order[j]] = [order[j], order[i]];
+                    }
+                }
+            }
+            const grid = Array.from({ length: size }, () => Array(size).fill(null));
+            const placements = [];
+            let num = 1;
+
+            // first word centered horizontally
+            const w0 = order[0].letters;
+            let r0 = Math.floor(size / 2);
+            let c0 = Math.floor((size - w0.length) / 2);
+            for (let i = 0; i < w0.length; i++) grid[r0][c0 + i] = w0[i];
+            placements.push({ word: order[0].display, letters: w0, row: r0, col: c0, dir: 'across', num: num++ });
+
+            for (let wi = 1; wi < order.length; wi++) {
+                const letters = order[wi].letters;
+                let candidates = [];
+                for (let i = 0; i < letters.length; i++) {
+                    for (let r = 0; r < size; r++) {
+                        for (let c = 0; c < size; c++) {
+                            if (grid[r][c] !== letters[i]) continue;
+                            // try across with letter i at (r,c)
+                            const ca = c - i;
+                            const xa = cwTryPlace(grid, size, size, letters, r, ca, 'across');
+                            if (xa !== null && (placements.length === 0 || xa > 0)) {
+                                candidates.push({ row: r, col: ca, dir: 'across', crosses: xa });
+                            }
+                            const cr = r - i;
+                            const xd = cwTryPlace(grid, size, size, letters, cr, c, 'down');
+                            if (xd !== null && (placements.length === 0 || xd > 0)) {
+                                candidates.push({ row: cr, col: c, dir: 'down', crosses: xd });
+                            }
+                        }
+                    }
+                }
+                if (!candidates.length) continue;
+                candidates.sort((a, b) => b.crosses - a.crosses);
+                const pick = candidates[Math.floor(Math.random() * Math.min(3, candidates.length))];
+                const dr = pick.dir === 'across' ? 0 : 1;
+                const dc = pick.dir === 'across' ? 1 : 0;
+                for (let i = 0; i < letters.length; i++) {
+                    grid[pick.row + dr * i][pick.col + dc * i] = letters[i];
+                }
+                placements.push({
+                    word: order[wi].display,
+                    letters,
+                    row: pick.row,
+                    col: pick.col,
+                    dir: pick.dir,
+                    num: num++
+                });
+            }
+
+            if (!best || placements.length > best.placements.length) {
+                best = { grid, placements, size };
+            }
+            if (placements.length === order.length) break;
+        }
+
+        if (!best || best.placements.length < 2) return null;
+
+        // Trim empty border
+        let minR = best.size, maxR = 0, minC = best.size, maxC = 0;
+        for (let r = 0; r < best.size; r++) {
+            for (let c = 0; c < best.size; c++) {
+                if (best.grid[r][c] !== null) {
+                    minR = Math.min(minR, r); maxR = Math.max(maxR, r);
+                    minC = Math.min(minC, c); maxC = Math.max(maxC, c);
+                }
+            }
+        }
+        const rows = maxR - minR + 1;
+        const cols = maxC - minC + 1;
+        const trimmed = Array.from({ length: rows }, (_, r) =>
+            Array.from({ length: cols }, (_, c) => best.grid[r + minR][c + minC])
+        );
+        const placements = best.placements.map(p => ({
+            ...p,
+            row: p.row - minR,
+            col: p.col - minC
+        }));
+        // renumber by reading order
+        placements.sort((a, b) => a.row - b.row || a.col - b.col);
+        placements.forEach((p, i) => { p.num = i + 1; });
+
+        return { grid: trimmed, placements, rows, cols };
+    }
+
+    function cwRender(result) {
+        cwPlacements = result.placements;
+        cwRows = result.rows;
+        cwCols = result.cols;
+        cwSolution = {};
+        for (let r = 0; r < result.rows; r++) {
+            for (let c = 0; c < result.cols; c++) {
+                if (result.grid[r][c] !== null) cwSolution[r + ',' + c] = result.grid[r][c];
+            }
+        }
+
+        const gridEl = document.getElementById('cw-grid');
+        gridEl.style.gridTemplateColumns = 'repeat(' + result.cols + ', 28px)';
+        gridEl.style.gap = '0';
+        gridEl.style.columnGap = '0';
+        gridEl.style.rowGap = '0';
+        gridEl.innerHTML = '';
+
+        // number map
+        const numAt = {};
+        result.placements.forEach(p => {
+            const k = p.row + ',' + p.col;
+            if (!numAt[k] || p.num < numAt[k]) numAt[k] = p.num;
+        });
+
+        for (let r = 0; r < result.rows; r++) {
+            for (let c = 0; c < result.cols; c++) {
+                const cell = document.createElement('div');
+                const letter = result.grid[r][c];
+                if (letter === null) {
+                    cell.className = 'cw-cell block';
+                } else {
+                    cell.className = 'cw-cell letter';
+                    const key = r + ',' + c;
+                    if (numAt[key]) {
+                        const n = document.createElement('span');
+                        n.className = 'cw-num';
+                        n.textContent = numAt[key];
+                        cell.appendChild(n);
+                    }
+                    const inp = document.createElement('input');
+                    inp.type = 'text';
+                    inp.maxLength = 1;
+                    inp.autocomplete = 'off';
+                    inp.autocapitalize = 'characters';
+                    inp.dataset.r = r;
+                    inp.dataset.c = c;
+                    inp.addEventListener('focus', (e) => {
+                        const r = +e.target.dataset.r, c = +e.target.dataset.c;
+                        cwSetDirFromClick(r, c);
+                        cwHighlightWordAt(r, c);
+                    });
+                    inp.addEventListener('input', (e) => {
+                        let v = (e.target.value || '').slice(-1).toUpperCase();
+                        v = v.replace(/[^A-Za-zÀ-ỹĂăÂâÊêÔôƠơƯưĐđ]/g, '');
+                        e.target.value = v;
+                        e.target.parentElement.classList.remove('correct', 'wrong-flash');
+                        if (v) {
+                            const next = cwNextCell(+e.target.dataset.r, +e.target.dataset.c);
+                            if (next) next.focus();
+                        }
+                    });
+                    inp.addEventListener('keydown', (e) => {
+                        const r = +e.target.dataset.r, c = +e.target.dataset.c;
+                        if (e.key === 'ArrowRight') { cwDir = 'across'; const n = cwCellInput(r, c + 1); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowLeft') { cwDir = 'across'; const n = cwCellInput(r, c - 1); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowDown') { cwDir = 'down'; const n = cwCellInput(r + 1, c); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'ArrowUp') { cwDir = 'down'; const n = cwCellInput(r - 1, c); if (n) { n.focus(); e.preventDefault(); } }
+                        else if (e.key === 'Backspace' && !e.target.value) {
+                            const prev = cwPrevCell(r, c);
+                            if (prev) { prev.focus(); e.preventDefault(); }
+                        }
+                    });
+                    cell.appendChild(inp);
+                }
+                gridEl.appendChild(cell);
+            }
+        }
+
+        // bank
+        const bank = document.getElementById('cw-bank-grid');
+        bank.innerHTML = '';
+        const shuffled = result.placements.slice();
+        for (let i = shuffled.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+        }
+        shuffled.forEach(p => {
+            const d = document.createElement('div');
+            d.className = 'cw-bank-word';
+            d.textContent = p.word;
+            d.dataset.letters = p.letters;
+            bank.appendChild(d);
+        });
+
+        document.getElementById('cw-status').textContent =
+            'Placed ' + result.placements.length + ' words · fill every square';
+        document.getElementById('cw-status').className = 'cw-status';
+        cwApplyBankVisibility();
+    }
+
+    // Track typing direction so junctions continue the same way
+    let cwDir = 'across'; // 'across' | 'down'
+
+    function cwCellInput(r, c) {
+        return document.querySelector('.cw-cell.letter input[data-r="'+r+'"][data-c="'+c+'"]');
+    }
+    function cwNextCell(r, c) {
+        if (cwDir === 'down') {
+            const down = cwCellInput(r + 1, c);
+            if (down) return down;
+            const right = cwCellInput(r, c + 1);
+            if (right) { cwDir = 'across'; return right; }
+        } else {
+            const right = cwCellInput(r, c + 1);
+            if (right) return right;
+            const down = cwCellInput(r + 1, c);
+            if (down) { cwDir = 'down'; return down; }
+        }
+        return null;
+    }
+    function cwPrevCell(r, c) {
+        if (cwDir === 'down') {
+            const up = cwCellInput(r - 1, c);
+            if (up) return up;
+            const left = cwCellInput(r, c - 1);
+            if (left) { cwDir = 'across'; return left; }
+        } else {
+            const left = cwCellInput(r, c - 1);
+            if (left) return left;
+            const up = cwCellInput(r - 1, c);
+            if (up) { cwDir = 'down'; return up; }
+        }
+        return null;
+    }
+
+    function cwClearActiveWord() {
+        document.querySelectorAll('.cw-cell.cw-active-word').forEach(el => el.classList.remove('cw-active-word'));
+    }
+    function cwHighlightWordAt(r, c) {
+        cwClearActiveWord();
+        // Find placement(s) covering this cell in current direction; prefer cwDir
+        const covering = cwPlacements.filter(p => {
+            const dr = p.dir === 'across' ? 0 : 1;
+            const dc = p.dir === 'across' ? 1 : 0;
+            for (let i = 0; i < p.letters.length; i++) {
+                if (p.row + dr * i === r && p.col + dc * i === c) return true;
+            }
+            return false;
+        });
+        let place = covering.find(p => p.dir === cwDir) || covering[0];
+        if (!place) return;
+        cwDir = place.dir;
+        const dr = place.dir === 'across' ? 0 : 1;
+        const dc = place.dir === 'across' ? 1 : 0;
+        for (let i = 0; i < place.letters.length; i++) {
+            const rr = place.row + dr * i, cc = place.col + dc * i;
+            const inp = cwCellInput(rr, cc);
+            if (inp) inp.parentElement.classList.add('cw-active-word');
+        }
+    }
+
+    function cwSetDirFromClick(r, c) {
+        // If this cell is the start of a placed word, adopt that word's direction.
+        const starts = cwPlacements.filter(p => p.row === r && p.col === c);
+        if (starts.length === 1) {
+            cwDir = starts[0].dir;
+            return;
+        }
+        if (starts.length > 1) {
+            // both across & down start here — keep current dir
+            return;
+        }
+        // Mid-word: only one axis may continue
+        const hasAcross = !!(cwCellInput(r, c - 1) || cwCellInput(r, c + 1));
+        const hasDown = !!(cwCellInput(r - 1, c) || cwCellInput(r + 1, c));
+        if (hasAcross && !hasDown) cwDir = 'across';
+        else if (hasDown && !hasAcross) cwDir = 'down';
+        // if both (junction), keep current cwDir so progress continues straight
+    }
+
+    function cwApplyBankVisibility() {
+        const bank = document.getElementById('cw-bank');
+        const btn = document.getElementById('cw-toggle-bank-btn');
+        if (cwShowBank) {
+            bank.classList.add('visible');
+            btn.textContent = 'Hide Word Bank';
+        } else {
+            bank.classList.remove('visible');
+            btn.textContent = 'Show Word Bank';
+        }
+    }
+
+    function cwOpen() {
+        const words = cwEligibleWords();
+        if (words.length < 4) {
+            alert('Need at least 4 clicked words with 4+ letters each to build a crossword.');
+            return;
+        }
+        // Cap at 15 for density
+        let list = words.slice();
+        if (list.length > 15) {
+            // shuffle and take 15
+            for (let i = list.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [list[i], list[j]] = [list[j], list[i]];
+            }
+            list = list.slice(0, 15);
+        }
+        const result = cwBuildGrid(list);
+        if (!result) {
+            alert('Could not build a crossword from those words. Click a few more, or try again.');
+            return;
+        }
+        cwRender(result);
+        document.getElementById('cw-sub').textContent =
+            'From words you clicked · ' + result.placements.length + ' words in the puzzle';
+        document.getElementById('cw-overlay').classList.add('visible');
+    }
+
+    function cwClose() {
+        cwClearActiveWord();
+        document.getElementById('cw-overlay').classList.remove('visible');
+    }
+
+    function cwCheck() {
+        let total = 0, ok = 0;
+        document.querySelectorAll('.cw-cell.letter input').forEach(inp => {
+            total++;
+            const key = inp.dataset.r + ',' + inp.dataset.c;
+            const want = cwSolution[key];
+            const got = (inp.value || '').toUpperCase();
+            inp.parentElement.classList.remove('correct', 'wrong-flash');
+            if (got && got === want) {
+                ok++;
+                inp.parentElement.classList.add('correct');
+            } else if (got) {
+                inp.parentElement.classList.add('wrong-flash');
+            }
+        });
+        const st = document.getElementById('cw-status');
+        if (ok === total && total > 0) {
+            st.textContent = "You got it! Crossword complete.";
+            st.className = 'cw-status success';
+            // mark bank used
+            document.querySelectorAll('.cw-bank-word').forEach(w => w.classList.add('used'));
+        } else {
+            st.textContent = ok + ' / ' + total + ' letters correct — keep going';
+            st.className = 'cw-status bad';
+        }
+    }
+
+
+    function cwShowSolution() {
+        document.querySelectorAll('.cw-cell.letter input').forEach(inp => {
+            const key = inp.dataset.r + ',' + inp.dataset.c;
+            const want = cwSolution[key];
+            if (want) {
+                inp.value = want;
+                inp.parentElement.classList.remove('wrong-flash');
+                inp.parentElement.classList.add('correct');
+            }
+        });
+        document.querySelectorAll('.cw-bank-word').forEach(w => w.classList.add('used'));
+        const st = document.getElementById('cw-status');
+        st.textContent = 'Solution shown — try New layout for another puzzle';
+        st.className = 'cw-status success';
+    }
+
+    function cwNewLayout() {
+        cwOpen();
+    }
+
+    // ========== INITIALIZATION ==========
+    document.addEventListener('DOMContentLoaded', () => {
+        const popup = document.getElementById('popup-card');
+
+        // Assign stable ids and wire click handlers
+        document.querySelectorAll('#story-content .vocab, h1 .vocab, h2 .vocab').forEach((el, index) => {
+            if (!el.id) el.id = 'vocab-' + index;
+
+            el.addEventListener('click', (e) => {
+                e.stopPropagation();
+
+                // In practice mode we ignore clicks on vocab (they are blanks or filled)
+                if (practiceMode) return;
+
+                // Track this word for the word bank
+                if (!clickedIds.has(el.id)) {
+                    clickedIds.add(el.id);
+                    updateWordCount();
+                }
+
+                // Show / toggle popup (existing behaviour)
+                if (popup.style.display === 'block' && popup.dataset.activeId === el.id) {
+                    popup.style.display = 'none';
+                    return;
+                }
+
+                popup.dataset.activeId = el.id;
+                popup.dataset.wordEn = el.dataset.wordEn || '';
+                popup.dataset.wordVn = el.dataset.wordVn || '';
+
+                // For Vietnamese input (lang=vi): title = English (opposite), sub = Vietnamese
+                document.getElementById('popup-title').innerText = el.dataset.wordEn || '';
+                document.getElementById('popup-sub').innerText = el.dataset.wordVn || '';
+                document.getElementById('popup-part-of-speech').innerText = el.dataset.pos || '';
+                
+                const hr = '<br><hr style="border:0; border-top:1px dashed #7a4e1a; margin:8px 0;">';
+                const isEnInput = document.documentElement.lang === 'en';
+                document.getElementById('popup-definition').innerHTML = isEnInput
+                    ? (el.dataset.defVn || '') + hr + (el.dataset.defEn || '')
+                    : (el.dataset.defEn || '') + hr + (el.dataset.defVn || '');
+                
+                document.getElementById('popup-context-text').innerText = isEnInput ? (el.dataset.contextEn || el.dataset.wordEn || '') : (el.dataset.contextVn || el.dataset.wordVn || '');
+
+                popup.style.display = 'block';
+            });
+        });
+
+        // Close popup on outside click
+        document.addEventListener('click', (e) => {
+            if (popup.style.display === 'block' && !popup.contains(e.target)) {
+                popup.style.display = 'none';
+            }
+        });
+
+        popup.addEventListener('click', (e) => {
+            if (e.target === popup || e.target.tagName !== 'BUTTON') {
+                popup.style.display = 'none';
+            }
+        });
+
+        // Practice control buttons
+        // Practice control buttons
+        function toggleWordBank() {
+            const bank = document.getElementById('word-bank-section');
+            const btn = document.getElementById('toggle-bank-btn');
+            if (bank.classList.contains('visible')) {
+                // Hide bank + re-blank the story as typeable inputs for a
+                // real memory challenge (nothing to click anymore)
+                bank.classList.remove('visible');
+                btn.textContent = 'Show Word Bank';
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankTypeable(el));
+                    const firstBlank = orderedBlanks[0];
+                    if (firstBlank) {
+                        firstBlank.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                        const inp = firstBlank.querySelector('input.blank-input');
+                        if (inp) inp.focus();
+                    }
+                    updateProgress();
+                }
+            } else {
+                bank.classList.add('visible');
+                btn.textContent = 'Hide Word Bank';
+                // Fresh round again, same as the hide direction: re-blank
+                // everything back to click-to-select and rebuild the bank,
+                // rather than leaving previously-typed answers in place.
+                if (practiceMode && orderedBlanks.length > 0) {
+                    orderedBlanks.forEach(el => makeBlankClickable(el));
+                    buildWordBank();
+                    setActiveBlank(orderedBlanks[0]);
+                    orderedBlanks[0].scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    updateProgress();
+                }
+            }
+        }
+
+        document.getElementById('start-practice-btn').addEventListener('click', enterPracticeMode);
+        document.getElementById('reset-practice-btn').addEventListener('click', resetPractice);
+        document.getElementById('toggle-bank-btn').addEventListener('click', toggleWordBank);
+        document.getElementById('exit-practice-btn').addEventListener('click', exitPracticeMode);
+
+        // Spaced Repetition controls
+        document.getElementById('start-srs-btn').addEventListener('click', () => srsStartSession('review'));
+        document.getElementById('start-srs-challenge-btn').addEventListener('click', () => srsStartSession('challenge'));
+        document.getElementById('srs-close-btn').addEventListener('click', srsCloseOverlay);
+        document.getElementById('srs-reveal-btn').addEventListener('click', srsRevealAnswer);
+        document.getElementById('srs-check-btn').addEventListener('click', srsCheckTypedAnswer);
+        const typeAreaEl = document.getElementById('srs-type-area');
+        if (typeAreaEl) {
+            typeAreaEl.addEventListener('click', (e) => e.stopPropagation());
+            typeAreaEl.addEventListener('touchend', (e) => e.stopPropagation());
+        }
+        // srs-type-area-stop
+
+        document.getElementById('srs-giveup-btn').addEventListener('click', srsGiveUp);
+        const srsTypeInput = document.getElementById('srs-type-input');
+        const submitTyped = (e) => {
+            if (e) e.preventDefault();
+            srsCheckTypedAnswer();
+        };
+        srsTypeInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        // Mobile keyboards often only fire keyup / change for the Done key
+        srsTypeInput.addEventListener('keyup', (e) => {
+            if (e.key === 'Enter') submitTyped(e);
+        });
+        document.getElementById('srs-again-btn').addEventListener('click', () => srsStartSession(srsMode));
+        document.getElementById('srs-back-btn').addEventListener('click', srsCloseOverlay);
+        document.querySelectorAll('.srs-rate-btn').forEach(btn => {
+            btn.addEventListener('click', () => srsRateCard(btn.dataset.rating));
+        });
+        // Click anywhere in the review card that isn't a button dismisses it
+        // (mirrors the vocab popup's behavior) — no button clicks close it,
+        // since those (Show Answer, ratings, audio) have their own actions.
+        // Backdrop closes session. Once an answer is showing (Level 1 reveal,
+        // Level 2 correct, or Show answer), click anywhere on the card (not a
+        // rating button / input) advances — no need to hunt for the X.
+        document.getElementById('srs-overlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('srs-overlay')) {
+                srsCloseOverlay();
+                return;
+            }
+            // Never advance from a tap while the type-in field is active (mobile
+            // keyboard dismiss often hits the card behind the keyboard).
+            const typeInput = document.getElementById('srs-type-input');
+            if (typeInput && document.activeElement === typeInput) return;
+            if (e.target.closest('#srs-type-area')) return;
+            if (srsAnswerRevealed && !e.target.closest('button') && !e.target.closest('input')) {
+                const rating = (srsChallengeSolved || srsMode === 'review') ? 'easy' : 'again';
+                srsAnswerRevealed = false;
+                srsChallengeSolved = false;
+                srsRateCard(rating);
+            }
+        });
+
+        const cwStart = document.getElementById('start-cw-btn');
+        if (cwStart) cwStart.addEventListener('click', cwOpen);
+        const cwCloseBtn = document.getElementById('cw-close-btn');
+        if (cwCloseBtn) cwCloseBtn.addEventListener('click', cwClose);
+        const cwCheckBtn = document.getElementById('cw-check-btn');
+        if (cwCheckBtn) cwCheckBtn.addEventListener('click', cwCheck);
+        const cwSolveBtn = document.getElementById('cw-solve-btn');
+        if (cwSolveBtn) cwSolveBtn.addEventListener('click', cwShowSolution);
+        const cwNewBtn = document.getElementById('cw-new-btn');
+        if (cwNewBtn) cwNewBtn.addEventListener('click', cwNewLayout);
+        const cwToggleBank = document.getElementById('cw-toggle-bank-btn');
+        if (cwToggleBank) cwToggleBank.addEventListener('click', () => {
+            cwShowBank = !cwShowBank;
+            cwApplyBankVisibility();
+        });
+        const cwOverlay = document.getElementById('cw-overlay');
+        if (cwOverlay) cwOverlay.addEventListener('click', (e) => {
+            if (e.target === cwOverlay) cwClose();
+        });
+
+
+        updateWordCount();
+    });
+
+</script>
+</body>
+</html>
